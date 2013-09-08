@@ -16,6 +16,8 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Markdown Editor: [Mou](http://mouapp.com/)
 * Web Framework: [Play](http://www.playframework.com/)
 * IDE: [Eclipse](http://www.eclipse.org/)
+* Web Hosting: [Heroku](https://www.heroku.com/)
+* 
 
 
 ### [Git](http://git-scm.com/)
@@ -39,6 +41,10 @@ Play has a lot to it. Documentation and tutorials can be found on the play web s
 Eclipse is a IDE which has support for Scala an even play projects. Initial installation is simple just download from the [download page](http://www.eclipse.org/downloads/) and put it where you want it.
 
 Eclipse has many plugins that may be useful but the primary one for this project is the [Scala one](http://scala-ide.org/download/current.html). Another helpful plugin is EGit which can be found by searching in the eclipse market place.
+
+### [Heroku](https://www.heroku.com/)
+
+Heroku is a web hosting company that greatly simplifies deployment, maintenance and upgrading of your web application. Heroku has it a toolbelt you need to install but once in place it's pretty easy to use. Fortunately Play works nicely with heroku and the have instructions on installation etc [here](http://www.playframework.com/documentation/2.1.3/ProductionHeroku).
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

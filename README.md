@@ -44,7 +44,7 @@ Eclipse has many plugins that may be useful but the primary one for this project
 
 ### [Heroku](https://www.heroku.com/)
 
-Heroku is a web hosting company that greatly simplifies deployment, maintenance and upgrading of your web application. Heroku has it a toolbelt you need to install but once in place it's pretty easy to use. Fortunately Play works nicely with heroku and the have instructions on installation etc [here](http://www.playframework.com/documentation/2.1.3/ProductionHeroku).
+Heroku is a web hosting company that greatly simplifies deployment, maintenance and upgrading of your web application. Heroku has it a toolbelt you need to install but once in place it's pretty easy to use. Fortunately Play works nicely with heroku and they have instructions on installation etc [here](http://www.playframework.com/documentation/2.1.3/ProductionHeroku).
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

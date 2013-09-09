@@ -17,7 +17,7 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Web Framework: [Play](http://www.playframework.com/)
 * IDE: [Eclipse](http://www.eclipse.org/)
 * Web Hosting: [Heroku](https://www.heroku.com/)
-* 
+* Authentication: [SecureSocial.ws](http://securesocial.ws/)
 
 
 ### [Git](http://git-scm.com/)
@@ -46,6 +46,13 @@ Eclipse has many plugins that may be useful but the primary one for this project
 
 Heroku is a web hosting company that greatly simplifies deployment, maintenance and upgrading of your web application. Heroku has it a toolbelt you need to install but once in place it's pretty easy to use. Fortunately Play works nicely with heroku and they have instructions on installation etc [here](http://www.playframework.com/documentation/2.1.3/ProductionHeroku).
 
+### [SecureSocial.ws](http://securesocial.ws/)
+
+http://securesocial.ws/guide/getting-started.html
+Get Keys for each provider
+Samples
+https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
+
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.
 
@@ -68,3 +75,11 @@ http://www.playframework.com/documentation/2.1.x/IDE
 .DS_Store
 
 ##### Push back to Github
+
+##### Start a project on Heroku
+
+heroku create
+git push heroku master
+
+
+

@@ -58,7 +58,12 @@ facebook login
 https://developers.facebook.com/apps/?action=create
 https://developers.facebook.com/
 https://developers.facebook.com/docs/facebook-login/
+
+Create a production and local app on Heroku
 http://stackoverflow.com/questions/2459728/how-to-test-facebook-connect-locally
+
+Set config vars locally and on Heroku
+https://devcenter.heroku.com/articles/config-vars
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

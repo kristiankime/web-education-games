@@ -49,9 +49,16 @@ Heroku is a web hosting company that greatly simplifies deployment, maintenance 
 ### [SecureSocial.ws](http://securesocial.ws/)
 
 http://securesocial.ws/guide/getting-started.html
-Get Keys for each provider
 Samples
 https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
+
+Get Keys for each provider
+Facebook
+facebook login
+https://developers.facebook.com/apps/?action=create
+https://developers.facebook.com/
+https://developers.facebook.com/docs/facebook-login/
+http://stackoverflow.com/questions/2459728/how-to-test-facebook-connect-locally
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

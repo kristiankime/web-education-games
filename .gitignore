@@ -17,3 +17,4 @@ dist
 /.cache
 /bin
 .DS_Store
+app_environment_variables.sh

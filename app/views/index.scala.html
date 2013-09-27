@@ -1,22 +1,28 @@
-@()(implicit flash: Flash)
+@(tasks: List[Equation], taskForm: Form[String])
 
-@main(None) {
+@import helper._
+
+@main("Equation list") {
     
-    @flash.get("error").map { errorMessage =>
-        
-        <div class="alert-message error">
-            <p>
-                <strong>Oops!</strong> @errorMessage
-            </p>
-        </div>
-        
+    <h1>@tasks.size task(s)</h1>
+    
+    <ul>
+        @tasks.map { task =>
+            <li>
+                @task.equation
+                
+                @form(routes.Application.deleteEquation(task.id)) {
+                    <input type="submit" value="Delete">
+                }
+            </li>
+        }
+    </ul>
+    
+    <h2>Add a new task</h2>
+    
+    @form(routes.Application.newEquation) {
+        @inputText(taskForm("label")) 
+        <input type="submit" value="Create">
     }
-        
-    <div class="alert-message block-message info">
-        <p>
-            <strong>This is the Play 2.0 Websocket sample application!</strong> 
-            To start, choose a username and sign in using the top right form.
-        </p>
-    </div>
     
 }

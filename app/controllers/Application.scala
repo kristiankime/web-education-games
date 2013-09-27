@@ -15,36 +15,38 @@ import models._
 import akka.actor._
 import scala.concurrent.duration._
 
+import play.api.data._
+import play.api.data.Forms._
+
+import models.Equations
+
 object Application extends Controller with securesocial.core.SecureSocial {
 
 	//	def index = SecuredAction { implicit request =>
 	//		Ok(views.html.index("Your new application is ready."))
 	//	}
 
-	/**
-	 * Just display the home page.
-	 */
-	def index = Action { implicit request =>
-		Ok(views.html.index())
+	def index = Action {
+		Redirect(routes.Application.equations)
 	}
 
-	/**
-	 * Display the chat room page.
-	 */
-	def chatRoom(username: Option[String]) = Action { implicit request =>
-		username.filterNot(_.isEmpty).map { username =>
-			Ok(views.html.chatRoom(username))
-		}.getOrElse {
-			Redirect(routes.Application.index).flashing(
-				"error" -> "Please choose a valid username.")
-		}
+	def equations = Action {
+		Ok(views.html.index(Equations.all(), taskForm))
 	}
 
-	/**
-	 * Handles the chat websocket.
-	 */
-	def chat(username: String) = WebSocket.async[JsValue] { request =>
-		ChatRoom.join(username)
+	def newEquation = Action { implicit request =>
+		taskForm.bindFromRequest.fold(
+			errors => BadRequest(views.html.index(Equations.all(), errors)),
+			label => {
+				Equations.create("", "", label)
+				Redirect(routes.Application.equations)
+			})
 	}
 
+	def deleteEquation(id: Int) = Action { implicit request =>
+		Equations.delete(id);
+		Ok(views.html.index(Equations.all(), taskForm))
+	}
+
+	val taskForm = Form("label" -> nonEmptyText)
 }

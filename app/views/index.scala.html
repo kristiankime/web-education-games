@@ -10,7 +10,7 @@
     <ul>
         @equations.map { equation =>
             <li>
-                @equation.equation
+            	<script type="math/mml"> @Html(equation.equation) </script>
                 
                 @form(routes.Application.deleteEquation(equation.id)) {
                     <input type="submit" value="Delete">
@@ -31,16 +31,17 @@
 		<div id="MathOutput">$${}$$</div>
 	</div>
     
-    @form(routes.Application.newEquation, 'id -> "equationForm", 'onsubmit -> "equationFormSubmit()" ) {
+    @form(routes.Application.newEquation, 'id -> "equationForm" ) {
     	<input type="hidden" name="@EQ.equation" id="equationMathML">
-    	<input type="submit" value="Create">
+    	<input type="button" value="Create" onclick="equationFormSubmit()">
     }
     
     <script>
     function equationFormSubmit() {
         toMathML(jax("MathOutput"), function(mathML) {
+        	console.log(mathML);
 	        $("#equationMathML").val(mathML);
-	        $("#equationForm").submit()
+	        $("#equationForm").submit();
         });
         return false;
     }

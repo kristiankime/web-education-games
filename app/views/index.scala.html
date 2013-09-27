@@ -1,27 +1,28 @@
-@(tasks: List[Equation], taskForm: Form[String])
+@(equations: List[Equation], equationForm: Form[String])
 
 @import helper._
+@import controllers.EquationHTML
 
 @main("Equation list") {
     
-    <h1>@tasks.size task(s)</h1>
+    <h1>@equations.size equation(s)</h1>
     
     <ul>
-        @tasks.map { task =>
+        @equations.map { equation =>
             <li>
-                @task.equation
+                @equation.equation
                 
-                @form(routes.Application.deleteEquation(task.id)) {
+                @form(routes.Application.deleteEquation(equation.id)) {
                     <input type="submit" value="Delete">
                 }
             </li>
         }
     </ul>
     
-    <h2>Add a new task</h2>
+    <h2>Add a new equation</h2>
     
     @form(routes.Application.newEquation) {
-        @inputText(taskForm("label")) 
+        @inputText(equationForm(EquationHTML.equation))
         <input type="submit" value="Create">
     }
     

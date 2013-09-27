@@ -2,16 +2,16 @@ package models
 
 import scala.collection.mutable.LinkedHashMap
 
-case class Equation(id: Int, user:String, text: String, equation: String)
+case class Equation(id: Int, equation: String)
 
 object Equations {
 	private val equations = LinkedHashMap[Int, Equation]()
 	
 	def all() = equations.values.toList
 
-	def create(user:String, text: String, equation: String) = {
+	def create(equation: String) = {
 		val id = equations.size;
-		val eq = Equation(id, user, text, equation);
+		val eq = Equation(id, equation);
 		equations.put(id, eq)
 		eq
 	}
@@ -19,5 +19,4 @@ object Equations {
 	def delete(id: Int) {
 		equations.remove(id)
 	}
-
 }

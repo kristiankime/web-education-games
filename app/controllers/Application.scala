@@ -31,22 +31,26 @@ object Application extends Controller with securesocial.core.SecureSocial {
 	}
 
 	def equations = Action {
-		Ok(views.html.index(Equations.all(), taskForm))
+		Ok(views.html.index(Equations.all(), EquationHTML.form))
 	}
 
 	def newEquation = Action { implicit request =>
-		taskForm.bindFromRequest.fold(
+		EquationHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Equations.all(), errors)),
-			label => {
-				Equations.create("", "", label)
+			equation => {
+				Equations.create(equation)
 				Redirect(routes.Application.equations)
 			})
 	}
 
-	def deleteEquation(id: Int) = Action { implicit request =>
+	def deleteEquation(id: Int) = Action {
 		Equations.delete(id);
-		Ok(views.html.index(Equations.all(), taskForm))
+		Ok(views.html.index(Equations.all(), EquationHTML.form))
 	}
 
-	val taskForm = Form("label" -> nonEmptyText)
+}
+
+object EquationHTML {
+	val equation = "equation"
+	val form = Form(equation -> nonEmptyText)
 }

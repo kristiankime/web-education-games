@@ -29,8 +29,8 @@ class MathMLSpec extends Specification {
 		}
 		
 		"be able to parse variables" in {
-			val xml = <cn>X</cn>
-			val mathML = Cn("X")
+			val xml = <ci>X</ci>
+			val mathML = Ci("X")
 			MathML(xml).get must beEqualTo(mathML)
 		}
 		

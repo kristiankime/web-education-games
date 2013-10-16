@@ -5,21 +5,43 @@ import scala.xml.MetaData
 import scala.xml.Node
 import scala.xml.Elem
 import scala.xml.Text
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 object MathML {
 
-	def apply(xml: Elem): MathMLElem = {
-		xml.label match {
-			case "apply" => Apply(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, applyable(xml.childElem(0)), xml.childElem.drop(1).map(MathML(_)): _*)
-			case "cn" => Cn(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0))
-			case _ => throw new IllegalArgumentException(xml.label + " was not recognized as a MathML element")
+	def apply(xml: Elem): Try[MathMLElem] = {
+		xml.label.toLowerCase match {
+			case "apply" => applyElement(apply, xml)
+			case "cn" => Success(Cn(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
+			case _ => Failure(new IllegalArgumentException(xml.label + " was not recognized as a MathML element"))
 		}
 	}
 
-	def applyable(xml: Elem): Applyable = {
-		xml.label match {
-			case "plus" => Plus(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty)
-			case _ => throw new IllegalArgumentException(xml.label + " was not recognized as an applyable MathML element")
+	private def applyElement(apply: scala.xml.Elem => scala.util.Try[mathml.MathMLElem], xml: scala.xml.Elem): scala.util.Try[mathml.MathMLElem] = {
+		if (xml.childElem.isEmpty) {
+			Failure(new IllegalArgumentException("Apply MathML Elements should have at least one child " + xml))
+		} else {
+			val applyElement = applyable(xml.childElem(0))
+			val applyValues = xml.childElem.drop(1).map(MathML(_))
+			val failure = Seq(applyElement).++(applyValues).find(_.isFailure)
+			if (failure.nonEmpty) {
+				failure.get
+			} else {
+				Success(Apply(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, applyElement.get, applyValues.map(_.get): _*))
+			}
+		}
+	}
+	
+	def applyable(xml: Elem): Try[Applyable] = {
+		xml.label.toLowerCase match {
+			case "plus" => Success(Plus(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
+			case "minus" => Success(Minus(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
+			case "times" => Success(Times(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
+			case "divide" => Success(Divide(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
+			case "power" => Success(Power(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
+			case _ => Failure(new IllegalArgumentException(xml.label + " was not recognized as an applyable MathML element"))
 		}
 	}
 
@@ -27,8 +49,8 @@ object MathML {
 		def childElem = e.child.collect(_ match { case x: Elem => x })
 	}
 
-	
 	val h = <hack/>
+
 }
 
 sealed abstract class MathMLElem(
@@ -75,10 +97,65 @@ case class Plus(
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
 }
 
-object Plus{
+object Plus {
 	def apply() = new Plus()
 }
 
+case class Minus(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean)
+	extends Applyable(prefix, "minus", attributes1, scope, minimizeEmpty) {
+
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+}
+
+object Minus {
+	def apply() = new Minus()
+}
+
+case class Times(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean)
+	extends Applyable(prefix, "times", attributes1, scope, minimizeEmpty) {
+
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+}
+
+object Times {
+	def apply() = new Times()
+}
+
+case class Divide(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean)
+	extends Applyable(prefix, "divide", attributes1, scope, minimizeEmpty) {
+
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+}
+
+object Divide {
+	def apply() = new Divide()
+}
+
+case class Power(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean)
+	extends Applyable(prefix, "power", attributes1, scope, minimizeEmpty) {
+
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+}
+
+object Power {
+	def apply() = new Power()
+}
 
 // Terminal Identifiers
 case class Cn(

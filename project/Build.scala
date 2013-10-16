@@ -11,6 +11,7 @@ object ApplicationBuild extends Build {
 		// Add your project dependencies here,
 		jdbc,
 		anorm,
+		"org.specs2" %% "specs2" % "2.0",
 		"securesocial" %% "securesocial" % "master-SNAPSHOT")
 
 	val main = play.Project(appName, appVersion, appDependencies).settings {

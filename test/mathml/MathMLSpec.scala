@@ -64,7 +64,7 @@ class MathMLSpec extends Specification {
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
-		"fail to parse plus with more then two arguments" in {
+		"fail to parse minus with more then two arguments" in {
 			MathML(<apply> <minus/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
 		}
 

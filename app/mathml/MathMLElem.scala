@@ -25,7 +25,7 @@ abstract class MathMLElem(
 
 	def simplify(): MathMLElem
 
-	def derivative(wrt: String): Option[MathMLElem]
+	def derivative(wrt: String): MathMLElem
 }
 
 abstract class Applyable(
@@ -42,7 +42,7 @@ abstract class Applyable(
 
 	def isOne = false
 
-	def derivative(wrt: String): Option[MathMLElem] = throw new UnsupportedOperationException("Applyables should not get derived, use derive on the surrounding apply element.")
+	def derivative(wrt: String): MathMLElem = throw new UnsupportedOperationException("Applyables should not get derived, use derive on the surrounding apply element.")
 }
 
 case class Plus(

@@ -24,7 +24,7 @@ case class Ci(
 
 	def simplify() = this
 
-	def derivative(wrt: String): Option[MathMLElem] = if (text == wrt) Some(Cn("1")) else None
+	def derivative(wrt: String): MathMLElem = if (text == wrt) Cn(1) else Cn(0)
 }
 
 object Ci {

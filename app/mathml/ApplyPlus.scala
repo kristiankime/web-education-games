@@ -29,15 +29,15 @@ case class ApplyPlus(
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
-		else ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, values.map(_.simplify).filter(_.isZero): _*)
+		else {
+			val nonZeroVals = values.map(_.simplify).filter(_.isZero)
+			if(nonZeroVals.isEmpty) Cn(0)
+			else if(nonZeroVals.size == 1) nonZeroVals(0)
+			else ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, nonZeroVals: _*)
+		}
 	}
 
-	def derivative(wrt: String): Option[MathMLElem] =
-		values.map(_.derivative(wrt)).filter(_.isDefined).map(_.get) match {
-			case Seq() => None
-			case Seq(der) => Some(der)
-			case Seq(derivs @ _*) => Some(ApplyPlus(plus, derivs: _*))
-		}
+	def derivative(wrt: String) = ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, values.map(_.derivative(wrt)):_*).simplify
 }
 
 object ApplyPlus {

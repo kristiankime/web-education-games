@@ -25,7 +25,7 @@ case class Cn(
 
 	def simplify() = this
 
-	def derivative(wrt: String): Option[MathMLElem] = None
+	def derivative(wrt: String) = Cn(0)
 }
 
 object Cn {

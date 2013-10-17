@@ -25,16 +25,12 @@ case class ApplyMinusBinary(
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
+		else if (value2.isZero) value1
+		else if (value1.isZero) ApplyMinusUnary(minus, value2)
 		else this
 	}
 
-	def derivative(wrt: String): Option[MathMLElem] =
-		(value1.derivative(wrt), value2.derivative(wrt)) match {
-			case (None, None) => None
-			case (Some(der1), None) => Some(der1)
-			case (None, Some(der2)) => Some(ApplyMinusUnary(minus, der2))
-			case (Some(der1), Some(der2)) => Some(ApplyMinusBinary(der1, der2))
-		}
+	def derivative(wrt: String): MathMLElem = ApplyMinusBinary(prefix, attributes1, scope, minimizeEmpty, minus, value1.derivative(wrt), value2.derivative(wrt)).simplify
 }
 
 object ApplyMinusBinary {

@@ -27,18 +27,9 @@ case class ApplyTimes(
 		else ApplyTimes(prefix, attributes1, scope, minimizeEmpty, times, values.map(_.simplify).filter(_.isOne): _*)
 	}
 
-	def derivative(wrt: String): Option[MathMLElem] = {
-		values.map(Option(_)).reduce((a, b) => productRule(wrt, a.get, b.get))
-	}
+	def derivative(wrt: String): MathMLElem = values.reduce((a, b) => productRule(wrt, a, b)).simplify
 
-	private def productRule(wrt: String, val1: MathMLElem, val2: MathMLElem) = {
-		(val1.derivative(wrt), val2.derivative(wrt)) match {
-			case (None, None) => None
-			case (Some(der1), None) => Some(ApplyTimes(der1, val2))
-			case (None, Some(der2)) => Some(ApplyTimes(val1, der2))
-			case (Some(der1), Some(der2)) => Some(ApplyPlus(ApplyTimes(der1, val2), ApplyTimes(Times(), val1, der2)))
-		}
-	}
+	private def productRule(wrt: String, val1: MathMLElem, val2: MathMLElem) = ApplyPlus(ApplyTimes(val1.derivative(wrt), val2), ApplyTimes(Times(), val1, val2.derivative(wrt))).simplify
 }
 
 object ApplyTimes {

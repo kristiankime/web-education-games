@@ -28,7 +28,7 @@ case class ApplyDivide(
 		else this
 	}
 
-	def derivative(wrt: String): Option[MathMLElem] = null
+	def derivative(wrt: String): MathMLElem = null
 }
 
 object ApplyDivide {

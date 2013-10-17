@@ -27,11 +27,7 @@ case class ApplyMinusUnary(
 		else this
 	}
 
-	def derivative(wrt: String): Option[MathMLElem] =
-		value.derivative(wrt) match {
-			case None => None
-			case Some(der1) => Some(ApplyMinusUnary(minus, der1))
-		}
+	def derivative(wrt: String) = ApplyMinusUnary(prefix, attributes1, scope, minimizeEmpty, minus, value.derivative(wrt)).simplify
 }
 
 object ApplyMinusUnary {

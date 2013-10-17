@@ -21,7 +21,6 @@ sealed abstract class MathMLElem(
 	def eval(boundVariables: Map[String, Double]): Try[Double]
 }
 
-// ========== ApplyXXX
 case class ApplyPlus(
 	override val prefix: String,
 	attributes1: MetaData,
@@ -38,6 +37,7 @@ case class ApplyPlus(
 
 object ApplyPlus {
 	def apply(plus: Plus, applyValues: MathMLElem*) = new ApplyPlus(plus, applyValues: _*)
+	def apply(applyValues: MathMLElem*) = new ApplyPlus(Plus(), applyValues: _*)
 }
 
 case class ApplyMinusUnary(
@@ -56,6 +56,7 @@ case class ApplyMinusUnary(
 
 object ApplyMinusUnary {
 	def apply(minus: Minus, value: MathMLElem) = new ApplyMinusUnary(minus, value)
+	def apply(value: MathMLElem) = new ApplyMinusUnary(Minus(), value)
 }
 
 case class ApplyMinusBinary(
@@ -75,6 +76,7 @@ case class ApplyMinusBinary(
 
 object ApplyMinusBinary {
 	def apply(minus: Minus, value1: MathMLElem, value2: MathMLElem) = new ApplyMinusBinary(minus, value1, value2)
+	def apply(value1: MathMLElem, value2: MathMLElem) = new ApplyMinusBinary(Minus(), value1, value2)
 }
 
 case class ApplyTimes(
@@ -93,6 +95,7 @@ case class ApplyTimes(
 
 object ApplyTimes {
 	def apply(times: Times, values: MathMLElem*) = new ApplyTimes(times, values: _*)
+	def apply(values: MathMLElem*) = new ApplyTimes(Times(), values: _*)
 }
 
 case class ApplyDivide(
@@ -112,6 +115,7 @@ case class ApplyDivide(
 
 object ApplyDivide {
 	def apply(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = new ApplyDivide(divide, numerator, denominator)
+	def apply(numerator: MathMLElem, denominator: MathMLElem) = new ApplyDivide(Divide(), numerator, denominator)
 }
 
 case class ApplyPower(
@@ -131,29 +135,9 @@ case class ApplyPower(
 
 object ApplyPower {
 	def apply(power: Power, value1: MathMLElem, value2: MathMLElem) = new ApplyPower(power, value1, value2)
+	def apply(value1: MathMLElem, value2: MathMLElem) = new ApplyPower(Power(), value1, value2)
 }
 
-// =========
-
-case class Apply(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val applyFunction: Applyable,
-	val applyValues: MathMLElem*)
-	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](applyFunction) ++ applyValues): _*) {
-
-	def this(applyFunction: Applyable, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, applyFunction, applyValues: _*)
-
-	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Apply should not get evaled")) //applyFunction.applyEval(boundVariables, applyValues)
-}
-
-object Apply {
-	def apply(applyFunction: Applyable, applyValues: MathMLElem*) = new Apply(applyFunction, applyValues: _*)
-}
-
-// Applyables (Things that can be the first element in a apply element, i.e. plus, minus, mult etc...) 
 abstract class Applyable(
 	override val prefix: String,
 	override val label: String,
@@ -162,9 +146,7 @@ abstract class Applyable(
 	override val minimizeEmpty: Boolean)
 	extends MathMLElem(prefix, label, attributes1, scope, minimizeEmpty, Seq(): _*) {
 
-	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use applyEval instead"))
-
-//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]): Try[Double]
+	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
 }
 
 case class Plus(
@@ -175,8 +157,6 @@ case class Plus(
 	extends Applyable(prefix, "plus", attributes1, scope, minimizeEmpty) {
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
-
-//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 }
 
 object Plus {
@@ -191,8 +171,6 @@ case class Minus(
 	extends Applyable(prefix, "minus", attributes1, scope, minimizeEmpty) {
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
-
-//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ - _))
 }
 
 object Minus {
@@ -207,8 +185,6 @@ case class Times(
 	extends Applyable(prefix, "times", attributes1, scope, minimizeEmpty) {
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
-
-//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ * _))
 }
 
 object Times {
@@ -223,8 +199,6 @@ case class Divide(
 	extends Applyable(prefix, "divide", attributes1, scope, minimizeEmpty) {
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
-
-//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ / _))
 }
 
 object Divide {
@@ -239,15 +213,12 @@ case class Power(
 	extends Applyable(prefix, "power", attributes1, scope, minimizeEmpty) {
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
-
-//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(Math.pow(_, _)))
 }
 
 object Power {
 	def apply() = new Power()
 }
 
-// Terminal Identifiers
 case class Cn(
 	override val prefix: String,
 	attributes1: MetaData,

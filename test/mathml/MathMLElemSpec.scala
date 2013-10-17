@@ -39,39 +39,39 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"add 2 numbers correctly for apply+plus " in {
-			ApplyPlus(Plus(), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(10)
+			ApplyPlus(Cn(5), Cn(5)).eval(Map()).get must beEqualTo(10)
 		}
 
 		"add > 2 numbers correctly for apply+plus " in {
-			ApplyPlus(Plus(), Cn(5), Cn(5), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(20)
+			ApplyPlus(Cn(5), Cn(5), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(20)
 		}
 
 		"subtract 1 number correctly for apply+minus " in {
-			ApplyMinusUnary(Minus(), Cn(6)).eval(Map()).get must beEqualTo(-6)
+			ApplyMinusUnary(Cn(6)).eval(Map()).get must beEqualTo(-6)
 		}
 		
 		"subtract 2 numbers correctly for apply+minus " in {
-			ApplyMinusBinary(Minus(), Cn(6), Cn(5)).eval(Map()).get must beEqualTo(1)
+			ApplyMinusBinary(Cn(6), Cn(5)).eval(Map()).get must beEqualTo(1)
 		}
 
 		"multiply 2 numbers correctly for apply+times " in {
-			ApplyTimes(Times(), Cn(3), Cn(-2)).eval(Map()).get must beEqualTo(-6)
+			ApplyTimes(Cn(3), Cn(-2)).eval(Map()).get must beEqualTo(-6)
 		}
 
 		"multiply > 2 numbers correctly for apply+times " in {
-			ApplyTimes(Times(), Cn(-12), Cn(.5), Cn(-2), Cn(2)).eval(Map()).get must beEqualTo(24)
+			ApplyTimes(Cn(-12), Cn(.5), Cn(-2), Cn(2)).eval(Map()).get must beEqualTo(24)
 		}
 
 		"divide 2 numbers correctly for apply+divide " in {
-			ApplyDivide(Divide(), Cn(8), Cn(4)).eval(Map()).get must beEqualTo(2)
+			ApplyDivide(Cn(8), Cn(4)).eval(Map()).get must beEqualTo(2)
 		}
 
 		"raise a number to another numbers correctly for apply+power" in {
-			ApplyPower(Power(), Cn(3), Cn(2)).eval(Map()).get must beEqualTo(9)
+			ApplyPower(Cn(3), Cn(2)).eval(Map()).get must beEqualTo(9)
 		}
 		
 		"nested applys work" in {
-			ApplyPlus(Plus(), Cn(1), ApplyPlus(Plus(), Cn(2), Cn(3))).eval(Map()).get must beEqualTo(6)
+			ApplyPlus(Cn(1), ApplyPlus(Cn(2), Cn(3))).eval(Map()).get must beEqualTo(6)
 		}
 	}
 }

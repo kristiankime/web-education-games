@@ -19,6 +19,8 @@ sealed abstract class MathMLElem(
 	extends Elem(prefix, label, attributes1, scope, minimizeEmpty, child: _*) {
 
 	def eval(boundVariables: Map[String, Double]): Try[Double]
+
+	def derivative(wrt: String): Option[MathMLElem]
 }
 
 case class ApplyPlus(
@@ -33,6 +35,13 @@ case class ApplyPlus(
 	def this(plus: Plus, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, plus, applyValues: _*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
+
+	def derivative(wrt: String): Option[MathMLElem] = {
+		val valueDer = values.map(_.derivative(wrt)).filter(_.isDefined)
+		if (valueDer.isEmpty) None
+		else if (valueDer.size == 1) Some(valueDer(0).get)
+		else Some(ApplyPlus(plus, valueDer.map(_.get): _*))
+	}
 }
 
 object ApplyPlus {
@@ -52,6 +61,12 @@ case class ApplyMinusUnary(
 	def this(minus: Minus, value: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, minus, value)
 
 	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
+
+	def derivative(wrt: String): Option[MathMLElem] = {
+		val valueDer = value.derivative(wrt)
+		if (valueDer.isEmpty) None
+		else Some(ApplyMinusUnary(minus, valueDer.get))
+	}
 }
 
 object ApplyMinusUnary {
@@ -72,6 +87,8 @@ case class ApplyMinusBinary(
 	def this(minus: Minus, value1: MathMLElem, value2: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, minus, value1, value2)
 
 	def eval(boundVariables: Map[String, Double]) = Try(value1.eval(boundVariables).get - value2.eval(boundVariables).get)
+
+	def derivative(wrt: String): Option[MathMLElem] = null
 }
 
 object ApplyMinusBinary {
@@ -91,6 +108,8 @@ case class ApplyTimes(
 	def this(times: Times, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, times, applyValues: _*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
+
+	def derivative(wrt: String): Option[MathMLElem] = null
 }
 
 object ApplyTimes {
@@ -111,6 +130,8 @@ case class ApplyDivide(
 	def this(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, divide, numerator, denominator)
 
 	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
+
+	def derivative(wrt: String): Option[MathMLElem] = null
 }
 
 object ApplyDivide {
@@ -131,6 +152,8 @@ case class ApplyPower(
 	def this(power: Power, value1: MathMLElem, value2: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, power, value1, value2)
 
 	def eval(boundVariables: Map[String, Double]) = Try(Math.pow(value1.eval(boundVariables).get, value2.eval(boundVariables).get))
+
+	def derivative(wrt: String): Option[MathMLElem] = null
 }
 
 object ApplyPower {
@@ -147,6 +170,8 @@ abstract class Applyable(
 	extends MathMLElem(prefix, label, attributes1, scope, minimizeEmpty, Seq(): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
+
+	def derivative(wrt: String): Option[MathMLElem] = throw new UnsupportedOperationException("Applyables should not get derived, use derive on the surrounding apply element.")
 }
 
 case class Plus(
@@ -230,12 +255,13 @@ case class Cn(
 	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
 
 	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
+
+	def derivative(wrt: String): Option[MathMLElem] = None
 }
 
 object Cn {
 	def apply(value: Node) = new Cn(value)
-	def apply(value: String) = new Cn(Text(value))
-	def apply(value: Double) = new Cn(Text(value.toString))
+	def apply(value: Any) = new Cn(Text(value.toString))
 }
 
 case class Ci(
@@ -249,6 +275,8 @@ case class Ci(
 	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
 
 	def eval(boundVariables: Map[String, Double]) = Try(boundVariables.get(text).get)
+
+	def derivative(wrt: String): Option[MathMLElem] = if (text == wrt) Some(Cn("1")) else None
 }
 
 object Ci {

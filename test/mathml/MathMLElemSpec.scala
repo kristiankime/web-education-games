@@ -17,12 +17,12 @@ import org.specs2.matcher.Matcher
 class MathMLElemSpec extends Specification {
 	
 	"eval" should {
-
 		"turn Cn into a number if possible" in {
 			Cn(5).eval(Map()).get must beEqualTo(5)
 		}
 
 		"fail if a Cn can't be parsed into a number" in {
+//			MathML(<cn>not a number</cn>).get.eval(Map()) must beFailedTry
 			Cn("not a number").eval(Map()) must beFailedTry
 		}
 
@@ -72,6 +72,36 @@ class MathMLElemSpec extends Specification {
 		
 		"nested applys work" in {
 			ApplyPlus(Cn(1), ApplyPlus(Cn(2), Cn(3))).eval(Map()).get must beEqualTo(6)
+		}
+	}
+	
+	"derivative" should {
+		"derivative of a constant is 0 (aka None)" in {
+			Cn(3).derivative("X") must beNone
+		}
+		
+		"derivative of the wrt variable is 1" in {
+			Ci("X").derivative("X").get must beEqualTo(Cn(1))
+		}
+
+		"derivative of non wrt variable is 0 (aka None)" in {
+			Ci("Not X").derivative("X") must beNone
+		}
+
+		"sum of the derivatives is the derivative of the sums" in {
+			ApplyPlus(Ci("X"), Ci("X")).derivative("X").get must beEqualTo(ApplyPlus(Cn(1), Cn(1)))
+		}
+		
+		"sum of the derivatives is the derivative of the sums (simplifies left None)" in {
+			ApplyPlus(Cn(1), Ci("X")).derivative("X").get must beEqualTo(Cn(1))
+		}
+		
+		"sum of the derivatives is the derivative of the sums (simplifies right None)" in {
+			ApplyPlus(Ci("X"), Cn(1)).derivative("X").get must beEqualTo(Cn(1))
+		}
+		
+		"sum of the derivatives is the derivative of the sums (simplifies both None)" in {
+			ApplyPlus(Cn(1), Cn(1)).derivative("X") must beNone
 		}
 	}
 }

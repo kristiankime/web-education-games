@@ -18,8 +18,122 @@ sealed abstract class MathMLElem(
 	child: Node*)
 	extends Elem(prefix, label, attributes1, scope, minimizeEmpty, child: _*) {
 
-	def eval(boundVariables: Map[String, Double]) : Try[Double]
+	def eval(boundVariables: Map[String, Double]): Try[Double]
 }
+
+// ========== ApplyXXX
+case class ApplyPlus(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val plus: Plus,
+	val values: MathMLElem*)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](plus) ++ values): _*) {
+
+	def this(plus: Plus, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, plus, applyValues: _*)
+
+	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
+}
+
+object ApplyPlus {
+	def apply(plus: Plus, applyValues: MathMLElem*) = new ApplyPlus(plus, applyValues: _*)
+}
+
+case class ApplyMinusUnary(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val minus: Minus,
+	val value: MathMLElem)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](minus) ++ value): _*) {
+
+	def this(minus: Minus, value: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, minus, value)
+
+	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
+}
+
+object ApplyMinusUnary {
+	def apply(minus: Minus, value: MathMLElem) = new ApplyMinusUnary(minus, value)
+}
+
+case class ApplyMinusBinary(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val minus: Minus,
+	val value1: MathMLElem,
+	val value2: MathMLElem)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](minus) ++ value1 ++ value2): _*) {
+
+	def this(minus: Minus, value1: MathMLElem, value2: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, minus, value1, value2)
+
+	def eval(boundVariables: Map[String, Double]) = Try(value1.eval(boundVariables).get - value2.eval(boundVariables).get)
+}
+
+object ApplyMinusBinary {
+	def apply(minus: Minus, value1: MathMLElem, value2: MathMLElem) = new ApplyMinusBinary(minus, value1, value2)
+}
+
+case class ApplyTimes(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val times: Times,
+	val values: MathMLElem*)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](times) ++ values): _*) {
+
+	def this(times: Times, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, times, applyValues: _*)
+
+	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
+}
+
+object ApplyTimes {
+	def apply(times: Times, values: MathMLElem*) = new ApplyTimes(times, values: _*)
+}
+
+case class ApplyDivide(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val divide: Divide,
+	val numerator: MathMLElem,
+	val denominator: MathMLElem)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](divide) ++ numerator ++ denominator): _*) {
+
+	def this(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, divide, numerator, denominator)
+
+	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
+}
+
+object ApplyDivide {
+	def apply(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = new ApplyDivide(divide, numerator, denominator)
+}
+
+case class ApplyPower(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val power: Power,
+	val value1: MathMLElem,
+	val value2: MathMLElem)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](power) ++ value1 ++ value2): _*) {
+
+	def this(power: Power, value1: MathMLElem, value2: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, power, value1, value2)
+
+	def eval(boundVariables: Map[String, Double]) = Try(Math.pow(value1.eval(boundVariables).get, value2.eval(boundVariables).get))
+}
+
+object ApplyPower {
+	def apply(power: Power, value1: MathMLElem, value2: MathMLElem) = new ApplyPower(power, value1, value2)
+}
+
+// =========
 
 case class Apply(
 	override val prefix: String,
@@ -32,7 +146,7 @@ case class Apply(
 
 	def this(applyFunction: Applyable, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, applyFunction, applyValues: _*)
 
-	def eval(boundVariables: Map[String, Double]) = applyFunction.applyEval(boundVariables, applyValues)
+	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Apply should not get evaled")) //applyFunction.applyEval(boundVariables, applyValues)
 }
 
 object Apply {
@@ -50,7 +164,7 @@ abstract class Applyable(
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use applyEval instead"))
 
-	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]): Try[Double]
+//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]): Try[Double]
 }
 
 case class Plus(
@@ -62,7 +176,7 @@ case class Plus(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
 
-	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ + _))
+//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 }
 
 object Plus {
@@ -78,7 +192,7 @@ case class Minus(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
 
-	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ - _))
+//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ - _))
 }
 
 object Minus {
@@ -94,7 +208,7 @@ case class Times(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
 
-	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ * _))
+//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ * _))
 }
 
 object Times {
@@ -110,7 +224,7 @@ case class Divide(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
 
-	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ / _))
+//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(_ / _))
 }
 
 object Divide {
@@ -125,8 +239,8 @@ case class Power(
 	extends Applyable(prefix, "power", attributes1, scope, minimizeEmpty) {
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
-	
-	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(Math.pow(_ , _)))
+
+//	def applyEval(boundVariables: Map[String, Double], parameters: Seq[MathMLElem]) = Try(parameters.map(_.eval(boundVariables).get).reduceLeft(Math.pow(_, _)))
 }
 
 object Power {
@@ -143,7 +257,7 @@ case class Cn(
 	extends MathMLElem(prefix, "cn", attributes1, scope, minimizeEmpty, Seq(value): _*) {
 
 	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
-	
+
 	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
 }
 
@@ -162,7 +276,7 @@ case class Ci(
 	extends MathMLElem(prefix, "ci", attributes1, scope, minimizeEmpty, Seq(value): _*) {
 
 	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
-	
+
 	def eval(boundVariables: Map[String, Double]) = Try(boundVariables.get(text).get)
 }
 

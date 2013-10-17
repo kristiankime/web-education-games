@@ -13,36 +13,37 @@ object MathML {
 
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {
-			case "apply" => applyElement(apply, xml)
+			case "apply" => applyElementPrep(xml)
 			case "cn" => Success(Cn(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
 			case "ci" => Success(Ci(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
-			case _ => Failure(new IllegalArgumentException(xml.label + " was not recognized as a MathML element"))
+			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
 	}
 
-	private def applyElement(apply: scala.xml.Elem => scala.util.Try[mathml.MathMLElem], xml: scala.xml.Elem): scala.util.Try[mathml.MathMLElem] = {
-		if (xml.childElem.isEmpty) {
-			Failure(new IllegalArgumentException("Apply MathML Elements should have at least one child " + xml))
+	private def applyElementPrep(xml: scala.xml.Elem): scala.util.Try[mathml.MathMLElem] = {
+		if (xml.childElem.size < 2) {
+			Failure(new IllegalArgumentException("Apply MathML Elements must have at least two children " + xml))
 		} else {
-			val applyElement = applyable(xml.childElem(0))
-			val applyValues = xml.childElem.drop(1).map(MathML(_))
-			val failure = Seq(applyElement).++(applyValues).find(_.isFailure)
-			if (failure.nonEmpty) {
-				failure.get
-			} else {
-				Success(Apply(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, applyElement.get, applyValues.map(_.get): _*))
-			}
+			val apply = xml
+			val operator = xml.childElem(0)
+			val argumentsTry = xml.childElem.drop(1).map(MathML(_))
+			val failure = argumentsTry.find(_.isFailure)
+			
+			if (failure.nonEmpty) failure.get
+			else applyElementCreate(apply, operator, argumentsTry.map(_.get))
 		}
 	}
-	
-	private def applyable(xml: Elem): Try[Applyable] = {
-		xml.label.toLowerCase match {
-			case "plus" => Success(Plus(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
-			case "minus" => Success(Minus(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
-			case "times" => Success(Times(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
-			case "divide" => Success(Divide(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
-			case "power" => Success(Power(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty))
-			case _ => Failure(new IllegalArgumentException(xml.label + " was not recognized as an applyable MathML element"))
+
+	private def applyElementCreate(a: scala.xml.Elem, o: scala.xml.Elem, args: Seq[mathml.MathMLElem]): scala.util.Try[mathml.MathMLElem] = {
+		(o.label.toLowerCase(), args) match {
+			case ("plus", _) => Success(new ApplyPlus(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Plus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), args: _*))
+			case ("minus", Seq(v)) => Success(new ApplyMinusUnary(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v))
+			case ("minus", Seq(v1, v2)) => Success(new ApplyMinusBinary(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v1, v2))
+			case ("minus", _) => Failure(new IllegalArgumentException(a + " minus was called with >2 arguments"))
+			case ("times", _) => Success(new ApplyTimes(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Times(o.prefix, o.attributes, o.scope, o.minimizeEmpty), args: _*))
+			case ("divide", Seq(num, den)) => Success(new ApplyDivide(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Divide(o.prefix, o.attributes, o.scope, o.minimizeEmpty), num, den))
+			case ("power", Seq(v1, v2)) => Success(new ApplyPower(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Power(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v1, v2))
+			case (_, _) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element"))
 		}
 	}
 

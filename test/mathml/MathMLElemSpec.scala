@@ -15,7 +15,7 @@ import org.specs2.matcher.Matcher
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
 class MathMLElemSpec extends Specification {
-
+	
 	"eval" should {
 
 		"turn Cn into a number if possible" in {
@@ -39,47 +39,39 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"add 2 numbers correctly for apply+plus " in {
-			Apply(Plus(), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(10)
+			ApplyPlus(Plus(), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(10)
 		}
 
 		"add > 2 numbers correctly for apply+plus " in {
-			Apply(Plus(), Cn(5), Cn(5), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(20)
+			ApplyPlus(Plus(), Cn(5), Cn(5), Cn(5), Cn(5)).eval(Map()).get must beEqualTo(20)
 		}
 
+		"subtract 1 number correctly for apply+minus " in {
+			ApplyMinusUnary(Minus(), Cn(6)).eval(Map()).get must beEqualTo(-6)
+		}
+		
 		"subtract 2 numbers correctly for apply+minus " in {
-			Apply(Minus(), Cn(6), Cn(5)).eval(Map()).get must beEqualTo(1)
-		}
-
-		"subtract > 2 numbers correctly for apply+minus " in {
-			Apply(Minus(), Cn(10), Cn(4), Cn(6), Cn(3)).eval(Map()).get must beEqualTo(-3)
+			ApplyMinusBinary(Minus(), Cn(6), Cn(5)).eval(Map()).get must beEqualTo(1)
 		}
 
 		"multiply 2 numbers correctly for apply+times " in {
-			Apply(Times(), Cn(3), Cn(-2)).eval(Map()).get must beEqualTo(-6)
+			ApplyTimes(Times(), Cn(3), Cn(-2)).eval(Map()).get must beEqualTo(-6)
 		}
 
 		"multiply > 2 numbers correctly for apply+times " in {
-			Apply(Times(), Cn(-12), Cn(.5), Cn(-2), Cn(2)).eval(Map()).get must beEqualTo(24)
+			ApplyTimes(Times(), Cn(-12), Cn(.5), Cn(-2), Cn(2)).eval(Map()).get must beEqualTo(24)
 		}
 
 		"divide 2 numbers correctly for apply+divide " in {
-			Apply(Divide(), Cn(8), Cn(4)).eval(Map()).get must beEqualTo(2)
-		}
-
-		"divide > 2 numbers correctly for apply+divide " in {
-			Apply(Divide(), Cn(12), Cn(4), Cn(3), Cn(2)).eval(Map()).get must beEqualTo(.5)
+			ApplyDivide(Divide(), Cn(8), Cn(4)).eval(Map()).get must beEqualTo(2)
 		}
 
 		"raise a number to another numbers correctly for apply+power" in {
-			Apply(Power(), Cn(3), Cn(2)).eval(Map()).get must beEqualTo(9)
-		}
-
-		"raise a number to another numbers correctly for apply+power" in {
-			Apply(Power(), Cn(2), Cn(2), Cn(3)).eval(Map()).get must beEqualTo(64)
+			ApplyPower(Power(), Cn(3), Cn(2)).eval(Map()).get must beEqualTo(9)
 		}
 		
 		"nested applys work" in {
-			Apply(Plus(), Cn(1), Apply(Plus(), Cn(2), Cn(3))).eval(Map()).get must beEqualTo(6)
+			ApplyPlus(Plus(), Cn(1), ApplyPlus(Plus(), Cn(2), Cn(3))).eval(Map()).get must beEqualTo(6)
 		}
 	}
 }

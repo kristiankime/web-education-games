@@ -27,14 +27,20 @@ class MathMLSpec extends Specification {
 			val mathML = Cn("5")
 			MathML(xml).get must beEqualTo(mathML)
 		}
-		
+
 		"be able to parse variables" in {
 			val xml = <ci>X</ci>
 			val mathML = Ci("X")
 			MathML(xml).get must beEqualTo(mathML)
 		}
-		
-		"be able to parse plus" in {
+
+		"be able to parse plus with one argument" in {
+			val xml = <apply> <plus/> <cn>5</cn> </apply>
+			val mathML = Apply(Plus(), Cn("5"))
+			MathML(xml).get must beEqualTo(mathML)
+		}
+
+		"be able to parse plus with two arguments" in {
 			val xml = <apply> <plus/> <cn>5</cn> <cn>5</cn> </apply>
 			val mathML = Apply(Plus(), Cn("5"), Cn("5"))
 			MathML(xml).get must beEqualTo(mathML)
@@ -46,16 +52,20 @@ class MathMLSpec extends Specification {
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
-		"be able to parse minus" in {
+		"be able to parse minus with one argument" in {
+			val xml = <apply> <minus/> <cn>5</cn> </apply>
+			val mathML = Apply(Minus(), Cn("5"))
+			MathML(xml).get must beEqualTo(mathML)
+		}
+
+		"be able to parse minus with two arguments" in {
 			val xml = <apply> <minus/> <cn>5</cn> <cn>5</cn> </apply>
 			val mathML = Apply(Minus(), Cn("5"), Cn("5"))
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
-		"be able to parse plus with more then two arguments" in {
-			val xml = <apply> <minus/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>
-			val mathML = Apply(Minus(), Cn("5"), Cn("4"), Cn("3"))
-			MathML(xml).get must beEqualTo(mathML)
+		"fail to parse plus with more then two arguments" in {
+			MathML(<apply> <minus/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
 		}
 
 		"be able to parse times" in {
@@ -76,24 +86,20 @@ class MathMLSpec extends Specification {
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
-		"be able to parse divide with more then two arguments" in {
-			val xml = <apply> <divide/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>
-			val mathML = Apply(Divide(), Cn("5"), Cn("4"), Cn("3"))
-			MathML(xml).get must beEqualTo(mathML)
+		"fail to parse divide with more then two arguments" in {
+			MathML(<apply> <divide/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
 		}
-		
+
 		"be able to parse power" in {
 			val xml = <apply> <power/> <cn>5</cn> <cn>5</cn> </apply>
 			val mathML = Apply(Power(), Cn("5"), Cn("5"))
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
-		"be able to parse power with more then two arguments" in {
-			val xml = <apply> <power/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>
-			val mathML = Apply(Power(), Cn("5"), Cn("4"), Cn("3"))
-			MathML(xml).get must beEqualTo(mathML)
+		"fail to parse power with more then two arguments" in {
+			MathML(<apply> <power/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
 		}
-		
+
 		"be able to parse nested applys" in {
 			val xml = <apply> <plus/> <apply> <plus/> <cn>4</cn> <cn>4</cn> </apply> <cn>5</cn> <cn>5</cn> </apply>
 			val mathML = Apply(Plus(), Apply(Plus(), Cn("4"), Cn("4")), Cn("5"), Cn("5"))

@@ -1,13 +1,9 @@
 package mathml
 
-import scala.xml.NamespaceBinding
-import scala.xml.MetaData
-import scala.xml.Node
-import scala.xml.Elem
-import scala.xml.Text
-import scala.util.Try
-import scala.util.Success
 import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+import scala.xml.Elem
 
 object MathML {
 
@@ -28,7 +24,7 @@ object MathML {
 			val operator = xml.childElem(0)
 			val argumentsTry = xml.childElem.drop(1).map(MathML(_))
 			val failure = argumentsTry.find(_.isFailure)
-			
+
 			if (failure.nonEmpty) failure.get
 			else applyElementCreate(apply, operator, argumentsTry.map(_.get))
 		}

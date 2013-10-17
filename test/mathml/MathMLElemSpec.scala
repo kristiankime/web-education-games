@@ -2,13 +2,10 @@ package mathml
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-
 import scala.xml.XML
 import scala.xml.Text
-
 import play.api.test._
 import play.api.test.Helpers._
-
 import org.specs2.mutable._
 import org.specs2.matcher.Matcher
 
@@ -22,7 +19,6 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"fail if a Cn can't be parsed into a number" in {
-//			MathML(<cn>not a number</cn>).get.eval(Map()) must beFailedTry
 			Cn("not a number").eval(Map()) must beFailedTry
 		}
 
@@ -104,6 +100,8 @@ class MathMLElemSpec extends Specification {
 			ApplyPlus(Cn(1), Cn(1)).derivative("X") must beNone
 		}
 		
+		
+		
 		"subtraction of the derivatives is the derivative of the subtractions" in {
 			ApplyMinusBinary(Ci("X"), Ci("X")).derivative("X").get must beEqualTo(ApplyMinusBinary(Cn(1), Cn(1)))
 		}
@@ -119,5 +117,13 @@ class MathMLElemSpec extends Specification {
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies both None)" in {
 			ApplyMinusBinary(Cn(1), Cn(1)).derivative("X") must beNone
 		}
+		
+		
+		
+		
+		"product rule" in {
+			ApplyTimes(Ci("X"), Ci("X")).derivative("X").get.simplify must beEqualTo(ApplyPlus(Ci("X"), Cn("X")))
+		}
+		
 	}
 }

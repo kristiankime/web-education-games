@@ -36,12 +36,18 @@ case class ApplyPlus(
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 
-	def derivative(wrt: String): Option[MathMLElem] = {
-		val valueDer = values.map(_.derivative(wrt)).filter(_.isDefined)
-		if (valueDer.isEmpty) None
-		else if (valueDer.size == 1) Some(valueDer(0).get)
-		else Some(ApplyPlus(plus, valueDer.map(_.get): _*))
-	}
+	def derivative(wrt: String): Option[MathMLElem] = 
+//		val valueDer = values.map(_.derivative(wrt)).filter(_.isDefined)
+//		if (valueDer.isEmpty) None
+//		else if (valueDer.size == 1) Some(valueDer(0).get)
+//		else Some(ApplyPlus(plus, valueDer.map(_.get): _*))
+		
+		values.map(_.derivative(wrt)).filter(_.isDefined).map(_.get) match {
+			case Seq() => None
+			case Seq(der) => Some(der)
+			case Seq(derivs@_*) => Some(ApplyPlus(plus, derivs:_*))
+		}
+	
 }
 
 object ApplyPlus {
@@ -62,11 +68,12 @@ case class ApplyMinusUnary(
 
 	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
 
-	def derivative(wrt: String): Option[MathMLElem] = {
-		val valueDer = value.derivative(wrt)
-		if (valueDer.isEmpty) None
-		else Some(ApplyMinusUnary(minus, valueDer.get))
-	}
+	def derivative(wrt: String): Option[MathMLElem] =
+		value.derivative(wrt) match {
+			case None => None
+			case Some(der1) => Some(ApplyMinusUnary(minus, der1))
+		}
+
 }
 
 object ApplyMinusUnary {
@@ -88,7 +95,14 @@ case class ApplyMinusBinary(
 
 	def eval(boundVariables: Map[String, Double]) = Try(value1.eval(boundVariables).get - value2.eval(boundVariables).get)
 
-	def derivative(wrt: String): Option[MathMLElem] = null
+	def derivative(wrt: String): Option[MathMLElem] =
+		(value1.derivative(wrt), value2.derivative(wrt)) match {
+			case (None, None) => None
+			case (Some(der1), None) => Some(der1)
+			case (None, Some(der2)) => Some(ApplyMinusUnary(minus, der2))
+			case (Some(der1), Some(der2)) => Some(ApplyMinusBinary(der1, der2))
+		}
+
 }
 
 object ApplyMinusBinary {

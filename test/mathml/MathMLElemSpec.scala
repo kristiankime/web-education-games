@@ -103,5 +103,21 @@ class MathMLElemSpec extends Specification {
 		"sum of the derivatives is the derivative of the sums (simplifies both None)" in {
 			ApplyPlus(Cn(1), Cn(1)).derivative("X") must beNone
 		}
+		
+		"subtraction of the derivatives is the derivative of the subtractions" in {
+			ApplyMinusBinary(Ci("X"), Ci("X")).derivative("X").get must beEqualTo(ApplyMinusBinary(Cn(1), Cn(1)))
+		}
+		
+		"subtraction of the derivatives is the derivative of the subtractions (simplifies left None)" in {
+			ApplyMinusBinary(Cn(1), Ci("X")).derivative("X").get must beEqualTo(ApplyMinusUnary(Cn(1)))
+		}
+		
+		"subtraction of the derivatives is the derivative of the subtractions (simplifies right None)" in {
+			ApplyMinusBinary(Ci("X"), Cn(1)).derivative("X").get must beEqualTo(Cn(1))
+		}
+		
+		"subtraction of the derivatives is the derivative of the subtractions (simplifies both None)" in {
+			ApplyMinusBinary(Cn(1), Cn(1)).derivative("X") must beNone
+		}
 	}
 }

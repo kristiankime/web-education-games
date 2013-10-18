@@ -34,7 +34,7 @@ object MathML {
 		(o.label.toLowerCase(), args) match {
 			case ("plus", _) => Success(new ApplyPlus(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Plus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), args: _*))
 			case ("minus", Seq(v)) => Success(new ApplyMinusUnary(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v))
-			case ("minus", Seq(v1, v2)) => Success(new ApplyMinusBinary(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v1, v2))
+			case ("minus", Seq(v1, v2)) => Success(new ApplyMinusB(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v1, v2))
 			case ("minus", _) => Failure(new IllegalArgumentException(a + " minus was called with >2 arguments"))
 			case ("times", _) => Success(new ApplyTimes(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Times(o.prefix, o.attributes, o.scope, o.minimizeEmpty), args: _*))
 			case ("divide", Seq(num, den)) => Success(new ApplyDivide(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Divide(o.prefix, o.attributes, o.scope, o.minimizeEmpty), num, den))

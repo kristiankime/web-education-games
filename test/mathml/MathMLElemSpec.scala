@@ -47,7 +47,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"subtract 2 numbers correctly for apply+minus " in {
-			ApplyMinusBinary(Cn(6), Cn(5)).eval(Map()).get must beEqualTo(1)
+			ApplyMinusB(Cn(6), Cn(5)).eval(Map()).get must beEqualTo(1)
 		}
 
 		"multiply 2 numbers correctly for apply+times " in {
@@ -101,19 +101,19 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions" in {
-			ApplyMinusBinary(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyMinusBinary(Cn(1), Cn(1)))
+			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyMinusB(Cn(1), Cn(1)))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies left None)" in {
-			ApplyMinusBinary(Cn(1), Ci("X")).derivative("X") must beEqualTo(ApplyMinusUnary(Cn(1)))
+			ApplyMinusB(Cn(1), Ci("X")).derivative("X") must beEqualTo(ApplyMinusUnary(Cn(1)))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies right None)" in {
-			ApplyMinusBinary(Ci("X"), Cn(1)).derivative("X") must beEqualTo(Cn(1))
+			ApplyMinusB(Ci("X"), Cn(1)).derivative("X") must beEqualTo(Cn(1))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies both None)" in {
-			ApplyMinusBinary(Cn(1), Cn(1)).derivative("X") must beEqualTo(Cn(0))
+			ApplyMinusB(Cn(1), Cn(1)).derivative("X") must beEqualTo(Cn(0))
 		}
 
 		"product rule" in {

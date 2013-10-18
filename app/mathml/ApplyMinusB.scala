@@ -4,13 +4,16 @@ import scala.util.Try
 import scala.xml.MetaData
 import scala.xml.NamespaceBinding
 
-case class ApplyMinusBinary(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val minus: Minus,
-	val value1: MathMLElem,
+/**
+ * ApplyMinus for the Binary case
+ */ 
+case class ApplyMinusB(
+	override val prefix: String, 
+	attributes1: MetaData, 
+	override val scope: NamespaceBinding, 
+	override val minimizeEmpty: Boolean, 
+	val minus: Minus, 
+	val value1: MathMLElem, 
 	val value2: MathMLElem)
 	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](minus) ++ value1 ++ value2): _*) {
 
@@ -27,13 +30,13 @@ case class ApplyMinusBinary(
 		else if (isOne) Cn(1)
 		else if (value2.isZero) value1
 		else if (value1.isZero) ApplyMinusUnary(minus, value2)
-		else this
+		else ApplyMinusB.this
 	}
 
-	def derivative(wrt: String): MathMLElem = ApplyMinusBinary(prefix, attributes1, scope, minimizeEmpty, minus, value1.derivative(wrt), value2.derivative(wrt)).simplify
+	def derivative(wrt: String): MathMLElem = (ApplyMinusB(prefix, attributes1, scope, minimizeEmpty, minus, value1.derivative(wrt), value2.derivative(wrt))).simplify
 }
 
-object ApplyMinusBinary {
-	def apply(minus: Minus, value1: MathMLElem, value2: MathMLElem) = new ApplyMinusBinary(minus, value1, value2)
-	def apply(value1: MathMLElem, value2: MathMLElem) = new ApplyMinusBinary(Minus(), value1, value2)
+object ApplyMinusB {
+	def apply(minus: Minus, value1: MathMLElem, value2: MathMLElem) = new ApplyMinusB(minus, value1, value2)
+	def apply(value1: MathMLElem, value2: MathMLElem) = new ApplyMinusB(Minus(), value1, value2)
 }

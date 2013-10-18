@@ -29,6 +29,8 @@ case class ApplyDivide(
 		else this
 	}
 
+	def variables: Set[String] = numerator.variables ++ denominator.variables
+
 	def derivative(wrt: String): MathMLElem = {
 		val f = numerator
 		val fP = f.derivative(wrt).simplify

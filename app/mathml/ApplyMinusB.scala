@@ -6,14 +6,14 @@ import scala.xml.NamespaceBinding
 
 /**
  * ApplyMinus for the Binary case
- */ 
+ */
 case class ApplyMinusB(
-	override val prefix: String, 
-	attributes1: MetaData, 
-	override val scope: NamespaceBinding, 
-	override val minimizeEmpty: Boolean, 
-	val minus: Minus, 
-	val value1: MathMLElem, 
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding,
+	override val minimizeEmpty: Boolean,
+	val minus: Minus,
+	val value1: MathMLElem,
 	val value2: MathMLElem)
 	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](minus) ++ value1 ++ value2): _*) {
 
@@ -32,6 +32,8 @@ case class ApplyMinusB(
 		else if (value1.isZero) ApplyMinusU(minus, value2)
 		else this
 	}
+
+	def variables: Set[String] = value1.variables ++ value2.variables
 
 	def derivative(wrt: String): MathMLElem = (ApplyMinusB(prefix, attributes1, scope, minimizeEmpty, minus, value1.derivative(wrt), value2.derivative(wrt))).simplify
 }

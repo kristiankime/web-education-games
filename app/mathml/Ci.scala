@@ -24,7 +24,9 @@ case class Ci(
 
 	def simplify() = this
 
-	def derivative(wrt: String): MathMLElem = if (text == wrt) Cn(1) else Cn(0)
+	def variables: Set[String] = Set(value.text.trim)
+	
+	def derivative(wrt: String): MathMLElem = if (text.trim == wrt) Cn(1) else Cn(0)
 }
 
 object Ci {

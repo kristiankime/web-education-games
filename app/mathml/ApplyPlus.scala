@@ -26,18 +26,20 @@ case class ApplyPlus(
 		(ones == 1 && (ones + zeros == values.length))
 	}
 
+	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
+
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
 		else {
 			val nonZeroVals = values.map(_.simplify).filter(!_.isZero)
-			if(nonZeroVals.isEmpty) Cn(0)
-			else if(nonZeroVals.size == 1) nonZeroVals(0)
+			if (nonZeroVals.isEmpty) Cn(0)
+			else if (nonZeroVals.size == 1) nonZeroVals(0)
 			else ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, nonZeroVals: _*)
 		}
 	}
 
-	def derivative(wrt: String) = ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, values.map(_.derivative(wrt)):_*).simplify
+	def derivative(wrt: String) = ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, values.map(_.derivative(wrt)): _*).simplify
 }
 
 object ApplyPlus {

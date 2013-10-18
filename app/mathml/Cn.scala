@@ -6,7 +6,6 @@ import scala.xml.NamespaceBinding
 import scala.xml.Node
 import scala.xml.Text
 
-
 case class Cn(
 	override val prefix: String,
 	attributes1: MetaData,
@@ -24,6 +23,8 @@ case class Cn(
 	def isOne = Try(text.trim().toDouble).getOrElse(Double.MaxValue) == 1d
 
 	def simplify() = this
+
+	def variables: Set[String] = Set()
 
 	def derivative(wrt: String) = Cn(0)
 }

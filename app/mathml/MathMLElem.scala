@@ -24,6 +24,8 @@ abstract class MathMLElem(
 	def isOne: Boolean
 
 	def simplify(): MathMLElem
+	
+	def variables: Set[String]
 
 	def derivative(wrt: String): MathMLElem
 }
@@ -42,6 +44,8 @@ abstract class Applyable(
 
 	def isOne = false
 
+	def variables: Set[String] = Set()
+	
 	def derivative(wrt: String): MathMLElem = throw new UnsupportedOperationException("Applyables should not get derived, use derive on the surrounding apply element.")
 }
 

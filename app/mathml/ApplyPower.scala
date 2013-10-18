@@ -29,10 +29,13 @@ case class ApplyPower(
 		else this
 	}
 
+	def variables: Set[String] = base.variables ++ exp.variables
+
 	// LATER technically need to use generalized power rule but for now we'll assume X base and Real Exponents
 	// (x^r)' = r*x^(r-1)
 	def derivative(wrt: String): MathMLElem = {
-		if(base.isInstanceOf[Ci] && base.asInstanceOf[Ci].value.text == wrt) {
+		if (!variables.contains(wrt)) Cn(0)
+		else if (base.isInstanceOf[Ci] && base.asInstanceOf[Ci].value.text.trim == wrt) {
 			ApplyTimes(exp, ApplyPower(base, ApplyMinusB(exp, Cn(1))))
 		} else {
 			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)

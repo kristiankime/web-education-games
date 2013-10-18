@@ -29,8 +29,10 @@ case class ApplyMinusU(
 		else if (isOne) Cn(1)
 		else this
 	}
+	
+	def variables: Set[String] = value.variables
 
-	def derivative(wrt: String) = (ApplyMinusU(prefix, attributes1, scope, minimizeEmpty, minus, value.derivative(wrt))).simplify
+	def derivative(wrt: String) = ApplyMinusU(prefix, attributes1, scope, minimizeEmpty, minus, value.derivative(wrt)).simplify
 }
 
 object ApplyMinusU {

@@ -18,17 +18,29 @@ case class ApplyDivide(
 
 	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
 
-	def isZero = !numerator.simplify.isZero && denominator.simplify.isZero
+	def isZero = numerator.simplify.isZero && !denominator.simplify.isZero
 
 	def isOne = numerator.simplify == denominator.simplify
 
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
+		else if (denominator.simplify.isOne) numerator
 		else this
 	}
 
-	def derivative(wrt: String): MathMLElem = null
+	def derivative(wrt: String): MathMLElem = {
+		val f = numerator
+		val fP = f.derivative(wrt).simplify
+		val g = denominator
+		val gP = g.derivative(wrt).simplify
+		// (f/g)' = (f'g + g'f)/g^2
+		ApplyDivide(
+			ApplyTimes(
+				ApplyTimes(fP, g),
+				ApplyTimes(f, gP)),
+			ApplyPower(g, Cn(2))).simplify
+	}
 }
 
 object ApplyDivide {

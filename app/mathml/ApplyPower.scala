@@ -10,26 +10,34 @@ case class ApplyPower(
 	override val scope: NamespaceBinding,
 	override val minimizeEmpty: Boolean,
 	val power: Power,
-	val value1: MathMLElem,
-	val value2: MathMLElem)
-	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](power) ++ value1 ++ value2): _*) {
+	val base: MathMLElem,
+	val exp: MathMLElem)
+	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](power) ++ base ++ exp): _*) {
 
-	def this(power: Power, value1: MathMLElem, value2: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, power, value1, value2)
+	def this(power: Power, base: MathMLElem, exp: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, power, base, exp)
 
-	def eval(boundVariables: Map[String, Double]) = Try(Math.pow(value1.eval(boundVariables).get, value2.eval(boundVariables).get))
+	def eval(boundVariables: Map[String, Double]) = Try(Math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
-	def isZero = value1.simplify.isZero
+	def isZero = base.simplify.isZero
 
-	def isOne = value1.simplify.isOne || value2.simplify.isZero
+	def isOne = base.simplify.isOne || exp.simplify.isZero
 
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
-		else if (value2.isOne) value1
+		else if (exp.isOne) base
 		else this
 	}
 
-	def derivative(wrt: String): MathMLElem = null
+	// LATER technically need to use generalized power rule but for now we'll assume X base and Real Exponents
+	// (x^r)' = r*x^(r-1)
+	def derivative(wrt: String): MathMLElem = {
+		if(base.isInstanceOf[Ci] && base.asInstanceOf[Ci].value.text == wrt) {
+			ApplyTimes(exp, ApplyPower(base, ApplyMinusB(exp, Cn(1))))
+		} else {
+			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
+		}
+	}
 }
 
 object ApplyPower {

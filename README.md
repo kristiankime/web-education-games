@@ -32,15 +32,17 @@ As a quick side note Github actually uses a slightly modified flavor of Markdown
 
 ### [Play](http://www.playframework.com/)
 
-Play is a Java or Scala based Web Framework, I've choosen to work in Scala for this project. Play requires a JDK be installed on your system. So if you don't already have one you'll need to get one. Details about how to install play (and a JDK) are on the [play install page](http://www.playframework.com/documentation/2.1.x/Installing).
+Play is a Java or Scala based Web Framework, I've choosen to work in Scala for this project. Play requires a JDK be installed on your system. So if you don't already have one you'll need to get one. The project is currently using play 2.2.0. Details about how to install play (and a JDK) are on the [play install page](http://www.playframework.com/documentation/2.2.x/Installing).
 
-Play has a lot to it. Documentation and tutorials can be found on the play web site. There is a [To Do List Example App here](http://www.playframework.com/documentation/2.1.x/ScalaTodoList). But if all you want to do is run this project you'll just need to get Play installed.
+Play has a lot to it. Documentation and tutorials can be found on the play web site. There is a [To Do List Example App here](http://www.playframework.com/documentation/2.2.x/ScalaTodoList). But if all you want to do is run this project you'll just need to get Play installed.
 
 ### [Eclipse](http://www.eclipse.org/)
 
-Eclipse is a IDE which has support for Scala an even play projects. Initial installation is simple just download from the [download page](http://www.eclipse.org/downloads/) and put it where you want it.
+Eclipse is a IDE which has support for Scala an even play projects. Initial installation is simple just download from the [download page](http://www.eclipse.org/downloads/) and put it where you want it. The project is tested under eclipse version 4.3 (Kepler). It is suggested that the 
 
-Eclipse has many plugins that may be useful but the primary one for this project is the [Scala one](http://scala-ide.org/download/current.html). Another helpful plugin is EGit which can be found by searching in the eclipse market place.
+Eclipse has many plugins that may be useful but the primary one for this project is the [Scala one](http://scala-ide.org/download/current.html). This project is currently tested using the scala ide from this download site http://download.scala-ide.org/sdk/e38/scala210/stable/site. 
+
+Another helpful plugin is EGit which can be found by searching in the eclipse market place.
 
 ### [Heroku](https://www.heroku.com/)
 

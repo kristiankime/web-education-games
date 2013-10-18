@@ -16,7 +16,7 @@ class MathMLSpec extends Specification {
 	"apply" should {
 
 		"fail to parse non MathML" in {
-			MathML(<not_math_ml_tag> </not_math_ml_tag>) must beFailedTry
+			MathML(<not_math_ml_tag> </not_math_ml_tag>).isFailure must beTrue
 		}
 
 		"be able to parse numbers" in {
@@ -62,7 +62,7 @@ class MathMLSpec extends Specification {
 		}
 
 		"fail to parse minus with more then two arguments" in {
-			MathML(<apply> <minus/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
+			MathML(<apply> <minus/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>).isFailure must beTrue
 		}
 
 		"be able to parse times" in {
@@ -84,7 +84,7 @@ class MathMLSpec extends Specification {
 		}
 
 		"fail to parse divide with more then two arguments" in {
-			MathML(<apply> <divide/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
+			MathML(<apply> <divide/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>).isFailure must beTrue
 		}
 
 		"be able to parse power" in {
@@ -94,7 +94,7 @@ class MathMLSpec extends Specification {
 		}
 
 		"fail to parse power with more then two arguments" in {
-			MathML(<apply> <power/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>) must beFailedTry
+			MathML(<apply> <power/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>).isFailure must beTrue
 		}
 
 		"be able to parse nested applys" in {

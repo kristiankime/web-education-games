@@ -7,6 +7,15 @@ import scala.xml.Elem
 
 object MathML {
 
+	def equals(v: String, eq1: MathMLElem, eq2: MathMLElem) = {
+		val values = for (i <- -5 to 5) yield Map(v -> i.toDouble)
+		values.foldLeft(true)((a, b) => a && closeEnough(eq1.eval(b).get, eq2.eval(b).get))
+	}
+
+	private def closeEnough(v1: Double, v2: Double) = {
+		v1 == v2
+	}
+
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {
 			case "apply" => applyElementPrep(xml)

@@ -19,7 +19,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"fail if a Cn can't be parsed into a number" in {
-			Cn("not a number").eval(Map()) must beFailedTry
+			Cn("not a number").eval(Map()).isFailure must beTrue
 		}
 
 		"turn Ci into the number specified by the bound parameters" in {
@@ -27,11 +27,11 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"fail if there is no entry for a Ci variable name in the bound parameters" in {
-			Ci("X").eval(Map("no entry for X" -> 3)) must beFailedTry
+			Ci("X").eval(Map("no entry for X" -> 3)).isFailure must beTrue
 		}
 
 		"fail if there is only an applyable" in {
-			Plus().eval(Map()) must beFailedTry
+			Plus().eval(Map()).isFailure must beTrue
 		}
 
 		"add 2 numbers correctly for apply+plus " in {

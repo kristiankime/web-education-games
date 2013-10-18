@@ -1,50 +1,20 @@
-@(equations: List[Equation], equationForm: Form[String])
+@()
 
 @import helper._
 @import controllers.{EquationHTML => EQ}
  
-@main("Equation list") {
+@main("EdTech Welcome Page") {
     
-    <h1>@equations.size equation(s)</h1>
-    
-    <ul>
-        @equations.map { equation =>
-            <li>
-            	<script type="math/mml"> @Html(equation.equation) </script>
-                
-                @form(routes.Application.deleteEquation(equation.id)) {
-                    <input type="submit" value="Delete">
-                }
-            </li>
-        }
-    </ul>
-    
-    <h2>Add a new equation</h2>
+    <h1>Welcome to the EdTech Math Game</h1>
     
     <p>
-		Type some \(\rm\TeX\) code and press RETURN: <br> 
-		<input id="MathInput" size="80" onchange="updateJaxTeX(jax('MathOutput'), this.value)" />
-	</p>
- 
-	<div id="box">
-		You typed:<br>
-		<div id="MathOutput">$${}$$</div>
-	</div>
+    Currently we are in in the very preliminary stages of development. 
+    The links here are attempt to spike out technologies that might be useful and do not represent finished development.
+    </p>
     
-    @form(routes.Application.newEquation, 'id -> "equationForm" ) {
-    	<input type="hidden" name="@EQ.equation" id="equationMathML">
-    	<input type="button" value="Save Equation" onclick="equationFormSubmit()">
-    }
-    
-    <script>
-    function equationFormSubmit() {
-        toMathML(jax("MathOutput"), function(mathML) {
-        	console.log(mathML);
-	        $("#equationMathML").val(mathML);
-	        $("#equationForm").submit();
-        });
-        return false;
-    }
-    </script>
+    <ul>
+     <li> <a href=@routes.Application.equations> equations </a> </li>
+     <li> <a href=@routes.Application.newDerivativeq> derivatives </a> </li>
+    </ul>
     
 }

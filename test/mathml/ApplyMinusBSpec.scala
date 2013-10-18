@@ -50,7 +50,7 @@ class ApplyMinusBSpec extends Specification {
 			ApplyMinusB(Cn(0), Cn(3)).simplify must beEqualTo(ApplyMinusU(Cn(3)))
 		}
 
-		"remain unchanged if nothing can be simpified" in {
+		"remain unchanged if nothing can be simplified" in {
 			ApplyMinusB(Cn(3), Ci("X")).simplify must beEqualTo(ApplyMinusB(Cn(3), Ci("X")))
 		}
 	}

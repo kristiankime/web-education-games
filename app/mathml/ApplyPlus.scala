@@ -30,7 +30,7 @@ case class ApplyPlus(
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
 		else {
-			val nonZeroVals = values.map(_.simplify).filter(_.isZero)
+			val nonZeroVals = values.map(_.simplify).filter(!_.isZero)
 			if(nonZeroVals.isEmpty) Cn(0)
 			else if(nonZeroVals.size == 1) nonZeroVals(0)
 			else ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, nonZeroVals: _*)

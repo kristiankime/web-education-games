@@ -4,12 +4,15 @@ import scala.xml.NamespaceBinding
 import scala.xml.MetaData
 import scala.util.Try
 
-case class ApplyMinusUnary(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val minus: Minus,
+/**
+ * ApplyMinusUnary
+ */
+case class ApplyMinusU(
+	override val prefix: String, 
+	attributes1: MetaData, 
+	override val scope: NamespaceBinding, 
+	override val minimizeEmpty: Boolean, 
+	val minus: Minus, 
 	val value: MathMLElem)
 	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](minus) ++ value): _*) {
 
@@ -27,10 +30,10 @@ case class ApplyMinusUnary(
 		else this
 	}
 
-	def derivative(wrt: String) = ApplyMinusUnary(prefix, attributes1, scope, minimizeEmpty, minus, value.derivative(wrt)).simplify
+	def derivative(wrt: String) = (ApplyMinusU(prefix, attributes1, scope, minimizeEmpty, minus, value.derivative(wrt))).simplify
 }
 
-object ApplyMinusUnary {
-	def apply(minus: Minus, value: MathMLElem) = new ApplyMinusUnary(minus, value)
-	def apply(value: MathMLElem) = new ApplyMinusUnary(Minus(), value)
+object ApplyMinusU {
+	def apply(minus: Minus, value: MathMLElem) = new ApplyMinusU(minus, value)
+	def apply(value: MathMLElem) = new ApplyMinusU(Minus(), value)
 }

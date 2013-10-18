@@ -29,8 +29,8 @@ case class ApplyMinusB(
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
 		else if (value2.isZero) value1
-		else if (value1.isZero) ApplyMinusUnary(minus, value2)
-		else ApplyMinusB.this
+		else if (value1.isZero) ApplyMinusU(minus, value2)
+		else this
 	}
 
 	def derivative(wrt: String): MathMLElem = (ApplyMinusB(prefix, attributes1, scope, minimizeEmpty, minus, value1.derivative(wrt), value2.derivative(wrt))).simplify

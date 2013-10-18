@@ -43,7 +43,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"subtract 1 number correctly for apply+minus " in {
-			ApplyMinusUnary(Cn(6)).eval(Map()).get must beEqualTo(-6)
+			ApplyMinusU(Cn(6)).eval(Map()).get must beEqualTo(-6)
 		}
 
 		"subtract 2 numbers correctly for apply+minus " in {
@@ -105,7 +105,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies left None)" in {
-			ApplyMinusB(Cn(1), Ci("X")).derivative("X") must beEqualTo(ApplyMinusUnary(Cn(1)))
+			ApplyMinusB(Cn(1), Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies right None)" in {

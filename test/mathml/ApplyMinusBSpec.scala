@@ -11,7 +11,7 @@ import org.specs2.matcher.Matcher
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
-class ApplyMinusBinarySpec extends Specification {
+class ApplyMinusBSpec extends Specification {
 
 	"isZero" should {
 		"return true if two values are equal" in {
@@ -47,7 +47,7 @@ class ApplyMinusBinarySpec extends Specification {
 		}
 
 		"return minus second value if first value is 0" in {
-			ApplyMinusB(Cn(0), Cn(3)).simplify must beEqualTo(ApplyMinusUnary(Cn(3)))
+			ApplyMinusB(Cn(0), Cn(3)).simplify must beEqualTo(ApplyMinusU(Cn(3)))
 		}
 
 		"remain unchanged if nothing can be simpified" in {
@@ -61,7 +61,7 @@ class ApplyMinusBinarySpec extends Specification {
 		}
 		
 		"obey the subtraction rule: (f - g)' = f' - g' (left side dx is 0)" in {
-			ApplyMinusB(Cn(3), Ci("X")).derivative("X") must beEqualTo(ApplyMinusUnary(Cn(1)))
+			ApplyMinusB(Cn(3), Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
 		}
 
 		"obey the subtraction rule: (f - g)' = f' - g' (right side dx is 0)" in {

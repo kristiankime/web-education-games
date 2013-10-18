@@ -51,7 +51,7 @@ class MathMLSpec extends Specification {
 
 		"be able to parse minus with one argument" in {
 			val xml = <apply> <minus/> <cn>5</cn> </apply>
-			val mathML = ApplyMinusUnary(Cn(5))
+			val mathML = ApplyMinusU(Cn(5))
 			MathML(xml).get must beEqualTo(mathML)
 		}
 

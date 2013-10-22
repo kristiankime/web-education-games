@@ -22,11 +22,10 @@ import models.Equations
 object Application extends Controller {
 
 	def index = Action {
-//		Redirect(routes.Application.equations)
 		Ok(views.html.index())
 	}
 
-	// Equations
+	// ======== Equations ======== 
 	def equations = Action {
 		Ok(views.html.equations(Equations.all(), EquationHTML.form))
 	}
@@ -46,23 +45,27 @@ object Application extends Controller {
 	}
 
 	
-	// Derivative Questions
-	def derivativeq = Action {
-		Ok(views.html.derivativeq(DerivativeQuestions.all(), DerivativeQHTML.form))
+	// ======== Self Quiz Actions ======== 
+	def selfQuizQuestions = Action {
+		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
 	}
 
-	def newDerivativeq = Action { implicit request =>
+	def newSelfQuizQuestion = Action { implicit request =>
 		EquationHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.derivativeq(DerivativeQuestions.all(), errors)),
+			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all(), errors)),
 			equation => {
 				Equations.create(equation)
-				Redirect(routes.Application.equations)
+				Redirect(routes.Application.selfQuizQuestions)
 			})
 	}
 
-	def deleteDerivativeq(id: Int) = Action {
+	def deleteSelfQuizQuestion(id: Int) = Action {
 		DerivativeQuestions.delete(id);
-		Ok(views.html.derivativeq(DerivativeQuestions.all(), DerivativeQHTML.form))
+		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
+	}
+	
+	def takeSelfQuizQuestion(id: Int) = Action {
+		Ok(views.html.self_quiz_take(DerivativeQuestions.get(id)))
 	}
 
 }
@@ -72,7 +75,7 @@ object EquationHTML {
 	val form = Form(equation -> nonEmptyText)
 }
 
-object DerivativeQHTML {
+object DerivativeQuestionHTML {
 	val equation = "equation"
 	val form = Form(equation -> nonEmptyText)
 }

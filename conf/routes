@@ -3,17 +3,18 @@
 # ~~~~
 
 # Home page
-GET    /                         controllers.Application.index
+GET    /                      controllers.Application.index
 
 # Equation pages
-GET    /equation                 controllers.Application.equations
-POST   /equation                 controllers.Application.newEquation
-POST   /equation/:id/delete      controllers.Application.deleteEquation(id: Int)
+GET    /equation              controllers.Application.equations
+POST   /equation              controllers.Application.newEquation
+POST   /equation/:id/delete   controllers.Application.deleteEquation(id: Int)
 
 # Derivative Question / Answer pages
-GET    /derivativeq              controllers.Application.derivativeq
-POST   /derivativeq              controllers.Application.newDerivativeq
-POST   /derivativeq/:id/delete   controllers.Application.deleteDerivativeq(id: Int)
+GET    /selfquiz              controllers.Application.selfQuizQuestions
+POST   /selfquiz              controllers.Application.newSelfQuizQuestion
+POST   /selfquiz/:id/delete   controllers.Application.deleteSelfQuizQuestion(id: Int)
+POST   /selfquiz/:id/take     controllers.Application.takeSelfQuizQuestion(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
-GET    /assets/*file             controllers.Assets.at(path="/public", file)
+GET    /assets/*file          controllers.Assets.at(path="/public", file)

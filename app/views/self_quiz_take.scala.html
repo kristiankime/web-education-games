@@ -1,0 +1,12 @@
+@(question: Option[DerivativeQuestion])
+
+@import helper._
+@import controllers.DerivativeQuestionHTML
+ 
+@main("List of Self Quiz Questions") {
+    
+    <h1>What is the Derivative of</h1>
+    
+    <script type="math/mml"> @Html(question.get.mathML.toString) </script>
+    
+}

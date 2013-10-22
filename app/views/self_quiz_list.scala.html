@@ -1,0 +1,76 @@
+@(derivativeQs: List[DerivativeQuestion], questionForm: Form[String])
+
+@import helper._
+@import controllers.DerivativeQuestionHTML
+ 
+@main("List of Self Quiz Questions") {
+    
+    <h1>@derivativeQs.size Derivative Question(s)</h1>
+    
+    <ul>
+        @derivativeQs.map { derivativeQ =>
+            <li>
+            	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
+                
+                <a href=@routes.Application.takeSelfQuizQuestion(derivativeQ.id)> answer </a>
+                
+                @form(routes.Application.deleteSelfQuizQuestion(derivativeQ.id)) {
+                    <input type="submit" value="Delete">
+                }
+            </li>
+        }
+    </ul>
+    
+    <h2>Add a new Derivative Question</h2>
+    
+    <p>
+		Type in an equation and press RETURN: <br> 
+		Currently equations can only contain numbers,the variable X and +,-,*,/,^,() <br> 
+		<input id="MathInput" size="80" onchange='updateContentMathML("MathOutput",this.value)' />
+	</p>
+ 
+	<div id="box">
+		You typed:<br>
+		<div id="MathOutput">$${}$$</div>
+	</div>
+    
+    @form(routes.Application.newSelfQuizQuestion, 'id -> "derivativeqForm" ) {
+    	<input type="hidden" name="@DerivativeQuestionHTML.equation" id="derivativeQuestionMathML">
+    	<input type="button" value="Save Question" onclick="derivativeqFormSubmit()">
+    }
+    
+    <script>
+    // updateContentMathML('MathOutput', '<math>' + ARTC.txt2MathML.parse(this.value) + '</math>' )
+    
+    var mathML = null;
+    function updateMathOutput(str){
+    	mathML = null;
+    	var error = null;
+    	try {
+    		mathML = ARTC.txt2MathML.parse(str);
+    		var mOut = $("#MathOutput")
+	   		
+	   		console.log("txt2MathML")
+			console.log(mathML)
+    		console.log(mOut);
+
+    		mOut.html('<script type="math\/mml"> <math>' + mathML + '<\/math> <\/script>' );
+    		
+    		MathJax.Hub.Queue(["Typeset", MathJax.Hub, "MathOutput"]);
+		} catch (e) {
+			error = e;
+		}
+
+    }
+    
+    function derivativeqFormSubmit() {
+        toMathML(jax("MathOutput"), function(mathML) {
+        	console.log(mathML);
+	        $("#derivativeQuestionMathML").val(mathML);
+	        $("#derivativeqForm").submit();
+        });
+        return false;
+    }
+    </script>
+    
+}

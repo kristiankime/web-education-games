@@ -41,6 +41,7 @@ ARTC.txt2MathML = (function(){
        */
       parse: function(input, startRule) {
         var parseFunctions = {
+          "start": parse_start,
           "Term_AddSub": parse_Term_AddSub,
           "Add": parse_Add,
           "Sub": parse_Sub,
@@ -68,7 +69,7 @@ ARTC.txt2MathML = (function(){
             throw new Error("Invalid rule name: " + quote(startRule) + ".");
           }
         } else {
-          startRule = "Term_AddSub";
+          startRule = "start";
         }
         
         var pos = 0;
@@ -114,6 +115,21 @@ ARTC.txt2MathML = (function(){
           }
           
           rightmostFailuresExpected.push(failure);
+        }
+        
+        function parse_start() {
+          var result0;
+          var pos0;
+          
+          pos0 = pos;
+          result0 = parse_Term_AddSub();
+          if (result0 !== null) {
+            result0 = (function(offset, v) { return "<math> " + v + " </math>" })(pos0, result0);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+          return result0;
         }
         
         function parse_Term_AddSub() {

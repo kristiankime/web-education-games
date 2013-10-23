@@ -16,7 +16,6 @@ object DerivativeQuestions {
 	def create(str: String) = {
 		val id = idCounter
 		idCounter += 1
-		val xml = XML.loadString(str)
 		val mathML = MathML(XML.loadString(str))
 		val question = DerivativeQuestion(id, mathML.get)
 		derivativeQuestions.put(id, question)

@@ -26,7 +26,7 @@
     <p>
 		Type in an equation and press RETURN: <br> 
 		Currently equations can only contain numbers,the variable X and +,-,*,/,^,() <br> 
-		<input id="MathInput" size="80" onchange='updateContentMathML("MathOutput",this.value)' />
+		<input id="MathInput" size="80" onchange='QUIZ.updateMathOutput(this.value)' />
 	</p>
  
 	<div id="box">
@@ -36,41 +36,33 @@
     
     @form(routes.Application.newSelfQuizQuestion, 'id -> "derivativeqForm" ) {
     	<input type="hidden" name="@DerivativeQuestionHTML.equation" id="derivativeQuestionMathML">
-    	<input type="button" value="Save Question" onclick="derivativeqFormSubmit()">
+    	<input type="button" value="Save Question" onclick="QUIZ.formSubmit()">
     }
     
     <script>
-    // updateContentMathML('MathOutput', '<math>' + ARTC.txt2MathML.parse(this.value) + '</math>' )
-    
-    var mathML = null;
-    function updateMathOutput(str){
-    	mathML = null;
-    	var error = null;
-    	try {
-    		mathML = ARTC.txt2MathML.parse(str);
-    		var mOut = $("#MathOutput")
-	   		
-	   		console.log("txt2MathML")
-			console.log(mathML)
-    		console.log(mOut);
+var QUIZ = (function() {
+    var result = { mathML : null };
 
-    		mOut.html('<script type="math\/mml"> <math>' + mathML + '<\/math> <\/script>' );
-    		
-    		MathJax.Hub.Queue(["Typeset", MathJax.Hub, "MathOutput"]);
-		} catch (e) {
-			error = e;
+    result.updateMathOutput = function(mathMLStr) {
+    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
+    	if (mathMLStatus.success) {
+    		console.log(mathMLStatus.value);
+    		result.mathML = mathMLStatus.value;
+    		ARTC.updateContentMathML("MathOutput", mathMLStatus.value);
+    	} else {
+    		// TODO handle error case
+			console.log(mathMLStatus);
 		}
+    };
 
+    result.formSubmit = function() {
+    	$("#derivativeQuestionMathML").val(result.mathML);
+    	$("#derivativeqForm").submit();
+		return false;
     }
-    
-    function derivativeqFormSubmit() {
-        toMathML(jax("MathOutput"), function(mathML) {
-        	console.log(mathML);
-	        $("#derivativeQuestionMathML").val(mathML);
-	        $("#derivativeqForm").submit();
-        });
-        return false;
-    }
+
+    return result;
+})();
     </script>
     
 }

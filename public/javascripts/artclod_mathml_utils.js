@@ -3,12 +3,37 @@ if (!ARTC) {
 }
 
 
+ARTC.Status = function(success, reason, details, value) {
+    this.success = success; 
+    this.reason = reason;
+    this.details = details;
+    this.value = value;
+}
+
+ARTC.statusTxt2MathML = function(mathMLStr) {
+    var success = true;
+    var reason = "";
+    var details = null;
+    var value = null;
+    
+    try {
+        value = ARTC.txt2MathML.parse(mathMLStr);
+    } catch (e) {
+	success = false;
+	reason = "parse error";
+	details = e;
+    }
+       
+    return new ARTC.Status(success, reason, details, value);
+};
+
 /*
- * Duplicate of underscore code as not to import an entire library for one function.
+ * Duplicate of underscore code so as not to import an entire library for one function.
  */
 ARTC.isFunction = function(obj) {
     return !!(obj && obj.constructor && obj.call && obj.apply);
 };
+
 
 /*
  * Update an HTML element with a string in content MathML format and then have MathJax render it.
@@ -25,11 +50,10 @@ ARTC.isFunction = function(obj) {
  *          "success" -> Indicating success, this is the only string where the success attribute will be true
  *          "id falsey" -> The id was falsey
  *          "mathMLStr falsey" -> The mathMLStr was falsey
- *          "parse error" -> The mathMLStr could not be parsed by ARTC.txt2MathML.parse 
  *          "invalid id" -> Could not find an element associated with the given id 
  * details - an empty string on success or an error object given more details about the failure
  */ 
-ARTC.updateContentMathML = function(id, mathMLStr, callback) {
+ARTC.updateContentMathML = function(id, mathML, callback) {
     var safeCallback = function() {/* noop */;};
     if(ARTC.isFunction(callback)){
 	safeCallback = callback;
@@ -38,16 +62,8 @@ ARTC.updateContentMathML = function(id, mathMLStr, callback) {
     if (!id) {
 	safeCallback({ success : false, reason : "id falsey", details : id });
 	return;
-    } else if (!mathMLStr) {
+    } else if (!mathML) {
 	safeCallback({ success : false, reason : "mathMLStr falsey", details : mathMLStr });
-	return;
-    }
-
-    var mathML = null;
-    try {
-	mathML = ARTC.txt2MathML.parse(mathMLStr);
-    } catch (e) {
-	safeCallback({ success : false, reason : "parse error", details : e });
 	return;
     }
 
@@ -57,7 +73,7 @@ ARTC.updateContentMathML = function(id, mathMLStr, callback) {
 	return;
     }
 
-    elem.innerHTML = '<script type="math\/mml"> <math> ' + mathML + ' <\/math> <\/script>';
+    elem.innerHTML = '<script type="math\/mml"> ' + mathML + ' <\/script>';
 
     MathJax.Hub.queue.Push(
 	    MathJax.Hub.Queue([ "Typeset", MathJax.Hub, id ]),

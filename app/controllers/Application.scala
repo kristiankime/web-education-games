@@ -54,7 +54,7 @@ object Application extends Controller {
 		EquationHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all(), errors)),
 			equation => {
-				Equations.create(equation)
+				DerivativeQuestions.create(equation)
 				Redirect(routes.Application.selfQuizQuestions)
 			})
 	}

@@ -18,6 +18,8 @@ object MathML {
 
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {
+			// TODO math must be the most outside wrapper
+			case "math" => Try(Math(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, MathML(xml.childElem(0)).get))
 			case "apply" => applyElementPrep(xml)
 			case "cn" => Success(Cn(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
 			case "ci" => Success(Ci(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))

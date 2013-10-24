@@ -5,7 +5,7 @@ import mathml.MathMLElem
 import scala.xml.XML
 import mathml.MathML
 
-case class DerivativeQuestionAnswer(qid: Int, aid: Int, mathML: MathMLElem)
+case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Int, originalStr: String, mathML: MathMLElem, correct: Boolean)
 
 object DerivativeQuestionAnswers {
 	private var idCounter = 0
@@ -13,20 +13,22 @@ object DerivativeQuestionAnswers {
 	
 	def all() = derivativeQuestionAnswers.values.toList
 
-	def create(qid: Int, str: String) = {
-		val aid = idCounter
-		idCounter += 1
-		val mathML = MathML(XML.loadString(str))
-		val question = DerivativeQuestionAnswer(qid, aid, mathML.get)
+	def create(question: DerivativeQuestion, answerStr: String) = {
+		System.err.println("answerStr = " + answerStr);
 		
-		if(derivativeQuestionAnswers.get(qid).isEmpty){
-			derivativeQuestionAnswers.put(qid, LinkedHashMap())
+		val answerMathML = MathML(XML.loadString(answerStr)).get // TODO can fail here
+		val correct = (answerMathML.simplify == question.mathML.simplify)		
+		val answer = DerivativeQuestionAnswer(question, idCounter, answerStr, answerMathML, correct)
+		idCounter += 1
+		
+		if(derivativeQuestionAnswers.get(question.id).isEmpty){
+			derivativeQuestionAnswers.put(question.id, LinkedHashMap())
 		}
-		derivativeQuestionAnswers.get(qid).get.put(aid, question)
+		derivativeQuestionAnswers.get(question.id).get.put(answer.id, answer)
 		question
 	}
 	
 	def removeQuestion(qid: Int) = derivativeQuestionAnswers.remove(qid)
 	
-	def get(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).map(_.get(aid).getOrElse(null))
+	def get(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).map(_.get(aid)).flatten
 }

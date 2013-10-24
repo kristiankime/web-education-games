@@ -1,4 +1,4 @@
-@(question: DerivativeQuestion, answer: Form[(Int, String)], correct: Option[Boolean])
+@(question: DerivativeQuestion, answer: Option[DerivativeQuestionAnswer])
 
 @import helper._
 @import controllers.DerivativeQuestionAnswerHTML
@@ -10,12 +10,22 @@
     
     <p>
 		Type in your answer, press RETURN, and the hit the submit button <br> 
-		<input size="80" onchange="QUIZ.updateAnswer(this.value)" />
+		<input size="80" onchange="QUIZ.updateAnswer(this.value)" value="@answer.map(_.originalStr).getOrElse("")"/>
 	</p>
 	<div id="box">
 		You typed:<br>
-		<div id="answer">$${}$$</div>
+		@if(answer.nonEmpty){
+			<div id="answer"> <script type="math/mml"> @Html(answer.get.mathML.toString) </script> </div>	
+		} else {
+			<div id="answer"> $${}$$ </div>	
+		}
 	</div>
+	
+	@if(answer.nonEmpty){
+		<p>
+		You answered the question @if(answer.get.correct){ correctly! } else { incorrectly }
+		</p>
+	}		
 	
 	@form(routes.Application.answerSelfQuizQuestion, 'id -> "answerForm" ) {
 		<input type="hidden" name="@DerivativeQuestionAnswerHTML.questionId" value="@question.id">

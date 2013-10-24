@@ -3,18 +3,22 @@
 # ~~~~
 
 # Home page
-GET    /                      controllers.Application.index
+GET    /                                        controllers.Application.index
 
 # Equation pages
-GET    /equation              controllers.Application.equations
-POST   /equation              controllers.Application.newEquation
-POST   /equation/:id/delete   controllers.Application.deleteEquation(id: Int)
+GET    /equation                                controllers.Application.equations
+POST   /equation                                controllers.Application.newEquation
+POST   /equation/:id/delete                     controllers.Application.deleteEquation(id: Int)
 
 # Derivative Question / Answer pages
-GET    /selfquiz              controllers.Application.selfQuizQuestions
-POST   /selfquiz              controllers.Application.newSelfQuizQuestion
-POST   /selfquiz/:id/delete   controllers.Application.deleteSelfQuizQuestion(id: Int)
-GET    /selfquiz/:id/take     controllers.Application.takeSelfQuizQuestion(id: Int)
+GET    /selfquiz/questions                      controllers.Application.selfQuizQuestions
+GET    /selfquiz/questions/:qid/                controllers.Application.selfQuizQuestion(qid: Int)
+POST   /selfquiz/questions                      controllers.Application.newSelfQuizQuestion
+POST   /selfquiz/questions/:qid/delete          controllers.Application.deleteSelfQuizQuestion(qid: Int)
+
+# GET    /selfquiz/questions/:qid/answers/        controllers.Application.selfQuizAnswers(qid: Int)
+GET    /selfquiz/questions/:qid/answers/:aid/   controllers.Application.selfQuizAnswer(qid: Int, aid : Int)
+POST   /selfquiz/questions/answers/             controllers.Application.answerSelfQuizQuestion
 
 # Map static resources from the /public folder to the /assets URL path
-GET    /assets/*file          controllers.Assets.at(path="/public", file)
+GET    /assets/*file                            controllers.Assets.at(path="/public", file)

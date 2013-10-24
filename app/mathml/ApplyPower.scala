@@ -16,7 +16,7 @@ case class ApplyPower(
 
 	def this(power: Power, base: MathMLElem, exp: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, power, base, exp)
 
-	def eval(boundVariables: Map[String, Double]) = Try(Math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
+	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
 	def isZero = base.simplify.isZero
 

@@ -2,22 +2,17 @@ package controllers
 
 import play.api._
 import play.api.mvc._
-
 import play.api._
 import play.api.mvc._
-
 import play.api.libs.json._
 import play.api.libs.iteratee._
-
 import models._
-
 import akka.actor._
 import scala.concurrent.duration._
-
 import play.api.data._
 import play.api.data.Forms._
-
 import models.Equations
+import mathml._
 
 object Application extends Controller {
 
@@ -44,14 +39,17 @@ object Application extends Controller {
 		Ok(views.html.equations(Equations.all(), EquationHTML.form))
 	}
 
-	
-	// ======== Self Quiz Actions ======== 
+	// ======== Self Quiz Questions ======== 
 	def selfQuizQuestions = Action {
 		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
 	}
 
+	def selfQuizQuestion(id: Int) = Action {
+		Ok(views.html.self_quiz_take(DerivativeQuestions.get(id).get, DerivativeAnswerHTML.form, None))
+	}
+
 	def newSelfQuizQuestion = Action { implicit request =>
-		EquationHTML.form.bindFromRequest.fold(
+		DerivativeQuestionHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all(), errors)),
 			equation => {
 				DerivativeQuestions.create(equation)
@@ -63,9 +61,27 @@ object Application extends Controller {
 		DerivativeQuestions.delete(id);
 		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
 	}
-	
-	def takeSelfQuizQuestion(id: Int) = Action {
-		Ok(views.html.self_quiz_take(DerivativeQuestions.get(id)))
+
+	// ======== Self Quiz Answers ======== 
+	def selfQuizAnswer(qid: Int, aid : Int) = Action {
+		val q = DerivativeQuestions.get(qid).get
+		val a = DerivativeQuestionAnswers.get(qid, aid).get
+		
+		val sucess = q.mathML.simplify == a.mathML.simplify
+
+		Ok(views.html.self_quiz_take(q, DerivativeAnswerHTML.form.fill((a.aid, a.mathML.toString)), Some(sucess)))
+	}
+
+	def answerSelfQuizQuestion = Action { implicit request =>
+		DerivativeAnswerHTML.form.bindFromRequest.fold(
+			// TODO we assume we can get the problem id here, code in defensive measures
+			errors => BadRequest(views.html.self_quiz_take(DerivativeQuestions.get(errors.get._1).get, errors, None)),
+			answerForm => {
+				val question = DerivativeQuestions.get(answerForm._1).get // TODO check for no question here
+				val answer = MathML(scala.xml.XML.loadString(answerForm._2)).get // TODO check for failure here
+				val derQesAnswer = DerivativeQuestionAnswers.create(question.id, answer.toString)
+				Redirect(routes.Application.selfQuizAnswer(derQesAnswer.qid, derQesAnswer.aid))
+			})
 	}
 
 }
@@ -78,4 +94,10 @@ object EquationHTML {
 object DerivativeQuestionHTML {
 	val equation = "equation"
 	val form = Form(equation -> nonEmptyText)
+}
+
+object DerivativeAnswerHTML {
+	val equationid = "equationid"
+	val answer = "answer"
+	val form = Form(tuple(equationid -> number, answer -> nonEmptyText))
 }

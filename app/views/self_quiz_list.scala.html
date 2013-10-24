@@ -12,7 +12,7 @@
             <li>
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
                 
-                <a href=@routes.Application.takeSelfQuizQuestion(derivativeQ.id)> answer </a>
+                <a href=@routes.Application.selfQuizQuestion(derivativeQ.id)> answer </a>
                 
                 @form(routes.Application.deleteSelfQuizQuestion(derivativeQ.id)) {
                     <input type="submit" value="Delete">

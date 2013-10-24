@@ -1,4 +1,4 @@
-@(question: Option[DerivativeQuestion])
+@(question:  DerivativeQuestion, answer: Form[(Int, String)], correct: Option[Boolean])
 
 @import helper._
 @import controllers.DerivativeQuestionHTML
@@ -7,6 +7,6 @@
     
     <h1>What is the Derivative of</h1>
     
-    <script type="math/mml"> @Html(question.get.mathML.toString) </script>
+    <script type="math/mml"> @Html(question.mathML.toString) </script>
     
 }

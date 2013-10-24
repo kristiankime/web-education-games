@@ -22,7 +22,10 @@ object DerivativeQuestions {
 		question
 	}
 
-	def delete(id: Int) = derivativeQuestions.remove(id)
+	def delete(id: Int) = {
+		derivativeQuestions.remove(id)
+		DerivativeQuestionAnswers.removeQuestion(id)
+	}
 	
 	def get(id: Int) = derivativeQuestions.get(id)
 }

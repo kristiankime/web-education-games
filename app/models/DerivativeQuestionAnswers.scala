@@ -10,25 +10,23 @@ case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Int, origi
 object DerivativeQuestionAnswers {
 	private var idCounter = 0
 	private val derivativeQuestionAnswers = LinkedHashMap[Int, LinkedHashMap[Int, DerivativeQuestionAnswer]]()
-	
+
 	def all() = derivativeQuestionAnswers.values.toList
 
 	def create(question: DerivativeQuestion, answerStr: String) = {
-		System.err.println("answerStr = " + answerStr);
-		
 		val answerMathML = MathML(XML.loadString(answerStr)).get // TODO can fail here
-		val correct = (answerMathML.simplify == question.mathML.simplify)		
+		val correct = (answerMathML.simplify == question.mathML.simplify)
 		val answer = DerivativeQuestionAnswer(question, idCounter, answerStr, answerMathML, correct)
 		idCounter += 1
-		
-		if(derivativeQuestionAnswers.get(question.id).isEmpty){
+
+		if (derivativeQuestionAnswers.get(question.id).isEmpty) {
 			derivativeQuestionAnswers.put(question.id, LinkedHashMap())
 		}
 		derivativeQuestionAnswers.get(question.id).get.put(answer.id, answer)
-		question
+		answer
 	}
-	
+
 	def removeQuestion(qid: Int) = derivativeQuestionAnswers.remove(qid)
-	
+
 	def get(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).map(_.get(aid)).flatten
 }

@@ -5,7 +5,14 @@
  
 @main("List of Self Quiz Questions") {
     
-    <h1>@derivativeQs.size Derivative Question(s)</h1>
+    <h2>Welcome to the EdTech Differentition Self Quiz</h1>
+    
+    <p>
+    	Pick one of the equations below to try figure out it's derivative.
+    </p>
+    
+    
+    <h4>@derivativeQs.size Derivative Question(s)</h4>
     
     <ul>
         @derivativeQs.map { derivativeQ =>
@@ -21,7 +28,7 @@
         }
     </ul>
     
-    <h2>Add a new Derivative Question</h2>
+    <h4>Add a new Derivative Question</h4>
     
     <p>
 		Type in an equation and press RETURN: <br> 

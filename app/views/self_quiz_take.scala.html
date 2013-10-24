@@ -5,13 +5,14 @@
  
 @main("List of Self Quiz Questions") {
     
-    <h1>What is the Derivative of</h1>
+    <h2>What is the Derivative of</h2>
     <script type="math/mml"> @Html(question.mathML.toString) </script>
     
     <p>
-		Type in your answer, press RETURN, and the hit the submit button <br> 
+		Type in your answer, press RETURN, and then hit the submit button <br> 
 		<input size="80" onchange="QUIZ.updateAnswer(this.value)" value="@answer.map(_.originalStr).getOrElse("")"/>
 	</p>
+	
 	<div id="box">
 		You typed:<br>
 		@if(answer.nonEmpty){

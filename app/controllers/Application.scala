@@ -40,6 +40,10 @@ object Application extends Controller {
 	}
 
 	// ======== Self Quiz Questions ======== 
+	def selfQuiz = Action {
+		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
+	}
+	
 	def selfQuizQuestions = Action {
 		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
 	}

@@ -1,12 +1,52 @@
-@(question:  DerivativeQuestion, answer: Form[(Int, String)], correct: Option[Boolean])
+@(question: DerivativeQuestion, answer: Form[(Int, String)], correct: Option[Boolean])
 
 @import helper._
-@import controllers.DerivativeQuestionHTML
+@import controllers.DerivativeQuestionAnswerHTML
  
 @main("List of Self Quiz Questions") {
     
     <h1>What is the Derivative of</h1>
-    
     <script type="math/mml"> @Html(question.mathML.toString) </script>
     
+    <p>
+		Type in your answer, press RETURN, and the hit the submit button <br> 
+		<input size="80" onchange="QUIZ.updateAnswer(this.value)" />
+	</p>
+	<div id="box">
+		You typed:<br>
+		<div id="answer">$${}$$</div>
+	</div>
+	
+	@form(routes.Application.answerSelfQuizQuestion, 'id -> "answerForm" ) {
+		<input type="hidden" name="@DerivativeQuestionAnswerHTML.questionId" value="@question.id">
+    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.answer" id="answerValue" value="">
+    	<input type="button" value="Submit" onclick="QUIZ.answerFormSubmit()">
+    }
+	
+	    <script>
+var QUIZ = (function() {
+    var result = { mathML : "" };
+
+    result.updateAnswer = function(mathMLStr) {
+    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
+    	if (mathMLStatus.success) {
+    		console.log(mathMLStatus.value);
+    		result.mathML = mathMLStatus.value;
+    		ARTC.updateContentMathML("answer", mathMLStatus.value);
+    	} else {
+    		// TODO handle error case
+			console.log(mathMLStatus);
+		}
+    };
+
+    result.answerFormSubmit = function() {
+    	// TODO don't submit when result is empty
+    	$("#answerValue").val(result.mathML);
+    	$("#answerForm").submit();
+		return false;
+    }
+
+    return result;
+})();
+    </script>
 }

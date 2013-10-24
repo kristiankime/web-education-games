@@ -45,7 +45,7 @@ object Application extends Controller {
 	}
 
 	def selfQuizQuestion(id: Int) = Action {
-		Ok(views.html.self_quiz_take(DerivativeQuestions.get(id).get, DerivativeAnswerHTML.form, None))
+		Ok(views.html.self_quiz_take(DerivativeQuestions.get(id).get, DerivativeQuestionAnswerHTML.form, None))
 	}
 
 	def newSelfQuizQuestion = Action { implicit request =>
@@ -63,19 +63,21 @@ object Application extends Controller {
 	}
 
 	// ======== Self Quiz Answers ======== 
-	def selfQuizAnswer(qid: Int, aid : Int) = Action {
+	def selfQuizAnswer(qid: Int, aid: Int) = Action {
 		val q = DerivativeQuestions.get(qid).get
 		val a = DerivativeQuestionAnswers.get(qid, aid).get
-		
+
 		val sucess = q.mathML.simplify == a.mathML.simplify
 
-		Ok(views.html.self_quiz_take(q, DerivativeAnswerHTML.form.fill((a.aid, a.mathML.toString)), Some(sucess)))
+		Ok(views.html.self_quiz_take(q, DerivativeQuestionAnswerHTML.form.fill((a.aid, a.mathML.toString)), Some(sucess)))
 	}
 
 	def answerSelfQuizQuestion = Action { implicit request =>
-		DerivativeAnswerHTML.form.bindFromRequest.fold(
-			// TODO we assume we can get the problem id here, code in defensive measures
-			errors => BadRequest(views.html.self_quiz_take(DerivativeQuestions.get(errors.get._1).get, errors, None)),
+		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
+			// TODO currently we assume we can get the problem id here
+			errors => {
+				BadRequest(views.html.self_quiz_take(DerivativeQuestions.get(errors.get._1).get, errors, None))
+			},
 			answerForm => {
 				val question = DerivativeQuestions.get(answerForm._1).get // TODO check for no question here
 				val answer = MathML(scala.xml.XML.loadString(answerForm._2)).get // TODO check for failure here
@@ -96,8 +98,8 @@ object DerivativeQuestionHTML {
 	val form = Form(equation -> nonEmptyText)
 }
 
-object DerivativeAnswerHTML {
-	val equationid = "equationid"
+object DerivativeQuestionAnswerHTML {
+	val questionId = "questionId"
 	val answer = "answer"
-	val form = Form(tuple(equationid -> number, answer -> nonEmptyText))
+	val form = Form(tuple(questionId -> number, answer -> nonEmptyText))
 }

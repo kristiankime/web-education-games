@@ -31,11 +31,13 @@ case class ApplyDivide(
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables
 	
+	// User the quotient rule (http://en.wikipedia.org/wiki/Quotient_rule)
 	def derivative(wrt: String): MathMLElem = {
 		val f = numerator
 		val fP = f.d(wrt).simplify
 		val g = denominator
 		val gP = g.d(wrt).simplify
+		
 		// (f/g)' = (f'g - g'f)/g^2
 		(fP*g - gP*f) / g^Cn(2) simplify
 	}

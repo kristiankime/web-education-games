@@ -1,0 +1,35 @@
+@* mathml_editor Template File *@
+@(editorName: String)
+
+	<span id="@(editorName)">
+		<input size="80" onkeyup="@(editorName).updateAnswer(this.value)" "/>
+		<font style:visibility="hidden" id="@(editorName+"Indicator")" color="red"> * </font>
+		<span id="@(editorName+"View")"> <script type="math/mml"> </script> </span>
+	<span>
+
+<script>
+var @(editorName) = (function() {
+    var result = {
+    	 	mathML : "", 
+    	 	valid : false,
+    	 	current : false
+    	 };
+
+    result.updateAnswer = function(mathMLStr) {
+    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
+    	if (mathMLStatus.success) {
+    		result.mathML = mathMLStatus.value;	
+    		result.valid = true;
+    		result.current = true;		
+    		$("#@(editorName+"Indicator")").hide();
+    		ARTC.updateContentMathML("@(editorName+"View")", mathMLStatus.value);
+    	} else {
+    		result.current = false;
+    		$("#@(editorName+"Indicator")").show();
+		}
+    };
+
+    return result;
+})();
+
+</script>

@@ -28,6 +28,20 @@ abstract class MathMLElem(
 	def variables: Set[String]
 
 	def derivative(wrt: String): MathMLElem
+
+	def d(wrt: String) = derivative(wrt)
+
+	def dx = derivative("x")
+
+	def +(m : MathMLElem) = ApplyPlus(this, m)
+
+	def *(m : MathMLElem) = ApplyTimes(this, m)
+
+	def -(m : MathMLElem) = ApplyMinusB(this, m)
+
+	def /(m : MathMLElem) = ApplyDivide(this, m)
+
+	def ^(m : MathMLElem) = ApplyPower(this, m)
 }
 
 abstract class Applyable(

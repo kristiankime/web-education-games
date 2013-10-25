@@ -13,6 +13,56 @@ import org.specs2.matcher.Matcher
 @RunWith(classOf[JUnitRunner])
 class MathMLElemSpec extends Specification {
 
+	"+" should {
+		"use ApplyPlus" in {
+			(Cn(5) + Cn(3)) must beEqualTo(ApplyPlus(Cn(5), Cn(3)))
+		}
+
+		"nest when used repeatedly" in {
+			(Cn(3) + Cn(4) + Cn(5)) must beEqualTo(ApplyPlus(ApplyPlus(Cn(3), Cn(4)), Cn(5)))
+		}
+	}
+
+	"-" should {
+		"use ApplyMinusB" in {
+			(Cn(5) - Cn(3)) must beEqualTo(ApplyMinusB(Cn(5), Cn(3)))
+		}
+
+		"nest when used repeatedly" in {
+			(Cn(3) - Cn(4) - Cn(5)) must beEqualTo(ApplyMinusB(ApplyMinusB(Cn(3), Cn(4)), Cn(5)))
+		}
+	}
+
+	"*" should {
+		"use ApplyTimes" in {
+			(Cn(5) * Cn(3)) must beEqualTo(ApplyTimes(Cn(5), Cn(3)))
+		}
+
+		"nest when used repeatedly" in {
+			(Cn(3) * Cn(4) * Cn(5)) must beEqualTo(ApplyTimes(ApplyTimes(Cn(3), Cn(4)), Cn(5)))
+		}
+	}
+	
+	"/" should {
+		"use ApplyDivid" in {
+			(Cn(5) / Cn(3)) must beEqualTo(ApplyDivide(Cn(5), Cn(3)))
+		}
+
+		"nest when used repeatedly" in {
+			(Cn(3) / Cn(4) / Cn(5)) must beEqualTo(ApplyDivide(ApplyDivide(Cn(3), Cn(4)), Cn(5)))
+		}
+	}
+	
+	"^" should {
+		"use ApplyPower" in {
+			(Cn(5) ^ Cn(3)) must beEqualTo(ApplyPower(Cn(5), Cn(3)))
+		}
+
+		"nest when used repeatedly" in {
+			(Cn(3) ^ Cn(4) ^ Cn(5)) must beEqualTo(ApplyPower(ApplyPower(Cn(3), Cn(4)), Cn(5)))
+		}
+	}
+
 	"eval" should {
 		"turn Cn into a number if possible" in {
 			Cn(5).eval(Map()).get must beEqualTo(5)

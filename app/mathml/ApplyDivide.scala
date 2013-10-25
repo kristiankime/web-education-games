@@ -36,9 +36,9 @@ case class ApplyDivide(
 		val fP = f.derivative(wrt).simplify
 		val g = denominator
 		val gP = g.derivative(wrt).simplify
-		// (f/g)' = (f'g + g'f)/g^2
+		// (f/g)' = (f'g - g'f)/g^2
 		ApplyDivide(
-			ApplyTimes(
+			ApplyMinusB(
 				ApplyTimes(fP, g),
 				ApplyTimes(f, gP)),
 			ApplyPower(g, Cn(2))).simplify

@@ -4,22 +4,34 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 import scala.xml.Elem
+import scala.util.Failure
+import math._
 
 object MathML {
 
-	def simplifyEquals(eq1: MathMLElem, eq2: MathMLElem) = {
-		val ret = eq1.simplify == eq2.simplify
-		System.err.println("simplifyEquals " + eq1.simplify + " " + eq2.simplify + " " + ret);
+	def checkEq(v: String, eq1: MathMLElem, eq2: MathMLElem) = {
+		val ret = if (simplifyEquals(eq1, eq2)) {
+			true
+		} else {
+			val values = for (i <- -5 to 5) yield Map(v -> i.toDouble)
+			values.forall(v => closeEnough(eq1.eval(v), eq2.eval(v)))
+		}
+//		System.err.println("eq1 " + eq1 + " eq2 " + eq2 + " == " + ret);
 		ret
 	}
 
-	def equals(v: String, eq1: MathMLElem, eq2: MathMLElem) = {
-		val values = for (i <- -5 to 5) yield Map(v -> i.toDouble)
-		values.foldLeft(true)((a, b) => a && closeEnough(eq1.eval(b).get, eq2.eval(b).get))
+	def simplifyEquals(eq1: MathMLElem, eq2: MathMLElem) = {
+		eq1.simplify == eq2.simplify
 	}
 
-	private def closeEnough(v1: Double, v2: Double) = {
-		v1 == v2
+	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
+	private def closeEnough(v1: Try[Double], v2: Try[Double]) = {
+		(v1, v2) match {
+			case (Success(x), Success(y)) => (x - accuracy) <= y && (x + accuracy >= y)
+			case (Failure(_), Failure(_)) => true // LATER ensure errors are the same?
+			case (Failure(_), Success(_)) => false
+			case (Success(_), Failure(_)) => false
+		}
 	}
 
 	def apply(xml: Elem): Try[MathMLElem] = {

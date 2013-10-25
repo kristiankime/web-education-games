@@ -103,13 +103,34 @@ class MathMLSpec extends Specification {
 			MathML(xml).get must beEqualTo(mathML)
 		}
 	}
-	
-		"simplifyEquals" should {
 
-			"be true for two equal cns" in {
-				MathML.simplifyEquals(Cn(3), Cn(3)) must beTrue
-			}
-			
+	"simplifyEquals" should {
+
+		"be true for two equal cns" in {
+			MathML.simplifyEquals(Cn(3), Cn(3)) must beTrue
 		}
+
+	}
+
+	"checkEq" should {
+
+		"be true for two equal cns" in {
+			MathML.checkEq("X", Cn(3), Cn(3)) must beTrue
+		}
+
+		"be true for two X+2 & 2+X" in {
+			val v1 = ApplyPlus(Ci("X"), Cn(2))
+			val v2 = ApplyPlus(Cn(2), Ci("X"))
+
+			MathML.checkEq("X", v1, v2) must beTrue
+		}
+
+		"be true for two X^2 & X^2" in {
+			val v1 = ApplyPower(Ci("X"), Cn(2))
+			val v2 = ApplyPower(Ci("X"), Cn(2))
+
+			MathML.checkEq("X", v1, v2) must beTrue
+		}
+	}
 
 }

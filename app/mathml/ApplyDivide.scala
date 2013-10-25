@@ -33,15 +33,11 @@ case class ApplyDivide(
 	
 	def derivative(wrt: String): MathMLElem = {
 		val f = numerator
-		val fP = f.derivative(wrt).simplify
+		val fP = f.d(wrt).simplify
 		val g = denominator
-		val gP = g.derivative(wrt).simplify
+		val gP = g.d(wrt).simplify
 		// (f/g)' = (f'g - g'f)/g^2
-		ApplyDivide(
-			ApplyMinusB(
-				ApplyTimes(fP, g),
-				ApplyTimes(f, gP)),
-			ApplyPower(g, Cn(2))).simplify
+		(fP*g - gP*f) / g^Cn(2) simplify
 	}
 }
 

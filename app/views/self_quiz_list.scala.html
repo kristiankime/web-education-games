@@ -31,45 +31,24 @@
     <h4>Add a new Derivative Question</h4>
     
     <p>
-		Type in an equation and press RETURN: <br> 
+		Type in an equation and press "Save Question": <br> 
 		Currently equations can only contain numbers,the variable X and +,-,*,/,^,() <br> 
-		<input id="MathInput" size="80" onchange='QUIZ.updateMathOutput(this.value)' />
+		@mathml_editor("QUESTION")
 	</p>
- 
-	<div id="box">
-		You typed:<br>
-		<div id="MathOutput">$${}$$</div>
-	</div>
-    
+
     @form(routes.Application.newSelfQuizQuestion, 'id -> "derivativeqForm" ) {
     	<input type="hidden" name="@DerivativeQuestionHTML.equation" id="derivativeQuestionMathML">
-    	<input type="button" value="Save Question" onclick="QUIZ.formSubmit()">
+    	<input type="button" value="Save Question" onclick="formSubmit()">
     }
     
     <script>
-var QUIZ = (function() {
-    var result = { mathML : null };
-
-    result.updateMathOutput = function(mathMLStr) {
-    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
-    	if (mathMLStatus.success) {
-    		console.log(mathMLStatus.value);
-    		result.mathML = mathMLStatus.value;
-    		ARTC.updateContentMathML("MathOutput", mathMLStatus.value);
-    	} else {
-    		// TODO handle error case
-			console.log(mathMLStatus);
+	formSubmit = function() {
+		if(QUESTION.valid){
+			$("#derivativeQuestionMathML").val(QUESTION.mathML);
+			$("#derivativeqForm").submit();
 		}
-    };
-
-    result.formSubmit = function() {
-    	$("#derivativeQuestionMathML").val(result.mathML);
-    	$("#derivativeqForm").submit();
-		return false;
+		// TODO indicated that the form did not submit
     }
-
-    return result;
-})();
     </script>
     
 }

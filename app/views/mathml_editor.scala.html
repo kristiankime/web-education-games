@@ -8,28 +8,28 @@
 		<span id="@(editorName+"View")"> <script type="math/mml"> <math> </math> </script> </span>
 	<span>
 
-<script>
-var @(editorName) = (function() {
-    var result = {
-    	 	mathML : "", 
-    	 	valid : false,
-    	 	current : false
-    	 };
-
-    result.updateAnswer = function(mathMLStr) {
-    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
-    	if (mathMLStatus.success) {
-    		result.mathML = mathMLStatus.value;	
-    		result.valid = true;
-    		result.current = true;		
-    		$("#@(editorName+"Indicator")").hide();
-    		ARTC.updateContentMathML("@(editorName+"View")", mathMLStatus.value);
-    	} else {
-    		result.current = false;
-    		$("#@(editorName+"Indicator")").show();
-		}
-    };
-
-    return result;
-})();
-</script>
+	<script>
+	var @(editorName) = (function() {
+	    var result = {
+	    	 	mathML : "", 
+	    	 	valid : false,
+	    	 	current : false
+	    	 };
+	
+	    result.updateAnswer = function(mathMLStr) {
+	    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
+	    	if (mathMLStatus.success) {
+	    		result.mathML = mathMLStatus.value;	
+	    		result.valid = true;
+	    		result.current = true;		
+	    		$("#@(editorName+"Indicator")").hide();
+	    		ARTC.updateContentMathML("@(editorName+"View")", mathMLStatus.value);
+	    	} else {
+	    		result.current = false;
+	    		$("#@(editorName+"Indicator")").show();
+			}
+	    };
+	
+	    return result;
+	})();
+	</script>

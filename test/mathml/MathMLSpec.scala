@@ -103,5 +103,13 @@ class MathMLSpec extends Specification {
 			MathML(xml).get must beEqualTo(mathML)
 		}
 	}
+	
+		"simplifyEquals" should {
+
+			"be true for two equal cns" in {
+				MathML.simplifyEquals(Cn(3), Cn(3)) must beTrue
+			}
+			
+		}
 
 }

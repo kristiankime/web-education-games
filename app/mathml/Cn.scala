@@ -12,15 +12,15 @@ case class Cn(
 	override val scope: NamespaceBinding,
 	override val minimizeEmpty: Boolean,
 	val value: Node)
-	extends MathMLElem(prefix, "cn", attributes1, scope, minimizeEmpty, Seq(value): _*) {
+	extends MathMLElem(prefix, "cn", attributes1, scope, minimizeEmpty, Seq(Cn.format(value)): _*) {
 
-	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
+	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, Cn.format(value))
 
 	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
 
-	def isZero = Try(text.trim().toDouble).getOrElse(Double.MaxValue) == 0d
+	def isZero = Try(text.trim().toDouble).getOrElse(Double.NaN) == 0d
 
-	def isOne = Try(text.trim().toDouble).getOrElse(Double.MaxValue) == 1d
+	def isOne = Try(text.trim().toDouble).getOrElse(Double.NaN) == 1d
 
 	def simplify() = this
 
@@ -30,6 +30,11 @@ case class Cn(
 }
 
 object Cn {
-	def apply(value: Node) = new Cn(value)
-	def apply(value: Any) = new Cn(Text(value.toString))
+	private def format(v : Node) : Text = format(v.text)
+	
+	private def format(v : String) = Text(v.trim) // TODO fail if string is not a number
+	
+	def apply(value: Node) = new Cn(format(value))
+	
+	def apply(value: Any) = new Cn(format(value.toString))
 }

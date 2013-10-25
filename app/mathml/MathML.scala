@@ -7,6 +7,12 @@ import scala.xml.Elem
 
 object MathML {
 
+	def simplifyEquals(eq1: MathMLElem, eq2: MathMLElem) = {
+		val ret = eq1.simplify == eq2.simplify
+		System.err.println("simplifyEquals " + eq1.simplify + " " + eq2.simplify + " " + ret);
+		ret
+	}
+
 	def equals(v: String, eq1: MathMLElem, eq2: MathMLElem) = {
 		val values = for (i <- -5 to 5) yield Map(v -> i.toDouble)
 		values.foldLeft(true)((a, b) => a && closeEnough(eq1.eval(b).get, eq2.eval(b).get))

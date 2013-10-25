@@ -13,6 +13,17 @@ import org.specs2.matcher.Matcher
 @RunWith(classOf[JUnitRunner])
 class CnSpec extends Specification {
 
+	"Cn" should {
+		"be the same regardless of whitespace with a string input" in {
+			Cn(" 34   ") == Cn(34) must beTrue
+		}
+		
+		"be the same regardless of whitespace with a node input" in {
+			val nodeWith34 = <t>    34  </t>.child(0)
+			Cn(nodeWith34) == Cn(34) must beTrue
+		}
+	}
+	
 	"isZero" should {
 		"return true if the number is zero" in {
 			Cn(0).isZero must beTrue

@@ -13,6 +13,17 @@ import org.specs2.matcher.Matcher
 @RunWith(classOf[JUnitRunner])
 class CiSpec extends Specification {
 
+	"Ci" should {
+		"be the same regardless of whitespace with a string input" in {
+			Ci(" X   ") == Ci("X") must beTrue
+		}
+
+		"be the same regardless of whitespace with a node input" in {
+			val nodeWithX = <t>    X  </t>.child(0)
+			Ci(nodeWithX) == Ci("X") must beTrue
+		}
+	}
+
 	"isZero" should {
 		"return false" in {
 			Ci("X").isZero must beFalse

@@ -61,14 +61,14 @@ object MathML {
 
 	private def applyElementCreate(a: scala.xml.Elem, o: scala.xml.Elem, args: Seq[mathml.MathMLElem]): scala.util.Try[mathml.MathMLElem] = {
 		(o.label.toLowerCase(), args) match {
-			case ("plus", _) => Success(new ApplyPlus(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Plus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), args: _*))
-			case ("minus", Seq(v)) => Success(new ApplyMinusU(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v))
-			case ("minus", Seq(v1, v2)) => Success(new ApplyMinusB(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v1, v2))
+			case ("plus", _) => Success(new ApplyPlus(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Plus(o.prefix, o.attributes, o.scope), args: _*))
+			case ("minus", Seq(v)) => Success(new ApplyMinusU(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope), v))
+			case ("minus", Seq(v1, v2)) => Success(new ApplyMinusB(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope), v1, v2))
 			case ("minus", _) => Failure(new IllegalArgumentException(a + " minus was called with >2 arguments"))
-			case ("times", _) => Success(new ApplyTimes(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Times(o.prefix, o.attributes, o.scope, o.minimizeEmpty), args: _*))
-			case ("divide", Seq(num, den)) => Success(new ApplyDivide(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Divide(o.prefix, o.attributes, o.scope, o.minimizeEmpty), num, den))
+			case ("times", _) => Success(new ApplyTimes(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Times(o.prefix, o.attributes, o.scope), args: _*))
+			case ("divide", Seq(num, den)) => Success(new ApplyDivide(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Divide(o.prefix, o.attributes, o.scope), num, den))
 			case ("divide", _) => Failure(new IllegalArgumentException(a + " divide was called with !=2 arguments"))
-			case ("power", Seq(v1, v2)) => Success(new ApplyPower(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Power(o.prefix, o.attributes, o.scope, o.minimizeEmpty), v1, v2))
+			case ("power", Seq(v1, v2)) => Success(new ApplyPower(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Power(o.prefix, o.attributes, o.scope), v1, v2))
 			case ("power", _) => Failure(new IllegalArgumentException(a + " power was called with !=2 arguments"))
 			case (_, _) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element"))
 		}

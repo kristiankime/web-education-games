@@ -48,9 +48,8 @@ abstract class Applyable(
 	override val prefix: String,
 	override val label: String,
 	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean)
-	extends MathMLElem(prefix, label, attributes1, scope, minimizeEmpty, Seq(): _*) {
+	override val scope: NamespaceBinding)
+	extends MathMLElem(prefix, label, attributes1, scope, true, Seq(): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
 
@@ -66,11 +65,10 @@ abstract class Applyable(
 case class Plus(
 	override val prefix: String,
 	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean)
-	extends Applyable(prefix, "plus", attributes1, scope, minimizeEmpty) {
+	override val scope: NamespaceBinding)
+	extends Applyable(prefix, "plus", attributes1, scope) {
 
-	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
 	def simplify() = this
 }
@@ -82,11 +80,10 @@ object Plus {
 case class Minus(
 	override val prefix: String,
 	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean)
-	extends Applyable(prefix, "minus", attributes1, scope, minimizeEmpty) {
+	override val scope: NamespaceBinding)
+	extends Applyable(prefix, "minus", attributes1, scope) {
 
-	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
 	def simplify() = this
 }
@@ -98,11 +95,10 @@ object Minus {
 case class Times(
 	override val prefix: String,
 	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean)
-	extends Applyable(prefix, "times", attributes1, scope, minimizeEmpty) {
+	override val scope: NamespaceBinding)
+	extends Applyable(prefix, "times", attributes1, scope) {
 
-	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
 	def simplify() = this
 }
@@ -114,11 +110,10 @@ object Times {
 case class Divide(
 	override val prefix: String,
 	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean)
-	extends Applyable(prefix, "divide", attributes1, scope, minimizeEmpty) {
+	override val scope: NamespaceBinding)
+	extends Applyable(prefix, "divide", attributes1, scope) {
 
-	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
 	def simplify() = this
 }
@@ -130,11 +125,10 @@ object Divide {
 case class Power(
 	override val prefix: String,
 	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean)
-	extends Applyable(prefix, "power", attributes1, scope, minimizeEmpty) {
+	override val scope: NamespaceBinding)
+	extends Applyable(prefix, "power", attributes1, scope) {
 
-	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false)
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
 	def simplify() = this
 }

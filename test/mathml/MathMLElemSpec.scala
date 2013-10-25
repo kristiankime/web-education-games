@@ -101,7 +101,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions" in {
-			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyMinusB(Cn(1), Cn(1)))
+			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(Cn(0))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies left None)" in {
@@ -117,7 +117,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"product rule" in {
-			ApplyTimes(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Ci("X"), Cn("X")))
+			ApplyTimes(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Ci("X"), Ci("X")))
 		}
 
 	}

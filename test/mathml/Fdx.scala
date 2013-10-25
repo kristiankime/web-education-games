@@ -7,7 +7,7 @@ import scala.xml.Node
 import scala.xml.Text
 import scala.util.Failure
 
-object gdx extends MathMLElem(MathML.h.prefix, "Gxdx", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
+object Fdx extends MathMLElem(MathML.h.prefix, "Fdx", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
 	
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
@@ -15,7 +15,7 @@ object gdx extends MathMLElem(MathML.h.prefix, "Gxdx", MathML.h.attributes, Math
 
 	def isOne = false
 
-	def simplify() = gdx.this
+	def simplify() = Fdx.this
 
 	def variables: Set[String] = Set("X")
 

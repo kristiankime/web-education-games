@@ -53,7 +53,7 @@ class ApplyDivideSpec extends Specification {
 
 	"derivative" should {
 		"obey the quotient rule: (f/g)' = (f'g - g'f)/g^2" in {
-			(f / g).dx must beEqualTo( (fdx*g - gdx*f) / g^Cn(2) )
+			(mathml.F / G).dx must beEqualTo( (Fdx*G - Gdx*F) / G^Cn(2) )
 		}
 	}
 }

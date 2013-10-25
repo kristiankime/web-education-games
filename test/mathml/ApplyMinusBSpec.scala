@@ -57,6 +57,10 @@ class ApplyMinusBSpec extends Specification {
 
 	"derivative" should {
 		"obey the subtraction rule: (f - g)' = f' - g' (both terms dx are 0)" in {
+			(F - G).dx must beEqualTo(Cn(0))
+		}
+		
+		"obey the subtraction rule: (f - g)' = f' - g' (both terms dx are 0)" in {
 			ApplyMinusB(Cn(5), Cn(3)).derivative("X") must beEqualTo(Cn(0))
 		}
 		

@@ -3,17 +3,18 @@
 @import helper._
 @import controllers.DerivativeQuestionAnswerHTML
  
-@main("List of Self Quiz Questions") {
+@main("Answer a Self Quiz Question") {
     
     <h2>What is the Derivative of</h2>
     <script type="math/mml"> @Html(question.mathML.toString) </script>
     
-    <p>
-		Type in your answer, press RETURN, and then hit the submit button <br> 
-		<input size="80" onchange="QUIZ.updateAnswer(this.value)" value="@answer.map(_.originalStr).getOrElse("")"/>
-	</p>
+    <div>
+		Type in your answer, and then hit the submit button <br> 
+		<input size="80" onkeyup="QUIZ.updateAnswer(this.value)" value="@answer.map(_.originalStr).getOrElse("")"/>
+		<font style:visibility="hidden" id="answerNotParsed" color="red"> * </font>
+	</div>
 	
-	<div id="box">
+	<div>
 		You typed:<br>
 		@if(answer.nonEmpty){
 			<div id="answer"> <script type="math/mml"> @Html(answer.get.mathML.toString) </script> </div>	
@@ -24,13 +25,13 @@
 	
 	@if(answer.nonEmpty){
 		<p>
-		You answered the question @if(answer.get.correct){ correctly! } else { incorrectly }
+		You answered the question @if(answer.get.correct){ <font color="green"> correctly! </font> } else { <font color="red"> incorrectly </font> }
 		</p>
 	}		
 	
 	@form(routes.Application.answerSelfQuizQuestion, 'id -> "answerForm" ) {
 		<input type="hidden" name="@DerivativeQuestionAnswerHTML.questionId" value="@question.id">
-    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.answer" id="answerValue" value="">
+    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.answer" id="answerValue">
     	<input type="button" value="Submit" onclick="QUIZ.answerFormSubmit()">
     }
 	
@@ -41,20 +42,20 @@ var QUIZ = (function() {
     result.updateAnswer = function(mathMLStr) {
     	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
     	if (mathMLStatus.success) {
-    		console.log(mathMLStatus.value);
-    		result.mathML = mathMLStatus.value;
+    		result.mathML = mathMLStatus.value;			
+    		$("#answerNotParsed").hide();
     		ARTC.updateContentMathML("answer", mathMLStatus.value);
     	} else {
-    		// TODO handle error case
-			console.log(mathMLStatus);
+    		$("#answerNotParsed").show();
 		}
-    };
+    };	
 
     result.answerFormSubmit = function() {
-    	// TODO don't submit when result is empty
-    	$("#answerValue").val(result.mathML);
-    	$("#answerForm").submit();
-		return false;
+    	if(result.mathML){
+    		$("#answerValue").val(result.mathML);
+    		$("#answerForm").submit();
+		}
+		// TODO indicated that the form did not submit
     }
 
     return result;

@@ -1,15 +1,17 @@
 package models
 
 import scala.collection.mutable.LinkedHashMap
-import mathml.MathMLElem
 import scala.xml.XML
-import mathml.MathML
+import mathml._
 
 case class DerivativeQuestion(id: Int, mathML: MathMLElem)
 
 object DerivativeQuestions {
 	private var idCounter = 0
 	private val derivativeQuestions = LinkedHashMap[Int, DerivativeQuestion]()
+
+	// Boot the system up with default question(s)
+	DerivativeQuestions.create(Math(Ci("x")).toString)
 	
 	def all() = derivativeQuestions.values.toList
 

@@ -47,7 +47,7 @@ class ApplyDivideSpec extends Specification {
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyDivide(Ci("X"), Cn(3)).simplify must beEqualTo(ApplyDivide(Ci("X"), Cn(3)))
+			ApplyDivide(Ci("x"), Cn(3)).simplify must beEqualTo(ApplyDivide(Ci("x"), Cn(3)))
 		}
 	}
 

@@ -47,29 +47,33 @@ class ApplyPlusSpec extends Specification {
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyPlus(Ci("X"), Cn(3)).simplify must beEqualTo(ApplyPlus(Ci("X"), Cn(3)))
+			ApplyPlus(Ci("x"), Cn(3)).simplify must beEqualTo(ApplyPlus(Ci("x"), Cn(3)))
 		}
 	}
 
 	"derivative" should {
 		"obey the sum rule: (f + g)' = f' + g' (both terms dx are 0)" in {
-			ApplyPlus(Cn(5), Cn(3)).derivative("X") must beEqualTo(Cn(0))
+			ApplyPlus(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
+		}
+		
+		"obey the sum rule: (f + g)' = f' + g' (both terms dx are 0)" in {
+			ApplyPlus(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
 		}
 		
 		"obey the sum rule: (f + g)' = f' + g' (left side dx is 0)" in {
-			ApplyPlus(Cn(3), Ci("X")).derivative("X") must beEqualTo(Cn(1))
+			ApplyPlus(Cn(3), Ci("x")).derivative("x") must beEqualTo(Cn(1))
 		}
 
 		"obey the sum rule: (f + g)' = f' + g' (right side dx is 0)" in {
-			ApplyPlus(Ci("X"), Cn(3)).derivative("X") must beEqualTo(Cn(1))
+			ApplyPlus(Ci("x"), Cn(3)).derivative("x") must beEqualTo(Cn(1))
 		}
 		
 		"obey the sum rule: (f + g)' = f' + g' (neither side dx is 0)" in {
-			ApplyPlus(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Cn(1), Cn(1)))
+			ApplyPlus(Ci("x"), Ci("x")).derivative("x") must beEqualTo(ApplyPlus(Cn(1), Cn(1)))
 		}
 		
 		"obey the sum rule for >2 arguments" in {
-			ApplyPlus(Ci("X"), Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Cn(1), Cn(1), Cn(1)))
+			ApplyPlus(Ci("x"), Ci("x"), Ci("x")).derivative("x") must beEqualTo(ApplyPlus(Cn(1), Cn(1), Cn(1)))
 		}
 	}
 }

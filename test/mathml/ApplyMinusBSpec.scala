@@ -51,29 +51,29 @@ class ApplyMinusBSpec extends Specification {
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusB(Cn(3), Ci("X")).simplify must beEqualTo(ApplyMinusB(Cn(3), Ci("X")))
+			ApplyMinusB(Cn(3), Ci("x")).simplify must beEqualTo(ApplyMinusB(Cn(3), Ci("x")))
 		}
 	}
 
 	"derivative" should {
-		"obey the subtraction rule: (f - g)' = f' - g' (both terms dx are 0)" in {
-			(F - G).dx must beEqualTo(Cn(0))
+		"obey the subtraction rule: (f - g)' = f' - g'" in {
+			(F - G).dx must beEqualTo( Fdx - Gdx)
 		}
 		
 		"obey the subtraction rule: (f - g)' = f' - g' (both terms dx are 0)" in {
-			ApplyMinusB(Cn(5), Cn(3)).derivative("X") must beEqualTo(Cn(0))
+			ApplyMinusB(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
 		}
 		
 		"obey the subtraction rule: (f - g)' = f' - g' (left side dx is 0)" in {
-			ApplyMinusB(Cn(8), Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
+			ApplyMinusB(Cn(8), Ci("x")).derivative("x") must beEqualTo(ApplyMinusU(Cn(1)))
 		}
 
 		"obey the subtraction rule: (f - g)' = f' - g' (right side dx is 0)" in {
-			ApplyMinusB(Ci("X"), Cn(3)).derivative("X") must beEqualTo(Cn(1))
+			ApplyMinusB(Ci("x"), Cn(3)).derivative("x") must beEqualTo(Cn(1))
 		}
 		
 		"obey the subtraction rule: (f - g)' = f' - g' (neither side dx is 0)" in {
-			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(Cn(0))
+			ApplyMinusB(Ci("x"), Ci("x")).derivative("x") must beEqualTo(Cn(0))
 		}
 	}
 }

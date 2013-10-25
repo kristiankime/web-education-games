@@ -15,44 +15,44 @@ class CiSpec extends Specification {
 
 	"Ci" should {
 		"be the same regardless of whitespace with a string input" in {
-			Ci(" X   ") == Ci("X") must beTrue
+			Ci(" x   ") == Ci("x") must beTrue
 		}
 
 		"be the same regardless of whitespace with a node input" in {
-			val nodeWithX = <t>    X  </t>.child(0)
-			Ci(nodeWithX) == Ci("X") must beTrue
+			val nodeWithX = <t>    x  </t>.child(0)
+			Ci(nodeWithX) == Ci("x") must beTrue
 		}
 	}
 
 	"isZero" should {
 		"return false" in {
-			Ci("X").isZero must beFalse
+			Ci("x").isZero must beFalse
 		}
 	}
 
 	"isOne" should {
 		"return false" in {
-			Ci("X").isOne must beFalse
+			Ci("x").isOne must beFalse
 		}
 	}
 
 	"simplify" should {
 		"return value unchanged" in {
-			Ci("X").simplify must beEqualTo(Ci("X"))
+			Ci("x").simplify must beEqualTo(Ci("x"))
 		}
 	}
 
 	"derivative" should {
 		"return one if wrt same variable" in {
-			Ci("X").derivative("X") must beEqualTo(Cn(1))
+			Ci("x").derivative("x") must beEqualTo(Cn(1))
 		}
 
 		"return zero if wrt different variable" in {
-			Ci("X").derivative("Y") must beEqualTo(Cn(0))
+			Ci("x").derivative("Y") must beEqualTo(Cn(0))
 		}
 		
 		"return zero if variable is different case" in {
-			Ci("X").derivative("x") must beEqualTo(Cn(0))
+			Ci("x").derivative("X") must beEqualTo(Cn(0))
 		}
 	}
 }

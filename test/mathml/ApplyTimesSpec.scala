@@ -47,25 +47,29 @@ class ApplyTimesSpec extends Specification {
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyTimes(Cn(3), Ci("X")).simplify must beEqualTo(ApplyTimes(Cn(3), Ci("X")))
+			ApplyTimes(Cn(3), Ci("x")).simplify must beEqualTo(ApplyTimes(Cn(3), Ci("x")))
 		}
 	}
 
 	"derivative" should {
-		"obey the product rule: (f g)' = f'g + g'f (both terms dx are 0)" in {
-			ApplyTimes(Cn(5), Cn(3)).derivative("X") must beEqualTo(Cn(0))
+		"obey the product rule: (f g)' = f'g + fg' (both terms dx are 0)" in {
+			(F * G).dx must beEqualTo(Fdx * G + F * Gdx)
 		}
-		
+
+		"obey the product rule: (f g)' = f'g + g'f (both terms dx are 0)" in {
+			ApplyTimes(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
+		}
+
 		"obey the product rule: (f g)' = f'g + g'f (left side dx is 0)" in {
-			ApplyTimes(Cn(3), Ci("X")).derivative("X") must beEqualTo(Cn(3))
+			ApplyTimes(Cn(3), Ci("x")).derivative("x") must beEqualTo(Cn(3))
 		}
 
 		"obey the product rule: (f g)' = f'g + g'f (right side dx is 0)" in {
-			ApplyTimes(Ci("X"), Cn(3)).derivative("X") must beEqualTo(Cn(3))
+			ApplyTimes(Ci("x"), Cn(3)).derivative("x") must beEqualTo(Cn(3))
 		}
-		
+
 		"obey the product rule: (f g)' = f'g + g'f (neither side dx is 0)" in {
-			ApplyTimes(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Ci("X"), Ci("X")))
+			ApplyTimes(Ci("x"), Ci("x")).derivative("x") must beEqualTo(ApplyPlus(Ci("x"), Ci("x")))
 		}
 	}
 }

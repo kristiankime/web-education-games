@@ -73,11 +73,11 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"turn Ci into the number specified by the bound parameters" in {
-			Ci("X").eval(Map("X" -> 3)).get must beEqualTo(3)
+			Ci("x").eval(Map("x" -> 3)).get must beEqualTo(3)
 		}
 
 		"fail if there is no entry for a Ci variable name in the bound parameters" in {
-			Ci("X").eval(Map("no entry for X" -> 3)).isFailure must beTrue
+			Ci("x").eval(Map("no entry for X" -> 3)).isFailure must beTrue
 		}
 
 		"fail if there is only an applyable" in {
@@ -123,51 +123,51 @@ class MathMLElemSpec extends Specification {
 
 	"derivative" should {
 		"derivative of a constant is 0 (aka None)" in {
-			Cn(3).derivative("X") must beEqualTo(Cn(0))
+			Cn(3).derivative("x") must beEqualTo(Cn(0))
 		}
 
 		"derivative of the wrt variable is 1" in {
-			Ci("X").derivative("X") must beEqualTo(Cn(1))
+			Ci("x").derivative("x") must beEqualTo(Cn(1))
 		}
 
 		"derivative of non wrt variable is 0 (aka None)" in {
-			Ci("Not X").derivative("X") must beEqualTo(Cn(0))
+			Ci("Not X").derivative("x") must beEqualTo(Cn(0))
 		}
 
 		"sum of the derivatives is the derivative of the sums" in {
-			ApplyPlus(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Cn(1), Cn(1)))
+			ApplyPlus(Ci("x"), Ci("x")).derivative("x") must beEqualTo(ApplyPlus(Cn(1), Cn(1)))
 		}
 
 		"sum of the derivatives is the derivative of the sums (simplifies left None)" in {
-			ApplyPlus(Cn(1), Ci("X")).derivative("X") must beEqualTo(Cn(1))
+			ApplyPlus(Cn(1), Ci("x")).derivative("x") must beEqualTo(Cn(1))
 		}
 
 		"sum of the derivatives is the derivative of the sums (simplifies right None)" in {
-			ApplyPlus(Ci("X"), Cn(1)).derivative("X") must beEqualTo(Cn(1))
+			ApplyPlus(Ci("x"), Cn(1)).derivative("x") must beEqualTo(Cn(1))
 		}
 
 		"sum of the derivatives is the derivative of the sums (simplifies both None)" in {
-			ApplyPlus(Cn(1), Cn(1)).derivative("X") must beEqualTo(Cn(0))
+			ApplyPlus(Cn(1), Cn(1)).derivative("x") must beEqualTo(Cn(0))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions" in {
-			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(Cn(0))
+			ApplyMinusB(Ci("x"), Ci("x")).derivative("x") must beEqualTo(Cn(0))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies left None)" in {
-			ApplyMinusB(Cn(1), Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
+			ApplyMinusB(Cn(1), Ci("x")).derivative("x") must beEqualTo(ApplyMinusU(Cn(1)))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies right None)" in {
-			ApplyMinusB(Ci("X"), Cn(1)).derivative("X") must beEqualTo(Cn(1))
+			ApplyMinusB(Ci("x"), Cn(1)).derivative("x") must beEqualTo(Cn(1))
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies both None)" in {
-			ApplyMinusB(Cn(1), Cn(1)).derivative("X") must beEqualTo(Cn(0))
+			ApplyMinusB(Cn(1), Cn(1)).derivative("x") must beEqualTo(Cn(0))
 		}
 
 		"product rule" in {
-			ApplyTimes(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyPlus(Ci("X"), Ci("X")))
+			ApplyTimes(Ci("x"), Ci("x")).derivative("x") must beEqualTo(ApplyPlus(Ci("x"), Ci("x")))
 		}
 
 	}

@@ -53,13 +53,13 @@ class ApplyPowerSpec extends Specification {
 
 	"derivative" should {
 		"obey the elementary power rule: (x^n)' = n*x^(n-1)" in {
-			ApplyPower(Ci("X"), Cn(3)).derivative("X") must beEqualTo(ApplyTimes(Cn(3), ApplyPower(Ci("X"), ApplyMinusB(Cn(3), Cn(1)))))
+			(Ci("x") ^ Cn(3)).dx must beEqualTo(ApplyTimes(Cn(3), ApplyPower(Ci("x"), ApplyMinusB(Cn(3), Cn(1)))))
 		}
-		// LATER get the "chain power rule" working
-		//		"obey the chain power rule: (f(x)^r)' = r*f(x)^(r-1)*f'(x) (both terms dx are 0)" in {
-		//			ApplyMinusB(Cn(5), Cn(3)).derivative("X") must beEqualTo(Cn(0))
-		//		}
 		
+		"obey the chain power rule: (f^n)' = n*f^(n-1)f'" in {
+			(F ^ Cn(3)).dx must beEqualTo( Cn(3)*F^(Cn(3)-Cn(1)) * Fdx)
+		}
+
 		// LATER get the Generalized power rule working
 		// (f(x)^(g(x)))' = f(x)^(g(x)-1)*(g(x)*'(x)+f(x)*log(f(x))*g'(x))
 	}

@@ -26,8 +26,8 @@ class MathMLSpec extends Specification {
 		}
 
 		"be able to parse variables" in {
-			val xml = <ci>X</ci>
-			val mathML = Ci("X")
+			val xml = <ci>x</ci>
+			val mathML = Ci("x")
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
@@ -115,21 +115,21 @@ class MathMLSpec extends Specification {
 	"checkEq" should {
 
 		"be true for two equal cns" in {
-			MathML.checkEq("X", Cn(3), Cn(3)) must beTrue
+			MathML.checkEq("x", Cn(3), Cn(3)) must beTrue
 		}
 
-		"be true for two X+2 & 2+X" in {
-			val v1 = ApplyPlus(Ci("X"), Cn(2))
-			val v2 = ApplyPlus(Cn(2), Ci("X"))
+		"be true for two x+2 & 2+x" in {
+			val v1 = ApplyPlus(Ci("x"), Cn(2))
+			val v2 = ApplyPlus(Cn(2), Ci("x"))
 
-			MathML.checkEq("X", v1, v2) must beTrue
+			MathML.checkEq("x", v1, v2) must beTrue
 		}
 
-		"be true for two X^2 & X^2" in {
-			val v1 = ApplyPower(Ci("X"), Cn(2))
-			val v2 = ApplyPower(Ci("X"), Cn(2))
+		"be true for x^2 & x^2" in {
+			val v1 = ApplyPower(Ci("x"), Cn(2))
+			val v2 = ApplyPower(Ci("x"), Cn(2))
 
-			MathML.checkEq("X", v1, v2) must beTrue
+			MathML.checkEq("x", v1, v2) must beTrue
 		}
 	}
 

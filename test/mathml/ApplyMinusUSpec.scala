@@ -31,17 +31,17 @@ class ApplyMinusUSpec extends Specification {
 
 	"simplify" should {
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusU(Ci("X")).simplify must beEqualTo(ApplyMinusU(Ci("X")))
+			ApplyMinusU(Ci("x")).simplify must beEqualTo(ApplyMinusU(Ci("x")))
 		}
 	}
 
 	"derivative" should {
 		"return zero if value is not a function of variable" in {
-			ApplyMinusU(Cn(6)).derivative("X") must beEqualTo(Cn(0))
+			ApplyMinusU(Cn(6)).derivative("x") must beEqualTo(Cn(0))
 		}
 		
 		"return minus of deriv if value is a function of variable" in {
-			ApplyMinusU(Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
+			ApplyMinusU(Ci("x")).derivative("x") must beEqualTo(ApplyMinusU(Cn(1)))
 		}
 	}
 }

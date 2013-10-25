@@ -36,10 +36,13 @@ case class ApplyTimes(
 
 	def derivative(wrt: String): MathMLElem = values.reduce((a, b) => productRule(wrt, a, b)).simplify
 
-	private def productRule(wrt: String, val1: MathMLElem, val2: MathMLElem) =
-		ApplyPlus(
-			ApplyTimes(val1.derivative(wrt), val2),
-			ApplyTimes(val1, val2.derivative(wrt))).simplify
+	// http://en.wikipedia.org/wiki/Product_rule
+	// (f*g)' = f'*g + f*g'
+	private def productRule(wrt: String, f: MathMLElem, g: MathMLElem) = {
+		val fP = f.d(wrt).simplify
+		val gP = g.d(wrt).simplify
+		fP*g + f*gP
+	}
 
 }
 

@@ -7,7 +7,7 @@ import scala.xml.Node
 import scala.xml.Text
 import scala.util.Failure
 
-object Fx extends MathMLElem(MathML.h.prefix, "Fx", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
+object f extends MathMLElem(MathML.h.prefix, "f", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
@@ -15,9 +15,10 @@ object Fx extends MathMLElem(MathML.h.prefix, "Fx", MathML.h.attributes, MathML.
 
 	def isOne = false
 
-	def simplify() = this
+	def simplify() = f.this
 
 	def variables: Set[String] = Set("X")
 
-	def derivative(wrt: String) = if(wrt.toLowerCase() == "x") { Fxdx } else { Cn(0) }
+	def derivative(wrt: String) = if(wrt.toLowerCase() == "x") { fdx } else { Cn(0) }
+	
 }

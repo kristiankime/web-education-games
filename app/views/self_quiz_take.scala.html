@@ -10,55 +10,30 @@
     
     <div>
 		Type in your answer, and then hit the submit button <br> 
-		<input size="80" onkeyup="QUIZ.updateAnswer(this.value)" value="@answer.map(_.originalStr).getOrElse("")"/>
-		<font style:visibility="hidden" id="answerNotParsed" color="red"> * </font>
+		@mathml_editor("ANSWER")
 	</div>
-	
-	<div>
-		You typed:<br>
-		@if(answer.nonEmpty){
-			<div id="answer"> <script type="math/mml"> @Html(answer.get.mathML.toString) </script> </div>	
-		} else {
-			<div id="answer"> $${}$$ </div>	
-		}
-	</div>
-	
+		
 	@if(answer.nonEmpty){
-		<p>
+	<div>
 		You answered the question @if(answer.get.correct){ <font color="green"> correctly! </font> } else { <font color="red"> incorrectly </font> }
-		</p>
+	</div>
 	}		
 	
+	<div>
 	@form(routes.Application.answerSelfQuizQuestion, 'id -> "answerForm" ) {
 		<input type="hidden" name="@DerivativeQuestionAnswerHTML.questionId" value="@question.id">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.answer" id="answerValue">
-    	<input type="button" value="Submit" onclick="QUIZ.answerFormSubmit()">
+    	<input type="button" value="Submit" onclick="answerFormSubmit()">
     }
+    </div>
 	
-	    <script>
-var QUIZ = (function() {
-    var result = { mathML : "" };
-
-    result.updateAnswer = function(mathMLStr) {
-    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
-    	if (mathMLStatus.success) {
-    		result.mathML = mathMLStatus.value;			
-    		$("#answerNotParsed").hide();
-    		ARTC.updateContentMathML("answer", mathMLStatus.value);
-    	} else {
-    		$("#answerNotParsed").show();
-		}
-    };	
-
-    result.answerFormSubmit = function() {
-    	if(result.mathML){
-    		$("#answerValue").val(result.mathML);
-    		$("#answerForm").submit();
+	<script>
+	var answerFormSubmit = function() {
+		if(ANSWER.valid){
+			$("#answerValue").val(ANSWER.mathML);
+			$("#answerForm").submit();
 		}
 		// TODO indicated that the form did not submit
-    }
-
-    return result;
-})();
+	}
     </script>
 }

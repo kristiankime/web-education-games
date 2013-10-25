@@ -50,5 +50,9 @@ class CiSpec extends Specification {
 		"return zero if wrt different variable" in {
 			Ci("X").derivative("Y") must beEqualTo(Cn(0))
 		}
+		
+		"return zero if variable is different case" in {
+			Ci("X").derivative("x") must beEqualTo(Cn(0))
+		}
 	}
 }

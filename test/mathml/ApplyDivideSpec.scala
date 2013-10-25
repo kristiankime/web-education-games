@@ -34,11 +34,11 @@ class ApplyDivideSpec extends Specification {
 	}
 
 	"simplify" should {
-		"return 0 if isZero is true" in {
+		"return 0 if numerator is 0 (and denominator is not)" in {
 			ApplyDivide(Cn(0), Cn(6)).simplify must beEqualTo(Cn(0))
 		}
 
-		"return 1 if isOne is true" in {
+		"return 1 if numerator and denominator are equal (and non zero)" in {
 			ApplyDivide(Cn(4), Cn(4)).simplify must beEqualTo(Cn(1))
 		}
 		

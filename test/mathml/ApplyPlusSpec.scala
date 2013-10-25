@@ -34,11 +34,11 @@ class ApplyPlusSpec extends Specification {
 	}
 
 	"simplify" should {
-		"return 0 if isZero is true" in {
+		"return 0 if all values are 0" in {
 			ApplyPlus(Cn(0), Cn(0), Cn(0)).simplify must beEqualTo(Cn(0))
 		}
 
-		"return 1 if isOne is true" in {
+		"return 1 if exactly one value is 1" in {
 			ApplyPlus(Cn(0), Cn(1), Cn(0)).simplify must beEqualTo(Cn(1))
 		}
 

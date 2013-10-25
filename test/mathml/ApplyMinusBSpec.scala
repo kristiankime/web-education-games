@@ -28,7 +28,7 @@ class ApplyMinusBSpec extends Specification {
 			ApplyMinusB(Cn(1), Cn(0)).isOne must beTrue
 		}
 
-		"return false if first value do not subtract to zero" in {
+		"return false if values are not equal" in {
 			ApplyMinusB(Cn(4), Cn(2)).isOne must beFalse
 		}
 	}
@@ -61,7 +61,7 @@ class ApplyMinusBSpec extends Specification {
 		}
 		
 		"obey the subtraction rule: (f - g)' = f' - g' (left side dx is 0)" in {
-			ApplyMinusB(Cn(3), Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
+			ApplyMinusB(Cn(8), Ci("X")).derivative("X") must beEqualTo(ApplyMinusU(Cn(1)))
 		}
 
 		"obey the subtraction rule: (f - g)' = f' - g' (right side dx is 0)" in {
@@ -69,7 +69,7 @@ class ApplyMinusBSpec extends Specification {
 		}
 		
 		"obey the subtraction rule: (f - g)' = f' - g' (neither side dx is 0)" in {
-			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(ApplyMinusB(Cn(1), Cn(1)))
+			ApplyMinusB(Ci("X"), Ci("X")).derivative("X") must beEqualTo(Cn(0))
 		}
 	}
 }

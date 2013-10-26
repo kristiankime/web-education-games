@@ -17,8 +17,8 @@ object G extends MathMLElem(MathML.h.prefix, "G", MathML.h.attributes, MathML.h.
 
 	def simplify() = G.this
 
-	def variables: Set[String] = Set("X")
+	def variables: Set[String] = Set("x")
 
-	def derivative(wrt: String) = if(wrt.toLowerCase() == "x") { Gdx } else { Cn(0) }
+	def derivative(wrt: String) = if(wrt == "x") { Gdx } else { Cn(0) }
 	
 }

@@ -17,8 +17,8 @@ object Gdx extends MathMLElem(MathML.h.prefix, "Gdx", MathML.h.attributes, MathM
 
 	def simplify() = Gdx.this
 
-	def variables: Set[String] = Set("X")
+	def variables: Set[String] = Set("x")
 
-	def derivative(wrt: String) = if(wrt.toLowerCase() == "x") { throw new UnsupportedOperationException() } else { Cn(0) }
+	def derivative(wrt: String) = if(wrt == "x") { throw new UnsupportedOperationException() } else { Cn(0) }
 
 }

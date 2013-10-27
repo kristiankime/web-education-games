@@ -1,8 +1,9 @@
-package mathml
+package mathml.scalar
 
-import scala.util.Try
-import scala.xml.MetaData
-import scala.xml.NamespaceBinding
+import scala.util._
+import scala.xml._
+import mathml._
+
 
 case class ApplyPower(
 	override val prefix: String,
@@ -32,13 +33,14 @@ case class ApplyPower(
 	def variables: Set[String] = base.variables ++ exp.variables
 
 	// LATER technically need to use generalized power rule but for now we'll assume base is f(x) and Real Exponents
-	// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
 	def derivative(wrt: String): MathMLElem = {
 		if (!variables.contains(wrt)) Cn(0)
-		else if (base.isInstanceOf[Ci] && base.asInstanceOf[Ci].value.text.trim == wrt) {
-			val exps = exp.simplify
-			val bases = base.simplify
-			ApplyTimes(ApplyTimes(exps, ApplyPower(bases, ApplyMinusB(exps, Cn(1)))), bases.derivative(wrt).simplify).simplify
+		else if (!exp.variables.contains(wrt)) {
+			val r = exp.simplify
+			val f = base
+			val fP = f.d(wrt).simplify
+			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
+			(r * f ^(r - Cn(1)) * fP).simplify
 		} else {
 			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
 		}

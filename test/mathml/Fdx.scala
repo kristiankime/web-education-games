@@ -6,6 +6,8 @@ import scala.xml.NamespaceBinding
 import scala.xml.Node
 import scala.xml.Text
 import scala.util.Failure
+import mathml.scalar.MathMLElem
+import mathml.scalar.Cn
 
 object Fdx extends MathMLElem(MathML.h.prefix, "Fdx", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
 	

@@ -3,6 +3,7 @@ package models
 import scala.collection.mutable.LinkedHashMap
 import scala.xml.XML
 import mathml._
+import mathml.scalar._
 
 case class DerivativeQuestion(id: Int, mathML: MathMLElem)
 

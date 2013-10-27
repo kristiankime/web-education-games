@@ -1,12 +1,9 @@
-package mathml
+package mathml.scalar
 
-import scala.util.Failure
-import scala.util.Try
-import scala.xml.Elem
-import scala.xml.MetaData
-import scala.xml.NamespaceBinding
-import scala.xml.Node
-import scala.xml.Text
+import scala.util._
+import scala.xml._
+import mathml._
+
 
 abstract class MathMLElem(
 	prefix: String,

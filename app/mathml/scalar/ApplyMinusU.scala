@@ -1,8 +1,9 @@
-package mathml
+package mathml.scalar
 
-import scala.xml.NamespaceBinding
-import scala.xml.MetaData
-import scala.util.Try
+import scala.util._
+import scala.xml._
+import mathml._
+
 
 /**
  * ApplyMinusUnary

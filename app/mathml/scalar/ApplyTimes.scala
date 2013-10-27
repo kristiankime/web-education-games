@@ -1,8 +1,9 @@
-package mathml
+package mathml.scalar
 
-import scala.util.Try
-import scala.xml.MetaData
-import scala.xml.NamespaceBinding
+import scala.util._
+import scala.xml._
+import mathml._
+
 
 case class ApplyTimes(
 	override val prefix: String,

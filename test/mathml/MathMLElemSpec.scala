@@ -8,6 +8,15 @@ import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import org.specs2.matcher.Matcher
+import mathml.scalar.ApplyMinusU
+import mathml.scalar.ApplyDivide
+import mathml.scalar.ApplyTimes
+import mathml.scalar.ApplyPlus
+import mathml.scalar.Plus
+import mathml.scalar.ApplyMinusB
+import mathml.scalar.ApplyPower
+import mathml.scalar.Cn
+import mathml.scalar.Ci
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

@@ -1,7 +1,7 @@
 package models
 
 import scala.collection.mutable.LinkedHashMap
-import mathml.MathMLElem
+import mathml.scalar.MathMLElem
 import scala.xml.XML
 import mathml.MathML
 

@@ -1,11 +1,9 @@
 package mathml
 
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
-import scala.xml.Elem
-import scala.util.Failure
+import scala.util._
+import scala.xml._
 import math._
+import mathml.scalar._
 
 object MathML {
 
@@ -45,7 +43,7 @@ object MathML {
 		}
 	}
 
-	private def applyElementPrep(xml: scala.xml.Elem): scala.util.Try[mathml.MathMLElem] = {
+	private def applyElementPrep(xml: Elem): scala.util.Try[MathMLElem] = {
 		if (xml.childElem.size < 2) {
 			Failure(new IllegalArgumentException("Apply MathML Elements must have at least two children " + xml))
 		} else {
@@ -59,7 +57,7 @@ object MathML {
 		}
 	}
 
-	private def applyElementCreate(a: scala.xml.Elem, o: scala.xml.Elem, args: Seq[mathml.MathMLElem]): scala.util.Try[mathml.MathMLElem] = {
+	private def applyElementCreate(a: Elem, o: Elem, args: Seq[MathMLElem]): Try[MathMLElem] = {
 		(o.label.toLowerCase(), args) match {
 			case ("plus", _) => Success(new ApplyPlus(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Plus(o.prefix, o.attributes, o.scope), args: _*))
 			case ("minus", Seq(v)) => Success(new ApplyMinusU(a.prefix, a.attributes, a.scope, a.minimizeEmpty, Minus(o.prefix, o.attributes, o.scope), v))

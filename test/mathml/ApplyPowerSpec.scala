@@ -8,6 +8,9 @@ import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import org.specs2.matcher.Matcher
+import mathml.scalar.ApplyPower
+import mathml.scalar.Cn
+import mathml.scalar.Ci
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -53,11 +56,11 @@ class ApplyPowerSpec extends Specification {
 
 	"derivative" should {
 		"obey the elementary power rule: (x^n)' = n*x^(n-1)" in {
-			(Ci("x") ^ Cn(3)).dx must beEqualTo(ApplyTimes(Cn(3), ApplyPower(Ci("x"), ApplyMinusB(Cn(3), Cn(1)))))
+			(Ci("x") ^ Cn(3)).dx must beEqualTo(Cn(3) * Ci("x") ^ (Cn(3) - Cn(1)))
 		}
-		
+
 		"obey the chain power rule: (f^n)' = n*f^(n-1)f'" in {
-			(F ^ Cn(3)).dx must beEqualTo( Cn(3)*F^(Cn(3)-Cn(1)) * Fdx)
+			(F ^ Cn(3)).dx must beEqualTo(Cn(3) * F ^ (Cn(3) - Cn(1)) * Fdx)
 		}
 
 		// LATER get the Generalized power rule working

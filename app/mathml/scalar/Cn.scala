@@ -33,15 +33,16 @@ sealed abstract class Cn(attributes1: MetaData, val value: NumberText[_ <: Scala
 }
 
 object Cn {
-	def apply(value: String): Try[Cn] = {
-		(Try(BigInt(value)), Try(BigDecimal(value))) match {
+	def apply(str: String): Try[Cn] = {
+		val trimmed = str.trim
+		(Try(BigInt(trimmed)), Try(BigDecimal(trimmed))) match {
 			case (Success(v), _) => Success(Cn(v))
 			case (_, Success(v)) => Success(Cn(v))
 			case (Failure(a), Failure(b)) => Failure(b)
 		}
 	}
 
-	def apply(value: Node): Try[Cn] = apply(value.text.trim)
+	def apply(value: Node): Try[Cn] = apply(value.text)
 
 	def apply(value: Short) = CnInteger(IntegerText(value))
 

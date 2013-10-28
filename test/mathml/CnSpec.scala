@@ -16,12 +16,12 @@ class CnSpec extends Specification {
 
 	"Cn" should {
 		"be the same regardless of whitespace with a string input" in {
-			Cn(" 34   ") == Cn(34) must beTrue
+			Cn(" 34   ").get == Cn(34) must beTrue
 		}
 		
 		"be the same regardless of whitespace with a node input" in {
 			val nodeWith34 = <t>    34  </t>.child(0)
-			Cn(nodeWith34) == Cn(34) must beTrue
+			Cn(nodeWith34).get == Cn(34) must beTrue
 		}
 	}
 	

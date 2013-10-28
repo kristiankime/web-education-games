@@ -51,12 +51,14 @@ object Cn {
 	def apply(value: Long) = CnInteger(IntegerText(value))
 
 	def apply(value: BigInt) = CnInteger(IntegerText(value))
-
-	def apply(value: Float) = CnReal(RealText(value))
-
-	def apply(value: Double) = CnReal(RealText(value))
 	
-	def apply(value: BigDecimal) = CnReal(RealText(value))
+	def float(value: Float) = CnReal(RealText(value))
+
+	def double(value: Double) = CnReal(RealText(value))
+	
+	def bigDecimal(value: BigDecimal) = CnReal(RealText(value))
+	
+	def apply(value: BigDecimal): Cn = if(value.isWhole) Cn(value.toBigInt) else Cn.bigDecimal(value)
 
 	val realType = <cn type="real"></cn>.attributes //new UnprefixedAttribute("type", Seq(Text("real")), null)
 
@@ -85,7 +87,7 @@ case class CnInteger(override val value: IntegerText) extends Cn(Cn.integerType,
 	}
 
 	def /(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num / v.value.num)
+		case v:CnInteger => Cn(BigDecimal(value.num) / BigDecimal(v.value.num))
 		case v:CnReal => Cn(BigDecimal(value.num) / v.value.num)
 	}
 
@@ -127,11 +129,8 @@ case class CnReal(override val value: RealText) extends Cn(Cn.realType, value) {
 	}
 }
 
-
 class NumberText[T <: ScalaNumber](val num: T) extends Text(num.toString)
 
-case class RealText(override val num: BigDecimal) extends NumberText[BigDecimal](num)
+case class RealText(override val num: BigDecimal) extends NumberText[BigDecimal](num) // LATER Integers print as 2.0
 
 case class IntegerText(override val num: BigInt) extends NumberText[BigInt](num)
-
-

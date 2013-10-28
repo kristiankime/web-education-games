@@ -56,4 +56,76 @@ class CnSpec extends Specification {
 			Cn(10).derivative("X") must beEqualTo(Cn(0))
 		}
 	}
+	
+	"+" should {
+		"add two ints" in {
+			Cn(1) + Cn(2) must beEqualTo(Cn(3))
+		}
+		
+		"add two reals" in {
+			Cn(1.1) + Cn(2.2) must beEqualTo(Cn(3.3))
+		}
+		
+		"add real & int" in {
+			Cn(1.1) + Cn(2) must beEqualTo(Cn(3.1))
+		}
+
+		"add int & real" in {
+			Cn(1) + Cn(2.2) must beEqualTo(Cn(3.2))
+		}
+	}
+	
+	"-" should {
+		"subtract two ints" in {
+			Cn(1) - Cn(2) must beEqualTo(Cn(-1))
+		}
+		
+		"subtract two reals" in {
+			Cn(1.1) - Cn(2.2) must beEqualTo(Cn(-1.1))
+		}
+		
+		"subtract real & int" in {
+			Cn(1.1) - Cn(2) must beEqualTo(Cn(-.9))
+		}
+
+		"subtract int & real" in {
+			Cn(1) - Cn(2.2) must beEqualTo(Cn(-1.2))
+		}
+	}
+	
+	"*" should {
+		"multiply two ints" in {
+			Cn(2) * Cn(3) must beEqualTo(Cn(6))
+		}
+		
+		"multiply two reals" in {
+			Cn(2.5) * Cn(4.5) must beEqualTo(Cn(11.25))
+		}
+		
+		"multiply real & int" in {
+			Cn(1.1) * Cn(2) must beEqualTo(Cn(2.2))
+		}
+
+		"multiply int & real" in {
+			Cn(2) * Cn(2.4) must beEqualTo(Cn(4.8))
+		}
+	}
+	
+	"/" should {
+		"divide two ints" in {
+			Cn(4) / Cn(8) must beEqualTo(Cn(.5))
+		}
+		
+		"divide two reals" in {
+			Cn(3.75) / Cn(1.5) must beEqualTo(Cn(2.5))
+		}
+		
+		"divide real & int" in {
+			Cn(1.1) / Cn(2) must beEqualTo(Cn(.55))
+		}
+
+		"divide int & real" in {
+			Cn(5) / Cn(2.5) must beEqualTo(Cn(2))
+		}
+	}
 }

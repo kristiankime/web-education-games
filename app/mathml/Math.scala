@@ -3,6 +3,7 @@ package mathml
 import scala.util._
 import scala.xml._
 import mathml.scalar.MathMLElem
+import mathml.scalar.Cn
 
 case class Math(
 	override val prefix: String,
@@ -20,6 +21,8 @@ case class Math(
 
 	def isOne = false
 
+	def cn: Option[Cn] = None
+	
 	def simplify() = Math(prefix, attributes, scope, minimizeEmpty, value.simplify)
 
 	def variables: Set[String] = Set()

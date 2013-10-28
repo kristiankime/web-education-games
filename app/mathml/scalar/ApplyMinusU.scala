@@ -25,6 +25,11 @@ case class ApplyMinusU(
 
 	def isOne = false
 
+	def cn: Option[Cn] = value.cn match {
+		case Some(v) => Some(v * Cn(-1))
+		case _ => None
+	}
+	
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)

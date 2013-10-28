@@ -26,6 +26,11 @@ case class ApplyMinusB(
 
 	def isOne = value1.simplify.isOne && value2.simplify.isZero
 
+	def cn: Option[Cn] = (value1.cn, value2.cn) match {
+		case (Some(v1), Some(v2)) => Some(v1 - v2)
+		case _ => None
+	}
+	
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)

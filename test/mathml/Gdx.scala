@@ -10,17 +10,19 @@ import mathml.scalar.MathMLElem
 import mathml.scalar.Cn
 
 object Gdx extends MathMLElem(MathML.h.prefix, "Gdx", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
-	
+
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
 	def isZero = false
 
 	def isOne = false
 
+	def cn: Option[Cn] = None
+
 	def simplify() = Gdx.this
 
 	def variables: Set[String] = Set("x")
 
-	def derivative(wrt: String) = if(wrt == "x") { throw new UnsupportedOperationException() } else { Cn(0) }
+	def derivative(wrt: String) = if (wrt == "x") throw new UnsupportedOperationException() else Cn(0)
 
 }

@@ -22,6 +22,12 @@ case class ApplyTimes(
 
 	def isOne = values.map(_.simplify).foldLeft(true)(_ && _.isOne)
 
+	def cn: Option[Cn] = if (values.forall(_.cn.nonEmpty)) {
+		Some(values.map(_.cn.get).reduce(_ + _))
+	} else {
+		None
+	}
+	
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)

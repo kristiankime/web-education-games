@@ -21,6 +21,8 @@ case class Ci(
 
 	def isOne = false
 
+	def cn: Option[Cn] = None
+	
 	def simplify() = this
 
 	def variables: Set[String] = Set(value.text.trim)

@@ -22,7 +22,12 @@ case class ApplyDivide(
 	def isZero = numerator.simplify.isZero && !denominator.simplify.isZero
 
 	def isOne = numerator.simplify == denominator.simplify
-
+	
+	def cn: Option[Cn] = (numerator.cn, denominator.cn) match {
+		case (Some(nu), Some(de)) => Some(nu / de)
+		case _ => None
+	}
+	
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)

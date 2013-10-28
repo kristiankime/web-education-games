@@ -23,6 +23,11 @@ case class ApplyPower(
 
 	def isOne = base.simplify.isOne || exp.simplify.isZero
 
+	def cn: Option[Cn] = (base.cn, exp.cn) match {
+		case (Some(b), Some(e)) => Some(b ^ e)
+		case _ => None
+	}
+	
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)

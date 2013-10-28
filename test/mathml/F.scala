@@ -17,10 +17,12 @@ object F extends MathMLElem(MathML.h.prefix, "F", MathML.h.attributes, MathML.h.
 
 	def isOne = false
 
+	def cn: Option[Cn] = None
+
 	def simplify() = F.this
 
 	def variables: Set[String] = Set("x")
 
-	def derivative(wrt: String) = if(wrt == "x") { Fdx } else { Cn(0) }
-	
+	def derivative(wrt: String) = if (wrt == "x") Fdx else Cn(0)
+
 }

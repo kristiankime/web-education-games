@@ -4,7 +4,6 @@ import scala.util._
 import scala.xml._
 import mathml._
 
-
 case class ApplyPlus(
 	override val prefix: String,
 	attributes1: MetaData,
@@ -25,6 +24,12 @@ case class ApplyPlus(
 		val ones = simplified.filter(_.isOne).size
 		val zeros = simplified.filter(_.isZero).size
 		(ones == 1 && (ones + zeros == values.length))
+	}
+
+	def cn: Option[Cn] = if (values.forall(_.cn.nonEmpty)) {
+		Some(values.map(_.cn.get).reduce(_ + _))
+	} else {
+		None
 	}
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)

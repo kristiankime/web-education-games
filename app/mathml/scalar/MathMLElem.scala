@@ -20,6 +20,8 @@ abstract class MathMLElem(
 
 	def isOne: Boolean
 
+	def cn: Option[Cn]
+
 	def simplify(): MathMLElem
 	
 	def variables: Set[String]
@@ -53,6 +55,8 @@ abstract class Applyable(
 	def isZero = false
 
 	def isOne = false
+	
+	def cn: Option[Cn] = None
 
 	def variables: Set[String] = Set()
 	

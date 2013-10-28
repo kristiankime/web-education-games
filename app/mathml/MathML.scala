@@ -36,14 +36,18 @@ object MathML {
 		xml.label.toLowerCase match {
 			// TODO math must be the most outside wrapper
 			case "math" => Try(Math(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, MathML(xml.childElem(0)).get))
-			case "apply" => applyElementPrep(xml)
-			case "cn" => Success(Cn(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
+			case "apply" => applyElement(xml)
+			case "cn" => constantElement(xml)
 			case "ci" => Success(Ci(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
 	}
+	
+	private def constantElement(xml: Elem): Try[Cn] = {
+		Cn(xml.child(0))
+	}
 
-	private def applyElementPrep(xml: Elem): scala.util.Try[MathMLElem] = {
+	private def applyElement(xml: Elem): Try[MathMLElem] = {
 		if (xml.childElem.size < 2) {
 			Failure(new IllegalArgumentException("Apply MathML Elements must have at least two children " + xml))
 		} else {

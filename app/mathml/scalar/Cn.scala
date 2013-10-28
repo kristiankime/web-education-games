@@ -3,24 +3,14 @@ package mathml.scalar
 import scala.util._
 import scala.xml._
 import mathml._
+import scala.math.ScalaNumber
 
-case class Cn(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val value: Node)
-	extends MathMLElem(prefix, "cn", attributes1, scope, minimizeEmpty, Seq(Cn.format(value)): _*) {
+sealed abstract class Cn(attributes1: MetaData, val value: NumberText[_ <: ScalaNumber])
+	extends MathMLElem(MathML.h.prefix, "cn", attributes1, MathML.h.scope, false, Seq(value): _*) {
 
-	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, Cn.format(value))
+	def eval(boundVariables: Map[String, Double]) = Try(value.num.doubleValue)
 
-	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
-
-	def isZero = Try(text.trim().toDouble).getOrElse(Double.NaN) == 0d
-
-	def isOne = Try(text.trim().toDouble).getOrElse(Double.NaN) == 1d
-
-	def simplify() = this
+	def simplify(): this.type = this
 
 	def variables: Set[String] = Set()
 
@@ -28,51 +18,55 @@ case class Cn(
 }
 
 object Cn {
-	private def format(v : Node) : Text = format(v.text)
+	def apply(value: String): Try[Cn] = {
+		(Try(BigInt(value)), Try(BigDecimal(value))) match {
+			case (Success(v), _) => Success(Cn(v))
+			case (_, Success(v)) => Success(Cn(v))
+			case (Failure(a), Failure(b)) => Failure(b)
+		}
+	}
+
+	def apply(value: Node): Try[Cn] = apply(value.text.trim)
+
+	def apply(value: Short) = CnInteger(IntegerText(value))
+
+	def apply(value: Int) = CnInteger(IntegerText(value))
+
+	def apply(value: Long) = CnInteger(IntegerText(value))
+
+	def apply(value: BigInt) = CnInteger(IntegerText(value))
+
+	def apply(value: Float) = CnReal(RealText(value))
+
+	def apply(value: Double) = CnReal(RealText(value))
 	
-	private def format(v : String) = Text(v.trim) // TODO fail if string is not a number
-	
-	def apply(value: Node) = new Cn(format(value))
-	
-	def apply(value: Any) = new Cn(format(value.toString))
+	def apply(value: BigDecimal) = CnReal(RealText(value))
+
+	val realType = <cn type="real"></cn>.attributes //new UnprefixedAttribute("type", Seq(Text("real")), null)
+
+	val integerType = <cn type="integer"></cn>.attributes //new UnprefixedAttribute("type", Seq(Text("integer")), null)
 }
 
+case class CnInteger(override val value: IntegerText) extends Cn(Cn.integerType, value) {
 
+	def isZero = value.num.compare(BigInt(0)) == 0
 
+	def isOne = value.num.compare(BigInt(1)) == 0
 
-
-case class CnReal(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val value: Node)
-	extends MathMLElem(prefix, "cn", new UnprefixedAttribute("type", Seq(Text("real")), null), scope, minimizeEmpty, Seq(): _*) {
-
-	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
-
-	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
-
-	def isZero = Try(text.trim().toDouble).getOrElse(Double.NaN) == 0d
-
-	def isOne = Try(text.trim().toDouble).getOrElse(Double.NaN) == 1d
-
-	def simplify() = this
-
-	def variables: Set[String] = Set()
-
-	def derivative(wrt: String) = Cn(0)
 }
 
+case class CnReal(override val value: RealText) extends Cn(Cn.realType, value) {
 
+	def isZero = value.num.compare(BigDecimal(0)) == 0
 
+	def isOne = value.num.compare(BigDecimal(1)) == 0
+	
+}
 
+class NumberText[T <: ScalaNumber](val num: T) extends Text(num.toString)
 
+case class RealText(override val num: BigDecimal) extends NumberText[BigDecimal](num)
 
-class NumberText[T](val value: T) extends Text(value.toString)
-
-case class RealText(override val value: BigDecimal) extends NumberText[BigDecimal](value)
-
-case class IntegerText(override val value: BigInt) extends NumberText[BigInt](value)
+case class IntegerText(override val num: BigInt) extends NumberText[BigInt](num)
 
 

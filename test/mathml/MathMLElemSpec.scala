@@ -78,7 +78,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"fail if a Cn can't be parsed into a number" in {
-			Cn("not a number").eval(Map()).isFailure must beTrue
+			Cn("not a number").isFailure must beTrue
 		}
 
 		"turn Ci into the number specified by the bound parameters" in {

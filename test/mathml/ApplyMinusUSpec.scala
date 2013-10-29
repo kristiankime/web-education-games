@@ -44,7 +44,7 @@ class ApplyMinusUSpec extends Specification {
 		}
 		
 		"return minus of deriv if value is a function of variable" in {
-			ApplyMinusU(Ci("x")).derivative("x") must beEqualTo(ApplyMinusU(Cn(1)))
+			ApplyMinusU(Ci("x")).derivative("x") must beEqualTo(Cn(-1))
 		}
 	}
 }

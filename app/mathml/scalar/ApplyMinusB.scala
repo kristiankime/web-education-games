@@ -17,13 +17,11 @@ case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
 		case _ => None
 	}
 
-	def simplify() = {
-		if (isZero) Cn(0)
-		else if (isOne) Cn(1)
-		else if (value2.isZero) value1
-		else if (value1.isZero) ApplyMinusU(value2)
-		else this
-	}
+	def simplify() =
+		if (cn.nonEmpty) cn.get
+		else if (value2.isZero) value1.simplify
+		else if (value1.isZero) ApplyMinusU(value2).simplify
+		else ApplyMinusB(value1.simplify, value2.simplify)
 
 	def variables: Set[String] = value1.variables ++ value2.variables
 

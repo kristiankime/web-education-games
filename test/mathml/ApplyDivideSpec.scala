@@ -36,6 +36,16 @@ class ApplyDivideSpec extends Specification {
 		}
 	}
 
+	"cn" should {
+		"return division if numerator and denominator are numbers " in {
+			(Cn(6) /Cn(4)).cn.get must beEqualTo(Cn(1.5))
+		}
+		
+		"return zero if numerator is zero " in {
+			(Cn(0) /Cn(4)).cn.get must beEqualTo(Cn(0))
+		}
+	}
+
 	"simplify" should {
 		"return 0 if numerator is 0 (and denominator is not)" in {
 			ApplyDivide(Cn(0), Cn(6)).simplify must beEqualTo(Cn(0))
@@ -44,7 +54,7 @@ class ApplyDivideSpec extends Specification {
 		"return 1 if numerator and denominator are equal (and non zero)" in {
 			ApplyDivide(Cn(4), Cn(4)).simplify must beEqualTo(Cn(1))
 		}
-		
+
 		"return numerator if denominator is 1" in {
 			ApplyDivide(Cn(6), Cn(1)).simplify must beEqualTo(Cn(6))
 		}
@@ -56,7 +66,7 @@ class ApplyDivideSpec extends Specification {
 
 	"derivative" should {
 		"obey the quotient rule: (f/g)' = (f'g - g'f)/g^2" in {
-			(mathml.F / G).dx must beEqualTo( (Fdx*G - Gdx*F) / G^Cn(2) )
+			(mathml.F / G).dx must beEqualTo((Fdx * G - Gdx * F) / G ^ Cn(2))
 		}
 	}
 }

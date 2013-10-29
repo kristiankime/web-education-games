@@ -9,11 +9,12 @@ case class ApplyPlus(val values: MathMLElem*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 
-	def cn: Option[Cn] = if (values.forall(_.cn.nonEmpty)) {
-		Some(values.map(_.cn.get).reduce(_ + _))
-	} else {
-		None
-	}
+	def cn: Option[Cn] =
+		if (values.forall(_.cn.nonEmpty)) {
+			Some(values.map(_.cn.get).reduce(_ + _))
+		} else {
+			None
+		}
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 

@@ -17,11 +17,9 @@ case class ApplyMinusU(val value: MathMLElem)
 		case _ => None
 	}
 
-	def simplify() = {
-		if (isZero) Cn(0)
-		else if (isOne) Cn(1)
-		else this
-	}
+	def simplify() =
+		if (cn.nonEmpty) cn.get
+		else ApplyMinusU(value.simplify)
 
 	def variables: Set[String] = value.variables
 

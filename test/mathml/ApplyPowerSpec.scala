@@ -42,15 +42,15 @@ class ApplyPowerSpec extends Specification {
 
 	"simplify" should {
 		"return 0 if base is zero" in {
-			ApplyPower(Cn(0), Cn(5)).simplify must beEqualTo(Cn(0))
+			ApplyPower(Cn(0), Cn(5)).simplifyStep must beEqualTo(Cn(0))
 		}
 
 		"return 1 if base is 1" in {
-			ApplyPower(Cn(1), Cn(12)).simplify must beEqualTo(Cn(1))
+			ApplyPower(Cn(1), Cn(12)).simplifyStep must beEqualTo(Cn(1))
 		}
 
 		"return 1 if exponent is 0" in {
-			ApplyPower(Cn(4), Cn(0)).simplify must beEqualTo(Cn(1))
+			ApplyPower(Cn(4), Cn(0)).simplifyStep must beEqualTo(Cn(1))
 		}
 	}
 

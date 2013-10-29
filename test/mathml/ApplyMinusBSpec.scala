@@ -39,23 +39,23 @@ class ApplyMinusBSpec extends Specification {
 
 	"simplify" should {
 		"return 0 if isZero is true" in {
-			ApplyMinusB(Cn(1), Cn(1)).simplify must beEqualTo(Cn(0))
+			ApplyMinusB(Cn(1), Cn(1)).simplifyStep must beEqualTo(Cn(0))
 		}
 
 		"return 1 if isOne is true" in {
-			ApplyMinusB(Cn(1), Cn(0)).simplify must beEqualTo(Cn(1))
+			ApplyMinusB(Cn(1), Cn(0)).simplifyStep must beEqualTo(Cn(1))
 		}
 
 		"return first value if second value is 0" in {
-			ApplyMinusB(Cn(4), Cn(0)).simplify must beEqualTo(Cn(4))
+			ApplyMinusB(Cn(4), Cn(0)).simplifyStep must beEqualTo(Cn(4))
 		}
 
 		"return minus second value if first value is 0" in {
-			ApplyMinusB(Cn(0), Cn(3)).simplify must beEqualTo(ApplyMinusU(Cn(3)))
+			ApplyMinusB(Cn(0), Cn(3)).simplifyStep must beEqualTo(ApplyMinusU(Cn(3)))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusB(Cn(3), Ci("x")).simplify must beEqualTo(ApplyMinusB(Cn(3), Ci("x")))
+			ApplyMinusB(Cn(3), Ci("x")).simplifyStep must beEqualTo(ApplyMinusB(Cn(3), Ci("x")))
 		}
 	}
 

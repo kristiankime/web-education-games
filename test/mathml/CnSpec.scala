@@ -47,7 +47,7 @@ class CnSpec extends Specification {
 
 	"simplify" should {
 		"return value unchanged" in {
-			Cn(1).simplify must beEqualTo(Cn(1))
+			Cn(1).simplifyStep must beEqualTo(Cn(1))
 		}
 	}
 

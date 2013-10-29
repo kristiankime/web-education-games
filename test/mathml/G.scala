@@ -13,9 +13,9 @@ object G extends MathMLElem(MathML.h.prefix, "G", MathML.h.attributes, MathML.h.
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cn: Option[Cn] = None
+	def cnStep: Option[Cn] = None
 
-	def simplify() = G.this
+	def simplifyStep() = G.this
 
 	def variables: Set[String] = Set("x")
 

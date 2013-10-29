@@ -34,7 +34,7 @@ class ApplyMinusUSpec extends Specification {
 
 	"simplify" should {
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusU(Ci("x")).simplify must beEqualTo(ApplyMinusU(Ci("x")))
+			ApplyMinusU(Ci("x")).simplifyStep must beEqualTo(ApplyMinusU(Ci("x")))
 		}
 	}
 

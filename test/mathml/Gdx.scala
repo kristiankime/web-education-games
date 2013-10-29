@@ -13,9 +13,9 @@ object Gdx extends MathMLElem(MathML.h.prefix, "Gdx", MathML.h.attributes, MathM
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cn: Option[Cn] = None
+	def cnStep: Option[Cn] = None
 
-	def simplify() = Gdx.this
+	def simplifyStep() = Gdx.this
 
 	def variables: Set[String] = Set("x")
 

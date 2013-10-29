@@ -38,29 +38,29 @@ class ApplyDivideSpec extends Specification {
 
 	"cn" should {
 		"return division if numerator and denominator are numbers " in {
-			(Cn(6) /Cn(4)).cn.get must beEqualTo(Cn(1.5))
+			(Cn(6) /Cn(4)).cnStep.get must beEqualTo(Cn(1.5))
 		}
 		
 		"return zero if numerator is zero " in {
-			(Cn(0) /Cn(4)).cn.get must beEqualTo(Cn(0))
+			(Cn(0) /Cn(4)).cnStep.get must beEqualTo(Cn(0))
 		}
 	}
 
 	"simplify" should {
 		"return 0 if numerator is 0 (and denominator is not)" in {
-			ApplyDivide(Cn(0), Cn(6)).simplify must beEqualTo(Cn(0))
+			ApplyDivide(Cn(0), Cn(6)).simplifyStep must beEqualTo(Cn(0))
 		}
 
 		"return 1 if numerator and denominator are equal (and non zero)" in {
-			ApplyDivide(Cn(4), Cn(4)).simplify must beEqualTo(Cn(1))
+			ApplyDivide(Cn(4), Cn(4)).simplifyStep must beEqualTo(Cn(1))
 		}
 
 		"return numerator if denominator is 1" in {
-			ApplyDivide(Cn(6), Cn(1)).simplify must beEqualTo(Cn(6))
+			ApplyDivide(Cn(6), Cn(1)).simplifyStep must beEqualTo(Cn(6))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyDivide(Ci("x"), Cn(3)).simplify must beEqualTo(ApplyDivide(Ci("x"), Cn(3)))
+			ApplyDivide(Ci("x"), Cn(3)).simplifyStep must beEqualTo(ApplyDivide(Ci("x"), Cn(3)))
 		}
 	}
 

@@ -17,9 +17,9 @@ case class Ci(
 
 	def eval(boundVariables: Map[String, Double]) = Try(boundVariables.get(text).get)
 
-	def cn: Option[Cn] = None
+	def cnStep: Option[Cn] = None
 	
-	def simplify() = this
+	def simplifyStep() = this
 
 	def variables: Set[String] = Set(value.text.trim)
 	

@@ -13,7 +13,7 @@ abstract class Operator(
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
 
-	def cn: Option[Cn] = None
+	def cnStep: Option[Cn] = None
 
 	def variables: Set[String] = Set()
 
@@ -28,7 +28,7 @@ case class Plus(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
-	def simplify() = this
+	def simplifyStep() = this
 }
 
 object Plus {
@@ -43,7 +43,7 @@ case class Minus(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
-	def simplify() = this
+	def simplifyStep() = this
 }
 
 object Minus {
@@ -58,7 +58,7 @@ case class Times(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
-	def simplify() = this
+	def simplifyStep() = this
 }
 
 object Times {
@@ -73,7 +73,7 @@ case class Divide(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
-	def simplify() = this
+	def simplifyStep() = this
 }
 
 object Divide {
@@ -88,7 +88,7 @@ case class Power(
 
 	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
 
-	def simplify() = this
+	def simplifyStep() = this
 }
 
 object Power {

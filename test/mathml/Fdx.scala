@@ -13,9 +13,9 @@ object Fdx extends MathMLElem(MathML.h.prefix, "Fdx", MathML.h.attributes, MathM
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cn: Option[Cn] = None
+	def cnStep: Option[Cn] = None
 
-	def simplify() = Fdx.this
+	def simplifyStep() = Fdx.this
 
 	def variables: Set[String] = Set("x")
 

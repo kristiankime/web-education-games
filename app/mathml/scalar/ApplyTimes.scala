@@ -10,17 +10,17 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
 	
-	def cn: Option[Cn] = if (values.forall(_.cn.nonEmpty)) {
-		Some(values.map(_.cn.get).reduce(_ + _))
+	def cnStep: Option[Cn] = if (values.forall(_.cnStep.nonEmpty)) {
+		Some(values.map(_.cnStep.get).reduce(_ + _))
 	} else {
 		None
 	}
 	
-	def simplify() = {
+	def simplifyStep() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
 		else {
-			val nonOneVals = values.map(_.simplify).filter(!_.isOne)
+			val nonOneVals = values.map(_.simplifyStep).filter(!_.isOne)
 			if (nonOneVals.isEmpty) Cn(1)
 			else if (nonOneVals.size == 1) nonOneVals(0)
 			else ApplyTimes(nonOneVals: _*)
@@ -29,13 +29,13 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 
-	def derivative(wrt: String): MathMLElem = values.reduce((a, b) => productRule(wrt, a, b)).simplify
+	def derivative(wrt: String): MathMLElem = values.reduce((a, b) => productRule(wrt, a, b)).simplifyStep
 
 	// http://en.wikipedia.org/wiki/Product_rule
 	// (f*g)' = f'*g + f*g'
 	private def productRule(wrt: String, f: MathMLElem, g: MathMLElem) = {
-		val fP = f.d(wrt).simplify
-		val gP = g.d(wrt).simplify
+		val fP = f.d(wrt).simplifyStep
+		val gP = g.d(wrt).simplifyStep
 		fP*g + f*gP
 	}
 }

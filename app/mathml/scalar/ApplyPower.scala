@@ -9,12 +9,12 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
-	def cn: Option[Cn] = (base.cn, exp.cn) match {
+	def cnStep: Option[Cn] = (base.cnStep, exp.cnStep) match {
 		case (Some(b), Some(e)) => Some(b ^ e)
 		case _ => None
 	}
 
-	def simplify() = {
+	def simplifyStep() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
 		else if (exp.isOne) base
@@ -27,11 +27,11 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	def derivative(wrt: String): MathMLElem = {
 		if (!variables.contains(wrt)) Cn(0)
 		else if (!exp.variables.contains(wrt)) {
-			val r = exp.simplify
+			val r = exp.simplifyStep
 			val f = base
-			val fP = f.d(wrt).simplify
+			val fP = f.d(wrt).simplifyStep
 			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
-			(r * f ^ (r - Cn(1)) * fP).simplify
+			(r * f ^ (r - Cn(1)) * fP).simplifyStep
 		} else {
 			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
 		}

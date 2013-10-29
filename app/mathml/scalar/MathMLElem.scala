@@ -15,13 +15,17 @@ abstract class MathMLElem(
 
 	def eval(boundVariables: Map[String, Double]): Try[Double]
 
-	def isZero: Boolean = if (cn.nonEmpty) cn.get == Cn(0) else false
+	def isZero: Boolean = if (cnStep.nonEmpty) cnStep.get == Cn(0) else false
 
-	def isOne: Boolean = if (cn.nonEmpty) cn.get == Cn(1) else false
+	def isOne: Boolean = if (cnStep.nonEmpty) cnStep.get == Cn(1) else false
 
-	def cn: Option[Cn]
+	def cnStep: Option[Cn]
 
-	def simplify(): MathMLElem
+	/**
+	 * Does one round of simplification on this element
+	 * LATER this is intended to be called repeatedly until a fixed point is reached
+	 */
+	def simplifyStep(): MathMLElem
 
 	def variables: Set[String]
 

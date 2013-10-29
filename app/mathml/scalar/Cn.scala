@@ -12,9 +12,9 @@ sealed abstract class Cn(attributes1: MetaData, val value: NumberText[_ <: Scala
 
 	def eval(boundVariables: Map[String, Double]) = Try(value.num.doubleValue)
 
-	def cn: Option[this.type] = Some(this)
+	def cnStep: Option[this.type] = Some(this)
 	
-	def simplify(): this.type = this
+	def simplifyStep(): this.type = this
 
 	def variables: Set[String] = Set()
 

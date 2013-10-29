@@ -39,19 +39,19 @@ class ApplyTimesSpec extends Specification {
 
 	"simplify" should {
 		"return 0 if isZero is true" in {
-			ApplyTimes(Cn(1), Cn(0), Cn(1)).simplify must beEqualTo(Cn(0))
+			ApplyTimes(Cn(1), Cn(0), Cn(1)).simplifyStep must beEqualTo(Cn(0))
 		}
 
 		"return 1 if isOne is true" in {
-			ApplyTimes(Cn(1), Cn(1), Cn(1)).simplify must beEqualTo(Cn(1))
+			ApplyTimes(Cn(1), Cn(1), Cn(1)).simplifyStep must beEqualTo(Cn(1))
 		}
 
 		"skip any 1 values" in {
-			ApplyTimes(Cn(4), Cn(1), Cn(3)).simplify must beEqualTo(ApplyTimes(Cn(4), Cn(3)))
+			ApplyTimes(Cn(4), Cn(1), Cn(3)).simplifyStep must beEqualTo(ApplyTimes(Cn(4), Cn(3)))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyTimes(Cn(3), Ci("x")).simplify must beEqualTo(ApplyTimes(Cn(3), Ci("x")))
+			ApplyTimes(Cn(3), Ci("x")).simplifyStep must beEqualTo(ApplyTimes(Cn(3), Ci("x")))
 		}
 	}
 

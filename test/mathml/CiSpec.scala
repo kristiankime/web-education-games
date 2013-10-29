@@ -40,7 +40,7 @@ class CiSpec extends Specification {
 
 	"simplify" should {
 		"return value unchanged" in {
-			Ci("x").simplify must beEqualTo(Ci("x"))
+			Ci("x").simplifyStep must beEqualTo(Ci("x"))
 		}
 	}
 

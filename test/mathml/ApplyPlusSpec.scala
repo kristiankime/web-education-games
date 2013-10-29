@@ -38,19 +38,19 @@ class ApplyPlusSpec extends Specification {
 
 	"simplify" should {
 		"return 0 if all values are 0" in {
-			ApplyPlus(Cn(0), Cn(0), Cn(0)).simplify must beEqualTo(Cn(0))
+			ApplyPlus(Cn(0), Cn(0), Cn(0)).simplifyStep must beEqualTo(Cn(0))
 		}
 
 		"return 1 if exactly one value is 1" in {
-			ApplyPlus(Cn(0), Cn(1), Cn(0)).simplify must beEqualTo(Cn(1))
+			ApplyPlus(Cn(0), Cn(1), Cn(0)).simplifyStep must beEqualTo(Cn(1))
 		}
 
 		"skip any 0 values" in {
-			ApplyPlus(Cn(4), Cn(0), Cn(1), Cn(3), Cn(0)).simplify must beEqualTo(ApplyPlus(Cn(4), Cn(1), Cn(3)))
+			ApplyPlus(Cn(4), Cn(0), Cn(1), Cn(3), Cn(0)).simplifyStep must beEqualTo(ApplyPlus(Cn(4), Cn(1), Cn(3)))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyPlus(Ci("x"), Cn(3)).simplify must beEqualTo(ApplyPlus(Ci("x"), Cn(3)))
+			ApplyPlus(Ci("x"), Cn(3)).simplifyStep must beEqualTo(ApplyPlus(Ci("x"), Cn(3)))
 		}
 	}
 

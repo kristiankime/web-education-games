@@ -17,11 +17,7 @@ case class ApplyTimes(
 	def this(times: Times, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, times, applyValues: _*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
-
-	def isZero = values.map(_.simplify).foldLeft(false)(_ || _.isZero)
-
-	def isOne = values.map(_.simplify).foldLeft(true)(_ && _.isOne)
-
+	
 	def cn: Option[Cn] = if (values.forall(_.cn.nonEmpty)) {
 		Some(values.map(_.cn.get).reduce(_ + _))
 	} else {

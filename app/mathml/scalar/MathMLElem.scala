@@ -16,9 +16,9 @@ abstract class MathMLElem(
 
 	def eval(boundVariables: Map[String, Double]): Try[Double]
 
-	def isZero: Boolean
+	def isZero: Boolean = if(cn.nonEmpty) cn == Cn(0) else false
 
-	def isOne: Boolean
+	def isOne: Boolean = if(cn.nonEmpty) cn == Cn(1) else false
 
 	def cn: Option[Cn]
 
@@ -51,10 +51,6 @@ abstract class Applyable(
 	extends MathMLElem(prefix, label, attributes1, scope, true, Seq(): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
-
-	def isZero = false
-
-	def isOne = false
 	
 	def cn: Option[Cn] = None
 

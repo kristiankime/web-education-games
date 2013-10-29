@@ -19,10 +19,6 @@ case class ApplyPower(
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
-	def isZero = base.simplify.isZero
-
-	def isOne = base.simplify.isOne || exp.simplify.isZero
-
 	def cn: Option[Cn] = (base.cn, exp.cn) match {
 		case (Some(b), Some(e)) => Some(b ^ e)
 		case _ => None

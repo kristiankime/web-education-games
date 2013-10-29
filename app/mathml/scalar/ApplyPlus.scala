@@ -17,15 +17,6 @@ case class ApplyPlus(
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 
-	def isZero = values.map(_.simplify).foldLeft(true)(_ && _.isZero)
-
-	def isOne = {
-		val simplified = values.map(_.simplify)
-		val ones = simplified.filter(_.isOne).size
-		val zeros = simplified.filter(_.isZero).size
-		(ones == 1 && (ones + zeros == values.length))
-	}
-
 	def cn: Option[Cn] = if (values.forall(_.cn.nonEmpty)) {
 		Some(values.map(_.cn.get).reduce(_ + _))
 	} else {

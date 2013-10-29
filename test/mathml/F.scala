@@ -13,10 +13,6 @@ object F extends MathMLElem(MathML.h.prefix, "F", MathML.h.attributes, MathML.h.
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def isZero = false
-
-	def isOne = false
-
 	def cn: Option[Cn] = None
 
 	def simplify() = F.this

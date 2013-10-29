@@ -21,10 +21,6 @@ case class ApplyMinusU(
 
 	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
 
-	def isZero = value.simplify.isZero
-
-	def isOne = false
-
 	def cn: Option[Cn] = value.cn match {
 		case Some(v) => Some(v * Cn(-1))
 		case _ => None

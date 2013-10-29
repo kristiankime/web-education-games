@@ -22,10 +22,6 @@ case class ApplyMinusB(
 
 	def eval(boundVariables: Map[String, Double]) = Try(value1.eval(boundVariables).get - value2.eval(boundVariables).get)
 
-	def isZero = value1.simplify == value2.simplify
-
-	def isOne = value1.simplify.isOne && value2.simplify.isZero
-
 	def cn: Option[Cn] = (value1.cn, value2.cn) match {
 		case (Some(v1), Some(v2)) => Some(v1 - v2)
 		case _ => None

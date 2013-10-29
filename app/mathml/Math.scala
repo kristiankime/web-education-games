@@ -17,10 +17,6 @@ case class Math(
 
 	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
 
-	def isZero = false
-
-	def isOne = false
-
 	def cn: Option[Cn] = None
 	
 	def simplify() = Math(prefix, attributes, scope, minimizeEmpty, value.simplify)

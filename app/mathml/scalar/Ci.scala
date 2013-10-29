@@ -17,10 +17,6 @@ case class Ci(
 
 	def eval(boundVariables: Map[String, Double]) = Try(boundVariables.get(text).get)
 
-	def isZero = false
-
-	def isOne = false
-
 	def cn: Option[Cn] = None
 	
 	def simplify() = this

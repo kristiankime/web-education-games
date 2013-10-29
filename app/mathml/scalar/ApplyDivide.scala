@@ -18,10 +18,6 @@ case class ApplyDivide(
 	def this(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, divide, numerator, denominator)
 
 	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
-
-	def isZero = numerator.simplify.isZero && !denominator.simplify.isZero
-
-	def isOne = numerator.simplify == denominator.simplify
 	
 	def cn: Option[Cn] = (numerator.cn, denominator.cn) match {
 		case (Some(nu), Some(de)) => Some(nu / de)
@@ -29,10 +25,8 @@ case class ApplyDivide(
 	}
 	
 	def simplify() = {
-		if (isZero) Cn(0)
-		else if (isOne) Cn(1)
-		else if (denominator.simplify.isOne) numerator
-		else this
+		if (cn.nonEmpty) cn.get
+		else ApplyDivide(denominator.simplify, numerator.simplify)
 	}
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables

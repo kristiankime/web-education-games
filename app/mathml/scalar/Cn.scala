@@ -66,10 +66,6 @@ object Cn {
 }
 
 case class CnInteger(override val value: IntegerText) extends Cn(Cn.integerType, value) {
-
-	def isZero = value.num.compare(BigInt(0)) == 0
-
-	def isOne = value.num.compare(BigInt(1)) == 0
 	
 	def +(m : Cn) = m match {
 		case v:CnInteger => Cn(value.num + v.value.num)
@@ -98,10 +94,6 @@ case class CnInteger(override val value: IntegerText) extends Cn(Cn.integerType,
 }
 
 case class CnReal(override val value: RealText) extends Cn(Cn.realType, value) {
-
-	def isZero = value.num.compare(BigDecimal(0)) == 0
-
-	def isOne = value.num.compare(BigDecimal(1)) == 0
 	
 	def +(m : Cn) = m match {
 		case v:CnInteger => Cn(value.num + BigDecimal(v.value.num))

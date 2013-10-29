@@ -5,17 +5,8 @@ import scala.xml._
 import mathml._
 
 
-case class ApplyDivide(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val divide: Divide,
-	val numerator: MathMLElem,
-	val denominator: MathMLElem)
-	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](divide) ++ numerator ++ denominator): _*) {
-
-	def this(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, divide, numerator, denominator)
+case class ApplyDivide(val numerator: MathMLElem,val denominator: MathMLElem)
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Divide()) ++ numerator ++ denominator): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
 	
@@ -26,7 +17,7 @@ case class ApplyDivide(
 	
 	def simplify() = {
 		if (cn.nonEmpty) cn.get
-		else ApplyDivide(denominator.simplify, numerator.simplify)
+		else ApplyDivide(numerator.simplify, denominator.simplify)
 	}
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables
@@ -41,9 +32,4 @@ case class ApplyDivide(
 		// (f/g)' = (f'g - g'f)/g^2
 		(fP*g - gP*f) / g^Cn(2) simplify
 	}
-}
-
-object ApplyDivide {
-	def apply(divide: Divide, numerator: MathMLElem, denominator: MathMLElem) = new ApplyDivide(divide, numerator, denominator)
-	def apply(numerator: MathMLElem, denominator: MathMLElem) = new ApplyDivide(Divide(), numerator, denominator)
 }

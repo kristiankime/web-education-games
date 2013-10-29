@@ -4,18 +4,8 @@ import scala.util._
 import scala.xml._
 import mathml._
 
-
-case class ApplyPower(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val power: Power,
-	val base: MathMLElem,
-	val exp: MathMLElem)
-	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](power) ++ base ++ exp): _*) {
-
-	def this(power: Power, base: MathMLElem, exp: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, power, base, exp)
+case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Power()) ++ base ++ exp): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
@@ -23,7 +13,7 @@ case class ApplyPower(
 		case (Some(b), Some(e)) => Some(b ^ e)
 		case _ => None
 	}
-	
+
 	def simplify() = {
 		if (isZero) Cn(0)
 		else if (isOne) Cn(1)
@@ -41,14 +31,9 @@ case class ApplyPower(
 			val f = base
 			val fP = f.d(wrt).simplify
 			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
-			(r * f ^(r - Cn(1)) * fP).simplify
+			(r * f ^ (r - Cn(1)) * fP).simplify
 		} else {
 			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
 		}
 	}
-}
-
-object ApplyPower {
-	def apply(power: Power, value1: MathMLElem, value2: MathMLElem) = new ApplyPower(power, value1, value2)
-	def apply(value1: MathMLElem, value2: MathMLElem) = new ApplyPower(Power(), value1, value2)
 }

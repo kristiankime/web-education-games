@@ -4,16 +4,8 @@ import scala.util._
 import scala.xml._
 import mathml._
 
-case class ApplyPlus(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val plus: Plus,
-	val values: MathMLElem*)
-	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](plus) ++ values): _*) {
-
-	def this(plus: Plus, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, plus, applyValues: _*)
+case class ApplyPlus(val values: MathMLElem*)
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Plus()) ++ values): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 
@@ -32,14 +24,9 @@ case class ApplyPlus(
 			val nonZeroVals = values.map(_.simplify).filter(!_.isZero)
 			if (nonZeroVals.isEmpty) Cn(0)
 			else if (nonZeroVals.size == 1) nonZeroVals(0)
-			else ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, nonZeroVals: _*)
+			else ApplyPlus(nonZeroVals: _*)
 		}
 	}
 
-	def derivative(wrt: String) = ApplyPlus(prefix, attributes1, scope, minimizeEmpty, plus, values.map(_.derivative(wrt)): _*).simplify
-}
-
-object ApplyPlus {
-	def apply(plus: Plus, applyValues: MathMLElem*) = new ApplyPlus(plus, applyValues: _*)
-	def apply(applyValues: MathMLElem*) = new ApplyPlus(Plus(), applyValues: _*)
+	def derivative(wrt: String) = ApplyPlus(values.map(_.derivative(wrt)): _*).simplify
 }

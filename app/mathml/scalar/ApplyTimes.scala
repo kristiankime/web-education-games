@@ -5,16 +5,8 @@ import scala.xml._
 import mathml._
 
 
-case class ApplyTimes(
-	override val prefix: String,
-	attributes1: MetaData,
-	override val scope: NamespaceBinding,
-	override val minimizeEmpty: Boolean,
-	val times: Times,
-	val values: MathMLElem*)
-	extends MathMLElem(prefix, "apply", attributes1, scope, minimizeEmpty, (Seq[MathMLElem](times) ++ values): _*) {
-
-	def this(times: Times, applyValues: MathMLElem*) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, times, applyValues: _*)
+case class ApplyTimes(val values: MathMLElem*)
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Times()) ++ values): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
 	
@@ -31,7 +23,7 @@ case class ApplyTimes(
 			val nonOneVals = values.map(_.simplify).filter(!_.isOne)
 			if (nonOneVals.isEmpty) Cn(1)
 			else if (nonOneVals.size == 1) nonOneVals(0)
-			else ApplyTimes(prefix, attributes1, scope, minimizeEmpty, times, nonOneVals: _*)
+			else ApplyTimes(nonOneVals: _*)
 		}
 	}
 
@@ -46,10 +38,4 @@ case class ApplyTimes(
 		val gP = g.d(wrt).simplify
 		fP*g + f*gP
 	}
-
-}
-
-object ApplyTimes {
-	def apply(times: Times, values: MathMLElem*) = new ApplyTimes(times, values: _*)
-	def apply(values: MathMLElem*) = new ApplyTimes(Times(), values: _*)
 }

@@ -128,4 +128,22 @@ class CnSpec extends Specification {
 			Cn(5) / Cn(2.5) must beEqualTo(Cn(2))
 		}
 	}
+	
+	"^" should {
+		"work with two ints" in {
+			Cn(3) / Cn(2) must beEqualTo(Cn(9))
+		}
+		
+		"work with two reals" in {
+			Cn(2.25) / Cn(.5) must beEqualTo(Cn(1.5))
+		}
+		
+		"work with real & int" in {
+			Cn(1.5) / Cn(2) must beEqualTo(Cn(2.25))
+		}
+
+		"work with int & real" in {
+			Cn(4) / Cn(1.5) must beEqualTo(Cn(8))
+		}
+	}
 }

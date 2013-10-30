@@ -21,11 +21,15 @@ abstract class MathMLElem(
 
 	def cnStep: Option[Cn]
 	
+	def c = s.cnStep
+	
 	/**
 	 * Does one round of simplification on this element
 	 * LATER this is intended to be called repeatedly until a fixed point is reached
 	 */
 	def simplifyStep(): MathMLElem
+	
+	def s = simplifyStep
 	
 	def variables: Set[String]
 

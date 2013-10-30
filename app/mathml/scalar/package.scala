@@ -28,7 +28,7 @@ package object scalar {
 	val `1.5` = Cn(1.5)
 	val `2.5` = Cn(2.5)
 
-	object x extends Ci(IdentifierText("x"))
+	val x = Ci("x")
 
-	object y extends Ci(IdentifierText("y"))
+	val y = Ci("y")
 }

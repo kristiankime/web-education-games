@@ -15,17 +15,9 @@ abstract class MathMLElem(
 
 	def eval(boundVariables: Map[String, Double]): Try[Double]
 
-	def isZero: Boolean = if (cnStep.nonEmpty) cnStep.get == Cn(0) else false
+	def isZero: Boolean = cnStep == Some(`0`)
 
-	def isOne: Boolean = if (cnStep.nonEmpty) cnStep.get == Cn(1) else false
-
-	/**
-	 * Does "one level" of attempting to turn this element into a constant.
-	 * Implementations of this method should not use the "c" or "s" or "simplifyStep" methods.
-	 */
-	def cnStep: Option[Cn]
-
-	def c = s.cnStep
+	def isOne: Boolean = cnStep == Some(`1`)
 
 	/**
 	 * Does one round of simplification on this element
@@ -34,7 +26,27 @@ abstract class MathMLElem(
 	def simplifyStep(): MathMLElem
 
 	// LATER implement this via repeated calls to simplifyStep
-	def s = simplifyStep
+	private var s_ : MathMLElem = null
+	def s = {
+		if (s_ == null) {
+			s_ = simplifyStep
+		}
+		s_
+	}
+
+	/**
+	 * Does "one level" of attempting to turn this element into a constant.
+	 * Implementations of this method should not use the "c" or "s" or "simplifyStep" methods.
+	 */
+	def cnStep: Option[Cn]
+
+	private var c_ : Option[Cn] = null
+	def c = {
+		if (c_ == null) {
+			c_ = s.cnStep
+		}
+		c_
+	}
 
 	def variables: Set[String]
 

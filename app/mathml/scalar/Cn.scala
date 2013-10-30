@@ -13,23 +13,23 @@ sealed abstract class Cn(attributes1: MetaData, val value: NumberText[_ <: Scala
 	def eval(boundVariables: Map[String, Double]) = Try(value.num.doubleValue)
 
 	def cnStep: Option[this.type] = Some(this)
-	
+
 	def simplifyStep(): this.type = this
 
 	def variables: Set[String] = Set()
 
 	def derivative(wrt: String) = Cn(0)
-	
-	def +(m : Cn): Cn 
 
-	def *(m : Cn): Cn
+	def +(m: Cn): Cn
 
-	def -(m : Cn): Cn
+	def *(m: Cn): Cn
 
-	def /(m : Cn): Cn
+	def -(m: Cn): Cn
 
-	def ^(m : Cn): Cn
-	
+	def /(m: Cn): Cn
+
+	def ^(m: Cn): Cn
+
 }
 
 object Cn {
@@ -51,14 +51,14 @@ object Cn {
 	def apply(value: Long) = CnInteger(IntegerText(value))
 
 	def apply(value: BigInt) = CnInteger(IntegerText(value))
-	
+
 	def float(value: Float) = CnReal(RealText(value))
 
 	def double(value: Double) = CnReal(RealText(value))
-	
+
 	def bigDecimal(value: BigDecimal) = CnReal(RealText(value))
-	
-	def apply(value: BigDecimal): Cn = if(value.isWhole) Cn(value.toBigInt) else Cn.bigDecimal(value)
+
+	def apply(value: BigDecimal): Cn = if (value.isWhole) Cn(value.toBigInt) else Cn.bigDecimal(value)
 
 	val realType = <cn type="real"></cn>.attributes //new UnprefixedAttribute("type", Seq(Text("real")), null)
 
@@ -66,58 +66,66 @@ object Cn {
 }
 
 case class CnInteger(override val value: IntegerText) extends Cn(Cn.integerType, value) {
-	
-	def +(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num + v.value.num)
-		case v:CnReal => Cn(BigDecimal(value.num) + v.value.num)
+
+	override val c = Some(this);
+
+	override val s = this;
+
+	def +(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num + v.value.num)
+		case v: CnReal => Cn(BigDecimal(value.num) + v.value.num)
 	}
 
-	def *(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num * v.value.num)
-		case v:CnReal => Cn(BigDecimal(value.num) * v.value.num)
+	def *(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num * v.value.num)
+		case v: CnReal => Cn(BigDecimal(value.num) * v.value.num)
 	}
 
-	def -(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num - v.value.num)
-		case v:CnReal => Cn(BigDecimal(value.num) - v.value.num)
+	def -(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num - v.value.num)
+		case v: CnReal => Cn(BigDecimal(value.num) - v.value.num)
 	}
 
-	def /(m : Cn) = m match {
-		case v:CnInteger => Cn(BigDecimal(value.num) / BigDecimal(v.value.num))
-		case v:CnReal => Cn(BigDecimal(value.num) / v.value.num)
+	def /(m: Cn) = m match {
+		case v: CnInteger => Cn(BigDecimal(value.num) / BigDecimal(v.value.num))
+		case v: CnReal => Cn(BigDecimal(value.num) / v.value.num)
 	}
 
-	def ^(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num.pow(v.value.num.intValue))
-		case v:CnReal => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
+	def ^(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num.pow(v.value.num.intValue))
+		case v: CnReal => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
 	}
 }
 
 case class CnReal(override val value: RealText) extends Cn(Cn.realType, value) {
-	
-	def +(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num + BigDecimal(v.value.num))
-		case v:CnReal => Cn(value.num + v.value.num)
+
+	override val c = Some(this);
+
+	override val s = this;
+
+	def +(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num + BigDecimal(v.value.num))
+		case v: CnReal => Cn(value.num + v.value.num)
 	}
 
-	def *(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num * BigDecimal(v.value.num))
-		case v:CnReal => Cn(value.num * v.value.num)
+	def *(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num * BigDecimal(v.value.num))
+		case v: CnReal => Cn(value.num * v.value.num)
 	}
 
-	def -(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num - BigDecimal(v.value.num))
-		case v:CnReal => Cn(value.num - v.value.num)
+	def -(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num - BigDecimal(v.value.num))
+		case v: CnReal => Cn(value.num - v.value.num)
 	}
 
-	def /(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num / BigDecimal(v.value.num))
-		case v:CnReal => Cn(value.num / v.value.num)
+	def /(m: Cn) = m match {
+		case v: CnInteger => Cn(value.num / BigDecimal(v.value.num))
+		case v: CnReal => Cn(value.num / v.value.num)
 	}
 
-	def ^(m : Cn) = m match {
-		case v:CnInteger => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
-		case v:CnReal => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
+	def ^(m: Cn) = m match {
+		case v: CnInteger => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
+		case v: CnReal => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
 	}
 }
 

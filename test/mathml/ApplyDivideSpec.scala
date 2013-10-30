@@ -19,15 +19,15 @@ class ApplyDivideSpec extends Specification {
 		"return correct division if numerator and denominator are numbers " in {
 			ApplyDivide(`6`, `4`).cnStep.get must beEqualTo(`1.5`)
 		}
-		
+
 		"return 0 if numerator is 0 " in {
 			ApplyDivide(`0`, `4`).cnStep.get must beEqualTo(`0`)
 		}
-		
+
 		"return 1 if numerator and denominator are equal" in {
 			ApplyDivide(`5`, `5`).cnStep.get must beEqualTo(`1`)
 		}
-		
+
 		"fail if a computation is not constant " in {
 			ApplyDivide(x, `4`).cnStep must beEmpty
 		}

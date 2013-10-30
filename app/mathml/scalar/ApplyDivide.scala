@@ -11,12 +11,13 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 
 	def cnStep: Option[Cn] = (numerator.cnStep, denominator.cnStep) match {
 		case (Some(nu), Some(de)) => Some(nu / de)
-		case (Some(nu), _) => if (nu == Cn(0)) Some(nu) else None
+		case (Some(nu), _) => if (nu.isZero) Some(nu) else None
 		case _ => None
 	}
 
 	def simplifyStep() =
 		if (cnStep.nonEmpty) cnStep.get
+		else if(denominator.isOne) { numerator.simplifyStep }
 		else ApplyDivide(numerator.simplifyStep, denominator.simplifyStep)
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables

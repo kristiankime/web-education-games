@@ -19,18 +19,23 @@ abstract class MathMLElem(
 
 	def isOne: Boolean = if (cnStep.nonEmpty) cnStep.get == Cn(1) else false
 
+	/**
+	 * Does "one level" of attempting to turn this element into a constant.
+	 * Implementations of this method should not use the "c" or "s" or "simplifyStep" methods.
+	 */
 	def cnStep: Option[Cn]
-	
+
 	def c = s.cnStep
-	
+
 	/**
 	 * Does one round of simplification on this element
-	 * LATER this is intended to be called repeatedly until a fixed point is reached
+	 * Implementations of this method should not use the "c" or "s" methods (but can use cnStep).
 	 */
 	def simplifyStep(): MathMLElem
-	
+
+	// LATER implement this via repeated calls to simplifyStep
 	def s = simplifyStep
-	
+
 	def variables: Set[String]
 
 	def derivative(wrt: String): MathMLElem

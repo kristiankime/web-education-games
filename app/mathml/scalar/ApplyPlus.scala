@@ -19,13 +19,13 @@ case class ApplyPlus(val values: MathMLElem*)
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 
 	def simplifyStep() = {
-		if (isZero) Cn(0)
-		else if (isOne) Cn(1)
-		else {
-			val nonZeroVals = values.map(_.simplifyStep).filter(!_.isZero)
-			if (nonZeroVals.isEmpty) Cn(0)
-			else if (nonZeroVals.size == 1) nonZeroVals(0)
-			else ApplyPlus(nonZeroVals: _*)
+		val cns = values.map(_.cnStep).filter(_.nonEmpty).map(_.get)
+		val elems = values.filter(_.cnStep.isEmpty)
+		(cns, elems) match {
+			case (Seq(cns @ _*), Seq()) => cns.reduce(_ + _)
+			case (Seq(), Seq(elem)) => elem
+			case (Seq(), Seq(elems @ _*)) => this
+			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyPlus(elems ++ Seq(cns.reduce(_ + _)): _*)
 		}
 	}
 

@@ -19,11 +19,6 @@ class CiSpec extends Specification {
 		"be the same regardless of whitespace with a string input" in {
 			Ci(" x   ") == Ci("x") must beTrue
 		}
-
-		"be the same regardless of whitespace with a node input" in {
-			val nodeWithX = <t>    x  </t>.child(0)
-			Ci(nodeWithX) == Ci("x") must beTrue
-		}
 	}
 
 	"isZero" should {

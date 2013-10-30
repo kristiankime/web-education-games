@@ -36,7 +36,7 @@ object MathML {
 			case "math" => Try(Math(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, MathML(xml.childElem(0)).get))
 			case "apply" => applyElement(xml)
 			case "cn" => constantElement(xml)
-			case "ci" => Success(Ci(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, xml.child(0)))
+			case "ci" => Success(Ci(xml.child(0).text))
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
 	}

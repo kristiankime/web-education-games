@@ -5,15 +5,8 @@ import scala.xml._
 import mathml._
 
 
-case class Ci(
-//	override val prefix: String,
-//	attributes1: MetaData,
-//	override val scope: NamespaceBinding,
-//	override val minimizeEmpty: Boolean,
-	val identifier: IdentifierText)
+case class Ci(val identifier: IdentifierText)
 	extends MathMLElem(MathML.h.prefix, "ci", MathML.h.attributes, MathML.h.scope, false, Seq(identifier): _*) {
-
-//	def this(value: Node) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, Ci.format(value))
 
 	def eval(boundVariables: Map[String, Double]) = Try(boundVariables.get(text).get)
 

@@ -24,7 +24,7 @@ class MathMLElemSpec extends Specification {
 
 	"+" should {
 		"use ApplyPlus" in {
-			(Cn(5) + Cn(3)) must beEqualTo(ApplyPlus(Cn(5), Cn(3)))
+			(F + F) must beEqualTo(ApplyPlus(F, G))
 		}
 
 		"nest when used repeatedly" in {

@@ -10,8 +10,7 @@ import org.specs2.mutable._
 import org.specs2.matcher.Matcher
 import mathml.scalar.ApplyTimes
 import mathml.scalar.ApplyPlus
-import mathml.scalar.Cn
-import mathml.scalar.Ci
+import mathml.scalar._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -46,8 +45,8 @@ class ApplyTimesSpec extends Specification {
 			ApplyTimes(Cn(1), Cn(1), Cn(1)).simplifyStep must beEqualTo(Cn(1))
 		}
 
-		"skip any 1 values" in {
-			ApplyTimes(Cn(4), Cn(1), Cn(3)).simplifyStep must beEqualTo(ApplyTimes(Cn(4), Cn(3)))
+		"multiple any constanst together" in {
+			ApplyTimes(Cn(4), Cn(1), Cn(3)).simplifyStep must beEqualTo(Cn(12))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
@@ -55,11 +54,17 @@ class ApplyTimesSpec extends Specification {
 		}
 	}
 
+	"cnStep" should {
+		"return 0 if any elements are 0" in {
+			ApplyTimes(Cn(1), Cn(0), Cn(1)).cnStep.get must beEqualTo(Cn(0))
+		}
+	}
+
 	"derivative" should {
-		"obey the product rule: (f g)' = f'g + fg' (both terms dx are 0)" in {
+		"obey the product rule: (f g)' = f'g + fg'" in {
 			(F * G).dx must beEqualTo(Fdx * G + F * Gdx)
 		}
-
+		
 		"obey the product rule: (f g)' = f'g + g'f (both terms dx are 0)" in {
 			ApplyTimes(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
 		}

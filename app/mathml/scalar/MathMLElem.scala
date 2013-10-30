@@ -20,13 +20,13 @@ abstract class MathMLElem(
 	def isOne: Boolean = if (cnStep.nonEmpty) cnStep.get == Cn(1) else false
 
 	def cnStep: Option[Cn]
-
+	
 	/**
 	 * Does one round of simplification on this element
 	 * LATER this is intended to be called repeatedly until a fixed point is reached
 	 */
 	def simplifyStep(): MathMLElem
-
+	
 	def variables: Set[String]
 
 	def derivative(wrt: String): MathMLElem

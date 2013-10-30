@@ -88,7 +88,7 @@ case class CnInteger(override val value: IntegerText) extends Cn(Cn.integerType,
 	}
 
 	def ^(m : Cn) = m match {
-		case v:CnInteger => Cn(value.num ^ v.value.num)
+		case v:CnInteger => Cn(value.num.pow(v.value.num.intValue))
 		case v:CnReal => Cn(math.pow(value.num.doubleValue, v.value.num.doubleValue))
 	}
 }

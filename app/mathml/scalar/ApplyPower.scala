@@ -15,8 +15,9 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	}
 
 	def simplifyStep() = {
-		if (isZero) Cn(0)
-		else if (isOne) Cn(1)
+		if (cnStep.nonEmpty) cnStep.get
+		else if (base.isOne) Cn(1)
+		else if (exp.isZero) Cn(1)
 		else if (exp.isOne) base
 		else this
 	}
@@ -28,10 +29,11 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 		if (!variables.contains(wrt)) Cn(0)
 		else if (!exp.variables.contains(wrt)) {
 			val r = exp.simplifyStep
-			val f = base
+			val f = base.simplifyStep
 			val fP = f.d(wrt).simplifyStep
 			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
-			(r * f ^ (r - Cn(1)) * fP).simplifyStep
+			ApplyTimes(r, f ^ (r - Cn(1)).simplifyStep, fP).simplifyStep
+			// (r * f ^ (r - Cn(1)) * fP).simplifyStep // LATER this is clearer and should simplify correctly later 
 		} else {
 			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
 		}

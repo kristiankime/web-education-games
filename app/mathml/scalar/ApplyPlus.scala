@@ -16,8 +16,6 @@ case class ApplyPlus(val values: MathMLElem*)
 			None
 		}
 
-	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
-
 	def simplifyStep() = {
 		val cns = values.map(_.cnStep).filter(_.nonEmpty).map(_.get)
 		val elems = values.filter(_.cnStep.isEmpty)
@@ -28,6 +26,8 @@ case class ApplyPlus(val values: MathMLElem*)
 			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyPlus(elems ++ Seq(cns.reduce(_ + _)): _*)
 		}
 	}
+
+	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 
 	def derivative(wrt: String) = ApplyPlus(values.map(_.derivative(wrt)): _*).simplifyStep
 }

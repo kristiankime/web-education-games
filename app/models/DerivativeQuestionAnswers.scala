@@ -15,10 +15,10 @@ object DerivativeQuestionAnswers {
 
 	def create(question: DerivativeQuestion, answerStr: String) = {
 		val answerMathML = MathML(XML.loadString(answerStr)).get // TODO can fail here
-		val correct = MathML.checkEq("x", question.mathML.derivative("x"), answerMathML)
+		val correct = MathML.checkEq("x", question.mathML.d("x"), answerMathML)
 		val answer = DerivativeQuestionAnswer(question, idCounter, answerStr, answerMathML, correct)
 		idCounter += 1
-
+		
 		if (derivativeQuestionAnswers.get(question.id).isEmpty) {
 			derivativeQuestionAnswers.put(question.id, LinkedHashMap())
 		}

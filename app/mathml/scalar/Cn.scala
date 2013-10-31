@@ -18,7 +18,7 @@ sealed abstract class Cn(attributes1: MetaData, val value: NumberText[_ <: Scala
 
 	def variables: Set[String] = Set()
 
-	def derivative(wrt: String) = Cn(0)
+	def derivative(wrt: String) = `0`
 
 	def +(m: Cn): Cn
 

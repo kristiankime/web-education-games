@@ -17,7 +17,7 @@ case class Ci(val identifier: IdentifierText)
 
 	def simplifyStep() = this
 
-	def variables: Set[String] = Set(identifier.id)
+	def variables: Set[String] = Set(identifier.id.trim)
 
 	def derivative(wrt: String): MathMLElem = if (text.trim == wrt) Cn(1) else Cn(0)
 }

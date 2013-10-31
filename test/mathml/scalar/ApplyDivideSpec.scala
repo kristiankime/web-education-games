@@ -12,6 +12,24 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class ApplyDivideSpec extends Specification {
 
+	"variables" should {
+		"be empty if element is constant" in {
+			ApplyDivide(`1`, `2`).variables must beEmpty
+		}
+
+		"be x if element constains an x" in {
+			ApplyDivide(x, `2`).variables must beEqualTo(Set("x"))
+		}
+
+		"be y if element constains a y" in {
+			ApplyDivide(y, `2`).variables must beEqualTo(Set("y"))
+		}
+		
+		"be x &y if element constains x & y" in {
+			ApplyDivide(x, y).variables must beEqualTo(Set("x", "y"))
+		}
+	}
+
 	"cnStep" should {
 		"return correct division if numerator and denominator are numbers " in {
 			ApplyDivide(`6`, `4`).cnStep.get must beEqualTo(`1.5`)

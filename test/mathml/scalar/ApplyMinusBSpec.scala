@@ -12,6 +12,24 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class ApplyMinusBSpec extends Specification {
 
+	"variables" should {
+		"be empty if element is constant" in {
+			ApplyMinusB(`1`, `2`).variables must beEmpty
+		}
+
+		"be x if element constains an x" in {
+			ApplyMinusB(x, `2`).variables must beEqualTo(Set("x"))
+		}
+
+		"be y if element constains a y" in {
+			ApplyMinusB(y, `2`).variables must beEqualTo(Set("y"))
+		}
+				
+		"be x &y if element constains x & y" in {
+			ApplyMinusB(x, y).variables must beEqualTo(Set("x", "y"))
+		}
+	}
+
 	"cnStep" should {
 		"return subtraction if values are numbers " in {
 			ApplyMinusB(`6`, `4`).cnStep.get must beEqualTo(`2`)
@@ -53,5 +71,5 @@ class ApplyMinusBSpec extends Specification {
 			ApplyMinusB(F, G).dx must beEqualTo(Fdx - Gdx)
 		}
 	}
-	
+
 }

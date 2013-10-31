@@ -15,15 +15,15 @@ case class Math(
 
 	def this(value: MathMLElem) = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope, false, value)
 
-	def eval(boundVariables: Map[String, Double]) = Try(text.toDouble)
+	def eval(boundVariables: Map[String, Double]) = value.eval(boundVariables)
 
-	def cnStep: Option[Cn] = None
+	def cnStep: Option[Cn] = value.cnStep
 	
 	def simplifyStep() = Math(prefix, attributes, scope, minimizeEmpty, value.simplifyStep)
 
-	def variables: Set[String] = Set()
+	def variables: Set[String] = value.variables
 
-	def derivative(wrt: String) = Math(prefix, attributes, scope, minimizeEmpty, value.derivative(wrt))
+	def derivative(wrt: String) = Math(prefix, attributes, scope, minimizeEmpty, value.d(wrt).s)
 }
 
 object Math {

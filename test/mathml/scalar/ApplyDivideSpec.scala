@@ -1,14 +1,11 @@
-package mathml
+package mathml.scalar
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import scala.xml.XML
-import scala.xml.Text
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import org.specs2.matcher.Matcher
-import mathml.scalar.ApplyDivide
+import mathml._
 import mathml.scalar._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
@@ -56,5 +53,5 @@ class ApplyDivideSpec extends Specification {
 			ApplyDivide(F, G).dx must beEqualTo((Fdx * G - Gdx * F) / G ^ `2`)
 		}
 	}
-	
+
 }

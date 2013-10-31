@@ -1,13 +1,13 @@
-package mathml
+package mathml.scalar
 
-import scala.util.Try
-import scala.xml.MetaData
-import scala.xml.NamespaceBinding
-import scala.xml.Node
-import scala.xml.Text
-import scala.util.Failure
-import mathml.scalar.MathMLElem
-import mathml.scalar.Cn
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
+import play.api.test._
+import play.api.test.Helpers._
+import org.specs2.mutable._
+import mathml._
+import mathml.scalar._
+import scala.util._
 
 object F extends MathMLElem(MathML.h.prefix, "F", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
 

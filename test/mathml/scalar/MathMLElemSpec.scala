@@ -1,22 +1,14 @@
-package mathml
+package mathml.scalar
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import scala.xml.XML
-import scala.xml.Text
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import org.specs2.matcher.Matcher
-import mathml.scalar.ApplyMinusU
-import mathml.scalar.ApplyDivide
-import mathml.scalar.ApplyTimes
-import mathml.scalar.ApplyPlus
-import mathml.scalar.Plus
-import mathml.scalar.ApplyMinusB
-import mathml.scalar.ApplyPower
-import mathml.scalar.Cn
-import mathml.scalar.Ci
+import mathml._
+import mathml.scalar._
+import scala.util._
+import scala.math.BigDecimal.double2bigDecimal
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

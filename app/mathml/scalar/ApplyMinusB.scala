@@ -25,5 +25,5 @@ case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
 
 	def variables: Set[String] = value1.variables ++ value2.variables
 
-	def derivative(wrt: String): MathMLElem = (ApplyMinusB(value1.derivative(wrt), value2.derivative(wrt))).simplifyStep
+	def derivative(wrt: String): MathMLElem = (ApplyMinusB(value1.d(wrt).s, value2.d(wrt).s)).s
 }

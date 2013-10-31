@@ -25,11 +25,11 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 	// User the quotient rule (http://en.wikipedia.org/wiki/Quotient_rule)
 	def derivative(wrt: String): MathMLElem = {
 		val f = numerator
-		val fP = f.d(wrt).simplifyStep
+		val fP = f.d(wrt).s
 		val g = denominator
-		val gP = g.d(wrt).simplifyStep
+		val gP = g.d(wrt).s
 
 		// (f/g)' = (f'g - g'f)/g^2
-		(fP * g - gP * f) / g ^ Cn(2) simplifyStep
+		(fP * g - gP * f) / (g ^ `2`) s
 	}
 }

@@ -29,5 +29,5 @@ case class ApplyPlus(val values: MathMLElem*)
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 
-	def derivative(wrt: String) = ApplyPlus(values.map(_.derivative(wrt)): _*).simplifyStep
+	def derivative(wrt: String) = ApplyPlus(values.map(_.d(wrt).s): _*).s
 }

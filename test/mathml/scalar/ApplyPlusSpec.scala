@@ -46,7 +46,7 @@ class ApplyPlusSpec extends Specification {
 
 	"derivative" should {
 		"obey the sum rule: (f + g)' = f' + g'" in {
-			ApplyPlus(F, G).dx must beEqualTo(ApplyPlus(Fdx, Gdx))
+			ApplyPlus(F, G).dx must beEqualTo(Fdx + Gdx)
 		}
 		
 		"obey the sum rule for more than 2 elements: (f + g + h)' = f' + g' + h'" in {

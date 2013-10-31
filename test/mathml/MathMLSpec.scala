@@ -13,6 +13,17 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class MathMLSpec extends Specification {
 
+	"derivative " should {
+		"derive x^3+3x+4" in {
+			val f = ( (x ^ `3`) + (`3` * x) + `4`)
+			System.err.println(f);
+			val d = f.dx.s
+			System.err.println(d);
+//			d must beEqualTo(`3` * x ^ `2` + `3`)
+			MathML.checkEq("x", d, (`3` * x ^ `2`) + `3`) must beFalse
+		}
+	}
+
 	"apply" should {
 
 		"fail to parse non MathML" in {
@@ -119,17 +130,45 @@ class MathMLSpec extends Specification {
 		}
 
 		"be true for two x+2 & 2+x" in {
-			val v1 = ApplyPlus(x, `2`)
-			val v2 = ApplyPlus(`2`, x)
+			val v1 = x + `2`
+			val v2 = `2` + x
 
 			MathML.checkEq("x", v1, v2) must beTrue
 		}
 
 		"be true for x^2 & x^2" in {
-			val v1 = ApplyPower(x, `2`)
-			val v2 = ApplyPower(x, `2`)
+			val v1 = x ^ `2`
+			val v2 = x ^ `2`
 
 			MathML.checkEq("x", v1, v2) must beTrue
+		}
+
+		"be true for [x + x + 2] & [2 * (x + 1)]" in {
+			val v1 = x + x + `2`
+			val v2 = `2` * (x + `1`)
+
+			MathML.checkEq("x", v1, v2) must beTrue
+		}
+
+		"be false for [x^2] & [x-2]" in {
+			val v1 = x ^ `2`
+			val v2 = x - `2`
+
+			MathML.checkEq("x", v1, v2) must beFalse
+		}
+
+		"be false for [2*x] & [x]" in {
+			val v1 = `2` * x
+			val v2 = x
+
+			MathML.checkEq("x", v1, v2) must beFalse
+		}
+
+		"be false for [x^2] & [1]" in {
+			val v1 = x ^ `2`
+			val v2 = `1`
+
+			MathML.checkEq("x", v1, v2) must beFalse
 		}
 	}
 

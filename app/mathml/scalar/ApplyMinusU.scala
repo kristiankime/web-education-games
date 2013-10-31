@@ -23,5 +23,5 @@ case class ApplyMinusU(val value: MathMLElem)
 
 	def variables: Set[String] = value.variables
 
-	def derivative(wrt: String) = ApplyMinusU(value.derivative(wrt)).simplifyStep
+	def derivative(wrt: String) = ApplyMinusU(value.d(wrt).s).s
 }

@@ -29,14 +29,13 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 
 	// LATER technically need to use generalized power rule but for now we'll assume base is f(x) and Real Exponents
 	def derivative(wrt: String): MathMLElem = {
-		if (!variables.contains(wrt)) Cn(0)
+		if (!variables.contains(wrt)) `0`
 		else if (!exp.variables.contains(wrt)) {
-			val r = exp.simplifyStep
-			val f = base.simplifyStep
-			val fP = f.d(wrt).simplifyStep
+			val r = exp.s
+			val f = base.s
+			val fP = f.d(wrt).s
 			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
-			ApplyTimes(r, f ^ (r - Cn(1)).simplifyStep, fP).simplifyStep
-			// (r * f ^ (r - Cn(1)) * fP).simplifyStep // LATER this is clearer and should simplify correctly later 
+			ApplyTimes(r, f ^ (r - `1`).s, fP).s
 		} else {
 			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
 		}

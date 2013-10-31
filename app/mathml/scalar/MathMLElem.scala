@@ -3,6 +3,7 @@ package mathml.scalar
 import scala.util._
 import scala.xml._
 import mathml._
+import scala.annotation.tailrec
 
 abstract class MathMLElem(
 	prefix: String,
@@ -29,9 +30,18 @@ abstract class MathMLElem(
 	private var s_ : MathMLElem = null
 	def s = {
 		if (s_ == null) {
-			s_ = simplifyStep
+			s_ = simplifyRecurse(this)
 		}
 		s_
+	}
+	
+	@tailrec private def simplifyRecurse(e : MathMLElem) : MathMLElem = {
+		val simp = e.simplifyStep
+		if(simp == e){
+			e
+		} else {
+			simplifyRecurse(simp)
+		}
 	}
 
 	/**

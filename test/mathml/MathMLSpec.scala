@@ -13,14 +13,38 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class MathMLSpec extends Specification {
 
-	"derivative " should {
-		"derive x^3+3x+4" in {
-			val f = ( (x ^ `3`) + (`3` * x) + `4`)
+	"derivative" should {
+		"work for simple exponential (x^3)" in {
+			val f = x ^ `3`
+//			System.err.println(f);
+			val d = f.dx.s
+//			System.err.println(d);
+			MathML.checkEq("x", d, `3` * (x ^ `2`)) must beTrue
+		}
+
+		"work for degree 1 polynomial (5 * x + 4)" in {
+			val f = (`5` * x + `4`)
+//			System.err.println(f);
+			val d = f.dx.s
+//			System.err.println(d);
+			MathML.checkEq("x", d, `5`) must beTrue
+		}
+		
+		"work for degree 2 polynomial (2 * x ^ 2 + -3 * x + -2)" in {
+			val f = (`2` * (x ^ `2`) + `-3` * x + `-2`)
+//			System.err.println(f);
+			val d = f.dx.s
+//			System.err.println(d);
+			MathML.checkEq("x", d, (`4` * x + `-3`)) must beTrue
+		}
+		
+		"work for degree 3 polynomial (x^3 + 3x + 4)" in {
+			val f = ((x ^ `3`) + `3` * x + `4`)
 			System.err.println(f);
 			val d = f.dx.s
 			System.err.println(d);
-//			d must beEqualTo(`3` * x ^ `2` + `3`)
-			MathML.checkEq("x", d, (`3` * x ^ `2`) + `3`) must beFalse
+			//			d must beEqualTo(`3` * x ^ `2` + `3`)
+			MathML.checkEq("x", d, (`3` * (x ^ `2`)) + `3`) must beTrue
 		}
 	}
 

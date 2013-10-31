@@ -2,20 +2,12 @@ package mathml
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import scala.xml.XML
-import scala.xml.Text
+import scala.xml._
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import org.specs2.matcher.Matcher
-import mathml.scalar.ApplyMinusU
-import mathml.scalar.ApplyDivide
-import mathml.scalar.ApplyTimes
-import mathml.scalar.ApplyPlus
-import mathml.scalar.ApplyMinusB
-import mathml.scalar.ApplyPower
-import mathml.scalar.Cn
-import mathml.scalar.Ci
+import mathml.scalar._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -29,43 +21,43 @@ class MathMLSpec extends Specification {
 
 		"be able to parse numbers" in {
 			val xml = <cn>5</cn>
-			val mathML = Cn(5)
+			val mathML = `5`
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse variables" in {
 			val xml = <ci>x</ci>
-			val mathML = Ci("x")
+			val mathML = x
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse plus with one argument" in {
 			val xml = <apply> <plus/> <cn>5</cn> </apply>
-			val mathML = ApplyPlus(Cn(5))
+			val mathML = ApplyPlus(`5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse plus with two arguments" in {
 			val xml = <apply> <plus/> <cn>5</cn> <cn>5</cn> </apply>
-			val mathML = ApplyPlus(Cn(5), Cn(5))
+			val mathML = ApplyPlus(`5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse plus with more then two arguments" in {
 			val xml = <apply> <plus/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>
-			val mathML = ApplyPlus(Cn(5), Cn(4), Cn(3))
+			val mathML = ApplyPlus(`5`, `4`, `3`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse minus with one argument" in {
 			val xml = <apply> <minus/> <cn>5</cn> </apply>
-			val mathML = ApplyMinusU(Cn(5))
+			val mathML = ApplyMinusU(`5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse minus with two arguments" in {
 			val xml = <apply> <minus/> <cn>5</cn> <cn>5</cn> </apply>
-			val mathML = ApplyMinusB(Cn(5), Cn(5))
+			val mathML = ApplyMinusB(`5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
@@ -75,19 +67,19 @@ class MathMLSpec extends Specification {
 
 		"be able to parse times" in {
 			val xml = <apply> <times/> <cn>5</cn> <cn>5</cn> </apply>
-			val mathML = ApplyTimes(Cn(5), Cn(5))
+			val mathML = ApplyTimes(`5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse times with more then two arguments" in {
 			val xml = <apply> <times/> <cn>5</cn> <cn>4</cn> <cn>3</cn> </apply>
-			val mathML = ApplyTimes(Cn(5), Cn(4), Cn(3))
+			val mathML = ApplyTimes(`5`, `4`, `3`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
 		"be able to parse divide" in {
 			val xml = <apply> <divide/> <cn>5</cn> <cn>5</cn> </apply>
-			val mathML = ApplyDivide(Cn(5), Cn(5))
+			val mathML = ApplyDivide(`5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
@@ -97,7 +89,7 @@ class MathMLSpec extends Specification {
 
 		"be able to parse power" in {
 			val xml = <apply> <power/> <cn>5</cn> <cn>5</cn> </apply>
-			val mathML = ApplyPower(Cn(5), Cn(5))
+			val mathML = ApplyPower(`5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
@@ -107,7 +99,7 @@ class MathMLSpec extends Specification {
 
 		"be able to parse nested applys" in {
 			val xml = <apply> <plus/> <apply> <plus/> <cn>4</cn> <cn>4</cn> </apply> <cn>5</cn> <cn>5</cn> </apply>
-			val mathML = ApplyPlus(ApplyPlus(Cn(4), Cn(4)), Cn(5), Cn(5))
+			val mathML = ApplyPlus(ApplyPlus(`4`, `4`), `5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 	}
@@ -115,7 +107,7 @@ class MathMLSpec extends Specification {
 	"simplifyEquals" should {
 
 		"be true for two equal cns" in {
-			MathML.simplifyEquals(Cn(3), Cn(3)) must beTrue
+			MathML.simplifyEquals(`3`, `3`) must beTrue
 		}
 
 	}
@@ -123,19 +115,19 @@ class MathMLSpec extends Specification {
 	"checkEq" should {
 
 		"be true for two equal cns" in {
-			MathML.checkEq("x", Cn(3), Cn(3)) must beTrue
+			MathML.checkEq("x", `3`, `3`) must beTrue
 		}
 
 		"be true for two x+2 & 2+x" in {
-			val v1 = ApplyPlus(Ci("x"), Cn(2))
-			val v2 = ApplyPlus(Cn(2), Ci("x"))
+			val v1 = ApplyPlus(x, `2`)
+			val v2 = ApplyPlus(`2`, x)
 
 			MathML.checkEq("x", v1, v2) must beTrue
 		}
 
 		"be true for x^2 & x^2" in {
-			val v1 = ApplyPower(Ci("x"), Cn(2))
-			val v2 = ApplyPower(Ci("x"), Cn(2))
+			val v1 = ApplyPower(x, `2`)
+			val v2 = ApplyPower(x, `2`)
 
 			MathML.checkEq("x", v1, v2) must beTrue
 		}

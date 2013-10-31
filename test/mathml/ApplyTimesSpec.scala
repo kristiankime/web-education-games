@@ -62,12 +62,12 @@ class ApplyTimesSpec extends Specification {
 
 	"derivative" should {
 		"obey the product rule: (f g)' = f'g + fg'" in {
-			(F * G).dx must beEqualTo(Fdx * G + F * Gdx)
+			ApplyTimes(F, G).dx must beEqualTo(Fdx * G + F * Gdx)
 		}
 
 		//		LATER
 		//		"obey the multiple product rule: (f g h)' = " in {
-		//			(F * G).dx must beEqualTo(Fdx * G + F * Gdx)
+		//			ApplyTimes(F, G, H).dx must beEqualTo(Fdx * G + F * Gdx)
 		//		}
 	}
 

@@ -1,6 +1,8 @@
 package mathml
 
 package object scalar {
+	val `-12` = Cn(-12)
+	val `-11` = Cn(-11)
 	val `-10` = Cn(-10)
 	val `-9` = Cn(-9)
 	val `-8` = Cn(-8)
@@ -22,6 +24,8 @@ package object scalar {
 	val `8` = Cn(8)
 	val `9` = Cn(9)
 	val `10` = Cn(10)
+	val `11` = Cn(11)
+	val `12` = Cn(12)
 
 	val `-.5` = Cn(-.5)
 	val `.5` = Cn(.5)

@@ -2,49 +2,48 @@ package mathml
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import scala.xml.XML
-import scala.xml.Text
+import scala.xml._
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import org.specs2.matcher.Matcher
-import mathml.scalar.ApplyMinusU
-import mathml.scalar.Cn
-import mathml.scalar.Ci
+import mathml.scalar._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
 class ApplyMinusUSpec extends Specification {
 
-	"isZero" should {
-		"return true if value is zero" in {
-			ApplyMinusU(Cn(0)).isZero must beTrue
+	"cnStep" should {
+		"return 0 if value is 0" in {
+			ApplyMinusU(`0`).cnStep.get must beEqualTo(`0`)
+		}
+		
+		"return 1 if value is -1" in {
+			ApplyMinusU(`-1`).cnStep.get must beEqualTo(`1`)
 		}
 
-		"return false if value is nonzero" in {
-			ApplyMinusU(Cn(5)).isZero must beFalse
+		"return negative of a value" in {
+			ApplyMinusU(`3`).cnStep.get must beEqualTo(`-3`)
+		}
+
+		"fail if not a constant " in {
+			ApplyMinusU(x).cnStep must beNone
 		}
 	}
 
-	"isOne" should {
-		"return false if values is not -1" in {
-			ApplyMinusU(Cn(9)).isOne must beFalse
+	"simplifyStep" should {
+		"return constand if value is constant" in {
+			ApplyMinusU(`-4`).simplifyStep must beEqualTo(`4`)
 		}
-	}
 
-	"simplify" should {
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusU(Ci("x")).simplifyStep must beEqualTo(ApplyMinusU(Ci("x")))
+			ApplyMinusU(x).simplifyStep must beEqualTo(ApplyMinusU(x))
 		}
 	}
 
 	"derivative" should {
-		"return zero if value is not a function of variable" in {
-			ApplyMinusU(Cn(6)).derivative("x") must beEqualTo(Cn(0))
-		}
-		
-		"return minus of deriv if value is a function of variable" in {
-			ApplyMinusU(Ci("x")).derivative("x") must beEqualTo(Cn(-1))
+		"return negative of values derivative" in {
+			ApplyMinusU(F).dx must beEqualTo(ApplyMinusU(Fdx))
 		}
 	}
+	
 }

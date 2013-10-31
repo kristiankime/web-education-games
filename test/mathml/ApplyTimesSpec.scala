@@ -16,91 +16,59 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class ApplyTimesSpec extends Specification {
 
-	"isZero" should {
-		"return true if any values are 0" in {
-			ApplyTimes(Cn(1), Cn(0), Cn(1)).isZero must beTrue
-		}
-
-		"return false if all values are non 0" in {
-			ApplyTimes(Cn(1), Cn(2), Cn(2)).isZero must beFalse
-		}
-	}
-
-	"isOne" should {
-		"return true all values are 1" in {
-			ApplyTimes(Cn(1), Cn(1)).isOne must beTrue
-		}
-
-		"return false if values do not multiply to 1" in {
-			ApplyTimes(Cn(4), Cn(2)).isOne must beFalse
-		}
-	}
-
 	"cnStep" should {
 		"return 0 if any value is zero" in {
-			ApplyTimes(Cn(1), Cn(0), Ci("x")).cnStep.get must beEqualTo(Cn(0))
+			ApplyTimes(`1`, `0`, x).cnStep.get must beEqualTo(`0`)
 		}
 
-		"return false if values do not multiply to 1" in {
-			ApplyTimes(Cn(4), Cn(2)).isOne must beFalse
+		"return multiplication of values if possible" in {
+			ApplyTimes(`4`, `2`, `1`).cnStep.get must beEqualTo(`8`)
+		}
+
+		"return false if values do not multiply to a constant" in {
+			ApplyTimes(`4`, x).isOne must beFalse
 		}
 	}
 
 	"simplifyStep" should {
 		"return 0 if isZero is true" in {
-			ApplyTimes(Cn(1), Cn(0), Cn(1)).simplifyStep must beEqualTo(Cn(0))
+			ApplyTimes(`1`, `0`, `1`).simplifyStep must beEqualTo(`0`)
 		}
-		
+
 		"return 0 if any value is zero" in {
-			ApplyTimes(Cn(1), Cn(0), Ci("x")).simplifyStep must beEqualTo(Cn(0))
+			ApplyTimes(`1`, `0`, x).simplifyStep must beEqualTo(`0`)
 		}
 
 		"return 1 if isOne is true" in {
-			ApplyTimes(Cn(1), Cn(1), Cn(1)).simplifyStep must beEqualTo(Cn(1))
+			ApplyTimes(`1`, `1`, `1`).simplifyStep must beEqualTo(`1`)
 		}
 
 		"multiple any constanst together" in {
-			ApplyTimes(Cn(4), Cn(1), Cn(3)).simplifyStep must beEqualTo(Cn(12))
+			ApplyTimes(`4`, `1`, `3`).simplifyStep must beEqualTo(Cn(12))
 		}
-		
+
 		"remove 1s in a sequence" in {
-			ApplyTimes(Cn(1), Cn(3), Ci("x")).simplifyStep must beEqualTo(Cn(3) * Ci("x"))
+			ApplyTimes(`1`, `3`, x).simplifyStep must beEqualTo(`3` * x)
 		}
 
 		"remove 1s" in {
-			ApplyTimes(Cn(1), Ci("x")).simplifyStep must beEqualTo(Ci("x"))
+			ApplyTimes(`1`, x).simplifyStep must beEqualTo(x)
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyTimes(Cn(3), Ci("x")).simplifyStep must beEqualTo(ApplyTimes(Cn(3), Ci("x")))
+			ApplyTimes(`3`, x).simplifyStep must beEqualTo(ApplyTimes(`3`, x))
 		}
 	}
-
-	//	"cnStep" should {
-	//		"return 0 if any elements are 0" in {
-	//			ApplyTimes(Cn(1), Cn(0), Cn(1)).cnStep.get must beEqualTo(Cn(0))
-	//		}
-	//	}
 
 	"derivative" should {
 		"obey the product rule: (f g)' = f'g + fg'" in {
 			(F * G).dx must beEqualTo(Fdx * G + F * Gdx)
 		}
 
-		"obey the product rule: (f g)' = f'g + g'f (both terms dx are 0)" in {
-			ApplyTimes(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
-		}
-
-		"obey the product rule: (f g)' = f'g + g'f (left side dx is 0)" in {
-			ApplyTimes(Cn(3), Ci("x")).derivative("x") must beEqualTo(Cn(3))
-		}
-
-		"obey the product rule: (f g)' = f'g + g'f (right side dx is 0)" in {
-			ApplyTimes(Ci("x"), Cn(3)).derivative("x") must beEqualTo(Cn(3))
-		}
-
-		"obey the product rule: (f g)' = f'g + g'f (neither side dx is 0)" in {
-			ApplyTimes(Ci("x"), Ci("x")).derivative("x") must beEqualTo(ApplyPlus(Ci("x"), Ci("x")))
-		}
+		//		LATER
+		//		"obey the multiple product rule: (f g h)' = " in {
+		//			(F * G).dx must beEqualTo(Fdx * G + F * Gdx)
+		//		}
 	}
+
 }

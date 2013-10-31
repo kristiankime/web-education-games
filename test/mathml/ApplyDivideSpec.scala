@@ -28,7 +28,7 @@ class ApplyDivideSpec extends Specification {
 			ApplyDivide(`5`, `5`).cnStep.get must beEqualTo(`1`)
 		}
 
-		"fail if a computation is not constant " in {
+		"fail if not a constant " in {
 			ApplyDivide(x, `4`).cnStep must beEmpty
 		}
 	}
@@ -56,4 +56,5 @@ class ApplyDivideSpec extends Specification {
 			(mathml.F / G).dx must beEqualTo((Fdx * G - Gdx * F) / G ^ `2`)
 		}
 	}
+	
 }

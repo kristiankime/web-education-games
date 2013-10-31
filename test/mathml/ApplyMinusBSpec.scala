@@ -8,76 +8,52 @@ import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import org.specs2.matcher.Matcher
-import mathml.scalar.ApplyMinusU
-import mathml.scalar.ApplyMinusB
-import mathml.scalar.Cn
-import mathml.scalar.Ci
+import mathml.scalar._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
 class ApplyMinusBSpec extends Specification {
 
-	"isZero" should {
-		"return true if two values are equal" in {
-			ApplyMinusB(Cn(1), Cn(1)).isZero must beTrue
+	"cnStep" should {
+		"return subtraction if values are numbers " in {
+			ApplyMinusB(`6`, `4`).cnStep.get must beEqualTo(`2`)
 		}
 
-		"return false if two values are different" in {
-			ApplyMinusB(Cn(1), Cn(2)).isZero must beFalse
-		}
-	}
-
-	"isOne" should {
-		"return true if first value is 1 and second value is 0" in {
-			ApplyMinusB(Cn(1), Cn(0)).isOne must beTrue
+		"return 0 if values are equal " in {
+			ApplyMinusB(`5`, `5`).cnStep.get must beEqualTo(`0`)
 		}
 
-		"return false if values are not equal" in {
-			ApplyMinusB(Cn(4), Cn(2)).isOne must beFalse
+		"fail if not a constant " in {
+			ApplyMinusB(x, `5`).cnStep must beNone
 		}
 	}
 
-	"simplify" should {
-		"return 0 if isZero is true" in {
-			ApplyMinusB(Cn(1), Cn(1)).simplifyStep must beEqualTo(Cn(0))
+	"simplifyStep" should {
+		"return 0 if numbers are the same" in {
+			ApplyMinusB(`1`, `1`).simplifyStep must beEqualTo(`0`)
 		}
 
-		"return 1 if isOne is true" in {
-			ApplyMinusB(Cn(1), Cn(0)).simplifyStep must beEqualTo(Cn(1))
+		"return 1 if numbers subtract to 1" in {
+			ApplyMinusB(`3`, `2`).simplifyStep must beEqualTo(`1`)
 		}
 
 		"return first value if second value is 0" in {
-			ApplyMinusB(Cn(4), Cn(0)).simplifyStep must beEqualTo(Cn(4))
+			ApplyMinusB(Cn(4), `0`).simplifyStep must beEqualTo(`4`)
 		}
 
 		"return minus second value if first value is 0" in {
-			ApplyMinusB(Cn(0), Cn(3)).simplifyStep must beEqualTo(Cn(-3))
+			ApplyMinusB(`0`, `3`).simplifyStep must beEqualTo(`-3`)
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusB(Cn(3), Ci("x")).simplifyStep must beEqualTo(ApplyMinusB(Cn(3), Ci("x")))
+			ApplyMinusB(`3`, x).simplifyStep must beEqualTo(`3` - x)
 		}
 	}
 
 	"derivative" should {
 		"obey the subtraction rule: (f - g)' = f' - g'" in {
-			(F - G).dx must beEqualTo( Fdx - Gdx)
-		}
-		
-		"obey the subtraction rule: (f - g)' = f' - g' (both terms dx are 0)" in {
-			ApplyMinusB(Cn(5), Cn(3)).derivative("x") must beEqualTo(Cn(0))
-		}
-		
-		"obey the subtraction rule: (f - g)' = f' - g' (left side dx is 0)" in {
-			ApplyMinusB(Cn(8), Ci("x")).derivative("x") must beEqualTo(Cn(-1))
-		}
-
-		"obey the subtraction rule: (f - g)' = f' - g' (right side dx is 0)" in {
-			ApplyMinusB(Ci("x"), Cn(3)).derivative("x") must beEqualTo(Cn(1))
-		}
-		
-		"obey the subtraction rule: (f - g)' = f' - g' (neither side dx is 0)" in {
-			ApplyMinusB(Ci("x"), Ci("x")).derivative("x") must beEqualTo(Cn(0))
+			(F - G).dx must beEqualTo(Fdx - Gdx)
 		}
 	}
+	
 }

@@ -14,52 +14,54 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class ApplyPowerSpec extends Specification {
 
-	"isZero" should {
-		"return true if base is zero" in {
-			ApplyPower(Cn(0), Cn(12)).isZero must beTrue
+	"cnStep" should {
+		"return 0 if base is 0" in {
+			ApplyPower(`0`, x).cnStep.get must beEqualTo(`0`)
+		}
+		
+		"return 1 if base is 1" in {
+			ApplyPower(`1`, x).cnStep.get must beEqualTo(`1`)
+		}
+		
+		"return base if power is 1" in {
+			ApplyPower(`5`, `1`).cnStep.get must beEqualTo(`5`)
 		}
 
-		"return false if base is not zero" in {
-			ApplyPower(Cn(3), Cn(2)).isZero must beFalse
+		"return 1 if power is 0" in {
+			ApplyPower(x, `0`).cnStep.get must beEqualTo(`1`)
 		}
-	}
-
-	"isOne" should {
-		"return true if base is 1" in {
-			ApplyPower(Cn(1), Cn(6)).isOne must beTrue
-		}
-
-		"return true if exponent is 0" in {
-			ApplyPower(Cn(12), Cn(0)).isOne must beTrue
-		}
-
-		"return false if base is not one and exp is not 0" in {
-			ApplyPower(Cn(4), Cn(2)).isOne must beFalse
+		
+		"return None if function is not constant" in {
+			ApplyPower(`2`, x).cnStep must beNone
 		}
 	}
-
-	"simplify" should {
+	
+	"simplifyStep" should {
 		"return 0 if base is zero" in {
-			ApplyPower(Cn(0), Cn(5)).simplifyStep must beEqualTo(Cn(0))
+			ApplyPower(`0`, x).simplifyStep must beEqualTo(`0`)
 		}
 
 		"return 1 if base is 1" in {
-			ApplyPower(Cn(1), Cn(12)).simplifyStep must beEqualTo(Cn(1))
+			ApplyPower(`1`, x).simplifyStep must beEqualTo(`1`)
 		}
 
 		"return 1 if exponent is 0" in {
-			ApplyPower(Cn(4), Cn(0)).simplifyStep must beEqualTo(Cn(1))
+			ApplyPower(x, `0`).simplifyStep must beEqualTo(`1`)
+		}
+		
+		"return base if exponent is 1" in {
+			ApplyPower(x, `1`).simplifyStep must beEqualTo(x)
 		}
 	}
 
 	"derivative" should {
 
 		"obey the elementary power rule: (x^n)' = n*x^(n-1)" in {
-			(Ci("x") ^ Cn(3)).dx must beEqualTo(Cn(3) * (Ci("x") ^ Cn(2)))
+			(x ^ `3`).dx must beEqualTo(`3` * (x ^ `2`))
 		}
 
 		"obey the chain power rule: (f^n)' = n*f^(n-1)f'" in {
-			(F ^ Cn(3)).dx must beEqualTo(ApplyTimes(Cn(3), F ^ Cn(2), Fdx))
+			(F ^ `3`).dx must beEqualTo(ApplyTimes(`3`, F ^ `2`, Fdx))
 		}
 
 		// LATER get the Generalized power rule working

@@ -7,12 +7,12 @@ import mathml.scalar._
 
 object MathML {
 
-	def checkEq(v: String, eq1: MathMLElem, eq2: MathMLElem) = {
+	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val values = for (i <- -5 to 5) yield Map(v -> i.toDouble)
-			values.forall(v => closeEnough(eq1.eval(v), eq2.eval(v)))
+			val varAndVals = for (i <- -5 to 5) yield Map(variableName -> i.toDouble)
+			varAndVals.forall(varAndVal => closeEnough(eq1.eval(varAndVal), eq2.eval(varAndVal)))
 		}
 	}
 

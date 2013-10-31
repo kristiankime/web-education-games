@@ -11,8 +11,8 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	def cnStep: Option[Cn] = if (values.forall(_.c.nonEmpty)) {
 		Some(values.map(_.c.get).reduce(_ * _))
-	} else if (values.map(_.c).contains(Some(Cn(0)))) {
-		Some(Cn(0))
+	} else if (values.map(_.c).contains(Some(`0`))) {
+		Some(`0`)
 	} else {
 		None
 	}

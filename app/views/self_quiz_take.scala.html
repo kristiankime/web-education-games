@@ -1,9 +1,12 @@
-@(question: DerivativeQuestion, answer: Option[DerivativeQuestionAnswer])
+ @(question: DerivativeQuestion, answer: Option[DerivativeQuestionAnswer])
 
 @import helper._
 @import controllers.DerivativeQuestionAnswerHTML
  
 @main("Answer a Self Quiz Question") {
+    <div>
+    	<a href="@routes.Application.selfQuizQuestions"> Back to the list of questions</a>
+    </div>
     
     <h2>What is the Derivative of</h2>
     <script type="math/mml"> @Html(question.mathML.toString) </script>

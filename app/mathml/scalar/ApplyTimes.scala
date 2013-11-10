@@ -9,7 +9,7 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
 
-	def cnStep: Option[Cn] = if (values.forall(_.c.nonEmpty)) {
+	def cnStep: Option[Constant] = if (values.forall(_.c.nonEmpty)) {
 		Some(values.map(_.c.get).reduce(_ * _))
 	} else if (values.map(_.c).contains(Some(`0`))) {
 		Some(`0`)
@@ -34,7 +34,7 @@ case class ApplyTimes(val values: MathMLElem*)
 		}
 	}
 
-	private def timesSimp(cn: Cn, elems: Seq[MathMLElem]) =
+	private def timesSimp(cn: Constant, elems: Seq[MathMLElem]) =
 		(cn, elems) match {
 			case (cn, Seq(elem)) if (cn.isOne) => elem
 			case (cn, Seq(elems @ _*)) if (cn.isOne) => ApplyTimes(elems: _*)

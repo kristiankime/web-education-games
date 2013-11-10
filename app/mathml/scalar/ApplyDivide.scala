@@ -9,7 +9,7 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 
 	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
 
-	def cnStep: Option[Cn] = (numerator.cnStep, denominator.cnStep) match {
+	def cnStep: Option[Constant] = (numerator.cnStep, denominator.cnStep) match {
 		case (Some(nu), Some(de)) => Some(nu / de)
 		case (Some(nu), _) => if (nu.isZero) Some(nu) else None
 		case _ => None

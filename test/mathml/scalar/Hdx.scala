@@ -13,7 +13,7 @@ object Hdx extends MathMLElem(MathML.h.prefix, "Hdx", MathML.h.attributes, MathM
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cnStep: Option[Cn] = None
+	def cnStep: Option[Constant] = None
 
 	def simplifyStep() = Hdx.this
 

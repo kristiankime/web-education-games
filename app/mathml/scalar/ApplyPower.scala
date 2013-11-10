@@ -9,7 +9,7 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
-	def cnStep: Option[Cn] = (base.cnStep, exp.cnStep) match {
+	def cnStep: Option[Constant] = (base.cnStep, exp.cnStep) match {
 		case (Some(b), _) if (b.isZero) => Some(`0`)
 		case (Some(b), _) if (b.isOne) => Some(`1`)
 		case (_, Some(e)) if (e.isZero) => Some(`1`)

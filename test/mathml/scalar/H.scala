@@ -13,7 +13,7 @@ object H extends MathMLElem(MathML.h.prefix, "H", MathML.h.attributes, MathML.h.
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cnStep: Option[Cn] = None
+	def cnStep: Option[Constant] = None
 
 	def simplifyStep() = H.this
 

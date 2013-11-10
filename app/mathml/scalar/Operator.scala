@@ -13,7 +13,7 @@ abstract class Operator(
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
 
-	def cnStep: Option[Cn] = None
+	def cnStep: Option[Constant] = None
 
 	def variables: Set[String] = Set()
 
@@ -93,4 +93,34 @@ case class Power(
 
 object Power {
 	def apply() = new Power()
+}
+
+case class Log(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding)
+	extends Operator(prefix, "log", attributes1, scope) {
+
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
+
+	def simplifyStep() = this
+}
+
+object Log {
+	def apply() = new Log()
+}
+
+case class Ln(
+	override val prefix: String,
+	attributes1: MetaData,
+	override val scope: NamespaceBinding)
+	extends Operator(prefix, "ln", attributes1, scope) {
+
+	def this() = this(MathML.h.prefix, MathML.h.attributes, MathML.h.scope)
+
+	def simplifyStep() = this
+}
+
+object Ln {
+	def apply() = new Log()
 }

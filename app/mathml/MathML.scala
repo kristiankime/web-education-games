@@ -41,7 +41,7 @@ object MathML {
 		}
 	}
 	
-	private def constantElement(xml: Elem): Try[Cn] = {
+	private def constantElement(xml: Elem): Try[Constant] = {
 		Cn(xml.child(0))
 	}
 

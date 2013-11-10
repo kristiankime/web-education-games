@@ -4,6 +4,7 @@ import scala.util._
 import scala.xml._
 import mathml.scalar.MathMLElem
 import mathml.scalar.Cn
+import mathml.scalar.Constant
 
 case class Math(
 	override val prefix: String,
@@ -17,7 +18,7 @@ case class Math(
 
 	def eval(boundVariables: Map[String, Double]) = value.eval(boundVariables)
 
-	def cnStep: Option[Cn] = value.cnStep
+	def cnStep: Option[Constant] = value.cnStep
 	
 	def simplifyStep() = Math(prefix, attributes, scope, minimizeEmpty, value.simplifyStep)
 

@@ -9,7 +9,7 @@ case class ApplyPlus(val values: MathMLElem*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 
-	def cnStep: Option[Cn] =
+	def cnStep: Option[Constant] =
 		if (values.forall(_.cnStep.nonEmpty)) {
 			Some(values.map(_.cnStep.get).reduce(_ + _))
 		} else {

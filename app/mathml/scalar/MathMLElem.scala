@@ -16,9 +16,9 @@ abstract class MathMLElem(
 
 	def eval(boundVariables: Map[String, Double]): Try[Double]
 
-	def isZero: Boolean = { c == Some(`0`) }
+	def isZero: Boolean = c.map(_.isZero).getOrElse(false)
 
-	def isOne: Boolean = { c == Some(`1`) }
+	def isOne: Boolean = c.map(_.isOne).getOrElse(false)
 
 	/**
 	 * Does one round of simplification on this element

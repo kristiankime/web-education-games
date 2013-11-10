@@ -18,6 +18,10 @@ abstract class Constant(name: String, attributes1: MetaData, minimizeEmpty: Bool
 
 	def derivative(wrt: String) = `0`
 
+	def isZero() : Boolean
+
+	def isOne() : Boolean
+	
 	def +(c: Constant): Constant
 
 	def *(c: Constant): Constant
@@ -34,6 +38,10 @@ class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolea
 
 	def eval(boundVariables: Map[String, Double]) = Try(v.doubleValue)
 
+	override def isZero() = {v.compare(BigInt(0)) == 0}
+
+	override def isOne() = {v.compare(BigInt(1)) == 0}
+	
 	def +(c: Constant) = c match {
 		case m: ConstantInteger => Cn(v + m.v)
 		case m: ConstantDecimal => Cn(BigDecimal(v) + m.v)
@@ -65,6 +73,10 @@ class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpty: Boolea
 
 	def eval(boundVariables: Map[String, Double]) = Try(v.doubleValue)
 
+	override def isZero() = {v.compare(BigDecimal(0)) == 0}
+
+	override def isOne() = {v.compare(BigDecimal(1)) == 0}
+	
 	def +(c: Constant) = c match {
 		case m: ConstantInteger => Cn(v + BigDecimal(m.v))
 		case m: ConstantDecimal => Cn(v + m.v)

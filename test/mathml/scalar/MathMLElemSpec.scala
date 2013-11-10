@@ -102,7 +102,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"fail if there is only an applyable" in {
-			Plus().eval(Map()).isFailure must beTrue
+			Plus.eval(Map()).isFailure must beTrue
 		}
 
 		"add 2 numbers correctly for apply+plus " in {

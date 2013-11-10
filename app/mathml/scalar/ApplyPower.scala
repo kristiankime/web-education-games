@@ -5,7 +5,7 @@ import scala.xml._
 import mathml._
 
 case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
-	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Power()) ++ base ++ exp): _*) {
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Power) ++ base ++ exp): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 

@@ -8,7 +8,7 @@ import mathml._
  * ApplyMinusUnary
  */
 case class ApplyMinusU(val value: MathMLElem)
-	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Minus()) ++ value): _*) {
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Minus) ++ value): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
 

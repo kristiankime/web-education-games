@@ -5,7 +5,7 @@ import scala.xml._
 import mathml._
 
 case class ApplyPlus(val values: MathMLElem*)
-	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Plus()) ++ values): _*) {
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Plus) ++ values): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 

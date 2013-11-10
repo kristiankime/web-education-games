@@ -8,7 +8,7 @@ import mathml._
  * ApplyMinus for the Binary case
  */
 case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
-	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Minus()) ++ value1 ++ value2): _*) {
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Minus) ++ value1 ++ value2): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(value1.eval(boundVariables).get - value2.eval(boundVariables).get)
 

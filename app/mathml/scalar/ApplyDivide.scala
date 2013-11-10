@@ -5,7 +5,7 @@ import scala.xml._
 import mathml._
 
 case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
-	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Divide()) ++ numerator ++ denominator): _*) {
+	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Divide) ++ numerator ++ denominator): _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(numerator.eval(boundVariables).get / denominator.eval(boundVariables).get)
 

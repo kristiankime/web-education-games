@@ -4,23 +4,21 @@ import scala.util._
 import scala.xml._
 import mathml._
 import mathml.scalar._
-import mathml.scalar.concept.Constant
+import mathml.scalar.concept._
 
-case class ApplyLn(val value: MathMLElem)
-	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Ln) ++ value): _*) {
+case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, Seq(Ln): _*) {
 
-	def eval(boundVariables: Map[String, Double]) = Try(math.log(value.eval(boundVariables).get))
+	override def eval(boundVariables: Map[String, Double]) = Try(math.log(v.eval(boundVariables).get))
 
-	def cnStep: Option[Constant] = value.cnStep match {
-		case Some(v) => Some(v.ln)
+	override def cnStep: Option[Constant] = v.cnStep match {
+		case Some(v) => Some(Logarithm.ln(v))
 		case _ => None
 	}
 
 	def simplifyStep() =
 		if (cnStep.nonEmpty) cnStep.get
-		else ApplyMinusU(value.simplifyStep)
+		else ApplyLn(v.simplifyStep)
 
-	def variables: Set[String] = value.variables
-
-	def derivative(wrt: String) = ApplyMinusU(value.d(wrt).s).s
+	def derivative(wrt: String) = v.d(wrt).s / v.d(wrt).s
+	
 }

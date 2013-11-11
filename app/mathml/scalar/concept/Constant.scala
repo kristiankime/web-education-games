@@ -33,11 +33,9 @@ abstract class Constant(name: String, attributes1: MetaData, minimizeEmpty: Bool
 	def /(c: Constant): Constant
 
 	def ^(c: Constant): Constant
-
-	def ln(): Constant
 }
 
-class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigInt, override val child: Node*)
+abstract class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigInt, override val child: Node*)
 	extends Constant(name, attributes1, minimizeEmpty, v, child: _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(v.doubleValue)
@@ -74,7 +72,7 @@ class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolea
 	def ln(): Constant = Cn(math.log(v.doubleValue))
 }
 
-class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigDecimal, override val child: Node*)
+abstract class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigDecimal, override val child: Node*)
 	extends Constant(name, attributes1, minimizeEmpty, v, child: _*) {
 
 	def eval(boundVariables: Map[String, Double]) = Try(v.doubleValue)

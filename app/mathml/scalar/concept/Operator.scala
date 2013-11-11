@@ -1,8 +1,9 @@
-package mathml.scalar
+package mathml.scalar.concept
 
 import scala.util._
 import scala.xml._
 import mathml._
+import mathml.scalar._
 
 abstract class Operator(override val label: String)
 	extends MathMLElem(MathML.h.prefix, label, MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
@@ -17,17 +18,3 @@ abstract class Operator(override val label: String)
 
 	def derivative(wrt: String): MathMLElem = throw new UnsupportedOperationException("Applyables should not get derived, use derive on the surrounding apply element.")
 }
-
-object Plus extends Operator("plus")
-
-object Minus extends Operator("minus")
-
-object Times extends Operator("times")
-
-object Divide extends Operator("divide")
-
-object Power extends Operator("power")
-
-object Log extends Operator("log")
-
-object Ln extends Operator("ln")

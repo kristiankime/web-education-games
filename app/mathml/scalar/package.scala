@@ -35,4 +35,6 @@ package object scalar {
 	val x = Ci("x")
 
 	val y = Ci("y")
+	
+	val e = ExponentialE
 }

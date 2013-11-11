@@ -1,8 +1,10 @@
-package mathml.scalar
+package mathml.scalar.apply
 
 import scala.util._
 import scala.xml._
 import mathml._
+import mathml.scalar._
+import mathml.scalar.concept.Constant
 
 /**
  * ApplyMinus for the Binary case

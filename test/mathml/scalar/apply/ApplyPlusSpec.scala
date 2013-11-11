@@ -1,12 +1,13 @@
-package mathml.scalar
+package mathml.scalar.apply
 
 import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml._
 import mathml.scalar._
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -38,7 +39,7 @@ class ApplyPlusSpec extends Specification {
 		"sum constants and leave variables (constands go to end)" in {
 			ApplyPlus(x, `3`, `4`, y).simplifyStep must beEqualTo(ApplyPlus(x, y, `7`))
 		}
-		
+
 		"remain unchanged if nothing can be simplified" in {
 			ApplyPlus(x, `3`).simplifyStep must beEqualTo(ApplyPlus(x, `3`))
 		}
@@ -48,10 +49,10 @@ class ApplyPlusSpec extends Specification {
 		"obey the sum rule: (f + g)' = f' + g'" in {
 			ApplyPlus(F, G).dx must beEqualTo(Fdx + Gdx)
 		}
-		
+
 		"obey the sum rule for more than 2 elements: (f + g + h)' = f' + g' + h'" in {
 			ApplyPlus(F, G, H).dx must beEqualTo(ApplyPlus(Fdx, Gdx, Hdx))
 		}
 	}
-	
+
 }

@@ -9,6 +9,12 @@ import mathml._
 import mathml.scalar._
 import scala.util._
 import scala.math.BigDecimal.double2bigDecimal
+import mathml.scalar.apply.ApplyTimes
+import mathml.scalar.apply.ApplyMinusB
+import mathml.scalar.apply.ApplyPower
+import mathml.scalar.apply.ApplyMinusU
+import mathml.scalar.apply.ApplyDivide
+import mathml.scalar.apply.ApplyPlus
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

@@ -1,8 +1,10 @@
-package mathml.scalar
+package mathml.scalar.apply
 
 import scala.util._
 import scala.xml._
 import mathml._
+import mathml.scalar._
+import mathml.scalar.concept.Constant
 
 case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Divide) ++ numerator ++ denominator): _*) {

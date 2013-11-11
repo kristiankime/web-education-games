@@ -2,9 +2,10 @@ package mathml.scalar
 
 import scala.util._
 import scala.xml._
-import mathml._
 import scala.math.ScalaNumber
 import scala.math.Numeric
+import mathml._
+import mathml.scalar.concept._
 
 object Cn {
 	def apply(str: String): Try[Constant] = {

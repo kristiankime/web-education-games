@@ -4,7 +4,7 @@ import scala.util._
 import scala.xml._
 import mathml.scalar.MathMLElem
 import mathml.scalar.Cn
-import mathml.scalar.Constant
+import mathml.scalar.concept.Constant
 
 case class Math(
 	override val prefix: String,

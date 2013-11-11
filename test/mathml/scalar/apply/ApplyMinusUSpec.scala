@@ -1,12 +1,13 @@
-package mathml.scalar
+package mathml.scalar.apply
 
 import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml._
 import mathml.scalar._
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -16,7 +17,7 @@ class ApplyMinusUSpec extends Specification {
 		"return 0 if value is 0" in {
 			ApplyMinusU(`0`).cnStep.get must beEqualTo(`0`)
 		}
-		
+
 		"return 1 if value is -1" in {
 			ApplyMinusU(`-1`).cnStep.get must beEqualTo(`1`)
 		}
@@ -45,5 +46,5 @@ class ApplyMinusUSpec extends Specification {
 			ApplyMinusU(F).dx must beEqualTo(ApplyMinusU(Fdx))
 		}
 	}
-	
+
 }

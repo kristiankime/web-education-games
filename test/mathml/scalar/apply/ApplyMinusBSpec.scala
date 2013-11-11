@@ -1,12 +1,13 @@
-package mathml.scalar
+package mathml.scalar.apply
 
 import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml._
 import mathml.scalar._
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -24,7 +25,7 @@ class ApplyMinusBSpec extends Specification {
 		"be y if element constains a y" in {
 			ApplyMinusB(y, `2`).variables must beEqualTo(Set("y"))
 		}
-				
+
 		"be x &y if element constains x & y" in {
 			ApplyMinusB(x, y).variables must beEqualTo(Set("x", "y"))
 		}

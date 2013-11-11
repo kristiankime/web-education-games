@@ -3,6 +3,7 @@ package mathml.scalar
 import scala.util._
 import scala.xml._
 import mathml._
+import mathml.scalar.concept.Constant
 
 case class Ci(val identifier: IdentifierText)
 	extends MathMLElem(MathML.h.prefix, "ci", MathML.h.attributes, MathML.h.scope, false, Seq(identifier): _*) {

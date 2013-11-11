@@ -1,10 +1,12 @@
-package mathml.scalar
+package mathml.scalar.concept
 
-import scala.math.ScalaNumber
 import mathml.MathML
+import mathml.scalar._
 import scala.xml.MetaData
 import scala.util.Try
 import scala.xml.Node
+import scala.math.BigDecimal.double2bigDecimal
+import scala.xml._
 
 // LATER might be able to make Constant scala.math.Numeric 
 abstract class Constant(name: String, attributes1: MetaData, minimizeEmpty: Boolean, val v: Any, override val child: Node*)
@@ -31,6 +33,8 @@ abstract class Constant(name: String, attributes1: MetaData, minimizeEmpty: Bool
 	def /(c: Constant): Constant
 
 	def ^(c: Constant): Constant
+
+	def ln(): Constant
 }
 
 class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigInt, override val child: Node*)
@@ -66,6 +70,8 @@ class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolea
 		case m: ConstantInteger => Cn(v.pow(m.v.intValue))
 		case m: ConstantDecimal => Cn(math.pow(v.doubleValue, m.v.doubleValue))
 	}
+	
+	def ln(): Constant = Cn(math.log(v.doubleValue))
 }
 
 class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigDecimal, override val child: Node*)
@@ -101,4 +107,6 @@ class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpty: Boolea
 		case m: ConstantInteger => Cn(math.pow(v.doubleValue, m.v.doubleValue))
 		case m: ConstantDecimal => Cn(math.pow(v.doubleValue, m.v.doubleValue))
 	}
+	
+	def ln(): Constant = Cn(math.log(v.doubleValue))
 }

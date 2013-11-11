@@ -6,8 +6,8 @@ import scala.xml._
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import org.specs2.matcher.Matcher
 import mathml.scalar._
+import mathml.scalar.apply._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

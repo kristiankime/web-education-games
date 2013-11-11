@@ -8,6 +8,7 @@ import org.specs2.mutable._
 import mathml._
 import mathml.scalar._
 import scala.util._
+import mathml.scalar.concept.Constant
 
 object H extends MathMLElem(MathML.h.prefix, "H", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
 

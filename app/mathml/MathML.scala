@@ -4,6 +4,8 @@ import scala.util._
 import scala.xml._
 import math._
 import mathml.scalar._
+import mathml.scalar.apply._
+import mathml.scalar.concept.Constant
 
 object MathML {
 

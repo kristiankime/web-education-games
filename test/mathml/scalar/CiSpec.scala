@@ -12,6 +12,12 @@ import mathml.scalar._
 @RunWith(classOf[JUnitRunner])
 class CiSpec extends Specification {
 
+	"Indentifer.name" should {
+		"be the same regardless of whitespace" in {
+			Ci(" x   ").identifier.name == "x" must beTrue
+		}
+	}
+	
 	"Ci" should {
 		"be the same regardless of whitespace with a string input" in {
 			Ci(" x   ") == Ci("x") must beTrue

@@ -18,7 +18,7 @@ case class Ci(val identifier: IdentifierText)
 
 	def simplifyStep() = this
 
-	def variables: Set[String] = Set(identifier.id.trim)
+	def variables: Set[String] = Set(identifier.name.trim)
 
 	def derivative(wrt: String): MathMLElem = if (text.trim == wrt) Cn(1) else Cn(0)
 }
@@ -27,4 +27,6 @@ object Ci {
 	def apply(value: String) = new Ci(IdentifierText(value))
 }
 
-case class IdentifierText(val id: String) extends Text(id.trim)
+case class IdentifierText(nameStr: String) extends Text(nameStr.trim){
+	val name = nameStr.trim
+}

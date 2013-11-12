@@ -13,17 +13,23 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyDivideSpec extends Specification {
 
+	"eval" should {
+		"do division" in {
+			ApplyDivide(`1`, `2`).eval(Map()).get must beEqualTo(.5)
+		}
+	}
+	
 	"variables" should {
-		"be empty if element is constant" in {
+		"be empty if elements are constant" in {
 			ApplyDivide(`1`, `2`).variables must beEmpty
 		}
 
-		"be x if element constains an x" in {
+		"be x if an element constains an x" in {
 			ApplyDivide(x, `2`).variables must beEqualTo(Set("x"))
 		}
 
 		"be y if element constains a y" in {
-			ApplyDivide(y, `2`).variables must beEqualTo(Set("y"))
+			ApplyDivide(`1`, y).variables must beEqualTo(Set("y"))
 		}
 
 		"be x &y if element constains x & y" in {

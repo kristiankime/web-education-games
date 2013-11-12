@@ -7,6 +7,10 @@ import scala.math.Numeric
 import mathml._
 import mathml.scalar.concept._
 
+case class CnInteger(override val v: BigInt) extends ConstantInteger("cn", Cn.integerType, false, v, Seq(IntegerText(v)): _*)
+
+case class CnReal(override val v: BigDecimal) extends ConstantDecimal("cn", Cn.realType, false, v, Seq(RealText(v)): _*)
+
 object Cn {
 	def apply(str: String): Try[Constant] = {
 		val trimmed = str.trim
@@ -38,22 +42,6 @@ object Cn {
 	val realType = <cn type="real"></cn>.attributes
 
 	val integerType = <cn type="integer"></cn>.attributes
-}
-
-case class CnInteger(override val v: BigInt) 
-	extends ConstantInteger("cn", Cn.integerType, false, v, Seq(IntegerText(v)): _*) {
-
-	override val c = Some(this);
-
-	override val s = this;
-}
-
-case class CnReal(override val v: BigDecimal) 
-	extends ConstantDecimal("cn", Cn.realType, false, v, Seq(RealText(v)): _*) {
-	
-	override val c = Some(this);
-
-	override val s = this;
 }
 
 class NumberText[T <: ScalaNumber](val num: T) extends Text(num.toString)

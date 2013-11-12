@@ -12,15 +12,15 @@ case class ApplyPlus(val values: MathMLElem*)
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ + _))
 
 	def cnStep: Option[Constant] =
-		if (values.forall(_.cnStep.nonEmpty)) {
-			Some(values.map(_.cnStep.get).reduce(_ + _))
+		if (values.forall(_.c.nonEmpty)) {
+			Some(values.map(_.c.get).reduce(_ + _))
 		} else {
 			None
 		}
 
 	def simplifyStep() = {
-		val cns = values.map(_.cnStep).filter(_.nonEmpty).map(_.get)
-		val elems = values.filter(_.cnStep.isEmpty)
+		val cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
+		val elems = values.filter(_.c.isEmpty)
 		(cns, elems) match {
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ + _)
 			case (Seq(), Seq(elem)) => elem

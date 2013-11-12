@@ -18,9 +18,9 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 	}
 
 	def simplifyStep() =
-		if (cnStep.nonEmpty) cnStep.get
-		else if (denominator.isOne) { numerator.simplifyStep }
-		else ApplyDivide(numerator.simplifyStep, denominator.simplifyStep)
+		if (c.nonEmpty) c.get
+		else if (denominator.isOne) { numerator.s }
+		else numerator.s / denominator.s
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables
 
@@ -32,7 +32,6 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 		val gP = g.d(wrt).s
 
 		// (f/g)' = (f'g - g'f)/g^2
-		val der = (fP * g - gP * f) / (g ^ `2`)
-		der s
+		((fP * g - gP * f) / (g ^ `2`))s
 	}
 }

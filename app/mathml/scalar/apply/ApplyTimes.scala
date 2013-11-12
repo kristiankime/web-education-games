@@ -20,11 +20,10 @@ case class ApplyTimes(val values: MathMLElem*)
 	}
 
 	def simplifyStep() = {
-		if (cnStep.nonEmpty) {
-			cnStep.get
+		if (c.nonEmpty) { c.get
 		} else {
-			val cns_ = values.map(_.cnStep).filter(_.nonEmpty).map(_.get)
-			val elems_ = values.filter(_.cnStep.isEmpty)
+			val cns_ = values.map(_.c).filter(_.nonEmpty).map(_.get)
+			val elems_ = values.filter(_.c.isEmpty)
 			(cns_, elems_) match {
 				case (Seq(cn), Seq()) => cn
 				case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
@@ -50,11 +49,10 @@ case class ApplyTimes(val values: MathMLElem*)
 	// http://en.wikipedia.org/wiki/Product_rule
 	// (f*g)' = f'*g + f*g'
 	private def productRule(wrt: String, f: MathMLElem, g: MathMLElem) = {
-		val fP = f.d(wrt).simplifyStep
-		val gP = g.d(wrt).simplifyStep
-		val fP_g = (fP * g).simplifyStep
-		val f_gP = (f * gP).simplifyStep
-		val ret = (fP_g + f_gP).simplifyStep
-		ret
+		val fP = f.d(wrt).s
+		val gP = g.d(wrt).s
+		val fP_g = (fP * g).s
+		val f_gP = (f * gP).s
+		(fP_g + f_gP).s
 	}
 }

@@ -23,12 +23,11 @@ abstract class MathMLElem(
 	def isOne: Boolean = c.map(_.isOne).getOrElse(false)
 
 	/**
-	 * Does one round of simplification on this element
-	 * Implementations of this method should not use the "c" or "s" methods (but can use cnStep).
+	 * Does one round of simplification on this element.
+	 * Implementations of this method should not use the "s".
 	 */
 	def simplifyStep(): MathMLElem
 
-	// LATER implement this via repeated calls to simplifyStep
 	private var s_ : MathMLElem = null
 	def s = {
 		if (s_ == null) {
@@ -48,14 +47,13 @@ abstract class MathMLElem(
 
 	/**
 	 * Does "one level" of attempting to turn this element into a constant.
-	 * Implementations of this method should not use the "c" or "s" or "simplifyStep" methods.
 	 */
 	def cnStep: Option[Constant]
 
 	private var c_ : Option[Constant] = null
 	def c = {
 		if (c_ == null) {
-			c_ = s.cnStep
+			c_ = cnStep
 		}
 		c_
 	}
@@ -74,6 +72,8 @@ abstract class MathMLElem(
 
 	def -(m: MathMLElem) = ApplyMinusB(this, m)
 
+	def unary_-() = ApplyMinusU(this)
+	
 	def /(m: MathMLElem) = ApplyDivide(this, m)
 
 	def ^(m: MathMLElem) = ApplyPower(this, m)

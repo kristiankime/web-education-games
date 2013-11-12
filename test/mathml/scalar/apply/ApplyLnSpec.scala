@@ -18,7 +18,7 @@ class ApplyLnSpec extends Specification {
 			ApplyLn(e).eval(Map()).get must beEqualTo(1)
 		}
 	}
-	
+
 	"variables" should {
 		"be empty if elements are constant" in {
 			ApplyLn(`2`).variables must beEmpty
@@ -43,15 +43,15 @@ class ApplyLnSpec extends Specification {
 		"return constant if value is constant" in {
 			ApplyLn(e).simplifyStep must beEqualTo(`1`)
 		}
-		
+
 		"remain unchanged if nothing can be simplified" in {
 			ApplyLn(x).simplifyStep must beEqualTo(ApplyLn(x))
 		}
 	}
 
 	"derivative" should {
-		"obey the ln der rule: ln(f)' = f'/f" in {
-			ApplyLn(F).dx must beEqualTo( Fdx / F)
+		"obey the ln derivative rule: ln(f)' = f'/f" in {
+			ApplyLn(F).dx must beEqualTo(Fdx / F)
 		}
 	}
 

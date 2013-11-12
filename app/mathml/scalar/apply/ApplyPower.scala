@@ -11,7 +11,7 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
 
-	def cnStep: Option[Constant] = (base.cnStep, exp.cnStep) match {
+	def cnStep: Option[Constant] = (base.c, exp.c) match {
 		case (Some(b), _) if (b.isZero) => Some(`0`)
 		case (Some(b), _) if (b.isOne) => Some(`1`)
 		case (_, Some(e)) if (e.isZero) => Some(`1`)
@@ -20,9 +20,9 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	}
 
 	def simplifyStep() = {
-		if (cnStep.nonEmpty) cnStep.get
-		else if (base.isOne) Cn(1)
-		else if (exp.isZero) Cn(1)
+		if (c.nonEmpty) c.get
+		else if (base.isOne) `1`
+		else if (exp.isZero) `1`
 		else if (exp.isOne) base
 		else this
 	}

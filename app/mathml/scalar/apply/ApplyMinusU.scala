@@ -14,16 +14,16 @@ case class ApplyMinusU(val value: MathMLElem)
 
 	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
 
-	def cnStep: Option[Constant] = value.cnStep match {
+	def cnStep: Option[Constant] = value.c match {
 		case Some(v) => Some(v * Cn(-1))
 		case _ => None
 	}
 
 	def simplifyStep() =
-		if (cnStep.nonEmpty) cnStep.get
-		else ApplyMinusU(value.simplifyStep)
+		if (c.nonEmpty) c.get
+		else -(value.s)
 
 	def variables: Set[String] = value.variables
 
-	def derivative(wrt: String) = ApplyMinusU(value.d(wrt).s).s
+	def derivative(wrt: String) = -(value.d(wrt).s).s
 }

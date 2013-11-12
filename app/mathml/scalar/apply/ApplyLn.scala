@@ -19,6 +19,6 @@ case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, S
 		if (cnStep.nonEmpty) cnStep.get
 		else ApplyLn(v.simplifyStep)
 
-	def derivative(wrt: String) = v.d(wrt).s / v.d(wrt).s
+	def derivative(wrt: String) = v.d(wrt).s / v.s
 	
 }

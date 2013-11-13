@@ -19,19 +19,19 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 
 	def simplifyStep() =
 		if (c.nonEmpty) c.get
-		else if (denominator.isOne) { numerator.s }
+		else if (denominator.isOne) numerator.s
 		else numerator.s / denominator.s
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables
 
 	// Quotient Rule (http://en.wikipedia.org/wiki/Quotient_rule)
-	def derivative(wrt: String): MathMLElem = {
+	def derivative(x: String): MathMLElem = {
 		val f = numerator.s
-		val fP = f.d(wrt).s
+		val fP = f.d(x)
 		val g = denominator.s
-		val gP = g.d(wrt).s
+		val gP = g.d(x)
 
 		// (f/g)' = (f'g - g'f)/g^2
-		((fP * g - gP * f) / (g ^ `2`))s
+		(fP * g - gP * f) / (g ^ `2`)
 	}
 }

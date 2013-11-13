@@ -150,47 +150,47 @@ class MathMLElemSpec extends Specification {
 
 	"derivative" should {
 		"derivative of a constant is 0 (aka None)" in {
-			`3`.derivative("x") must beEqualTo(`0`)
+			`3`.d("x") must beEqualTo(`0`)
 		}
 
 		"derivative of the wrt variable is 1" in {
-			x.derivative("x") must beEqualTo(`1`)
+			x.d("x") must beEqualTo(`1`)
 		}
 
 		"derivative of non wrt variable is 0 (aka None)" in {
-			Ci("Not X").derivative("x") must beEqualTo(`0`)
+			Ci("Not X").d("x") must beEqualTo(`0`)
 		}
 
 		"sum of the derivatives is the derivative of the sums" in {
-			ApplyPlus(x, x).derivative("x") must beEqualTo(`2`)
+			ApplyPlus(x, x).d("x") must beEqualTo(`2`)
 		}
 
 		"sum of the derivatives is the derivative of the sums (simplifies left None)" in {
-			ApplyPlus(`1`, x).derivative("x") must beEqualTo(`1`)
+			ApplyPlus(`1`, x).d("x") must beEqualTo(`1`)
 		}
 
 		"sum of the derivatives is the derivative of the sums (simplifies right None)" in {
-			ApplyPlus(x, `1`).derivative("x") must beEqualTo(`1`)
+			ApplyPlus(x, `1`).d("x") must beEqualTo(`1`)
 		}
 
 		"sum of the derivatives is the derivative of the sums (simplifies both None)" in {
-			ApplyPlus(`1`, `1`).derivative("x") must beEqualTo(`0`)
+			ApplyPlus(`1`, `1`).d("x") must beEqualTo(`0`)
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions" in {
-			ApplyMinusB(x, x).derivative("x") must beEqualTo(`0`)
+			ApplyMinusB(x, x).d("x") must beEqualTo(`0`)
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies left None)" in {
-			ApplyMinusB(`1`, x).derivative("x") must beEqualTo(`-1`)
+			ApplyMinusB(`1`, x).d("x") must beEqualTo(`-1`)
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies right None)" in {
-			ApplyMinusB(x, `1`).derivative("x") must beEqualTo(`1`)
+			ApplyMinusB(x, `1`).d("x") must beEqualTo(`1`)
 		}
 
 		"subtraction of the derivatives is the derivative of the subtractions (simplifies both None)" in {
-			ApplyMinusB(`1`, `1`).derivative("x") must beEqualTo(`0`)
+			ApplyMinusB(`1`, `1`).d("x") must beEqualTo(`0`)
 		}
 
 		"product rule" in {

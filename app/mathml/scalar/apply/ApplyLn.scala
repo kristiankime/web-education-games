@@ -19,11 +19,11 @@ case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, S
 		if (c.nonEmpty) c.get
 		else ApplyLn(v.s)
 
-	def derivative(wrt: String) = {
+	def derivative(x: String) = {
 		val f = v.s
-		val fP = f.d(wrt).s
+		val fP = f.d(x)
 
-		(fP / f)s
+		fP / f
 	}
 
 }

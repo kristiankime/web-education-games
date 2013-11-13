@@ -19,7 +19,7 @@ object MathML {
 	}
 
 	def simplifyEquals(eq1: MathMLElem, eq2: MathMLElem) = {
-		eq1.simplifyStep == eq2.simplifyStep
+		eq1.s == eq2.s
 	}
 
 	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations

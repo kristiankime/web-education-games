@@ -26,8 +26,13 @@ abstract class MathMLElem(
 	 * Does one round of simplification on this element.
 	 * Implementations of this method should not use the "s".
 	 */
-	def simplifyStep(): MathMLElem
+	protected def simplifyStep(): MathMLElem
 
+	private def simplifyStepWithCNCheck(): MathMLElem = {
+		if(c.nonEmpty) c.get
+		else simplifyStep
+	}
+	
 	private var s_ : MathMLElem = null
 	def s = {
 		if (s_ == null) {
@@ -37,7 +42,7 @@ abstract class MathMLElem(
 	}
 	
 	@tailrec private def simplifyRecurse(e : MathMLElem) : MathMLElem = {
-		val simp = e.simplifyStep
+		val simp = e.simplifyStepWithCNCheck
 		if(simp == e){
 			e
 		} else {
@@ -48,7 +53,7 @@ abstract class MathMLElem(
 	/**
 	 * Does "one level" of attempting to turn this element into a constant.
 	 */
-	def cnStep: Option[Constant]
+	protected def cnStep: Option[Constant]
 
 	private var c_ : Option[Constant] = null
 	def c = {
@@ -60,11 +65,11 @@ abstract class MathMLElem(
 
 	def variables: Set[String]
 
-	def derivative(wrt: String): MathMLElem
+	protected def derivative(wrt: String): MathMLElem
 
-	def d(wrt: String) = derivative(wrt)
+	def d(wrt: String) = derivative(wrt).s
 
-	def dx = derivative("x")
+	def dx = derivative("x").s
 
 	def +(m: MathMLElem) = ApplyPlus(this, m)
 

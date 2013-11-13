@@ -25,5 +25,5 @@ case class ApplyMinusU(val value: MathMLElem)
 
 	def variables: Set[String] = value.variables
 
-	def derivative(wrt: String) = -(value.d(wrt).s).s
+	def derivative(x: String) = -(value.d(x))
 }

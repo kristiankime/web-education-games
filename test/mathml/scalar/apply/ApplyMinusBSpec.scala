@@ -31,39 +31,39 @@ class ApplyMinusBSpec extends Specification {
 		}
 	}
 
-	"cnStep" should {
+	"c" should {
 		"return subtraction if values are numbers " in {
-			ApplyMinusB(`6`, `4`).cnStep.get must beEqualTo(`2`)
+			ApplyMinusB(`6`, `4`).c.get must beEqualTo(`2`)
 		}
 
 		"return 0 if values are equal " in {
-			ApplyMinusB(`5`, `5`).cnStep.get must beEqualTo(`0`)
+			ApplyMinusB(`5`, `5`).c.get must beEqualTo(`0`)
 		}
 
 		"fail if not a constant " in {
-			ApplyMinusB(x, `5`).cnStep must beNone
+			ApplyMinusB(x, `5`).c must beNone
 		}
 	}
 
-	"simplifyStep" should {
+	"s" should {
 		"return 0 if numbers are the same" in {
-			ApplyMinusB(`1`, `1`).simplifyStep must beEqualTo(`0`)
+			ApplyMinusB(`1`, `1`).s must beEqualTo(`0`)
 		}
 
 		"return 1 if numbers subtract to 1" in {
-			ApplyMinusB(`3`, `2`).simplifyStep must beEqualTo(`1`)
+			ApplyMinusB(`3`, `2`).s must beEqualTo(`1`)
 		}
 
 		"return first value if second value is 0" in {
-			ApplyMinusB(Cn(4), `0`).simplifyStep must beEqualTo(`4`)
+			ApplyMinusB(Cn(4), `0`).s must beEqualTo(`4`)
 		}
 
 		"return minus second value if first value is 0" in {
-			ApplyMinusB(`0`, `3`).simplifyStep must beEqualTo(`-3`)
+			ApplyMinusB(`0`, `3`).s must beEqualTo(`-3`)
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusB(`3`, x).simplifyStep must beEqualTo(`3` - x)
+			ApplyMinusB(`3`, x).s must beEqualTo(`3` - x)
 		}
 	}
 

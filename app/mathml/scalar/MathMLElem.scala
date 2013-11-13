@@ -28,10 +28,7 @@ abstract class MathMLElem(
 	 */
 	protected def simplifyStep(): MathMLElem
 
-	private def simplifyStepWithCNCheck(): MathMLElem = {
-		if(c.nonEmpty) c.get
-		else simplifyStep
-	}
+	private def simplifyStepWithCNCheck(): MathMLElem = c.getOrElse(simplifyStep)
 	
 	private var s_ : MathMLElem = null
 	def s = {

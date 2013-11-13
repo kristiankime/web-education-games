@@ -13,21 +13,21 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyPowerSpec extends Specification {
 
-	"cnStep" should {
+	"c" should {
 		"return 0 if base is 0" in {
-			ApplyPower(`0`, x).cnStep.get must beEqualTo(`0`)
+			ApplyPower(`0`, x).c.get must beEqualTo(`0`)
 		}
 
 		"return 1 if base is 1" in {
-			ApplyPower(`1`, x).cnStep.get must beEqualTo(`1`)
+			ApplyPower(`1`, x).c.get must beEqualTo(`1`)
 		}
 
 		"return base if power is 1" in {
-			ApplyPower(`5`, `1`).cnStep.get must beEqualTo(`5`)
+			ApplyPower(`5`, `1`).c.get must beEqualTo(`5`)
 		}
 
 		"return 1 if power is 0" in {
-			ApplyPower(x, `0`).cnStep.get must beEqualTo(`1`)
+			ApplyPower(x, `0`).c.get must beEqualTo(`1`)
 		}
 
 		"return None if function is not constant" in {
@@ -35,25 +35,25 @@ class ApplyPowerSpec extends Specification {
 		}
 	}
 
-	"simplifyStep" should {
+	"s" should {
 		"return 0 if base is zero" in {
-			ApplyPower(`0`, x).simplifyStep must beEqualTo(`0`)
+			ApplyPower(`0`, x).s must beEqualTo(`0`)
 		}
 
 		"return 1 if base is 1" in {
-			ApplyPower(`1`, x).simplifyStep must beEqualTo(`1`)
+			ApplyPower(`1`, x).s must beEqualTo(`1`)
 		}
 
 		"return 1 if exponent is 0" in {
-			ApplyPower(x, `0`).simplifyStep must beEqualTo(`1`)
+			ApplyPower(x, `0`).s must beEqualTo(`1`)
 		}
 
 		"return base if exponent is 1" in {
-			ApplyPower(x, `1`).simplifyStep must beEqualTo(x)
+			ApplyPower(x, `1`).s must beEqualTo(x)
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 
 		"obey the elementary power rule: (x^n)' = n*x^(n-1)" in {
 			ApplyPower(x, `3`).dx must beEqualTo(`3` * (x ^ `2`))
@@ -64,6 +64,6 @@ class ApplyPowerSpec extends Specification {
 		}
 
 		// LATER get the Generalized power rule working
-		// (f(x)^(g(x)))' = f(x)^(g(x)-1)*(g(x)*'(x)+f(x)*log(f(x))*g'(x))
+		// (f^g)' = f^(g-1) * (g f'+f log(f) g')
 	}
 }

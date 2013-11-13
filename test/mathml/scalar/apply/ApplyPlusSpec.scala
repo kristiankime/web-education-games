@@ -13,35 +13,47 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyPlusSpec extends Specification {
 
-	"cnStep" should {
+	"c" should {
 		"return sum of elements if all elements are constants" in {
-			ApplyPlus(`2`, `3`, Cn(-1)).cnStep.get must beEqualTo(`4`)
+			ApplyPlus(`2`, `3`, `-1`).c.get must beEqualTo(`4`)
+		}
+		
+		"return sum of nested elements if all elements are constants" in {
+			ApplyPlus(`2`, `1`, (`3` + `4`), `-1`).c.get must beEqualTo(`9`)
 		}
 
 		"return None if any elements are not constant" in {
-			ApplyPlus(`2`, x, `1`).cnStep must beNone
+			ApplyPlus(`2`, x, `1`).c must beNone
 		}
 	}
 
-	"simplifyStep" should {
+	"s" should {
 		"return 0 if all values are 0" in {
-			ApplyPlus(`0`, `0`, `0`).simplifyStep must beEqualTo(`0`)
+			ApplyPlus(`0`, `0`, `0`).s must beEqualTo(`0`)
 		}
 
 		"return 1 if exactly one value is 1" in {
-			ApplyPlus(`0`, `1`, `0`).simplifyStep must beEqualTo(`1`)
+			ApplyPlus(`0`, `1`, `0`).s must beEqualTo(`1`)
 		}
 
 		"sum values if they are all constant" in {
-			ApplyPlus(`4`, `0`, `1`, `3`, `0`).simplifyStep must beEqualTo(`8`)
+			ApplyPlus(`4`, `0`, `1`, `3`, `0`).s must beEqualTo(`8`)
 		}
 
-		"sum constants and leave variables (constands go to end)" in {
-			ApplyPlus(x, `3`, `4`, y).simplifyStep must beEqualTo(ApplyPlus(x, y, `7`))
+		"sum constants and leave variables (constants go to end)" in {
+			ApplyPlus(x, `3`, `4`, y).s must beEqualTo(ApplyPlus(x, y, `7`))
+		}
+		
+		"sum constants and leave variables, drop constants if they sum to 0" in {
+			ApplyPlus(x, `-3`, `3`).s must beEqualTo(x)
+		}
+		
+		"sum constants and leave variables, with nested elements  (constands go to end)" in {
+			ApplyPlus((x + `3`), `4`, y, (`2` + `3`)).s must beEqualTo(ApplyPlus(x, y, `12`))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyPlus(x, `3`).simplifyStep must beEqualTo(ApplyPlus(x, `3`))
+			ApplyPlus(x, `3`).s must beEqualTo(ApplyPlus(x, `3`))
 		}
 	}
 

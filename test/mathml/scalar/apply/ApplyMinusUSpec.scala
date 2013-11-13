@@ -13,31 +13,31 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyMinusUSpec extends Specification {
 
-	"cnStep" should {
+	"c" should {
 		"return 0 if value is 0" in {
-			ApplyMinusU(`0`).cnStep.get must beEqualTo(`0`)
+			ApplyMinusU(`0`).c.get must beEqualTo(`0`)
 		}
 
 		"return 1 if value is -1" in {
-			ApplyMinusU(`-1`).cnStep.get must beEqualTo(`1`)
+			ApplyMinusU(`-1`).c.get must beEqualTo(`1`)
 		}
 
 		"return negative of a value" in {
-			ApplyMinusU(`3`).cnStep.get must beEqualTo(`-3`)
+			ApplyMinusU(`3`).c.get must beEqualTo(`-3`)
 		}
 
 		"fail if not a constant " in {
-			ApplyMinusU(x).cnStep must beNone
+			ApplyMinusU(x).c must beNone
 		}
 	}
 
-	"simplifyStep" should {
-		"return constand if value is constant" in {
-			ApplyMinusU(`-4`).simplifyStep must beEqualTo(`4`)
+	"s" should {
+		"return constant if value is constant" in {
+			ApplyMinusU(`-4`).s must beEqualTo(`4`)
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyMinusU(x).simplifyStep must beEqualTo(ApplyMinusU(x))
+			ApplyMinusU(x).s must beEqualTo(ApplyMinusU(x))
 		}
 	}
 

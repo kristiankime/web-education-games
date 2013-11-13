@@ -27,7 +27,7 @@ case class ApplyTimes(val values: MathMLElem*)
 			(cns_, elems_) match {
 				case (Seq(cn), Seq()) => cn
 				case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
-				case (Seq(), Seq(elem)) => elem
+				case (Seq(), Seq(elem)) => elem.s
 				case (Seq(), Seq(elems @ _*)) => this
 				case (Seq(cn), Seq(elems @ _*)) => timesSimp(cn, elems)
 				case (Seq(cns @ _*), Seq(elems @ _*)) => timesSimp(cns.reduce(_ * _), elems)
@@ -37,9 +37,9 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	private def timesSimp(cn: Constant, elems: Seq[MathMLElem]) =
 		(cn, elems) match {
-			case (cn, Seq(elem)) if (cn.isOne) => elem
-			case (cn, Seq(elems @ _*)) if (cn.isOne) => ApplyTimes(elems: _*)
-			case (cn, Seq(elems @ _*)) => ApplyTimes(Seq(cn) ++ elems: _*)
+			case (cn, Seq(elem)) if (cn.isOne) => elem.s
+			case (cn, Seq(elems @ _*)) if (cn.isOne) => ApplyTimes(elems.map(_.s): _*)
+			case (cn, Seq(elems @ _*)) => ApplyTimes(Seq(cn) ++ elems.map(_.s): _*)
 		}
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)

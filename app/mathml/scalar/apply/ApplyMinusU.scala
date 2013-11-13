@@ -19,9 +19,7 @@ case class ApplyMinusU(val value: MathMLElem)
 		case _ => None
 	}
 
-	def simplifyStep() =
-		if (c.nonEmpty) c.get
-		else -(value.s)
+	def simplifyStep() = -(value.s)
 
 	def variables: Set[String] = value.variables
 

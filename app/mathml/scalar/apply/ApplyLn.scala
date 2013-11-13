@@ -15,9 +15,7 @@ case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, S
 		case _ => None
 	}
 
-	def simplifyStep() =
-		if (c.nonEmpty) c.get
-		else ApplyLn(v.s)
+	def simplifyStep() = ApplyLn(v.s)
 
 	def derivative(x: String) = {
 		val f = v.s

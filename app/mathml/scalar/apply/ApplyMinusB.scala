@@ -20,10 +20,9 @@ case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
 	}
 
 	def simplifyStep() =
-		if (c.nonEmpty) c.get
-		else if (value2.isZero) value1.s
+		if (value2.isZero) value1.s
 		else if (value1.isZero) -(value2.s)
-		else value1.s - value2.s
+		else (value1.s) - (value2.s)
 
 	def variables: Set[String] = value1.variables ++ value2.variables
 

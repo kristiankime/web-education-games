@@ -20,26 +20,37 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	}
 
 	def simplifyStep() = {
-		if (c.nonEmpty) c.get
-		else if (base.isOne) `1`
+		if (base.isOne) `1`
 		else if (exp.isZero) `1`
-		else if (exp.isOne) base
-		else this
+		else if (exp.isOne) base.s
+		else base.s ^ exp.s
 	}
 
 	def variables: Set[String] = base.variables ++ exp.variables
 
-	// LATER technically need to use generalized power rule but for now we'll assume base is f(x) and Real Exponents
-	def derivative(wrt: String): MathMLElem = {
-		if (!variables.contains(wrt)) `0`
-		else if (!exp.variables.contains(wrt)) {
-			val r = exp.s
-			val f = base.s
-			val fP = f.d(wrt).s
-			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
-			ApplyTimes(r, f ^ (r - `1`).s, fP).s
-		} else {
-			throw new IllegalArgumentException("Differentiation of general power case TBD " + this)
-		}
+	def derivative(x: String): MathMLElem = {
+		//		if (!variables.contains(x)) `0`
+		//		else if (!exp.variables.contains(x)) {
+		//			val r = exp.s
+		//			val f = base.s
+		//			val fP = f.d(x)
+		//			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
+		//			ApplyTimes(r, f ^ (r - `1`).s, fP).s
+		//		} else {
+		// d/dx (f ^ g) = f^(g-1) * (g * f' + f * log(f) * g')
+		val f = base.s
+		val fP = f.d(x)
+		val g = exp.s
+		val gP = g.d(x)
+
+		val first = (f ^ (g - `1`))
+		val second = (g * fP + f * ApplyLn(f) * gP)
+		val secondSimp = (g * fP + f * ApplyLn(f) * gP) s
+
+		val foo = first * secondSimp
+		val fooSimp = foo.s
+		fooSimp
+		//			(f ^ (g - `1`)) * (g * fP + f * ApplyLn(f) * gP)
+		//		}
 	}
 }

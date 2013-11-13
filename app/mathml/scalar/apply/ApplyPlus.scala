@@ -19,15 +19,21 @@ case class ApplyPlus(val values: MathMLElem*)
 		}
 
 	def simplifyStep() = {
-		val cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
-		val elems = values.filter(_.c.isEmpty)
-		(cns, elems) match {
+		(cns, flattedMathMLElems) match {
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ + _)
 			case (Seq(), Seq(elem)) => elem
-			case (Seq(), Seq(elems @ _*)) => this
-			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyPlus(elems ++ Seq(cns.reduce(_ + _)): _*)
+			case (Seq(), Seq(elems @ _*)) => ApplyPlus(elems: _*)
+			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyPlus(elems ++ Seq(cns.reduce(_ + _)).filterNot(_.isZero): _*)
 		}
 	}
+
+	private def cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
+
+	private def flattedMathMLElems: Seq[MathMLElem] = values.filter(_.c.isEmpty).map(_.s)
+		.flatMap(_ match {
+			case v: ApplyPlus => v.values
+			case v: MathMLElem => Seq(v)
+		})
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 

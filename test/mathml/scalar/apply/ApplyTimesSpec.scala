@@ -13,47 +13,47 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyTimesSpec extends Specification {
 
-	"cnStep" should {
+	"c" should {
 		"return 0 if any value is zero" in {
-			ApplyTimes(`1`, `0`, x).cnStep.get must beEqualTo(`0`)
+			ApplyTimes(`1`, `0`, x).c.get must beEqualTo(`0`)
 		}
 
 		"return multiplication of values if possible" in {
-			ApplyTimes(`4`, `2`, `1`).cnStep.get must beEqualTo(`8`)
+			ApplyTimes(`4`, `2`, `1`).c.get must beEqualTo(`8`)
 		}
 
-		"return false if values do not multiply to a constant" in {
-			ApplyTimes(`4`, x).isOne must beFalse
+		"return none if values do not multiply to a constant" in {
+			ApplyTimes(`4`, x).c.isEmpty must beTrue
 		}
 	}
 
-	"simplifyStep" should {
+	"s" should {
 		"return 0 if isZero is true" in {
-			ApplyTimes(`1`, `0`, `1`).simplifyStep must beEqualTo(`0`)
+			ApplyTimes(`1`, `0`, `1`).s must beEqualTo(`0`)
 		}
 
 		"return 0 if any value is zero" in {
-			ApplyTimes(`1`, `0`, x).simplifyStep must beEqualTo(`0`)
+			ApplyTimes(`1`, `0`, x).s must beEqualTo(`0`)
 		}
 
 		"return 1 if isOne is true" in {
-			ApplyTimes(`1`, `1`, `1`).simplifyStep must beEqualTo(`1`)
+			ApplyTimes(`1`, `1`, `1`).s must beEqualTo(`1`)
 		}
 
 		"multiple any constanst together" in {
-			ApplyTimes(`4`, `1`, `3`).simplifyStep must beEqualTo(Cn(12))
+			ApplyTimes(`4`, `1`, `3`).s must beEqualTo(Cn(12))
 		}
 
 		"remove 1s in a sequence" in {
-			ApplyTimes(`1`, `3`, x).simplifyStep must beEqualTo(`3` * x)
+			ApplyTimes(`1`, `3`, x).s must beEqualTo(`3` * x)
 		}
 
 		"remove 1s" in {
-			ApplyTimes(`1`, x).simplifyStep must beEqualTo(x)
+			ApplyTimes(`1`, x).s must beEqualTo(x)
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyTimes(`3`, x).simplifyStep must beEqualTo(ApplyTimes(`3`, x))
+			ApplyTimes(`3`, x).s must beEqualTo(ApplyTimes(`3`, x))
 		}
 	}
 

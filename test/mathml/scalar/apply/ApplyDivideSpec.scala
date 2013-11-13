@@ -55,21 +55,21 @@ class ApplyDivideSpec extends Specification {
 		}
 	}
 
-	"simplifyStep" should {
+	"s" should {
 		"return 0 if numerator is 0 (and denominator is not)" in {
-			ApplyDivide(`0`, `6`).simplifyStep must beEqualTo(`0`)
+			ApplyDivide(`0`, `6`).s must beEqualTo(`0`)
 		}
 
 		"return 1 if numerator and denominator are equal (and non zero)" in {
-			ApplyDivide(`4`, `4`).simplifyStep must beEqualTo(`1`)
+			ApplyDivide(`4`, `4`).s must beEqualTo(`1`)
 		}
 
 		"return numerator if denominator is 1" in {
-			ApplyDivide(x, `1`).simplifyStep must beEqualTo(x)
+			ApplyDivide(x, `1`).s must beEqualTo(x)
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplyDivide(x, `3`).simplifyStep must beEqualTo(ApplyDivide(x, `3`))
+			ApplyDivide(x, `3`).s must beEqualTo(ApplyDivide(x, `3`))
 		}
 	}
 

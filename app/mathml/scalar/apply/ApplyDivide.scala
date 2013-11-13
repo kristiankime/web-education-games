@@ -18,8 +18,7 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 	}
 
 	def simplifyStep() =
-		if (c.nonEmpty) c.get
-		else if (denominator.isOne) numerator.s
+		if (denominator.isOne) numerator.s
 		else numerator.s / denominator.s
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables

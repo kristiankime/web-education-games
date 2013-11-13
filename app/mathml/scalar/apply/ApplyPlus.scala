@@ -19,7 +19,7 @@ case class ApplyPlus(val values: MathMLElem*)
 		}
 
 	def simplifyStep() = {
-		(cns, flattedMathMLElems) match {
+		(cns, flattenedMathMLElems) match {
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ + _)
 			case (Seq(), Seq(elem)) => elem
 			case (Seq(), Seq(elems @ _*)) => ApplyPlus(elems: _*)
@@ -29,7 +29,7 @@ case class ApplyPlus(val values: MathMLElem*)
 
 	private def cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
 
-	private def flattedMathMLElems: Seq[MathMLElem] = values.filter(_.c.isEmpty).map(_.s)
+	private def flattenedMathMLElems: Seq[MathMLElem] = values.filter(_.c.isEmpty).map(_.s)
 		.flatMap(_ match {
 			case v: ApplyPlus => v.values
 			case v: MathMLElem => Seq(v)

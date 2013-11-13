@@ -20,27 +20,21 @@ case class ApplyTimes(val values: MathMLElem*)
 	}
 
 	def simplifyStep() = {
-		if (c.nonEmpty) { c.get
-		} else {
-			val cns_ = values.map(_.c).filter(_.nonEmpty).map(_.get)
-			val elems_ = values.filter(_.c.isEmpty)
-			(cns_, elems_) match {
-				case (Seq(cn), Seq()) => cn
-				case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
-				case (Seq(), Seq(elem)) => elem.s
-				case (Seq(), Seq(elems @ _*)) => this
-				case (Seq(cn), Seq(elems @ _*)) => timesSimp(cn, elems)
-				case (Seq(cns @ _*), Seq(elems @ _*)) => timesSimp(cns.reduce(_ * _), elems)
-			}
+		(cns, flattenedMathMLElems) match {
+			case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
+			case (Seq(), Seq(elem)) => elem
+			case (Seq(), Seq(elems @ _*)) => ApplyTimes(elems: _*)
+			case (Seq(cns @ _*), Seq(elems @ _*)) =>  ApplyTimes(Seq(cns.reduce(_ * _)).filterNot(_.isOne) ++ elems: _*)
 		}
 	}
 
-	private def timesSimp(cn: Constant, elems: Seq[MathMLElem]) =
-		(cn, elems) match {
-			case (cn, Seq(elem)) if (cn.isOne) => elem.s
-			case (cn, Seq(elems @ _*)) if (cn.isOne) => ApplyTimes(elems.map(_.s): _*)
-			case (cn, Seq(elems @ _*)) => ApplyTimes(Seq(cn) ++ elems.map(_.s): _*)
-		}
+	private def cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
+
+	private def flattenedMathMLElems: Seq[MathMLElem] = values.filter(_.c.isEmpty).map(_.s)
+		.flatMap(_ match {
+			case v: ApplyTimes => v.values
+			case v: MathMLElem => Seq(v)
+		})
 
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 

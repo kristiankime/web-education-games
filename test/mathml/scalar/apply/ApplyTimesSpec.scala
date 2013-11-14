@@ -51,6 +51,10 @@ class ApplyTimesSpec extends Specification {
 		"remove 1s" in {
 			ApplyTimes(`1`, x).s must beEqualTo(x)
 		}
+		
+		"multiply constants and leave variables, with nested elements  (constands go to end)" in {
+			ApplyTimes(x, `4`, y, (`2` * `3`)).s must beEqualTo(ApplyTimes(`24`, x, y))
+		}
 
 		"remain unchanged if nothing can be simplified" in {
 			ApplyTimes(`3`, x).s must beEqualTo(ApplyTimes(`3`, x))

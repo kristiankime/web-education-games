@@ -59,11 +59,14 @@ class ApplyPowerSpec extends Specification {
 			ApplyPower(x, `3`).dx must beEqualTo(`3` * (x ^ `2`))
 		}
 
-		"obey the chain power rule: (f^n)' = n*f^(n-1)f'" in {
+		"obey the chain power rule: (f^n)' = n*f^(n-1)*f'" in {
 			ApplyPower(F, `3`).dx must beEqualTo(ApplyTimes(`3`, F ^ `2`, Fdx))
 		}
 
 		// LATER get the Generalized power rule working
 		// (f^g)' = f^(g-1) * (g f'+f log(f) g')
+		"obey the generlized power rule: (f^g)' =  f^(g-1)    * (g * f'  + f * log(f)     * g')" in {
+			ApplyPower(F, G).dx must beEqualTo(   ((F^(G-`1`)) * (G * Fdx + F * ApplyLn(F) * Gdx))s )
+		}
 	}
 }

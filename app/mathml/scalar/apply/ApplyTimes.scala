@@ -43,10 +43,11 @@ case class ApplyTimes(val values: MathMLElem*)
 	// http://en.wikipedia.org/wiki/Product_rule
 	// (f*g)' = f'*g + f*g'
 	private def productRule(wrt: String, f: MathMLElem, g: MathMLElem) = {
-		val fP = f.d(wrt).s
-		val gP = g.d(wrt).s
+		val fP = f.d(wrt)
+		val gP = g.d(wrt)
 		val fP_g = (fP * g).s
 		val f_gP = (f * gP).s
+		
 		(fP_g + f_gP).s
 	}
 }

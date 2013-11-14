@@ -42,7 +42,7 @@ object MathML {
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
 	}
-	
+
 	private def constantElement(xml: Elem): Try[Constant] = {
 		Cn(xml.child(0))
 	}
@@ -72,9 +72,20 @@ object MathML {
 			case ("divide", _) => Failure(new IllegalArgumentException(a + " divide was called with !=2 arguments"))
 			case ("power", Seq(base, exp)) => Success(ApplyPower(base, exp))
 			case ("power", _) => Failure(new IllegalArgumentException(a + " power was called with !=2 arguments"))
-			case (_, _) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element"))
+			case ("ln", Seq(value)) => Success(ApplyLn(value))
+			case ("log", Seq(value)) => Success(ApplyLog10(value))
+			case ("log", Seq(base, value)) => logBase(base, value)
+			case (a, c) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element (label [" + o.label + "] might not be recognized or wrong number of child elements [" + c.length + "])"))
 		}
 	}
+
+	private def logBase(base: MathMLElem, value: MathMLElem) =
+		if (base.label.toLowerCase == "logbase" && base.childElem.length > 0) {
+			MathML(base.childElem(0)).map(_ match {
+				case c: CnInteger => ApplyLog(BigDecimal(c.v), value)
+				case c: CnReal => ApplyLog(c.v, value)
+			})
+		} else { Failure(new IllegalArgumentException("could not parse log from base " + base)) }
 
 	implicit class PimpedElem(e: Elem) {
 		def childElem = e.child.collect(_ match { case x: Elem => x })

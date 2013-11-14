@@ -1,20 +1,15 @@
 package mathml.scalar
 
+import scala.util._
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
-import org.specs2.mutable._
+import scala.math.BigDecimal.double2bigDecimal
 import mathml._
 import mathml.scalar._
-import scala.util._
-import scala.math.BigDecimal.double2bigDecimal
-import mathml.scalar.apply.ApplyTimes
-import mathml.scalar.apply.ApplyMinusB
-import mathml.scalar.apply.ApplyPower
-import mathml.scalar.apply.ApplyMinusU
-import mathml.scalar.apply.ApplyDivide
-import mathml.scalar.apply.ApplyPlus
+import mathml.scalar.apply._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -148,7 +143,7 @@ class MathMLElemSpec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"derivative of a constant is 0 (aka None)" in {
 			`3`.d("x") must beEqualTo(`0`)
 		}
@@ -226,6 +221,51 @@ class MathMLElemSpec extends Specification {
 			val d = f.dx.s
 			MathML.checkEq("x", d, (`3` * (x ^ `2`)) + `3`) must beTrue
 		}
-
 	}
+
+	"s" should {
+		"simplify this" in {
+			val a = MathML(<apply>
+				<plus/>
+				<apply>
+					<times/>
+					<Ci>G</Ci>
+					<Ci>Fdx</Ci>
+				</apply>
+				<apply>
+					<times/>
+					<apply>
+						<times/>
+						<Ci>F</Ci>
+						<apply>
+							<ln/>
+							<Ci>F</Ci>
+						</apply>
+					</apply>
+					<Ci>Gdx</Ci>
+				</apply>
+			</apply>).get
+
+			val b = MathML(<apply>
+				<plus/>
+				<apply>
+					<times/>
+					<Ci>G</Ci>
+					<Ci>Fdx</Ci>
+				</apply>
+				<apply>
+					<times/>
+					<Ci>F</Ci>
+					<apply>
+						<ln/>
+						<Ci>F</Ci>
+					</apply>
+					<Ci>Gdx</Ci>
+				</apply>
+			</apply>).get
+			
+			a.s must beEqualTo(b)
+		}
+	}
+
 }

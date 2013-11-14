@@ -6,7 +6,7 @@ import mathml._
 import mathml.scalar._
 import mathml.scalar.concept._
 
-case class ApplyLog(base : BigDecimal, value: MathMLElem) extends Logarithm(base, value, Seq(Log, Cn(base)): _*) {
+case class ApplyLog(base : BigDecimal, value: MathMLElem) extends Logarithm(base, value, Seq(Log, Logbase(base)): _*) {
 
 	def simplifyStep() = ApplyLog(b, v.s)
 

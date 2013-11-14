@@ -29,7 +29,7 @@ abstract class MathMLElem(
 	protected def simplifyStep(): MathMLElem
 
 	private def simplifyStepWithCNCheck(): MathMLElem = c.getOrElse(simplifyStep)
-	
+
 	private var s_ : MathMLElem = null
 	def s = {
 		if (s_ == null) {
@@ -37,10 +37,10 @@ abstract class MathMLElem(
 		}
 		s_
 	}
-	
-	@tailrec private def simplifyRecurse(e : MathMLElem) : MathMLElem = {
+
+	@tailrec private def simplifyRecurse(e: MathMLElem): MathMLElem = {
 		val simp = e.simplifyStepWithCNCheck
-		if(simp == e){
+		if (simp == e) {
 			e
 		} else {
 			simplifyRecurse(simp)
@@ -75,7 +75,7 @@ abstract class MathMLElem(
 	def -(m: MathMLElem) = ApplyMinusB(this, m)
 
 	def unary_-() = ApplyMinusU(this)
-	
+
 	def /(m: MathMLElem) = ApplyDivide(this, m)
 
 	def ^(m: MathMLElem) = ApplyPower(this, m)

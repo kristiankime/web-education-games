@@ -32,26 +32,26 @@ class ApplyDivideSpec extends Specification {
 			ApplyDivide(`1`, y).variables must beEqualTo(Set("y"))
 		}
 
-		"be x &y if element constains x & y" in {
+		"be x & y if element constains x & y" in {
 			ApplyDivide(x, y).variables must beEqualTo(Set("x", "y"))
 		}
 	}
 
-	"cnStep" should {
+	"c" should {
 		"return correct division if numerator and denominator are numbers " in {
-			ApplyDivide(`6`, `4`).cnStep.get must beEqualTo(`1.5`)
+			ApplyDivide(`6`, `4`).c.get must beEqualTo(`1.5`)
 		}
 
 		"return 0 if numerator is 0 " in {
-			ApplyDivide(`0`, `4`).cnStep.get must beEqualTo(`0`)
+			ApplyDivide(`0`, `4`).c.get must beEqualTo(`0`)
 		}
 
 		"return 1 if numerator and denominator are equal" in {
-			ApplyDivide(`5`, `5`).cnStep.get must beEqualTo(`1`)
+			ApplyDivide(`5`, `5`).c.get must beEqualTo(`1`)
 		}
 
 		"fail if not a constant " in {
-			ApplyDivide(x, `4`).cnStep must beEmpty
+			ApplyDivide(x, `4`).c must beEmpty
 		}
 	}
 
@@ -73,7 +73,7 @@ class ApplyDivideSpec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"obey the quotient rule: (f/g)' = (f'g - g'f)/g^2" in {
 			ApplyDivide(F, G).dx must beEqualTo((Fdx * G - Gdx * F) / (G ^ `2`))
 		}

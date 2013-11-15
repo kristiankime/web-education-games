@@ -29,13 +29,13 @@ class ApplyLnSpec extends Specification {
 		}
 	}
 
-	"cnStep" should {
+	"c" should {
 		"return correct log" in {
-			ApplyLn(e).cnStep.get must beEqualTo(`1`)
+			ApplyLn(e).c.get must beEqualTo(`1`)
 		}
 
 		"fail if not a constant " in {
-			ApplyLn(x).cnStep must beEmpty
+			ApplyLn(x).c must beEmpty
 		}
 	}
 
@@ -49,7 +49,7 @@ class ApplyLnSpec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"obey the ln derivative rule: ln(f)' = f'/f" in {
 			ApplyLn(F).dx must beEqualTo(Fdx / F)
 		}

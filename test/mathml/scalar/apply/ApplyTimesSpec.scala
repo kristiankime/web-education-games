@@ -13,6 +13,34 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyTimesSpec extends Specification {
 
+	"eval" should {
+		"multiply two numbers" in {
+			ApplyTimes(`3`, `-2`).eval(Map()).get must beEqualTo(-6)
+		}
+
+		"multiply many numbers" in {
+			ApplyTimes(`3`, `2`, `4`).eval(Map()).get must beEqualTo(24)
+		}
+	}
+
+	"variables" should {
+		"be empty if element is constant" in {
+			ApplyTimes(`1`, `2`).variables must beEmpty
+		}
+
+		"be x if element constains an x" in {
+			ApplyTimes(x, `2`).variables must beEqualTo(Set("x"))
+		}
+
+		"be y if element constains a y" in {
+			ApplyTimes(y, `2`).variables must beEqualTo(Set("y"))
+		}
+
+		"be x & y if element constains x & y" in {
+			ApplyTimes(x, y).variables must beEqualTo(Set("x", "y"))
+		}
+	}
+	
 	"c" should {
 		"return 0 if any value is zero" in {
 			ApplyTimes(`1`, `0`, x).c.get must beEqualTo(`0`)
@@ -61,7 +89,7 @@ class ApplyTimesSpec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"obey the product rule: (f g)' = f'g + fg'" in {
 			ApplyTimes(F, G).dx must beEqualTo(Fdx * G + F * Gdx)
 		}

@@ -13,6 +13,30 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyPowerSpec extends Specification {
 
+	"eval" should {
+		"raise value to power" in {
+			ApplyPower(`2`, `3`).eval(Map()).get must beEqualTo(8)
+		}
+	}
+
+	"variables" should {
+		"be empty if element is constant" in {
+			ApplyPower(`1`, `2`).variables must beEmpty
+		}
+
+		"be x if element constains an x" in {
+			ApplyPower(x, `2`).variables must beEqualTo(Set("x"))
+		}
+
+		"be y if element constains a y" in {
+			ApplyPower(y, `2`).variables must beEqualTo(Set("y"))
+		}
+
+		"be x & y if element constains x & y" in {
+			ApplyPower(x, y).variables must beEqualTo(Set("x", "y"))
+		}
+	}
+	
 	"c" should {
 		"return 0 if base is 0" in {
 			ApplyPower(`0`, x).c.get must beEqualTo(`0`)

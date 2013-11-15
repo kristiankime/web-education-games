@@ -13,6 +13,26 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyMinusUSpec extends Specification {
 
+	"eval" should {
+		"return negative of value" in {
+			ApplyMinusU(`6`).eval(Map()).get must beEqualTo(-6)
+		}
+	}
+	
+	"variables" should {
+		"be empty if element is constant" in {
+			ApplyMinusU(`2`).variables must beEmpty
+		}
+
+		"be x if element constains an x" in {
+			ApplyMinusU(x).variables must beEqualTo(Set("x"))
+		}
+
+		"be y if element constains a y" in {
+			ApplyMinusU(y).variables must beEqualTo(Set("y"))
+		}
+	}
+	
 	"c" should {
 		"return 0 if value is 0" in {
 			ApplyMinusU(`0`).c.get must beEqualTo(`0`)
@@ -41,7 +61,7 @@ class ApplyMinusUSpec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"return negative of values derivative" in {
 			ApplyMinusU(F).dx must beEqualTo(ApplyMinusU(Fdx))
 		}

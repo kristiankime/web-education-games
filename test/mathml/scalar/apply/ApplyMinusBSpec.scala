@@ -13,6 +13,12 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ApplyMinusBSpec extends Specification {
 
+	"eval" should {
+		"subtract numbers" in {
+			ApplyMinusB(`8`, `6`).eval(Map()).get must beEqualTo(2)
+		}
+	}
+	
 	"variables" should {
 		"be empty if element is constant" in {
 			ApplyMinusB(`1`, `2`).variables must beEmpty
@@ -26,7 +32,7 @@ class ApplyMinusBSpec extends Specification {
 			ApplyMinusB(y, `2`).variables must beEqualTo(Set("y"))
 		}
 
-		"be x &y if element constains x & y" in {
+		"be x & y if element constains x & y" in {
 			ApplyMinusB(x, y).variables must beEqualTo(Set("x", "y"))
 		}
 	}
@@ -67,7 +73,7 @@ class ApplyMinusBSpec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"obey the subtraction rule: (f - g)' = f' - g'" in {
 			ApplyMinusB(F, G).dx must beEqualTo(Fdx - Gdx)
 		}

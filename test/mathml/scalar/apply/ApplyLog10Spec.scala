@@ -30,13 +30,13 @@ class ApplyLog10Spec extends Specification {
 		}
 	}
 
-	"cnStep" should {
+	"c" should {
 		"return correct log" in {
-			ApplyLog10(Cn(math.pow(10, 2))).cnStep.get must beEqualTo(Cn(2))
+			ApplyLog10(Cn(math.pow(10, 2))).c.get must beEqualTo(Cn(2))
 		}
 
 		"fail if not a constant " in {
-			ApplyLog10(x).cnStep must beEmpty
+			ApplyLog10(x).c must beEmpty
 		}
 	}
 
@@ -50,7 +50,7 @@ class ApplyLog10Spec extends Specification {
 		}
 	}
 
-	"derivative" should {
+	"d" should {
 		"obey the ln derivative rule: ln(f)' = f' / ln(b) f" in {
 			ApplyLog10(F).dx must beEqualTo(Fdx / (ln_10 * F))
 		}

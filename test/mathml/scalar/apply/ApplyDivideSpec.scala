@@ -68,6 +68,14 @@ class ApplyDivideSpec extends Specification {
 			ApplyDivide(x, `1`).s must beEqualTo(x)
 		}
 
+		"simplify if numerator is also a divide" in {
+			ApplyDivide(x / `2`, y).s must beEqualTo(x / (`2` * y))
+		}
+		
+		"simplify if denominator is also a divide" in {
+			ApplyDivide(x, y / `3`).s must beEqualTo( (`3` * x) / y)
+		}
+		
 		"remain unchanged if nothing can be simplified" in {
 			ApplyDivide(x, `3`).s must beEqualTo(ApplyDivide(x, `3`))
 		}

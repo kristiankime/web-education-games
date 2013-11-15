@@ -119,10 +119,14 @@ class MathMLSpec extends Specification {
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
-		"parse ln " in {
-			val xml = <apply> <ln/> <cn>8</cn> </apply>
-			val mathML = ApplyLn(`8`)
-			MathML(xml).get must beEqualTo(mathML)
+		"parse e" in {
+			val xml = <exponentiale/>
+			MathML(xml).get must beEqualTo(ExponentialE)
+		}
+
+		"parse e nested" in {
+			val xml = <apply> <plus/> <ci>x</ci> <exponentiale/> </apply>
+			MathML(xml).get must beEqualTo(x + e)
 		}
 
 	}

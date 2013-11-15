@@ -60,6 +60,7 @@ ARTC.txt2MathML = (function(){
           "Primary": parse_Primary,
           "Neg": parse_Neg,
           "Variable": parse_Variable,
+          "E": parse_E,
           "Number": parse_Number,
           "Scientific": parse_Scientific,
           "Floating": parse_Floating,
@@ -857,11 +858,14 @@ ARTC.txt2MathML = (function(){
             if (result1 === null) {
               result1 = parse_Parens();
               if (result1 === null) {
-                result1 = parse_Number();
+                result1 = parse_E();
                 if (result1 === null) {
-                  result1 = parse_Neg();
+                  result1 = parse_Number();
                   if (result1 === null) {
-                    result1 = parse_Variable();
+                    result1 = parse_Neg();
+                    if (result1 === null) {
+                      result1 = parse_Variable();
+                    }
                   }
                 }
               }
@@ -937,6 +941,40 @@ ARTC.txt2MathML = (function(){
           }
           if (result0 !== null) {
             result0 = (function(offset) { return "<ci> x </ci>"; })(pos0);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+          return result0;
+        }
+        
+        function parse_E() {
+          var result0;
+          var pos0;
+          
+          pos0 = pos;
+          if (input.charCodeAt(pos) === 101) {
+            result0 = "e";
+            pos++;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"e\"");
+            }
+          }
+          if (result0 === null) {
+            if (input.charCodeAt(pos) === 69) {
+              result0 = "E";
+              pos++;
+            } else {
+              result0 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"E\"");
+              }
+            }
+          }
+          if (result0 !== null) {
+            result0 = (function(offset) { return "<exponentiale/>"; })(pos0);
           }
           if (result0 === null) {
             pos = pos0;

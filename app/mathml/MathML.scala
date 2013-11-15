@@ -75,6 +75,7 @@ object MathML {
 			case "apply" => applyElement(xml)
 			case "cn" => constantElement(xml)
 			case "ci" => Success(Ci(xml.child(0).text)) // LATER child(0).text could be nonsense
+			case "exponentiale" => Success(ExponentialE)
 			case "logbase" => Cn(xml.childElem(0)).map(Logbase(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}

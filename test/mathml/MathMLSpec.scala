@@ -108,10 +108,20 @@ class MathMLSpec extends Specification {
 			val mathML = ApplyLog(4, `16`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
+		
+		"fail to parse log with a cn instead of a logbase" in {
+			MathML(<apply> <log/> <cn>4</cn> <cn>16</cn> </apply>).isFailure must beTrue
+		}
 
 		"parse log without base as log 10" in {
 			val xml = <apply> <log/> <cn>16</cn> </apply>
 			val mathML = ApplyLog10(`16`)
+			MathML(xml).get must beEqualTo(mathML)
+		}
+		
+		"parse ln " in {
+			val xml = <apply> <ln/> <cn>8</cn> </apply>
+			val mathML = ApplyLn(`8`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
 
@@ -163,6 +173,14 @@ class MathMLSpec extends Specification {
 			val v2 = `1`
 
 			MathML.checkEq("x", v1, v2) must beFalse
+		}
+		
+		"be true for two log(x)s" in {
+			MathML.checkEq("x", ApplyLn(x), ApplyLn(x)) must beTrue
+		}
+		
+		"be false for two logs with different bases" in {
+			MathML.checkEq("x", ApplyLog10(x), ApplyLn(x)) must beFalse
 		}
 	}
 

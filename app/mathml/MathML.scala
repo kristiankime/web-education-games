@@ -7,14 +7,36 @@ import mathml.scalar._
 import mathml.scalar.apply._
 import mathml.scalar.concept.Constant
 
+object Match extends Enumeration {
+	type Match = Value
+	val Yes, No, Inconclusive = Value
+}
+
+import Match._
+
+
 object MathML {
 
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val varAndVals = for (i <- -5 to 5) yield Map(variableName -> i.toDouble)
-			varAndVals.forall(varAndVal => closeEnough(eq1.eval(varAndVal), eq2.eval(varAndVal)))
+			val varAndVals = for (i <- -5 to 5) yield Map(variableName -> (i.toDouble + 0.01d))
+
+			System.err.println(eq1);
+			System.err.println(eq2);
+
+			val eq1s = varAndVals.map(eq1.eval(_))
+			val eq2s = varAndVals.map(eq2.eval(_))
+
+			System.err.println(eq1s);
+			System.err.println(eq2s);
+
+			val matches = varAndVals.map(varAndVal => closeEnough(eq1.eval(varAndVal), eq2.eval(varAndVal)))
+			
+			System.err.println(matches)
+			
+			matches.contains(Yes) && !matches.contains(No)
 		}
 	}
 
@@ -25,11 +47,26 @@ object MathML {
 	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
 	private def closeEnough(v1: Try[Double], v2: Try[Double]) = {
 		(v1, v2) match {
-			case (Success(x), Success(y)) => (x - accuracy) <= y && (x + accuracy >= y)
-			case (Failure(_), Failure(_)) => true // LATER ensure errors are the same?
-			case (Failure(_), Success(_)) => false
-			case (Success(_), Failure(_)) => false
+			case (Success(x), Success(y)) => doubleCloseEnough(x, y)
+			case (Failure(_), Failure(_)) => Inconclusive // LATER ensure errors are the same?
+			case (Failure(_), Success(_)) => No
+			case (Success(_), Failure(_)) => No
 		}
+	}
+
+	private def doubleCloseEnough(x: Double, y: Double) = {
+		if (x.isNaN && doubleNonNumber(y)) Inconclusive
+		else if (doubleNonNumber(x) && y.isNaN) Inconclusive
+		else if (x.isNegInfinity && y.isNegInfinity) Inconclusive
+		else if (x.isPosInfinity && y.isPosInfinity) Inconclusive
+		else if (x.isNegInfinity && y.isPosInfinity) No
+		else if (x.isPosInfinity && y.isNegInfinity) No
+		else if ((x - accuracy) <= y && (x + accuracy >= y)) Yes
+		else No
+	}
+
+	private def doubleNonNumber(d: Double) = {
+		d.isInfinite() || d.isNaN()
 	}
 
 	def apply(xml: Elem): Try[MathMLElem] = {
@@ -75,7 +112,7 @@ object MathML {
 			case ("ln", Seq(value)) => Success(ApplyLn(value))
 			case ("ln", Seq(_)) => Failure(new IllegalArgumentException(a + " ln was called with !=1 arg "))
 			case ("log", Seq(value)) => Success(ApplyLog10(value))
-			case ("log", Seq(b : Logbase, value)) => Success(ApplyLog(b.v, value))
+			case ("log", Seq(b: Logbase, value)) => Success(ApplyLog(b.v, value))
 			case ("log", Seq(_)) => Failure(new IllegalArgumentException(a + " log was called with >1 arg or no logbase"))
 			case (a, c) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element (label [" + o.label + "] might not be recognized or wrong number of child elements [" + c.length + "])"))
 		}
@@ -88,5 +125,6 @@ object MathML {
 	val h = <hack/> // This is a hack so we can get default XML meta data for default MathML objects
 
 }
+
 
 

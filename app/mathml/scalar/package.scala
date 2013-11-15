@@ -67,4 +67,6 @@ package object scalar {
 	val y = Ci("y")
 	
 	val e = ExponentialE
+	
+	val π = null
 }

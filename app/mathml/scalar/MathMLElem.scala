@@ -68,6 +68,8 @@ abstract class MathMLElem(
 
 	def dx = derivative("x").s
 
+	def ʹ = dx
+
 	def +(m: MathMLElem) = ApplyPlus(this, m)
 
 	def *(m: MathMLElem) = ApplyTimes(this, m)
@@ -79,5 +81,7 @@ abstract class MathMLElem(
 	def /(m: MathMLElem) = ApplyDivide(this, m)
 
 	def ^(m: MathMLElem) = ApplyPower(this, m)
-}
 
+	def ?=(e: MathMLElem) = MathML.checkEq("x", this, e)
+
+}

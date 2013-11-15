@@ -102,6 +102,19 @@ class MathMLSpec extends Specification {
 			val mathML = ApplyPlus(ApplyPlus(`4`, `4`), `5`, `5`)
 			MathML(xml).get must beEqualTo(mathML)
 		}
+		
+		"be able to parse log with base" in {
+			val xml = <apply> <log/> <logbase> <cn>4</cn> </logbase> <cn>16</cn> </apply>
+			val mathML = ApplyLog(4, `16`)
+			MathML(xml).get must beEqualTo(mathML)
+		}
+
+		"parse log without base as log 10" in {
+			val xml = <apply> <log/> <cn>16</cn> </apply>
+			val mathML = ApplyLog10(`16`)
+			MathML(xml).get must beEqualTo(mathML)
+		}
+
 	}
 
 	"checkEq" should {

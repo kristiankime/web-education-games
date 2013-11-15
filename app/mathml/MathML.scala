@@ -34,11 +34,11 @@ object MathML {
 
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {
-			// TODO math must be the most outside wrapper
 			case "math" => Try(Math(xml.prefix, xml.attributes, xml.scope, xml.minimizeEmpty, MathML(xml.childElem(0)).get))
 			case "apply" => applyElement(xml)
 			case "cn" => constantElement(xml)
-			case "ci" => Success(Ci(xml.child(0).text))
+			case "ci" => Success(Ci(xml.child(0).text)) // LATER child(0).text could be nonsense
+			case "logbase" => Cn(xml.childElem(0)).map(Logbase(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
 	}
@@ -73,19 +73,13 @@ object MathML {
 			case ("power", Seq(base, exp)) => Success(ApplyPower(base, exp))
 			case ("power", _) => Failure(new IllegalArgumentException(a + " power was called with !=2 arguments"))
 			case ("ln", Seq(value)) => Success(ApplyLn(value))
+			case ("ln", Seq(_)) => Failure(new IllegalArgumentException(a + " ln was called with !=1 arg "))
 			case ("log", Seq(value)) => Success(ApplyLog10(value))
-			case ("log", Seq(base, value)) => logBase(base, value)
+			case ("log", Seq(b : Logbase, value)) => Success(ApplyLog(b.v, value))
+			case ("log", Seq(_)) => Failure(new IllegalArgumentException(a + " log was called with >1 arg or no logbase"))
 			case (a, c) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element (label [" + o.label + "] might not be recognized or wrong number of child elements [" + c.length + "])"))
 		}
 	}
-
-	private def logBase(base: MathMLElem, value: MathMLElem) =
-		if (base.label.toLowerCase == "logbase" && base.childElem.length > 0) {
-			MathML(base.childElem(0)).map(_ match {
-				case c: CnInteger => ApplyLog(BigDecimal(c.v), value)
-				case c: CnReal => ApplyLog(c.v, value)
-			})
-		} else { Failure(new IllegalArgumentException("could not parse log from base " + base)) }
 
 	implicit class PimpedElem(e: Elem) {
 		def childElem = e.child.collect(_ match { case x: Elem => x })

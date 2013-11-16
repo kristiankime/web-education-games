@@ -14,29 +14,32 @@ object Match extends Enumeration {
 
 import Match._
 
-
 object MathML {
+
+	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
+		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
+		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
+		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
+		matches.reduce((_, _) match {
+			case (No, _) => No
+			case (_, No) => No // If we ever see a No they are not a match
+			case (Yes, _) => Yes
+			case (_, Yes) => Yes // If we have Inconclusive and yes conclude yes
+			case (Inconclusive, Inconclusive) => Inconclusive // If we only have Inconclusive...
+		})
+	}
 
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val varAndVals = for (i <- -5 to 5) yield Map(variableName -> (i.toDouble + 0.01d))
+			val eval = checkEval(variableName, eq1, eq2, (-50 to 50).map(_.doubleValue))
 
-			System.err.println(eq1);
-			System.err.println(eq2);
-
-			val eq1s = varAndVals.map(eq1.eval(_))
-			val eq2s = varAndVals.map(eq2.eval(_))
-
-			System.err.println(eq1s);
-			System.err.println(eq2s);
-
-			val matches = varAndVals.map(varAndVal => closeEnough(eq1.eval(varAndVal), eq2.eval(varAndVal)))
-			
-			System.err.println(matches)
-			
-			matches.contains(Yes) && !matches.contains(No)
+			eval match {
+				case No => false
+				case Inconclusive => false
+				case Yes => true
+			}
 		}
 	}
 
@@ -44,16 +47,16 @@ object MathML {
 		eq1.s == eq2.s
 	}
 
-	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
 	private def closeEnough(v1: Try[Double], v2: Try[Double]) = {
 		(v1, v2) match {
 			case (Success(x), Success(y)) => doubleCloseEnough(x, y)
-			case (Failure(_), Failure(_)) => Inconclusive // LATER ensure errors are the same?
+			case (Failure(_), Failure(_)) => Inconclusive
 			case (Failure(_), Success(_)) => No
 			case (Success(_), Failure(_)) => No
 		}
 	}
 
+	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
 	private def doubleCloseEnough(x: Double, y: Double) = {
 		if (x.isNaN && doubleNonNumber(y)) Inconclusive
 		else if (doubleNonNumber(x) && y.isNaN) Inconclusive

@@ -22,18 +22,18 @@ abstract class Logarithm(val b: BigDecimal, val v: MathMLElem, pre: MathMLElem*)
 object Logarithm {
 
 	def ln(value: Constant) = value match {
-		case v: ConstantInteger => Cn(math.log(v.v.doubleValue))
-		case v: ConstantDecimal => Cn(math.log(v.v.doubleValue))
+		case c: ConstantInteger => Cn(math.log(c.v.doubleValue))
+		case c: ConstantDecimal => Cn(math.log(c.v.doubleValue))
 	}
 
 	def log10(value: Constant) = value match {
-		case v: ConstantInteger => Cn(math.log10(v.v.doubleValue))
-		case v: ConstantDecimal => Cn(math.log10(v.v.doubleValue))
+		case c: ConstantInteger => Cn(math.log10(c.v.doubleValue))
+		case c: ConstantDecimal => Cn(math.log10(c.v.doubleValue))
 	}
 
 	def log(b: BigDecimal, value: Constant) = value match {
-		case v: ConstantInteger => Cn(math.log(v.v.doubleValue) / math.log(b.doubleValue))
-		case v: ConstantDecimal => Cn(math.log(v.v.doubleValue) / math.log(b.doubleValue))
+		case c: ConstantInteger => Cn(math.log(c.v.doubleValue) / math.log(b.doubleValue))
+		case c: ConstantDecimal => Cn(math.log(c.v.doubleValue) / math.log(b.doubleValue))
 	}
 
 }

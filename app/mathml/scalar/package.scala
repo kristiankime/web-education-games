@@ -68,5 +68,5 @@ package object scalar {
 	
 	val e = ExponentialE
 	
-	val π = null
+	val π = Pi
 }

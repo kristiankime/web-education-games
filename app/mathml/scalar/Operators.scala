@@ -18,3 +18,15 @@ object Power extends Operator("power")
 object Log extends Operator("log")
 
 object Ln extends Operator("ln")
+
+object Sin extends Operator("sin")
+
+object Cos extends Operator("cos")
+
+object Tan extends Operator("tan")
+
+object Sec extends Operator("sec")
+
+object Csc extends Operator("csc")
+
+object Cot extends Operator("cot")

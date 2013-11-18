@@ -71,6 +71,12 @@ class MathMLCheckEqSpec extends Specification {
 			(f ?= g) must beTrue
 		}
 
+		"(x/(x+log(x)))' = (ln(10)*(ln(x) - 1))/(x*ln(10)+ln(x))^2" in {
+			val f = (x / (x + log(x)))ʹ
+			val g = (ln(`10`) * (ln(x) - `1`)) / ((x * ln(`10`) + ln(x)) ^ `2`)
+			(f ?= g) must beTrue
+		}
+
 	}
 
 }

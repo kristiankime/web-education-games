@@ -17,9 +17,14 @@ import Match._
 object MathML {
 
 	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
+//		System.err.println(eq1);
+//		System.err.println(eq2);
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
+//		System.err.println(eq1s);
+//		System.err.println(eq2s);
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
+//		System.err.println(matches);
 		matches.reduce((_, _) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match

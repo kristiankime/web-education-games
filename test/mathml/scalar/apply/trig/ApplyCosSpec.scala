@@ -19,16 +19,6 @@ class ApplyCosSpec extends Specification {
 		}
 	}
 
-	"variables" should {
-		"be empty if elements are constant" in {
-			ApplyCos(`2`).variables must beEmpty
-		}
-
-		"be x if an element constains an x" in {
-			ApplyCos(x).variables must beEqualTo(Set("x"))
-		}
-	}
-
 	"c" should {
 		"return correct sin" in {
 			ApplyCos(π).c.get must beEqualTo(`-1`)

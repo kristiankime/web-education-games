@@ -18,16 +18,6 @@ class ApplySinSpec extends Specification {
 		}
 	}
 
-	"variables" should {
-		"be empty if elements are constant" in {
-			ApplySin(`2`).variables must beEmpty
-		}
-
-		"be x if an element constains an x" in {
-			ApplySin(x).variables must beEqualTo(Set("x"))
-		}
-	}
-
 	"c" should {
 		"return correct sin" in {
 			ApplySin(π / `2`).c.get must beEqualTo(`1`)

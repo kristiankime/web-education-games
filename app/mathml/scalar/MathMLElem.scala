@@ -64,7 +64,9 @@ abstract class MathMLElem(
 
 	protected def derivative(wrt: String): MathMLElem
 
-	def d(wrt: String) = derivative(wrt).s
+	def d(wrt: String) = 
+		if (!variables.contains(wrt)) `0`
+		else derivative(wrt).s
 
 	def dx = derivative("x").s
 

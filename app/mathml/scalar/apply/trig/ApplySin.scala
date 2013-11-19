@@ -6,9 +6,9 @@ import mathml._
 import mathml.scalar._
 import mathml.scalar.concept._
 
-case class ApplySin(value: MathMLElem) extends Logarithm(ExponentialE.v, value, Seq(Sin): _*) {
+case class ApplySin(value: MathMLElem) extends UnaryFunction(value, Sin) {
 
-	override def eval(boundVariables: Map[String, Double]) = Try(math.sin(v.eval(boundVariables).get))
+	override def eval(b: Map[String, Double]) = Try(math.sin(v.eval(b).get))
 
 	override def cnStep: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.sin(v))

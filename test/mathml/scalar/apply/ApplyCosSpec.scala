@@ -39,15 +39,19 @@ class ApplyCosSpec extends Specification {
 		}
 	}
 
-	//	"s" should {
-	//		"return constant if value is constant" in {
-	//			ApplyCos(e).s must beEqualTo(`1`)
-	//		}
-	//
-	//		"remain unchanged if nothing can be simplified" in {
-	//			ApplyCos(x).s must beEqualTo(ApplyCos(x))
-	//		}
-	//	}
+	"s" should {
+		"return constant if value is constant" in {
+			ApplyCos(π).s must beEqualTo(`-1`)
+		}
+
+		"simplify what can be simpified" in {
+			ApplyCos(NeedsSimp).s must beEqualTo(ApplyCos(Simplified))
+		}
+
+		"remain unchanged if nothing can be simplified" in {
+			ApplyCos(x).s must beEqualTo(ApplyCos(x))
+		}
+	}
 
 	"d" should {
 		"obey the sin derivative rule: ln(f)' = f'/f" in {

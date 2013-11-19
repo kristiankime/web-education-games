@@ -39,15 +39,20 @@ class ApplySinSpec extends Specification {
 		}
 	}
 
-	//	"s" should {
-	//		"return constant if value is constant" in {
-	//			ApplySin(e).s must beEqualTo(`1`)
-	//		}
-	//
-	//		"remain unchanged if nothing can be simplified" in {
-	//			ApplySin(x).s must beEqualTo(ApplySin(x))
-	//		}
-	//	}
+	"s" should {
+		"return constant if value is constant" in {
+			ApplySin(π / `2`).s must beEqualTo(`1`)
+		}
+
+		"simplify what can be simpified" in {
+			ApplySin(NeedsSimp).s must beEqualTo(ApplySin(Simplified))
+		}
+
+		"remain unchanged if nothing can be simplified" in {
+			ApplySin(x).s must beEqualTo(ApplySin(x))
+		}
+
+	}
 
 	"d" should {
 		"obey the sin derivative rule: ln(f)' = f'/f" in {

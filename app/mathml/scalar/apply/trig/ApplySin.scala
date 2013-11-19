@@ -1,4 +1,4 @@
-package mathml.scalar.apply
+package mathml.scalar.apply.trig
 
 import scala.util._
 import scala.xml._

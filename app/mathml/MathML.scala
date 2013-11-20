@@ -5,6 +5,7 @@ import scala.xml._
 import math._
 import mathml.scalar._
 import mathml.scalar.apply._
+import mathml.scalar.apply.trig._
 import mathml.scalar.concept.Constant
 
 object Match extends Enumeration {
@@ -17,14 +18,9 @@ import Match._
 object MathML {
 
 	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
-//		System.err.println(eq1);
-//		System.err.println(eq2);
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
-//		System.err.println(eq1s);
-//		System.err.println(eq2s);
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
-//		System.err.println(matches);
 		matches.reduce((_, _) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match
@@ -84,6 +80,7 @@ object MathML {
 			case "cn" => constantElement(xml)
 			case "ci" => Success(Ci(xml.child(0).text)) // LATER child(0).text could be nonsense
 			case "exponentiale" => Success(ExponentialE)
+			case "pi" => Success(mathml.scalar.Pi)
 			case "logbase" => Cn(xml.childElem(0)).map(Logbase(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
@@ -112,17 +109,18 @@ object MathML {
 			case ("plus", _) => Success(ApplyPlus(args: _*))
 			case ("minus", Seq(v)) => Success(ApplyMinusU(v))
 			case ("minus", Seq(v1, v2)) => Success(ApplyMinusB(v1, v2))
-			case ("minus", _) => Failure(new IllegalArgumentException(a + " minus was called with >2 arguments"))
 			case ("times", _) => Success(ApplyTimes(args: _*))
 			case ("divide", Seq(num, den)) => Success(ApplyDivide(num, den))
-			case ("divide", _) => Failure(new IllegalArgumentException(a + " divide was called with !=2 arguments"))
 			case ("power", Seq(base, exp)) => Success(ApplyPower(base, exp))
-			case ("power", _) => Failure(new IllegalArgumentException(a + " power was called with !=2 arguments"))
 			case ("ln", Seq(value)) => Success(ApplyLn(value))
-			case ("ln", Seq(_)) => Failure(new IllegalArgumentException(a + " ln was called with !=1 arg "))
 			case ("log", Seq(value)) => Success(ApplyLog10(value))
 			case ("log", Seq(b: Logbase, value)) => Success(ApplyLog(b.v, value))
-			case ("log", Seq(_)) => Failure(new IllegalArgumentException(a + " log was called with >1 arg or no logbase"))
+			case ("sin", Seq(v)) => Success(ApplySin(v))
+			case ("cos", Seq(v)) => Success(ApplyCos(v))
+			case ("tan", Seq(v)) => Success(ApplyTan(v))
+			case ("sec", Seq(v)) => Success(ApplySec(v))
+			case ("csc", Seq(v)) => Success(ApplyCsc(v))
+			case ("cot", Seq(v)) => Success(ApplyCot(v))
 			case (a, c) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element (label [" + o.label + "] might not be recognized or wrong number of child elements [" + c.length + "])"))
 		}
 	}

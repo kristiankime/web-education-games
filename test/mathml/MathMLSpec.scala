@@ -8,6 +8,7 @@ import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml.scalar._
 import mathml.scalar.apply._
+import mathml.scalar.apply.trig._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -127,6 +128,35 @@ class MathMLSpec extends Specification {
 		"parse e nested" in {
 			val xml = <apply> <plus/> <ci>x</ci> <exponentiale/> </apply>
 			MathML(xml).get must beEqualTo(x + e)
+		}
+
+		"parse pi" in {
+			val xml = <pi/>
+			MathML(xml).get must beEqualTo(π)
+		}
+
+		"be able to parse cos" in {
+			MathML(<apply> <cos/> <pi/> </apply>).get must beEqualTo(ApplyCos(π))
+		}
+
+		"be able to parse cot" in {
+			MathML(<apply> <cot/> <pi/> </apply>).get must beEqualTo(ApplyCot(π))
+		}
+
+		"be able to parse csc" in {
+			MathML(<apply> <csc/> <pi/> </apply>).get must beEqualTo(ApplyCsc(π))
+		}
+
+		"be able to parse sec" in {
+			MathML(<apply> <sec/> <pi/> </apply>).get must beEqualTo(ApplySec(π))
+		}
+
+		"be able to parse sin" in {
+			MathML(<apply> <sin/> <pi/> </apply>).get must beEqualTo(ApplySin(π))
+		}
+
+		"be able to parse tan" in {
+			MathML(<apply> <tan/> <pi/> </apply>).get must beEqualTo(ApplyTan(π))
 		}
 
 	}

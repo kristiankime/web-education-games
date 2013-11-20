@@ -7,46 +7,42 @@ import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml._
 import mathml.scalar._
+import mathml.scalar.concept.Trigonometry
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
-class ApplySinSpec extends Specification {
+class ApplySecSpec extends Specification {
 
 	"eval" should {
-		"do sin" in {
-			ApplySin(π / `2`).eval(Map()).get must beEqualTo(1)
+		"do csc" in {
+			ApplySec(π).eval(Map()).get must beEqualTo(Trigonometry.sec(math.Pi))
 		}
 	}
 
 	"c" should {
-		"return correct sin" in {
-			ApplySin(π / `2`).c.get must beEqualTo(`1`)
+		"return correct sec" in {
+			ApplySec(π).c.get must beEqualTo(Cn(Trigonometry.sec(math.Pi)))
 		}
 
 		"fail if not a constant " in {
-			ApplySin(x).c must beEmpty
+			ApplySec(x).c must beEmpty
 		}
 	}
 
 	"s" should {
 		"simplify what can be simpified" in {
-			ApplySin(NeedsSimp).s must beEqualTo(ApplySin(Simplified))
+			ApplySec(NeedsSimp).s must beEqualTo(ApplySec(Simplified))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplySin(x).s must beEqualTo(ApplySin(x))
+			ApplySec(x).s must beEqualTo(ApplySec(x))
 		}
 	}
 
 	"d" should {
-		"obey the derivative rule: sin(f)' = cos(f)f'" in {
-			ApplySin(F).dx must beEqualTo(ApplyCos(F) * Fdx)
+		"obey the derivative rule: sec(f)' = tan(f) sec(f) f'" in {
+			ApplySec(F).dx must beEqualTo((ApplyTan(F) * ApplySec(F) * Fdx)s)
 		}
 	}
 
 }
-
-
-
-
-

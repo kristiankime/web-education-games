@@ -7,46 +7,42 @@ import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml._
 import mathml.scalar._
+import mathml.scalar.concept.Trigonometry
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
-class ApplySinSpec extends Specification {
+class ApplyCscSpec extends Specification {
 
 	"eval" should {
-		"do sin" in {
-			ApplySin(π / `2`).eval(Map()).get must beEqualTo(1)
+		"do csc" in {
+			ApplyCsc(π).eval(Map()).get must beEqualTo(Trigonometry.csc(math.Pi))
 		}
 	}
 
 	"c" should {
-		"return correct sin" in {
-			ApplySin(π / `2`).c.get must beEqualTo(`1`)
+		"return correct cot" in {
+			ApplyCsc(π).c.get must beEqualTo(Cn(Trigonometry.csc(math.Pi)))
 		}
 
 		"fail if not a constant " in {
-			ApplySin(x).c must beEmpty
+			ApplyCsc(x).c must beEmpty
 		}
 	}
 
 	"s" should {
 		"simplify what can be simpified" in {
-			ApplySin(NeedsSimp).s must beEqualTo(ApplySin(Simplified))
+			ApplyCsc(NeedsSimp).s must beEqualTo(ApplyCsc(Simplified))
 		}
 
 		"remain unchanged if nothing can be simplified" in {
-			ApplySin(x).s must beEqualTo(ApplySin(x))
+			ApplyCsc(x).s must beEqualTo(ApplyCsc(x))
 		}
 	}
 
 	"d" should {
-		"obey the derivative rule: sin(f)' = cos(f)f'" in {
-			ApplySin(F).dx must beEqualTo(ApplyCos(F) * Fdx)
+		"obey the derivative rule: csc(f)' = -cot(f) csc(f) f'" in {
+			ApplyCsc(F).dx must beEqualTo((-ApplyCot(F) * ApplyCsc(F) * Fdx)s)
 		}
 	}
 
 }
-
-
-
-
-

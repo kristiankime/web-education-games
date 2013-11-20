@@ -11,7 +11,7 @@ import mathml.scalar.apply._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove import mathml.scalar.Fdx
 @RunWith(classOf[JUnitRunner])
-class ApplyTimesSpec extends Specification {
+class UnaryFunctionSpec extends Specification {
 
 	"variables" should {
 		"return empty for constant internals" in {

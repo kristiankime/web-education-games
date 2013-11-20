@@ -44,7 +44,7 @@ class ApplyCosSpec extends Specification {
 	}
 
 	"d" should {
-		"obey the sin derivative rule: ln(f)' = f'/f" in {
+		"obey the sin derivative rule: cos(f)' = -sin(f)f'" in {
 			ApplyCos(F).dx must beEqualTo(-ApplySin(F) * Fdx)
 		}
 	}

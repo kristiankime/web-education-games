@@ -18,7 +18,7 @@ class MathMLDerivativeSpec extends Specification {
 	"Checking equality between symbolic differentiaton and manual derivative " should {
 
 		"ln(x)' = 1 / x" in {
-			(ln(x)ʹ) must beEqualTo(`1` / x)
+			(ln(x) dx) must beEqualTo(`1` / x)
 		}
 
 		// LATER try to simplify these

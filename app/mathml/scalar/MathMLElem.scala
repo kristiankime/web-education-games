@@ -70,8 +70,6 @@ abstract class MathMLElem(
 
 	def dx = derivative("x").s
 
-	def ʹ = dx
-
 	def +(m: MathMLElem) = ApplyPlus(this, m)
 
 	def *(m: MathMLElem) = ApplyTimes(this, m)

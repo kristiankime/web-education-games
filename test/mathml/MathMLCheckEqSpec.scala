@@ -48,31 +48,31 @@ class MathMLCheckEqSpec extends Specification {
 		}
 
 		"ln(x)' = 1 / x" in {
-			val f = ln(x)ʹ
+			val f = ln(x) dx
 			val g = `1` / x
 			(f ?= g) must beTrue
 		}
 
 		"1 / ln(x)' = -1 / (x * log(x)^2)" in {
-			val f = (`1` / ln(x))ʹ
+			val f = (`1` / ln(x)) dx
 			val g = `-1` / (x * (ln(x) ^ `2`))
 			(f ?= g) must beTrue
 		}
 
 		"x / ln(x)' = (ln(x)-1) / (ln(x)^2)" in {
-			val f = (x / ln(x))ʹ
+			val f = (x / ln(x)) dx
 			val g = (ln(x) - `1`) / (ln(x) ^ `2`)
 			(f ?= g) must beTrue
 		}
 
 		"(x/(x+ln(x)))' = (ln(x)-1) / (x+ln(x))^2" in {
-			val f = x / (x + ln(x))ʹ
+			val f = x / (x + ln(x)) dx
 			val g = (ln(x) - `1`) / ((x + ln(x)) ^ `2`)
 			(f ?= g) must beTrue
 		}
 
 		"(x/(x+log(x)))' = (ln(10)*(ln(x) - 1))/(x*ln(10)+ln(x))^2" in {
-			val f = (x / (x + log(x)))ʹ
+			val f = (x / (x + log(x))) dx
 			val g = (ln(`10`) * (ln(x) - `1`)) / ((x * ln(`10`) + ln(x)) ^ `2`)
 			(f ?= g) must beTrue
 		}

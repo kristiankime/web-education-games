@@ -34,7 +34,12 @@ object MathML {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val eval = checkEval(variableName, eq1, eq2, (-50 to 50).map(_.doubleValue))
+			val eval1 = checkEval(variableName, eq1, eq2, (-50 to 50).map(_.doubleValue))
+
+			val eval = if (eval1 == Inconclusive) {
+				val ran = new Random(0L)
+				checkEval(variableName, eq1, eq2, Seq.fill(10)( (ran.nextDouble * 2000d) -1000d))
+			} else { eval1 }
 
 			eval match {
 				case No => false

@@ -39,14 +39,14 @@ object Application extends Controller {
 	}
 
 	// ======== Self Quiz Questions ======== 
-	def selfQuiz = Action {
-		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
-	}
-
+	def selfQuiz = selfQuizQuestions
+	def selfQuizSlash = selfQuizQuestions
+	def selfQuizQuestionsSlash = selfQuizQuestions
 	def selfQuizQuestions = Action {
 		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
 	}
 
+	def selfQuizQuestionSlash(id: Int) = selfQuizQuestion(id)
 	def selfQuizQuestion(id: Int) = Action {
 		Ok(views.html.self_quiz_answer(DerivativeQuestions.read(id).get, None))
 	}
@@ -66,6 +66,7 @@ object Application extends Controller {
 	}
 
 	// ======== Self Quiz Answers ======== 
+	def selfQuizAnswerSlash(qid: Int, aid: Int) = selfQuizAnswer(qid, aid)
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {
 		val question = DerivativeQuestions.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswers.read(qid, aid)

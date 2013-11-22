@@ -48,7 +48,7 @@ object Application extends Controller {
 	}
 
 	def selfQuizQuestion(id: Int) = Action {
-		Ok(views.html.self_quiz_take(DerivativeQuestions.read(id).get, None))
+		Ok(views.html.self_quiz_answer(DerivativeQuestions.read(id).get, None))
 	}
 
 	def newSelfQuizQuestion = Action { implicit request =>
@@ -69,13 +69,13 @@ object Application extends Controller {
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {
 		val question = DerivativeQuestions.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswers.read(qid, aid)
-		Ok(views.html.self_quiz_take(question, answer))
+		Ok(views.html.self_quiz_answer(question, answer))
 	}
 
 	def answerSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
 			errors => {
-				BadRequest(views.html.self_quiz_take(DerivativeQuestions.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
+				BadRequest(views.html.self_quiz_answer(DerivativeQuestions.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
 			},
 			answerForm => {
 				val question = DerivativeQuestions.read(answerForm._1).get // TODO check for no question here

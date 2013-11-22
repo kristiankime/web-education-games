@@ -8,19 +8,24 @@
     	<a href="@routes.Application.selfQuizQuestions"> Back to the list of questions</a>
     </div>
     
-    <h2>What is the Derivative of</h2>
-    <script type="math/mml"> @Html(question.mathML.toString) </script>
+    <div>
+	    <h2>What is the Derivative of</h2>
+    	<script type="math/mml"> @Html(question.mathML.toString) </script>
+	</div>
+	<p>
+	
+	@if(answer.nonEmpty){
+	<div>
+		Answer @Html(answer.get.id.toString) to this questions was <script type="math/mml"> @Html(answer.get.mathML.toString) </script> <br>
+		That answer was @if(answer.get.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
+	</div>
+	<p>
+	}	
     
     <div>
 		Type in your answer, and then hit the submit button <br> 
 		@mathml_editor("ANSWER")
 	</div>
-		
-	@if(answer.nonEmpty){
-	<div>
-		You answered the question @if(answer.get.correct){ <font color="green"> correctly! </font> } else { <font color="red"> incorrectly </font> }
-	</div>
-	}		
 		
 	<div>
 	@form(routes.Application.answerSelfQuizQuestion, 'id -> "answerForm" ) {

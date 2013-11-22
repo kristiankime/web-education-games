@@ -1,4 +1,4 @@
-@(derivativeQs: List[DerivativeQuestion], questionForm: Form[String])
+@(derivativeQs: List[DerivativeQuestion])
 
 @import helper._
 @import controllers.DerivativeQuestionHTML
@@ -37,7 +37,9 @@
 	</p>
 
     @form(routes.Application.newSelfQuizQuestion, 'id -> "derivativeqForm" ) {
-    	<input type="hidden" name="@DerivativeQuestionHTML.equation" id="derivativeQuestionMathML">
+    	<input type="hidden" name="@DerivativeQuestionHTML.mathML" id="derivativeQuestionMathML">
+    	<input type="hidden" name="@DerivativeQuestionHTML.rawStr" id="derivativeQuestionRawStr">
+    	<input type="hidden" name="@DerivativeQuestionHTML.current" id="derivativeQuestionCurrent">
     	<input type="button" value="Save Question" onclick="formSubmit()">
     }
     
@@ -45,6 +47,8 @@
 	formSubmit = function() {
 		if(QUESTION.valid){
 			$("#derivativeQuestionMathML").val(QUESTION.mathML);
+			$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+			$("#derivativeQuestionCurrent").val(QUESTION.current);
 			$("#derivativeqForm").submit();
 		}
 		// TODO indicated that the form did not submit

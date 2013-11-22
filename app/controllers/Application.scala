@@ -2,17 +2,16 @@ package controllers
 
 import play.api._
 import play.api.mvc._
-import play.api._
-import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.iteratee._
-import models._
-import akka.actor._
-import scala.concurrent.duration._
 import play.api.data._
 import play.api.data.Forms._
-import models.Equations
+import akka.actor._
+import scala.concurrent.duration._
+import models._
 import mathml._
+//import scala._
+import scala.util._
 
 object Application extends Controller {
 
@@ -41,11 +40,11 @@ object Application extends Controller {
 
 	// ======== Self Quiz Questions ======== 
 	def selfQuiz = Action {
-		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
+		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
 	}
-	
+
 	def selfQuizQuestions = Action {
-		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
+		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
 	}
 
 	def selfQuizQuestion(id: Int) = Action {
@@ -54,16 +53,17 @@ object Application extends Controller {
 
 	def newSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all(), errors)),
-			equation => {
-				DerivativeQuestions.create(equation)
+			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all())),
+			form => {
+				val mathML = Try(xml.XML.loadString(form._1)).map(MathML(_)).flatten
+				mathML.foreach(DerivativeQuestions.create(_, form._2, form._3))
 				Redirect(routes.Application.selfQuizQuestions)
 			})
 	}
 
 	def deleteSelfQuizQuestion(id: Int) = Action {
 		DerivativeQuestions.delete(id);
-		Ok(views.html.self_quiz_list(DerivativeQuestions.all(), DerivativeQuestionHTML.form))
+		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
 	}
 
 	// ======== Self Quiz Answers ======== 
@@ -81,7 +81,7 @@ object Application extends Controller {
 			},
 			answerForm => {
 				val question = DerivativeQuestions.get(answerForm._1).get // TODO check for no question here
-				val answerStr = answerForm._2 
+				val answerStr = answerForm._2
 				val answer = DerivativeQuestionAnswers.create(question, answerStr) // TODO check for failure here
 				Redirect(routes.Application.selfQuizAnswer(question.id, answer.id))
 			})
@@ -95,8 +95,10 @@ object EquationHTML {
 }
 
 object DerivativeQuestionHTML {
-	val equation = "equation"
-	val form = Form(equation -> nonEmptyText)
+	val mathML = "mathML"
+	val rawStr = "rawStr"
+	val current = "current"
+	val form = Form(tuple(mathML -> text, rawStr -> text, current -> boolean))
 }
 
 object DerivativeQuestionAnswerHTML {

@@ -21,11 +21,13 @@
 		You answered the question @if(answer.get.correct){ <font color="green"> correctly! </font> } else { <font color="red"> incorrectly </font> }
 	</div>
 	}		
-	
+		
 	<div>
 	@form(routes.Application.answerSelfQuizQuestion, 'id -> "answerForm" ) {
 		<input type="hidden" name="@DerivativeQuestionAnswerHTML.questionId" value="@question.id">
-    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.answer" id="answerValue">
+    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.rawStr" id="answerRawStr">
+    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.mathML" id="answerMathML">
+    	<input type="hidden" name="@DerivativeQuestionAnswerHTML.current" id="answerCurrent">
     	<input type="button" value="Submit" onclick="answerFormSubmit()">
     }
     </div>
@@ -33,7 +35,9 @@
 	<script>
 	var answerFormSubmit = function() {
 		if(ANSWER.valid){
-			$("#answerValue").val(ANSWER.mathML);
+			$("#answerMathML").val(ANSWER.mathML);
+			$("#answerRawStr").val(ANSWER.rawStr);
+			$("#answerCurrent").val(ANSWER.current);
 			$("#answerForm").submit();
 		}
 		// TODO indicated that the form did not submit

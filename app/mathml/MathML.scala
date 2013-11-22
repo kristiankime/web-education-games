@@ -77,6 +77,8 @@ object MathML {
 	private def doubleNonNumber(d: Double) = {
 		d.isInfinite() || d.isNaN()
 	}
+	
+	def apply(text: String) : Try[MathMLElem] = Try(xml.XML.loadString(text)).map(apply(_)).flatten
 
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {

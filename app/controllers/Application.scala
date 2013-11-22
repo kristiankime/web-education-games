@@ -48,15 +48,14 @@ object Application extends Controller {
 	}
 
 	def selfQuizQuestion(id: Int) = Action {
-		Ok(views.html.self_quiz_take(DerivativeQuestions.get(id).get, None))
+		Ok(views.html.self_quiz_take(DerivativeQuestions.read(id).get, None))
 	}
 
 	def newSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all())),
 			form => {
-				val mathML = Try(xml.XML.loadString(form._1)).map(MathML(_)).flatten
-				mathML.foreach(DerivativeQuestions.create(_, form._2, form._3))
+				MathML(form._1).foreach(DerivativeQuestions.create(_, form._2, form._3))
 				Redirect(routes.Application.selfQuizQuestions)
 			})
 	}
@@ -68,21 +67,23 @@ object Application extends Controller {
 
 	// ======== Self Quiz Answers ======== 
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {
-		val question = DerivativeQuestions.get(qid).get // TODO can be null
-		val answer = DerivativeQuestionAnswers.get(qid, aid)
+		val question = DerivativeQuestions.read(qid).get // TODO can be null
+		val answer = DerivativeQuestionAnswers.read(qid, aid)
 		Ok(views.html.self_quiz_take(question, answer))
 	}
 
 	def answerSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
-			// TODO currently we assume we can get the problem id here
 			errors => {
-				BadRequest(views.html.self_quiz_take(DerivativeQuestions.get(errors.get._1).get, None))
+				BadRequest(views.html.self_quiz_take(DerivativeQuestions.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
 			},
 			answerForm => {
-				val question = DerivativeQuestions.get(answerForm._1).get // TODO check for no question here
-				val answerStr = answerForm._2
-				val answer = DerivativeQuestionAnswers.create(question, answerStr) // TODO check for failure here
+				val question = DerivativeQuestions.read(answerForm._1).get // TODO check for no question here
+				val mathML = MathML(answerForm._2).get // TODO can fail here
+				val rawStr = answerForm._3
+				val synched = answerForm._4
+
+				val answer = DerivativeQuestionAnswers.create(question, rawStr, mathML, synched);
 				Redirect(routes.Application.selfQuizAnswer(question.id, answer.id))
 			})
 	}
@@ -103,6 +104,8 @@ object DerivativeQuestionHTML {
 
 object DerivativeQuestionAnswerHTML {
 	val questionId = "questionId"
-	val answer = "answer"
-	val form = Form(tuple(questionId -> number, answer -> nonEmptyText))
+	val mathML = "mathML"
+	val rawStr = "rawStr"
+	val current = "current"
+	val form = Form(tuple(questionId -> number, mathML -> text, rawStr -> text, current -> boolean))
 }

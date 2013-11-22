@@ -5,28 +5,29 @@ import mathml.scalar.MathMLElem
 import scala.xml.XML
 import mathml.MathML
 
-case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Int, originalStr: String, mathML: MathMLElem, correct: Boolean)
+case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Int, rawStr: String, mathML: MathMLElem, synched: Boolean, correct: Boolean)
 
 object DerivativeQuestionAnswers {
 	private var idCounter = 0
 	private val derivativeQuestionAnswers = LinkedHashMap[Int, LinkedHashMap[Int, DerivativeQuestionAnswer]]()
 
+	private def nextId = {
+		val id = idCounter
+		idCounter += 1
+		id
+	}
+
 	def all() = derivativeQuestionAnswers.values.toList
 
-	def create(question: DerivativeQuestion, answerStr: String) = {
-		val answerMathML = MathML(XML.loadString(answerStr)).get // TODO can fail here
-		val correct = MathML.checkEq("x", question.mathML.d("x"), answerMathML)
-		val answer = DerivativeQuestionAnswer(question, idCounter, answerStr, answerMathML, correct)
-		idCounter += 1
-		
-		if (derivativeQuestionAnswers.get(question.id).isEmpty) {
-			derivativeQuestionAnswers.put(question.id, LinkedHashMap())
-		}
-		derivativeQuestionAnswers.get(question.id).get.put(answer.id, answer)
+	def create(question: DerivativeQuestion, rawStr: String, mathML: MathMLElem, synched: Boolean) = {
+		val correct = MathML.checkEq("x", question.mathML.d("x"), mathML)
+		val answer = DerivativeQuestionAnswer(question, nextId, rawStr, mathML, synched, correct)
+		derivativeQuestionAnswers.getOrElseUpdate(question.id, LinkedHashMap()).put(answer.id, answer)
 		answer
 	}
 
-	def removeQuestion(qid: Int) = derivativeQuestionAnswers.remove(qid)
+	def read(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).map(_.get(aid)).flatten
 
-	def get(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).map(_.get(aid)).flatten
+	def delete(qid: Int) = derivativeQuestionAnswers.remove(qid)
+
 }

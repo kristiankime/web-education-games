@@ -15,6 +15,13 @@ import scala.util._
 
 object Application extends Controller {
 
+	/**
+	 * Application does not use trailing slashes so indicate to browsers
+	 */
+	def untrail(path: String) = Action {
+		MovedPermanently("/" + path)
+	}
+
 	def index = Action {
 		Ok(views.html.index())
 	}
@@ -40,20 +47,18 @@ object Application extends Controller {
 
 	// ======== Self Quiz Questions ======== 
 	def selfQuiz = selfQuizQuestions
-	def selfQuizSlash = selfQuizQuestions
-	def selfQuizQuestionsSlash = selfQuizQuestions
+
 	def selfQuizQuestions = Action {
-		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
+		Ok(views.html.self_quiz_questions(DerivativeQuestions.all()))
 	}
 
-	def selfQuizQuestionSlash(id: Int) = selfQuizQuestion(id)
 	def selfQuizQuestion(id: Int) = Action {
 		Ok(views.html.self_quiz_answer(DerivativeQuestions.read(id).get, None))
 	}
 
 	def newSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_list(DerivativeQuestions.all())),
+			errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestions.all())),
 			form => {
 				MathML(form._1).foreach(DerivativeQuestions.create(_, form._2, form._3))
 				Redirect(routes.Application.selfQuizQuestions)
@@ -62,11 +67,10 @@ object Application extends Controller {
 
 	def deleteSelfQuizQuestion(id: Int) = Action {
 		DerivativeQuestions.delete(id);
-		Ok(views.html.self_quiz_list(DerivativeQuestions.all()))
+		Ok(views.html.self_quiz_questions(DerivativeQuestions.all()))
 	}
 
 	// ======== Self Quiz Answers ======== 
-	def selfQuizAnswerSlash(qid: Int, aid: Int) = selfQuizAnswer(qid, aid)
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {
 		val question = DerivativeQuestions.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswers.read(qid, aid)

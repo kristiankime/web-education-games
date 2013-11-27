@@ -71,12 +71,16 @@ object Application extends Controller {
 	}
 
 	// ======== Self Quiz Answers ======== 
+	def selfQuizAnswers(id: Int) = Action {
+		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id).get))
+	}
+	
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {
 		val question = DerivativeQuestions.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswers.read(qid, aid)
 		Ok(views.html.self_quiz_answer(question, answer))
 	}
-
+	
 	def answerSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
 			errors => {

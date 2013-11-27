@@ -4,27 +4,28 @@
 
 
 # Remove trailing /'s from paths 
-GET  /*path/  controllers.Application.untrail(path: String)
+GET    /*path/                               controllers.Application.untrail(path: String)
 
 # Home page
-GET    /                                      controllers.Application.index
+GET    /                                     controllers.Application.index
 
 # Equation pages
-GET    /equation                              controllers.Application.equations
-POST   /equation                              controllers.Application.newEquation
-POST   /equation/:id/delete                   controllers.Application.deleteEquation(id: Int)
+GET    /equation                             controllers.Application.equations
+POST   /equation                             controllers.Application.newEquation
+POST   /equation/:id/delete                  controllers.Application.deleteEquation(id: Int)
 
-# Derivative Question / Answer pages
-GET    /selfquiz                              controllers.Application.selfQuiz
-GET    /selfquiz/question                     controllers.Application.selfQuizQuestions
-GET    /selfquiz/question/:qid                controllers.Application.selfQuizQuestion(qid: Int)
-POST   /selfquiz/question                     controllers.Application.newSelfQuizQuestion
+# Derivative question pages
+GET    /selfquiz                             controllers.Application.selfQuiz
+GET    /selfquiz/question                    controllers.Application.selfQuizQuestions
+GET    /selfquiz/question/:qid               controllers.Application.selfQuizQuestion(qid: Int)
+POST   /selfquiz/question                    controllers.Application.newSelfQuizQuestion
 # Should be DELETE
-POST   /selfquiz/question/:qid/delete         controllers.Application.deleteSelfQuizQuestion(qid: Int) 
+POST   /selfquiz/question/:qid/delete        controllers.Application.deleteSelfQuizQuestion(qid: Int) 
 
-# GET    /selfquiz/question/:qid/answer        controllers.Application.selfQuizAnswers(qid: Int)
-GET    /selfquiz/question/:qid/answer/:aid    controllers.Application.selfQuizAnswer(qid: Int, aid : Int)
-POST   /selfquiz/question/answer/             controllers.Application.answerSelfQuizQuestion
+# Derivative answer pages
+GET    /selfquiz/question/:qid/answer        controllers.Application.selfQuizAnswers(qid: Int)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.Application.selfQuizAnswer(qid: Int, aid : Int)
+POST   /selfquiz/question/answer/            controllers.Application.answerSelfQuizQuestion
 
 # Map static resources from the /public folder to the /assets URL path
-GET    /assets/*file                          controllers.Assets.at(path="/public", file)
+GET    /assets/*file                         controllers.Assets.at(path="/public", file)

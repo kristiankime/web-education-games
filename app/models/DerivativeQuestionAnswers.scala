@@ -26,8 +26,10 @@ object DerivativeQuestionAnswers {
 		answer
 	}
 
-	def read(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).map(_.get(aid)).flatten
-
+	def read(qid: Int) = derivativeQuestionAnswers.get(qid).map(_.values.toList)
+	
+	def read(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).flatMap(_.get(aid))
+	
 	def delete(qid: Int) = derivativeQuestionAnswers.remove(qid)
 
 }

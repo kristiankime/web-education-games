@@ -19,7 +19,6 @@ GET    /selfquiz                             controllers.Application.selfQuiz
 GET    /selfquiz/question                    controllers.Application.selfQuizQuestions
 GET    /selfquiz/question/:qid               controllers.Application.selfQuizQuestion(qid: Int)
 POST   /selfquiz/question                    controllers.Application.newSelfQuizQuestion
-# Should be DELETE
 POST   /selfquiz/question/:qid/delete        controllers.Application.deleteSelfQuizQuestion(qid: Int) 
 
 # Derivative answer pages

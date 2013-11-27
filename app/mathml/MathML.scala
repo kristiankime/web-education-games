@@ -20,7 +20,14 @@ object MathML {
 	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
+
+		System.err.println(eq1s);
+		System.err.println(eq2s);
+
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
+
+		System.err.println(matches);
+
 		matches.reduce((_, _) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match
@@ -38,7 +45,7 @@ object MathML {
 
 			val eval = if (eval1 == Inconclusive) {
 				val ran = new Random(0L)
-				checkEval(variableName, eq1, eq2, Seq.fill(10)( (ran.nextDouble * 2000d) -1000d))
+				checkEval(variableName, eq1, eq2, Seq.fill(10)((ran.nextDouble * 2000d) - 1000d))
 			} else { eval1 }
 
 			eval match {
@@ -64,8 +71,7 @@ object MathML {
 
 	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
 	private def doubleCloseEnough(x: Double, y: Double) = {
-		if (x.isNaN && doubleNonNumber(y)) Inconclusive
-		else if (doubleNonNumber(x) && y.isNaN) Inconclusive
+		if (x.isNaN || y.isNaN) Inconclusive
 		else if (x.isNegInfinity && y.isNegInfinity) Inconclusive
 		else if (x.isPosInfinity && y.isPosInfinity) Inconclusive
 		else if (x.isNegInfinity && y.isPosInfinity) No
@@ -74,11 +80,7 @@ object MathML {
 		else No
 	}
 
-	private def doubleNonNumber(d: Double) = {
-		d.isInfinite() || d.isNaN()
-	}
-	
-	def apply(text: String) : Try[MathMLElem] = Try(xml.XML.loadString(text)).map(apply(_)).flatten
+	def apply(text: String): Try[MathMLElem] = Try(xml.XML.loadString(text)).map(apply(_)).flatten
 
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {

@@ -17,7 +17,8 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Web Framework: [Play](http://www.playframework.com/)
 * IDE: [Eclipse](http://www.eclipse.org/)
 * Web Hosting: [Heroku](https://www.heroku.com/)
-* Authentication: [SecureSocial.ws](http://securesocial.ws/)
+* Database: [H2](http://www.h2database.com/) for development & [PostgreSQL](http://www.postgresql.org/) for production
+* Authentication (TDB): [SecureSocial.ws](http://securesocial.ws/)
 
 
 ### [Git](http://git-scm.com/)
@@ -47,6 +48,16 @@ Another helpful plugin is EGit which can be found by searching in the eclipse ma
 ### [Heroku](https://www.heroku.com/)
 
 Heroku is a web hosting company that greatly simplifies deployment, maintenance and upgrading of your web application. Heroku has it a toolbelt you need to install but once in place it's pretty easy to use. Fortunately Play works nicely with heroku and they have instructions on installation etc [here](http://www.playframework.com/documentation/2.1.3/ProductionHeroku).
+
+### [H2](http://www.h2database.com/) 
+Using H2 with play 
+
+* http://www.playframework.com/documentation/2.0.1/ScalaDatabase
+* http://www.playframework.com/documentation/2.2.x/Developing-with-the-H2-Database
+* http://www.playframework.com/documentation/2.1.1/ProductionConfiguration
+
+### [PostgreSQL](http://www.postgresql.org/)
+
 
 ### [SecureSocial.ws](http://securesocial.ws/)
 

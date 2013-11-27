@@ -53,7 +53,7 @@ object Application extends Controller {
 	}
 
 	def selfQuizQuestion(id: Int) = Action {
-		Ok(views.html.self_quiz_answer(DerivativeQuestions.read(id).get, None))
+		Ok(views.html.self_quiz_answer(DerivativeQuestions.read(id).get, None)) // TODO can be null
 	}
 
 	def newSelfQuizQuestion = Action { implicit request =>
@@ -72,7 +72,8 @@ object Application extends Controller {
 
 	// ======== Self Quiz Answers ======== 
 	def selfQuizAnswers(id: Int) = Action {
-		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id).get))
+		// TODO can be null
+		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id).getOrElse(List())))
 	}
 	
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {

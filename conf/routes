@@ -12,7 +12,7 @@ GET    /                                     controllers.Application.index
 # Equation pages
 GET    /equation                             controllers.Application.equations
 POST   /equation                             controllers.Application.newEquation
-POST   /equation/:id/delete                  controllers.Application.deleteEquation(id: Int)
+POST   /equation/:id/delete                  controllers.Application.deleteEquation(id: Long)
 
 # Derivative question pages
 GET    /selfquiz                             controllers.Application.selfQuiz

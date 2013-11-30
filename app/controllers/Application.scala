@@ -10,8 +10,14 @@ import akka.actor._
 import scala.concurrent.duration._
 import models._
 import mathml._
-//import scala._
 import scala.util._
+import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick._
+import scala.slick.session.Session
+
+//===
+import play.api.Logger
+import play.api.Play.current
 
 object Application extends Controller {
 
@@ -27,21 +33,21 @@ object Application extends Controller {
 	}
 
 	// ======== Equations ======== 
-	def equations = Action {
+	def equations = DBAction { implicit dbSessionRequest =>
 		Ok(views.html.equations(Equations.all(), EquationHTML.form))
 	}
 
-	def newEquation = Action { implicit request =>
+	def newEquation = DBAction { implicit dbSessionRequest =>
 		EquationHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.equations(Equations.all(), errors)),
 			equation => {
-				Equations.create(equation)
+				Equations.create(Equation(None, equation))
 				Redirect(routes.Application.equations)
 			})
 	}
 
-	def deleteEquation(id: Int) = Action {
-		Equations.delete(id);
+	def deleteEquation(id: Long) = DBAction { implicit dbSessionRequest =>
+		Equations.delete(id)
 		Ok(views.html.equations(Equations.all(), EquationHTML.form))
 	}
 
@@ -75,13 +81,13 @@ object Application extends Controller {
 		// TODO can be null
 		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id).getOrElse(List())))
 	}
-	
+
 	def selfQuizAnswer(qid: Int, aid: Int) = Action {
 		val question = DerivativeQuestions.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswers.read(qid, aid)
 		Ok(views.html.self_quiz_answer(question, answer))
 	}
-	
+
 	def answerSelfQuizQuestion = Action { implicit request =>
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
 			errors => {
@@ -98,6 +104,13 @@ object Application extends Controller {
 			})
 	}
 
+	def definingQueriesController = Action {
+		DB.withSession { implicit session: Session =>
+			Ok("")
+//			val names = Query(new Cocktails).map(_.name).list
+//			Ok(views.html.definingQueries(names))
+		}
+	}
 }
 
 object EquationHTML {

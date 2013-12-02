@@ -54,7 +54,7 @@ Using H2 with play
 
 * https://github.com/freekh/play-slick
 * http://blog.lunatech.com/2013/08/08/play-slick-getting-started
-* 
+ 
 ### [H2](http://www.h2database.com/) 
 Using H2 with play 
 
@@ -64,6 +64,8 @@ Using H2 with play
 
 ### [PostgreSQL](http://www.postgresql.org/)
 
+* https://devcenter.heroku.com/articles/heroku-postgresql#local-setup
+* http://postgresapp.com/
 
 ### [SecureSocial.ws](http://securesocial.ws/)
 

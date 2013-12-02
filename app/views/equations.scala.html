@@ -12,7 +12,7 @@
             <li>
             	<script type="math/mml"> @Html(equation.equation) </script>
                 
-                @form(routes.Application.deleteEquation(equation.id.get)) {
+                @form(routes.Application.deleteEquation(equation.id)) {
                     <input type="submit" value="Delete">
                 }
             </li>

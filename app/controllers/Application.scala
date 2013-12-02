@@ -41,7 +41,7 @@ object Application extends Controller {
 		EquationHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.equations(Equations.all(), errors)),
 			equation => {
-				Equations.create(Equation(None, equation))
+				Equations.create(equation)
 				Redirect(routes.Application.equations)
 			})
 	}

@@ -116,5 +116,10 @@ http://www.playframework.com/documentation/2.1.x/IDE
 heroku create
 git push heroku master
 
+##### Problems with Evolutions
+
+Failed evolutions "stick"
+https://groups.google.com/forum/#!topic/play-framework/ukwA8W9voXU
+
 
 

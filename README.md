@@ -49,7 +49,7 @@ Another helpful plugin is EGit which can be found by searching in the eclipse ma
 
 Heroku is a web hosting company that greatly simplifies deployment, maintenance and upgrading of your web application. Heroku has it a toolbelt you need to install but once in place it's pretty easy to use. Fortunately Play works nicely with heroku and they have instructions on installation etc [here](http://www.playframework.com/documentation/2.1.3/ProductionHeroku).
 
-* http://www.playframework.com/documentation/2.2.x/ProductionHeroku
+* http://www.playframework.com/documentation/2.2.x/ProductionHeroku* 
 
 ### [Slick](http://slick.typesafe.com/) 
 Using H2 with play 

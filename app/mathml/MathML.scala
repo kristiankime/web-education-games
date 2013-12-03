@@ -20,13 +20,7 @@ object MathML {
 	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
-
-		System.err.println(eq1s);
-		System.err.println(eq2s);
-
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
-
-		System.err.println(matches);
 
 		matches.reduce((_, _) match {
 			case (No, _) => No

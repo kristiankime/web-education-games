@@ -5,11 +5,11 @@ import mathml.scalar.MathMLElem
 import scala.xml.XML
 import mathml.MathML
 
-case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Int, rawStr: String, mathML: MathMLElem, synched: Boolean, correct: Boolean)
+case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Long, rawStr: String, mathML: MathMLElem, synched: Boolean, correct: Boolean)
 
 object DerivativeQuestionAnswers {
-	private var idCounter = 0
-	private val derivativeQuestionAnswers = LinkedHashMap[Int, LinkedHashMap[Int, DerivativeQuestionAnswer]]()
+	private var idCounter = 0L
+	private val derivativeQuestionAnswers = LinkedHashMap[Long, LinkedHashMap[Long, DerivativeQuestionAnswer]]()
 
 	private def nextId = {
 		val id = idCounter
@@ -26,10 +26,10 @@ object DerivativeQuestionAnswers {
 		answer
 	}
 
-	def read(qid: Int) = derivativeQuestionAnswers.get(qid).map(_.values.toList)
+	def read(qid: Long) = derivativeQuestionAnswers.get(qid).map(_.values.toList)
 	
-	def read(qid: Int, aid: Int) = derivativeQuestionAnswers.get(qid).flatMap(_.get(aid))
+	def read(qid: Long, aid: Long) = derivativeQuestionAnswers.get(qid).flatMap(_.get(aid))
 	
-	def delete(qid: Int) = derivativeQuestionAnswers.remove(qid)
+	def delete(qid: Long) = derivativeQuestionAnswers.remove(qid)
 
 }

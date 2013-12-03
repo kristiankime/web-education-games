@@ -17,13 +17,13 @@ POST   /equation/:id/delete                  controllers.Application.deleteEquat
 # Derivative question pages
 GET    /selfquiz                             controllers.Application.selfQuiz
 GET    /selfquiz/question                    controllers.Application.selfQuizQuestions
-GET    /selfquiz/question/:qid               controllers.Application.selfQuizQuestion(qid: Int)
+GET    /selfquiz/question/:qid               controllers.Application.selfQuizQuestion(qid: Long)
 POST   /selfquiz/question                    controllers.Application.newSelfQuizQuestion
-POST   /selfquiz/question/:qid/delete        controllers.Application.deleteSelfQuizQuestion(qid: Int) 
+POST   /selfquiz/question/:qid/delete        controllers.Application.deleteSelfQuizQuestion(qid: Long) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.Application.selfQuizAnswers(qid: Int)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.Application.selfQuizAnswer(qid: Int, aid : Int)
+GET    /selfquiz/question/:qid/answer        controllers.Application.selfQuizAnswers(qid: Long)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.Application.selfQuizAnswer(qid: Long, aid : Long)
 POST   /selfquiz/question/answer/            controllers.Application.answerSelfQuizQuestion
 
 # Map static resources from the /public folder to the /assets URL path

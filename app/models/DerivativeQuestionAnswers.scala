@@ -1,35 +1,49 @@
 package models
 
 import scala.collection.mutable.LinkedHashMap
-import mathml.scalar.MathMLElem
 import scala.xml.XML
-import mathml.MathML
+import mathml._
+import mathml.scalar._
+import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick.DB
+import scala.slick.lifted.ForeignKeyAction
 
-case class DerivativeQuestionAnswer(question: DerivativeQuestion, id: Long, rawStr: String, mathML: MathMLElem, synched: Boolean, correct: Boolean)
+case class QuestionAndAnswer(q: DerivativeQuestion, a: DerivativeQuestionAnswer)
+
+case class DerivativeQuestionAnswer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object DerivativeQuestionAnswers {
-	private var idCounter = 0L
-	private val derivativeQuestionAnswers = LinkedHashMap[Long, LinkedHashMap[Long, DerivativeQuestionAnswer]]()
+	val DerivativeQuestionAnswers = new DerivativeQuestionAnswers
 
-	private def nextId = {
-		val id = idCounter
-		idCounter += 1
-		id
-	}
+	def all()(implicit s: Session) = Query(DerivativeQuestionAnswers).list
 
-	def all() = derivativeQuestionAnswers.values.toList
+	def create(question: DerivativeQuestion, rawStr: String, mathML: MathMLElem, synched: Boolean)(implicit s: Session): Long =
+		DerivativeQuestionAnswers.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
 
-	def create(question: DerivativeQuestion, rawStr: String, mathML: MathMLElem, synched: Boolean) = {
-		val correct = MathML.checkEq("x", question.mathML.d("x"), mathML)
-		val answer = DerivativeQuestionAnswer(question, nextId, rawStr, mathML, synched, correct)
-		derivativeQuestionAnswers.getOrElseUpdate(question.id, LinkedHashMap()).put(answer.id, answer)
-		answer
-	}
+	private def correct(question: DerivativeQuestion, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
 
-	def read(qid: Long) = derivativeQuestionAnswers.get(qid).map(_.values.toList)
-	
-	def read(qid: Long, aid: Long) = derivativeQuestionAnswers.get(qid).flatMap(_.get(aid))
-	
-	def delete(qid: Long) = derivativeQuestionAnswers.remove(qid)
+	def read(qid: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(_.questionId === qid).list
 
+	def read(qid: Long, aid: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(v => v.questionId === qid && v.id === aid).firstOption
+
+	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(_.id === id).delete
+}
+
+class DerivativeQuestionAnswers extends Table[DerivativeQuestionAnswer]("derivative_question_answers") {
+	implicit val mathMLTypeMapper = MappedTypeMapper.base[MathMLElem, String](
+		{ mathML => mathML.toString },
+		{ string => MathML(string).getOrElse(Math(`0`)) })
+
+	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+	def questionId = column[Long]("question_id", O.NotNull)
+	def mathML = column[MathMLElem]("mathml", O.NotNull)
+	def rawStr = column[String]("rawstr", O.NotNull)
+	def synched = column[Boolean]("synched", O.NotNull)
+	def correct = column[Boolean]("correct", O.NotNull)
+	def * = id ~ questionId ~ mathML ~ rawStr ~ synched ~ correct <> (DerivativeQuestionAnswer, DerivativeQuestionAnswer.unapply _)
+
+	def autoInc = questionId ~ mathML ~ rawStr ~ synched ~ correct returning id
+
+	def questionFK = foreignKey("question_fk", questionId, new DerivativeQuestions)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

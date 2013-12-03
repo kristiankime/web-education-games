@@ -20,7 +20,7 @@
             <li>
             	<script type="math/mml"> @Html(answer.mathML.toString) </script>
             	this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
-                <a href=@routes.Application.selfQuizAnswer(answer.question.id, answer.id)> details </a>
+                <a href=@routes.Application.selfQuizAnswer(answer.questionId, answer.id)> details </a>
             </li>
         }
     </ul>

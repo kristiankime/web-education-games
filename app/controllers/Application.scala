@@ -79,7 +79,7 @@ object Application extends Controller {
 	// ======== Self Quiz Answers ======== 
 	def selfQuizAnswers(id: Long) = DBAction { implicit dbSessionRequest =>
 		// TODO can be null
-		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id).getOrElse(List())))
+		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id)))
 	}
 
 	def selfQuizAnswer(qid: Long, aid: Long) = DBAction { implicit dbSessionRequest =>
@@ -99,18 +99,11 @@ object Application extends Controller {
 				val rawStr = answerForm._3
 				val synched = answerForm._4
 
-				val answer = DerivativeQuestionAnswers.create(question, rawStr, mathML, synched);
-				Redirect(routes.Application.selfQuizAnswer(question.id, answer.id))
+				val answerId = DerivativeQuestionAnswers.create(question, rawStr, mathML, synched);
+				Redirect(routes.Application.selfQuizAnswer(question.id, answerId))
 			})
 	}
 
-	def definingQueriesController = Action {
-		DB.withSession { implicit session: Session =>
-			Ok("")
-//			val names = Query(new Cocktails).map(_.name).list
-//			Ok(views.html.definingQueries(names))
-		}
-	}
 }
 
 object EquationHTML {

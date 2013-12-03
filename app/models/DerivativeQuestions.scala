@@ -32,6 +32,7 @@ class DerivativeQuestions extends Table[DerivativeQuestion]("derivative_question
 	def rawStr = column[String]("rawstr", O.NotNull)
 	def synched = column[Boolean]("synched", O.NotNull)
 	def * = id ~ mathML ~ rawStr ~ synched <> (DerivativeQuestion, DerivativeQuestion.unapply _)
+	
 	def autoInc = mathML ~ rawStr ~ synched returning id
 }
 

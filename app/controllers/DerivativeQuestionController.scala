@@ -19,7 +19,7 @@ import scala.slick.session.Session
 import play.api.Logger
 import play.api.Play.current
 
-object DerivativeQuestion extends Controller {
+object DerivativeQuestionController extends Controller {
 
 	def selfQuiz = selfQuizQuestions
 
@@ -36,7 +36,7 @@ object DerivativeQuestion extends Controller {
 			errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestionsModel.all())),
 			form => {
 				MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
-				Redirect(routes.DerivativeQuestion.selfQuizQuestions)
+				Redirect(routes.DerivativeQuestionController.selfQuizQuestions)
 			})
 	}
 

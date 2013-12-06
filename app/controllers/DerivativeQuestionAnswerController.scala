@@ -19,7 +19,7 @@ import scala.slick.session.Session
 import play.api.Logger
 import play.api.Play.current
 
-object DerivativeQuestionAnswer extends Controller {
+object DerivativeQuestionAnswerController extends Controller {
 
 	def selfQuizAnswers(id: Long) = DBAction { implicit dbSessionRequest =>
 		// TODO can be null
@@ -36,15 +36,14 @@ object DerivativeQuestionAnswer extends Controller {
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
 			errors => {
 				BadRequest(views.html.self_quiz_answer(DerivativeQuestionsModel.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
-			},
-			answerForm => {
+			}, 			answerForm => {
 				val question = DerivativeQuestionsModel.read(answerForm._1).get // TODO check for no question here
 				val mathML = MathML(answerForm._2).get // TODO can fail here
 				val rawStr = answerForm._3
 				val synched = answerForm._4
 
 				val answerId = DerivativeQuestionAnswersModel.create(question, rawStr, mathML, synched);
-				Redirect(routes.DerivativeQuestionAnswer.selfQuizAnswer(question.id, answerId))
+				Redirect(routes.DerivativeQuestionAnswerController.selfQuizAnswer(question.id, answerId))
 			})
 	}
 

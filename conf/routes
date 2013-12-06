@@ -10,21 +10,21 @@ GET    /*path/                               controllers.Application.untrail(pat
 GET    /                                     controllers.Application.index
 
 # Equation pages
-GET    /equation                             controllers.Equation.equations
-POST   /equation                             controllers.Equation.newEquation
-POST   /equation/:id/delete                  controllers.Equation.deleteEquation(id: Long)
+GET    /equation                             controllers.EquationController.equations
+POST   /equation                             controllers.EquationController.newEquation
+POST   /equation/:id/delete                  controllers.EquationController.deleteEquation(id: Long)
 
 # Derivative question pages
-GET    /selfquiz                             controllers.DerivativeQuestion.selfQuiz
-GET    /selfquiz/question                    controllers.DerivativeQuestion.selfQuizQuestions
-GET    /selfquiz/question/:qid               controllers.DerivativeQuestion.selfQuizQuestion(qid: Long)
-POST   /selfquiz/question                    controllers.DerivativeQuestion.newSelfQuizQuestion
-POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestion.deleteSelfQuizQuestion(qid: Long) 
+GET    /selfquiz                             controllers.DerivativeQuestionController.selfQuiz
+GET    /selfquiz/question                    controllers.DerivativeQuestionController.selfQuizQuestions
+GET    /selfquiz/question/:qid               controllers.DerivativeQuestionController.selfQuizQuestion(qid: Long)
+POST   /selfquiz/question                    controllers.DerivativeQuestionController.newSelfQuizQuestion
+POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestionController.deleteSelfQuizQuestion(qid: Long) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestionAnswer.selfQuizAnswers(qid: Long)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswer.selfQuizAnswer(qid: Long, aid : Long)
-POST   /selfquiz/question/answer/            controllers.DerivativeQuestionAnswer.answerSelfQuizQuestion
+GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestionAnswerController.selfQuizAnswers(qid: Long)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswerController.selfQuizAnswer(qid: Long, aid : Long)
+POST   /selfquiz/question/answer/            controllers.DerivativeQuestionAnswerController.answerSelfQuizQuestion
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                         controllers.Assets.at(path="/public", file)

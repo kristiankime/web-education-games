@@ -19,9 +19,9 @@
             <li>
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
                 
-                <a href=@routes.DerivativeQuestion.selfQuizQuestion(derivativeQ.id)> answer </a>
+                <a href=@routes.DerivativeQuestionController.selfQuizQuestion(derivativeQ.id)> answer </a>
                 
-                @form(routes.DerivativeQuestion.deleteSelfQuizQuestion(derivativeQ.id)) {
+                @form(routes.DerivativeQuestionController.deleteSelfQuizQuestion(derivativeQ.id)) {
                     <input type="submit" value="Delete">
                 }
             </li>
@@ -36,7 +36,7 @@
 		@mathml_editor("QUESTION")
 	</p>
 
-    @form(routes.DerivativeQuestion.newSelfQuizQuestion, 'id -> "derivativeqForm" ) {
+    @form(routes.DerivativeQuestionController.newSelfQuizQuestion, 'id -> "derivativeqForm" ) {
     	<input type="hidden" name="@DerivativeQuestionHTML.mathML" id="derivativeQuestionMathML">
     	<input type="hidden" name="@DerivativeQuestionHTML.rawStr" id="derivativeQuestionRawStr">
     	<input type="hidden" name="@DerivativeQuestionHTML.current" id="derivativeQuestionCurrent">

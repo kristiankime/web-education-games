@@ -1,0 +1,25 @@
+@(questionSet: Option[DerivativeQuestionSet], derivativeQs: List[DerivativeQuestion])
+
+@import helper._
+@import controllers.DerivativeQuestionHTML
+ 
+@main("List of Self Quiz Questions") {
+    
+    <h2>Welcome to the EdTech Differentition Problem Set editor</h1>
+    
+    <p>
+    	Select the equations you'd like to see in the problem set.
+    </p>
+    
+    
+    <h4>@derivativeQs.size Derivative Question(s)</h4>
+    
+    <ul>
+        @derivativeQs.map { derivativeQ =>
+            <li>
+            	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
+            </li>
+        }
+    </ul>
+    
+}

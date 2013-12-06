@@ -19,7 +19,7 @@ import scala.slick.session.Session
 import play.api.Logger
 import play.api.Play.current
 
-object Equation extends Controller {
+object EquationController extends Controller {
 
 	def equations = DBAction { implicit dbSessionRequest =>
 		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
@@ -30,7 +30,7 @@ object Equation extends Controller {
 			errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
 			equation => {
 				EquationsModel.create(equation)
-				Redirect(routes.Equation.equations)
+				Redirect(routes.EquationController.equations)
 			})
 	}
 

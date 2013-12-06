@@ -19,8 +19,10 @@ object DerivativeQuestionSetsModel {
 	def all()(implicit s: Session) = Query(DerivativeQuestionSets).list
 
 	def create(name: String)(implicit s: Session): Long = DerivativeQuestionSets.autoInc.insert(name)
-	
+
 	def read(id: Long)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === id).firstOption
+	
+	def update(set: DerivativeQuestionSet)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === set.id).update(set)
 
 	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === id).delete
 }

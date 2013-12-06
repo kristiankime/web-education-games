@@ -22,9 +22,9 @@ POST   /selfquiz/question                    controllers.DerivativeQuestion.newS
 POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestion.deleteSelfQuizQuestion(qid: Long) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestion.selfQuizAnswers(qid: Long)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestion.selfQuizAnswer(qid: Long, aid : Long)
-POST   /selfquiz/question/answer/            controllers.DerivativeQuestion.answerSelfQuizQuestion
+GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestionAnswer.selfQuizAnswers(qid: Long)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswer.selfQuizAnswer(qid: Long, aid : Long)
+POST   /selfquiz/question/answer/            controllers.DerivativeQuestionAnswer.answerSelfQuizQuestion
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                         controllers.Assets.at(path="/public", file)

@@ -28,7 +28,7 @@
 	</div>
 		
 	<div>
-	@form(routes.DerivativeQuestion.answerSelfQuizQuestion, 'id -> "answerForm" ) {
+	@form(routes.DerivativeQuestionAnswer.answerSelfQuizQuestion, 'id -> "answerForm" ) {
 		<input type="hidden" name="@DerivativeQuestionAnswerHTML.questionId" value="@question.id">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.rawStr" id="answerRawStr">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.mathML" id="answerMathML">

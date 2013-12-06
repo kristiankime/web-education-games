@@ -20,8 +20,9 @@ object MathML {
 	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
+		
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
-
+		
 		matches.reduce((_, _) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match
@@ -35,7 +36,7 @@ object MathML {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val eval1 = checkEval(variableName, eq1, eq2, (-50 to 50).map(_.doubleValue))
+			val eval1 = checkEval(variableName, eq1, eq2, (-5 to 5).map(_.doubleValue))
 
 			val eval = if (eval1 == Inconclusive) {
 				val ran = new Random(0L)
@@ -65,11 +66,7 @@ object MathML {
 
 	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
 	private def doubleCloseEnough(x: Double, y: Double) = {
-		if (x.isNaN || y.isNaN) Inconclusive
-		else if (x.isNegInfinity && y.isNegInfinity) Inconclusive
-		else if (x.isPosInfinity && y.isPosInfinity) Inconclusive
-		else if (x.isNegInfinity && y.isPosInfinity) No
-		else if (x.isPosInfinity && y.isNegInfinity) No
+		if (x.isNaN || y.isNaN || x.isInfinite || y.isInfinite ) Inconclusive
 		else if ((x - accuracy) <= y && (x + accuracy >= y)) Yes
 		else No
 	}

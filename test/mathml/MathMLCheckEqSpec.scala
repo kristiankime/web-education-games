@@ -82,6 +82,12 @@ class MathMLCheckEqSpec extends Specification {
 			val g = x / x
 			(f ?= g) must beTrue
 		}
+		
+		"e ^ x' = e ^ x" in {
+			val f = (e ^ x) dx
+			val g = e ^ x
+			(f ?= g) must beTrue
+		}
 	}
 
 }

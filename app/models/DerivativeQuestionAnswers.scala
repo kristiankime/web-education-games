@@ -9,8 +9,6 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import scala.slick.lifted.ForeignKeyAction
 
-case class QuestionAndAnswer(q: DerivativeQuestion, a: DerivativeQuestionAnswer)
-
 case class DerivativeQuestionAnswer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object DerivativeQuestionAnswers {

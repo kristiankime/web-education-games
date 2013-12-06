@@ -1,0 +1,25 @@
+@(questonsSets: List[DerivativeQuestionSet])
+
+@import helper._
+@import controllers.DerivativeQuestionHTML
+ 
+@main("List of Self Quiz Questions") {
+    
+    <h2>Welcome to the EdTech Differentition Problem Set list</h1>
+    
+    <p>
+    	Select the equations you'd like to see in the problem set.
+    </p>
+    
+    
+    <h4>@questonsSets.size Derivative Set(s)</h4>
+    
+    <ul>
+        @questonsSets.map { set =>
+            <li>
+            	@set.name
+            </li>
+        }
+    </ul>
+    
+}

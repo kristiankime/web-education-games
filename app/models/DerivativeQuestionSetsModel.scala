@@ -21,10 +21,10 @@ object DerivativeQuestionSetsModel {
 	def create(name: String)(implicit s: Session): Long = DerivativeQuestionSets.autoInc.insert(name)
 
 	def read(id: Long)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === id).firstOption
-	
-	def update(set: DerivativeQuestionSet)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === set.id).update(set)
 
-	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === id).delete
+	def update(set: DerivativeQuestionSet)(implicit s: Session) = DerivativeQuestionSets.where(_.id === set.id).update(set)
+
+	def delete(id: Long)(implicit s: Session) = DerivativeQuestionSets.where(_.id === id).delete
 }
 
 class DerivativeQuestionSetsModel extends Table[DerivativeQuestionSet]("derivative_question_sets") {
@@ -34,5 +34,3 @@ class DerivativeQuestionSetsModel extends Table[DerivativeQuestionSet]("derivati
 
 	def autoInc = name returning id
 }
-
-

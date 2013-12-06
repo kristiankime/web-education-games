@@ -16,6 +16,14 @@ object DerivativeQuestionSetLinksModel {
 
 	def create(questionId: Long, questionSetId: Long)(implicit s: Session) = DerivativeQuestionSetLinks.insert(questionId, questionSetId)
 
+	def create(questionSetId: Long, questionIds: List[Long])(implicit s: Session) = DerivativeQuestionSetLinks.insertAll(questionIds.map((_, questionSetId)): _*)
+	
+	def update(questionSetId: Long, questionIds: List[Long])(implicit s: Session) = {
+		// LATER there may be a more efficient way then deleting all and then recreating
+		DerivativeQuestionSetLinks.where(_.questionSetId === questionSetId).delete
+		DerivativeQuestionSetLinks.insertAll(questionIds.map((_, questionSetId)): _*)
+	}
+
 	def delete(questionId: Long, questionSetId: Long)(implicit s: Session) = Query(DerivativeQuestionSetLinks).where(r => r.questionId === questionId && r.questionSetId === questionSetId).delete
 
 	def questions(questionSetId: Long)(implicit s: Session) = (for {
@@ -30,7 +38,7 @@ class DerivativeQuestionSetLinksModel extends Table[(Long, Long)]("derivative_qu
 	def * = questionId ~ questionSetId
 
 	def pk = primaryKey("derivative_question_set_links_pk", (questionId, questionSetId))
-	
+
 	def questionIdFK = foreignKey("derivative_question_set_links_question_fk", questionId, new DerivativeQuestionsModel)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionSetIdFK = foreignKey("derivative_question_set_links_question_set_fk", questionSetId, new DerivativeQuestionSetsModel)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

@@ -21,27 +21,47 @@ import play.api.Play.current
 
 object DerivativeQuestionSetController extends Controller {
 
+	def selfQuizQuestionSet(id: Long) = DBAction { implicit dbSessionRequest =>
+		Ok(views.html.self_quiz_question_set(DerivativeQuestionSetsModel.read(id), DerivativeQuestionsModel.all))
+	}
+
+	def selfQuizQuestionSets = DBAction { implicit dbSessionRequest =>
+		Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
+	}
+
 	def update = DBAction { implicit dbSessionRequest =>
 		QuestionSetEditHTML.form.bindFromRequest.fold(
-			errors => Ok("TODO"),
+			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
-				val foo = form._1;
-				val foo2 = form._2;
-				
-//				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2))
-				
-//				MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
-//				Redirect(routes.DerivativeQuestion.selfQuizQuestions)
-				Ok("TODO")
+				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2))
+				DerivativeQuestionSetLinksModel.update(form._1, form._3)
+				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
+			})
+	}
+
+	def create = DBAction { implicit dbSessionRequest =>
+		QuestionSetCreateHTML.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
+			form => {
+				val id = DerivativeQuestionSetsModel.create(form._1)
+				DerivativeQuestionSetLinksModel.update(id, form._2)
+				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
 			})
 	}
 
 }
 
-object QuestionSetEditHTML {
-	val id = "id"
+trait QuestionSetHTML {
 	val name = "name"
 	val questionId = "questionId"
 	def questionId(i: Int) = "questionId[" + i + "]"
-	val form = Form(tuple(id -> longNumber, name -> nonEmptyText, questionId -> list(boolean)))
+}
+
+object QuestionSetEditHTML extends QuestionSetHTML {
+	val id = "id"
+	val form = Form(tuple(id -> longNumber, name -> nonEmptyText, questionId -> list(longNumber)))
+}
+
+object QuestionSetCreateHTML extends QuestionSetHTML {
+	val form = Form(tuple(name -> nonEmptyText, questionId -> list(longNumber)))
 }

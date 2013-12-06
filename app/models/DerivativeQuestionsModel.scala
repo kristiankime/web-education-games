@@ -10,8 +10,8 @@ import play.api.db.slick.DB
 
 case class DerivativeQuestion(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
 
-object DerivativeQuestions {
-	val DerivativeQuestions = new DerivativeQuestions
+object DerivativeQuestionsModel {
+	val DerivativeQuestions = new DerivativeQuestionsModel
 
 	def all()(implicit s: Session) = Query(DerivativeQuestions).list
 
@@ -22,7 +22,7 @@ object DerivativeQuestions {
 	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestions).where(_.id === id).delete
 }
 
-class DerivativeQuestions extends Table[DerivativeQuestion]("derivative_questions") {
+class DerivativeQuestionsModel extends Table[DerivativeQuestion]("derivative_questions") {
 	implicit val mathMLTypeMapper = MappedTypeMapper.base[MathMLElem, String](
 		{ mathML => mathML.toString },
 		{ string => MathML(string).getOrElse(Math(`0`)) })

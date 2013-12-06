@@ -12,7 +12,7 @@
             <li>
             	<script type="math/mml"> @Html(equation.equation) </script>
                 
-                @form(routes.Application.deleteEquation(equation.id)) {
+                @form(routes.Equation.deleteEquation(equation.id)) {
                     <input type="submit" value="Delete">
                 }
             </li>
@@ -31,7 +31,7 @@
 		<div id="MathOutput">$${}$$</div>
 	</div>
     
-    @form(routes.Application.newEquation, 'id -> "equationForm" ) {
+    @form(routes.Equation.newEquation, 'id -> "equationForm" ) {
     	<input type="hidden" name="@EQ.equation" id="equationMathML">
     	<input type="button" value="Save Equation" onclick="equationFormSubmit()">
     }

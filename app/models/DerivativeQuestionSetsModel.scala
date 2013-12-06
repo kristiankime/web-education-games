@@ -10,11 +10,11 @@ import play.api.db.slick.DB
 import scala.slick.lifted.ForeignKeyAction
 
 case class DerivativeQuestionSet(id: Long, name: String) {
-	def questions(implicit s: Session) = DerivativeQuestionSetLinks.questions(id)
+	def questions(implicit s: Session) = DerivativeQuestionSetLinksModel.questions(id)
 }
 
-object DerivativeQuestionSets {
-	val DerivativeQuestionSets = new DerivativeQuestionSets
+object DerivativeQuestionSetsModel {
+	val DerivativeQuestionSets = new DerivativeQuestionSetsModel
 
 	def all()(implicit s: Session) = Query(DerivativeQuestionSets).list
 
@@ -25,7 +25,7 @@ object DerivativeQuestionSets {
 	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === id).delete
 }
 
-class DerivativeQuestionSets extends Table[DerivativeQuestionSet]("derivative_question_sets") {
+class DerivativeQuestionSetsModel extends Table[DerivativeQuestionSet]("derivative_question_sets") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def * = id ~ name <> (DerivativeQuestionSet, DerivativeQuestionSet.unapply _)

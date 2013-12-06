@@ -10,9 +10,9 @@ GET    /*path/                               controllers.Application.untrail(pat
 GET    /                                     controllers.Application.index
 
 # Equation pages
-GET    /equation                             controllers.Application.equations
-POST   /equation                             controllers.Application.newEquation
-POST   /equation/:id/delete                  controllers.Application.deleteEquation(id: Long)
+GET    /equation                             controllers.Equation.equations
+POST   /equation                             controllers.Equation.newEquation
+POST   /equation/:id/delete                  controllers.Equation.deleteEquation(id: Long)
 
 # Derivative question pages
 GET    /selfquiz                             controllers.Application.selfQuiz

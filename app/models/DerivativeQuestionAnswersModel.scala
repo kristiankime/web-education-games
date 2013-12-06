@@ -11,8 +11,8 @@ import scala.slick.lifted.ForeignKeyAction
 
 case class DerivativeQuestionAnswer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
-object DerivativeQuestionAnswers {
-	val DerivativeQuestionAnswers = new DerivativeQuestionAnswers
+object DerivativeQuestionAnswersModel {
+	val DerivativeQuestionAnswers = new DerivativeQuestionAnswersModel
 
 	def all()(implicit s: Session) = Query(DerivativeQuestionAnswers).list
 
@@ -28,7 +28,7 @@ object DerivativeQuestionAnswers {
 	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(_.id === id).delete
 }
 
-class DerivativeQuestionAnswers extends Table[DerivativeQuestionAnswer]("derivative_question_answers") {
+class DerivativeQuestionAnswersModel extends Table[DerivativeQuestionAnswer]("derivative_question_answers") {
 	implicit val mathMLTypeMapper = MappedTypeMapper.base[MathMLElem, String](
 		{ mathML => mathML.toString },
 		{ string => MathML(string).getOrElse(Math(`0`)) })
@@ -43,5 +43,5 @@ class DerivativeQuestionAnswers extends Table[DerivativeQuestionAnswer]("derivat
 
 	def autoInc = questionId ~ mathML ~ rawStr ~ synched ~ correct returning id
 
-	def questionFK = foreignKey("question_fk", questionId, new DerivativeQuestions)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionFK = foreignKey("question_fk", questionId, new DerivativeQuestionsModel)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

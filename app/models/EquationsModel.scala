@@ -6,18 +6,17 @@ import play.api.db.slick.DB
 
 case class Equation(id: Long, equation: String)
 
-object Equations {
-	val Equations = new Equations
+object EquationsModel {
+	val Equations = new EquationsModel
 
 	def all()(implicit s: Session) = Query(Equations).list
 
 	def create(equation: String)(implicit s:Session): Long = Equations.autoInc.insert(equation)
 	
 	def delete(id: Long)(implicit s: Session) = Equations.where(_.id === id).delete
-
 }
 
-class Equations extends Table[Equation]("equations") {
+class EquationsModel extends Table[Equation]("equations") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def equation = column[String]("equation", O.NotNull)
 	def * = id ~ equation <> (Equation, Equation.unapply _)

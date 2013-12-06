@@ -32,83 +32,59 @@ object Application extends Controller {
 		Ok(views.html.index())
 	}
 
-	// ======== Equations ======== 
-	def equations = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.equations(Equations.all(), EquationHTML.form))
-	}
-
-	def newEquation = DBAction { implicit dbSessionRequest =>
-		EquationHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.equations(Equations.all(), errors)),
-			equation => {
-				Equations.create(equation)
-				Redirect(routes.Application.equations)
-			})
-	}
-
-	def deleteEquation(id: Long) = DBAction { implicit dbSessionRequest =>
-		Equations.delete(id)
-		Ok(views.html.equations(Equations.all(), EquationHTML.form))
-	}
-
 	// ======== Self Quiz Questions ======== 
 	def selfQuiz = selfQuizQuestions
 
 	def selfQuizQuestions = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_questions(DerivativeQuestions.all()))
+		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
 	}
 
 	def selfQuizQuestion(id: Long) = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_answer(DerivativeQuestions.read(id).get, None)) // TODO can be null
+		Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None)) // TODO can be null
 	}
 
 	def newSelfQuizQuestion = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestions.all())),
+			errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestionsModel.all())),
 			form => {
-				MathML(form._1).foreach(DerivativeQuestions.create(_, form._2, form._3))
+				MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
 				Redirect(routes.Application.selfQuizQuestions)
 			})
 	}
 
 	def deleteSelfQuizQuestion(id: Long) = DBAction { implicit dbSessionRequest =>
-		DerivativeQuestions.delete(id);
-		Ok(views.html.self_quiz_questions(DerivativeQuestions.all()))
+		DerivativeQuestionsModel.delete(id);
+		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
 	}
 
 	// ======== Self Quiz Answers ======== 
 	def selfQuizAnswers(id: Long) = DBAction { implicit dbSessionRequest =>
 		// TODO can be null
-		Ok(views.html.self_quiz_question_answers(DerivativeQuestions.read(id).get, DerivativeQuestionAnswers.read(id)))
+		Ok(views.html.self_quiz_question_answers(DerivativeQuestionsModel.read(id).get, DerivativeQuestionAnswersModel.read(id)))
 	}
 
 	def selfQuizAnswer(qid: Long, aid: Long) = DBAction { implicit dbSessionRequest =>
-		val question = DerivativeQuestions.read(qid).get // TODO can be null
-		val answer = DerivativeQuestionAnswers.read(qid, aid)
+		val question = DerivativeQuestionsModel.read(qid).get // TODO can be null
+		val answer = DerivativeQuestionAnswersModel.read(qid, aid)
 		Ok(views.html.self_quiz_answer(question, answer))
 	}
 
 	def answerSelfQuizQuestion = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
 			errors => {
-				BadRequest(views.html.self_quiz_answer(DerivativeQuestions.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
+				BadRequest(views.html.self_quiz_answer(DerivativeQuestionsModel.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
 			},
 			answerForm => {
-				val question = DerivativeQuestions.read(answerForm._1).get // TODO check for no question here
+				val question = DerivativeQuestionsModel.read(answerForm._1).get // TODO check for no question here
 				val mathML = MathML(answerForm._2).get // TODO can fail here
 				val rawStr = answerForm._3
 				val synched = answerForm._4
 
-				val answerId = DerivativeQuestionAnswers.create(question, rawStr, mathML, synched);
+				val answerId = DerivativeQuestionAnswersModel.create(question, rawStr, mathML, synched);
 				Redirect(routes.Application.selfQuizAnswer(question.id, answerId))
 			})
 	}
 
-}
-
-object EquationHTML {
-	val equation = "equation"
-	val form = Form(equation -> nonEmptyText)
 }
 
 object DerivativeQuestionHTML {

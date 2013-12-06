@@ -15,16 +15,16 @@ POST   /equation                             controllers.Equation.newEquation
 POST   /equation/:id/delete                  controllers.Equation.deleteEquation(id: Long)
 
 # Derivative question pages
-GET    /selfquiz                             controllers.Application.selfQuiz
-GET    /selfquiz/question                    controllers.Application.selfQuizQuestions
-GET    /selfquiz/question/:qid               controllers.Application.selfQuizQuestion(qid: Long)
-POST   /selfquiz/question                    controllers.Application.newSelfQuizQuestion
-POST   /selfquiz/question/:qid/delete        controllers.Application.deleteSelfQuizQuestion(qid: Long) 
+GET    /selfquiz                             controllers.DerivativeQuestion.selfQuiz
+GET    /selfquiz/question                    controllers.DerivativeQuestion.selfQuizQuestions
+GET    /selfquiz/question/:qid               controllers.DerivativeQuestion.selfQuizQuestion(qid: Long)
+POST   /selfquiz/question                    controllers.DerivativeQuestion.newSelfQuizQuestion
+POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestion.deleteSelfQuizQuestion(qid: Long) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.Application.selfQuizAnswers(qid: Long)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.Application.selfQuizAnswer(qid: Long, aid : Long)
-POST   /selfquiz/question/answer/            controllers.Application.answerSelfQuizQuestion
+GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestion.selfQuizAnswers(qid: Long)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestion.selfQuizAnswer(qid: Long, aid : Long)
+POST   /selfquiz/question/answer/            controllers.DerivativeQuestion.answerSelfQuizQuestion
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                         controllers.Assets.at(path="/public", file)

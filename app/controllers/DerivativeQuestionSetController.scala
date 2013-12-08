@@ -29,7 +29,7 @@ object DerivativeQuestionSetController extends Controller {
 		Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
 	}
 
-	def update = DBAction { implicit dbSessionRequest =>
+	def updateSelfQuizQuestionSet = DBAction { implicit dbSessionRequest =>
 		QuestionSetEditHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
@@ -39,7 +39,7 @@ object DerivativeQuestionSetController extends Controller {
 			})
 	}
 
-	def create = DBAction { implicit dbSessionRequest =>
+	def newSelfQuizQuestionSet = DBAction { implicit dbSessionRequest =>
 		QuestionSetCreateHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
@@ -51,17 +51,19 @@ object DerivativeQuestionSetController extends Controller {
 
 }
 
-trait QuestionSetHTML {
+object QuestionSetHTML {
+	val id = "id"
 	val name = "name"
 	val questionId = "questionId"
 	def questionId(i: Int) = "questionId[" + i + "]"
 }
 
-object QuestionSetEditHTML extends QuestionSetHTML {
-	val id = "id"
+object QuestionSetEditHTML {
+	import QuestionSetHTML._
 	val form = Form(tuple(id -> longNumber, name -> nonEmptyText, questionId -> list(longNumber)))
 }
 
-object QuestionSetCreateHTML extends QuestionSetHTML {
+object QuestionSetCreateHTML {
+	import QuestionSetHTML._
 	val form = Form(tuple(name -> nonEmptyText, questionId -> list(longNumber)))
 }

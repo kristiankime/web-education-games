@@ -1,7 +1,7 @@
 @(questionSet: Option[DerivativeQuestionSet], derivativeQs: List[DerivativeQuestion])
 
 @import helper._
-@import controllers.DerivativeQuestionHTML
+@import controllers.QuestionSetHTML
  
 @main("List of Self Quiz Questions") {
     
@@ -12,14 +12,25 @@
     </p>
     
     
-    <h4>@derivativeQs.size Derivative Question(s)</h4>
+    @form(action = 
+    	if(questionSet.isEmpty) { routes.DerivativeQuestionSetController.newSelfQuizQuestionSet }
+    	else { routes.DerivativeQuestionSetController.updateSelfQuizQuestionSet } ) {
+		
+		@if(questionSet.nonEmpty){ <input type="hidden" name="@QuestionSetHTML.id" value="@questionSet.get.id"> }
     
-    <ul>
-        @derivativeQs.map { derivativeQ =>
-            <li>
-            	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
-            </li>
-        }
-    </ul>
+    	<input type="text" name="@QuestionSetHTML.name" value="@questionSet.map(_.name).getOrElse("question set name")"> <br>
+    
+	    <h4>Select which question(s) you want in your quiz</h4> <br>
+	    
+	    <ul>
+	    	@derivativeQs.zip(0 until derivativeQs.size).map{ q =>
+	            <li>
+	            	<script type="math/mml"> @Html(q._1.mathML.toString) </script>
+	            	<input type="checkbox" name="@QuestionSetHTML.questionId(q._2)" value="@q._1.id">
+	            </li>
+	        }
+	    </ul>
+	    <input type="submit" value="Submit">
+    }
     
 }

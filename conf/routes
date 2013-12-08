@@ -27,8 +27,10 @@ GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswe
 POST   /selfquiz/question/answer/            controllers.DerivativeQuestionAnswerController.answerSelfQuizQuestion
 
 # Derivative queston set pages
-GET    /selfquiz/question/set                controllers.DerivativeQuestionSetController.selfQuizQuestionSets
-GET    /selfquiz/question/set/:sid           controllers.DerivativeQuestionSetController.selfQuizQuestionSet(sid: Long)
+GET    /selfquiz/questionset                controllers.DerivativeQuestionSetController.selfQuizQuestionSets
+GET    /selfquiz/questionset/:sid           controllers.DerivativeQuestionSetController.selfQuizQuestionSet(sid: Long)
+POST   /selfquiz/questionset/create         controllers.DerivativeQuestionSetController.newSelfQuizQuestionSet
+POST   /selfquiz/questionset/update         controllers.DerivativeQuestionSetController.updateSelfQuizQuestionSet
 
 
 # Map static resources from the /public folder to the /assets URL path

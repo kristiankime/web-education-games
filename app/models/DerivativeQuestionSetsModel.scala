@@ -14,7 +14,7 @@ case class DerivativeQuestionSet(id: Long, name: String) {
 }
 
 object DerivativeQuestionSetsModel {
-	val DerivativeQuestionSets = new DerivativeQuestionSetsModel
+	val DerivativeQuestionSets = new DerivativeQuestionSetsTable
 
 	def all()(implicit s: Session) = Query(DerivativeQuestionSets).list
 
@@ -27,7 +27,7 @@ object DerivativeQuestionSetsModel {
 	def delete(id: Long)(implicit s: Session) = DerivativeQuestionSets.where(_.id === id).delete
 }
 
-class DerivativeQuestionSetsModel extends Table[DerivativeQuestionSet]("derivative_question_sets") {
+class DerivativeQuestionSetsTable extends Table[DerivativeQuestionSet]("derivative_question_sets") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def * = id ~ name <> (DerivativeQuestionSet, DerivativeQuestionSet.unapply _)

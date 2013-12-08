@@ -12,23 +12,23 @@ import scala.slick.lifted.ForeignKeyAction
 case class DerivativeQuestionAnswer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object DerivativeQuestionAnswersModel {
-	val DerivativeQuestionAnswers = new DerivativeQuestionAnswersModel
+	val table = new DerivativeQuestionAnswersTable
 
-	def all()(implicit s: Session) = Query(DerivativeQuestionAnswers).list
+	def all()(implicit s: Session) = Query(table).list
 
 	def create(question: DerivativeQuestion, rawStr: String, mathML: MathMLElem, synched: Boolean)(implicit s: Session): Long =
-		DerivativeQuestionAnswers.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
+		table.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
 
 	private def correct(question: DerivativeQuestion, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
 
-	def read(qid: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(_.questionId === qid).list
+	def read(qid: Long)(implicit s: Session) = Query(table).where(_.questionId === qid).list
 
-	def read(qid: Long, aid: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(v => v.questionId === qid && v.id === aid).firstOption
+	def read(qid: Long, aid: Long)(implicit s: Session) = Query(table).where(v => v.questionId === qid && v.id === aid).firstOption
 
-	def delete(id: Long)(implicit s: Session) = Query(DerivativeQuestionAnswers).where(_.id === id).delete
+	def delete(id: Long)(implicit s: Session) = Query(table).where(_.id === id).delete
 }
 
-class DerivativeQuestionAnswersModel extends Table[DerivativeQuestionAnswer]("derivative_question_answers") {
+class DerivativeQuestionAnswersTable extends Table[DerivativeQuestionAnswer]("derivative_question_answers") {
 	implicit val mathMLTypeMapper = MappedTypeMapper.base[MathMLElem, String](
 		{ mathML => mathML.toString },
 		{ string => MathML(string).getOrElse(Math(`0`)) })
@@ -43,5 +43,5 @@ class DerivativeQuestionAnswersModel extends Table[DerivativeQuestionAnswer]("de
 
 	def autoInc = questionId ~ mathML ~ rawStr ~ synched ~ correct returning id
 
-	def questionFK = foreignKey("question_fk", questionId, new DerivativeQuestionsModel)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionFK = foreignKey("question_fk", questionId, new DerivativeQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

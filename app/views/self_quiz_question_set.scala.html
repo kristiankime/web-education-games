@@ -26,7 +26,7 @@
 	    	@derivativeQs.zip(0 until derivativeQs.size).map{ q =>
 	            <li>
 	            	<script type="math/mml"> @Html(q._1.mathML.toString) </script>
-	            	<input type="checkbox" name="@QuestionSetHTML.questionId(q._2)" value="@q._1.id">
+	            	<input type="checkbox" name="@QuestionSetHTML.questionId(q._2)" value="@q._1.id" @if(questionSet.map(_.questionIds).getOrElse(List()).contains(q._1.id)){ checked }>
 	            </li>
 	        }
 	    </ul>

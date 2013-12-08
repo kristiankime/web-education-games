@@ -18,6 +18,8 @@ object DerivativeQuestionSetLinksModel {
 
 	def create(questionSetId: Long, questionIds: List[Long])(implicit s: Session) = table.insertAll(questionIds.map((_, questionSetId)): _*)
 	
+	def read(questionSetId: Long)(implicit s: Session) = Query(table).where(_.questionSetId === questionSetId).list.map(_._1)
+	
 	def update(questionSetId: Long, questionIds: List[Long])(implicit s: Session) = {
 		// LATER there may be a more efficient way then deleting all and then recreating
 		table.where(_.questionSetId === questionSetId).delete

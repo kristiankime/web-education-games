@@ -19,6 +19,8 @@ object DerivativeQuestionsModel {
 
 	def read(id: Long)(implicit s: Session) = Query(table).where(_.id === id).firstOption
 
+	def read(ids: List[Long])(implicit s: Session) = Query(table).where(_.id inSet ids).list
+	
 	def delete(id: Long)(implicit s: Session) = table.where(_.id === id).delete
 }
 

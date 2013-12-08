@@ -33,8 +33,8 @@ object DerivativeQuestionSetController extends Controller {
 		QuestionSetEditHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
-				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2))
-				DerivativeQuestionSetLinksModel.update(form._1, form._3)
+				val questions = DerivativeQuestionsModel.read(form._3)
+				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2, questions))
 				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
 			})
 	}
@@ -43,8 +43,7 @@ object DerivativeQuestionSetController extends Controller {
 		QuestionSetCreateHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
-				val id = DerivativeQuestionSetsModel.create(form._1)
-				DerivativeQuestionSetLinksModel.update(id, form._2)
+				val id = DerivativeQuestionSetsModel.create(form._1, form._2)
 				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
 			})
 	}

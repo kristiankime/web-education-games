@@ -14,17 +14,17 @@ case class DerivativeQuestionSet(id: Long, name: String) {
 }
 
 object DerivativeQuestionSetsModel {
-	val DerivativeQuestionSets = new DerivativeQuestionSetsTable
+	val table = new DerivativeQuestionSetsTable
 
-	def all()(implicit s: Session) = Query(DerivativeQuestionSets).list
+	def all()(implicit s: Session) = Query(table).list
 
-	def create(name: String)(implicit s: Session): Long = DerivativeQuestionSets.autoInc.insert(name)
+	def create(name: String)(implicit s: Session): Long = table.autoInc.insert(name)
 
-	def read(id: Long)(implicit s: Session) = Query(DerivativeQuestionSets).where(_.id === id).firstOption
+	def read(id: Long)(implicit s: Session) = Query(table).where(_.id === id).firstOption
 
-	def update(set: DerivativeQuestionSet)(implicit s: Session) = DerivativeQuestionSets.where(_.id === set.id).update(set)
+	def update(set: DerivativeQuestionSet)(implicit s: Session) = table.where(_.id === set.id).update(set)
 
-	def delete(id: Long)(implicit s: Session) = DerivativeQuestionSets.where(_.id === id).delete
+	def delete(id: Long)(implicit s: Session) = table.where(_.id === id).delete
 }
 
 class DerivativeQuestionSetsTable extends Table[DerivativeQuestionSet]("derivative_question_sets") {

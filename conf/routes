@@ -28,7 +28,8 @@ POST   /selfquiz/question/answer/            controllers.DerivativeQuestionAnswe
 
 # Derivative queston set pages
 GET    /selfquiz/questionset                controllers.DerivativeQuestionSetController.selfQuizQuestionSets
-GET    /selfquiz/questionset/:sid           controllers.DerivativeQuestionSetController.selfQuizQuestionSet(sid: Long)
+GET    /selfquiz/questionset/:sid           controllers.DerivativeQuestionSetController.selfQuizQuestionSetEdit(sid: Long)
+GET    /selfquiz/questionset/:sid/answer    controllers.DerivativeQuestionSetController.selfQuizQuestionSetAnswer(sid: Long)
 POST   /selfquiz/questionset/create         controllers.DerivativeQuestionSetController.newSelfQuizQuestionSet
 POST   /selfquiz/questionset/update         controllers.DerivativeQuestionSetController.updateSelfQuizQuestionSet
 

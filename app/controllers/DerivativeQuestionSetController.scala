@@ -21,13 +21,20 @@ import play.api.Play.current
 
 object DerivativeQuestionSetController extends Controller {
 
-	def selfQuizQuestionSet(id: Long) = DBAction { implicit dbSessionRequest =>
+	def selfQuizQuestionSetAnswer(id: Long) = DBAction { implicit dbSessionRequest =>
+		DerivativeQuestionSetsModel.readQuestion(id) match {
+			case Some(s) => Ok(views.html.self_quiz_question_set(s._1, s._2))
+			case None => Ok(views.html.self_quiz_question_set_create(DerivativeQuestionsModel.all))
+		}
+	}
+
+	def selfQuizQuestionSetEdit(id: Long) = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionSetsModel.read(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_update(s, DerivativeQuestionsModel.all))
 			case None => Ok(views.html.self_quiz_question_set_create(DerivativeQuestionsModel.all))
 		}
 	}
-		
+
 	def selfQuizQuestionSets = DBAction { implicit dbSessionRequest =>
 		Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
 	}

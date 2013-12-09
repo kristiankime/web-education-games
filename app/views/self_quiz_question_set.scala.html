@@ -1,0 +1,27 @@
+@(set: DerivativeQuestionSet, derivativeQs: List[DerivativeQuestion])
+
+@import helper._
+@import controllers.DerivativeQuestionHTML
+ 
+@main("List of Self Quiz Questions") {
+    
+    <h2>Welcome to the EdTech Differentition Self Quiz</h1>
+    
+    <p>
+    	You are viewing the set "@set.name" Pick one of the equations below to try figure out it's derivative.
+    </p>
+    
+    
+    <h4>@derivativeQs.size Derivative Question(s)</h4>
+    
+    <ul>
+        @derivativeQs.map { derivativeQ =>
+            <li>
+            	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
+                
+                <a href=@routes.DerivativeQuestionController.selfQuizQuestion(derivativeQ.id)> answer </a>
+            </li>
+        }
+    </ul>
+    
+}

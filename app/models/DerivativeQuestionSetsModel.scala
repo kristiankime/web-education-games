@@ -27,6 +27,14 @@ object DerivativeQuestionSetsModel {
 			(DerivativeQuestionSet(r.id, r.name), DerivativeQuestionSetLinksModel.read(r.id))
 		}
 	}
+	
+	def readQuestion(id: Long)(implicit s: Session) = {
+		Query(table).where(_.id === id).firstOption.map{r => 
+			val qids =  DerivativeQuestionSetLinksModel.read(r.id)
+			val qs = DerivativeQuestionsModel.read(qids)
+			(DerivativeQuestionSet(r.id, r.name), qs)
+		}
+	}
 
 	def update(set: DerivativeQuestionSet, questionIds: List[Long])(implicit s: Session) = {
 		table.where(_.id === set.id).update(set)

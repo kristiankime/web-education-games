@@ -1,0 +1,32 @@
+@(derivativeQs: List[DerivativeQuestion])
+
+@import helper._
+@import controllers.QuestionSetHTML
+ 
+@main("List of Self Quiz Questions") {
+    
+    <h2>Welcome to the EdTech Differentition Problem Set editor</h1>
+    
+    <p>
+    	Select the equations you'd like to see in the problem set.
+    </p>
+    
+    
+    @form(action = routes.DerivativeQuestionSetController.newSelfQuizQuestionSet) {
+
+    	<input type="text" name="@QuestionSetHTML.name" value="question set name"> <br>
+    
+	    <h4>Select which question(s) you want in your question set</h4> <br>
+	    
+	    <ul>
+	    	@derivativeQs.zip(0 until derivativeQs.size).map{ q =>
+	            <li>
+	            	<script type="math/mml"> @Html(q._1.mathML.toString) </script>
+	            	<input type="checkbox" name="@QuestionSetHTML.questionId(q._2)" value="@q._1.id">
+	            </li>
+	        }
+	    </ul>
+	    <input type="submit" value="Submit">
+    }
+    
+}

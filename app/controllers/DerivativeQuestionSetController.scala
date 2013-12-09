@@ -22,9 +22,12 @@ import play.api.Play.current
 object DerivativeQuestionSetController extends Controller {
 
 	def selfQuizQuestionSet(id: Long) = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_question_set(DerivativeQuestionSetsModel.read(id), DerivativeQuestionsModel.all))
+		DerivativeQuestionSetsModel.read(id) match {
+			case Some(s) => Ok(views.html.self_quiz_question_set_update(s, DerivativeQuestionsModel.all))
+			case None => Ok(views.html.self_quiz_question_set_create(DerivativeQuestionsModel.all))
+		}
 	}
-
+		
 	def selfQuizQuestionSets = DBAction { implicit dbSessionRequest =>
 		Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
 	}
@@ -33,8 +36,7 @@ object DerivativeQuestionSetController extends Controller {
 		QuestionSetEditHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
-				val questions = DerivativeQuestionsModel.read(form._3)
-				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2, questions))
+				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2), form._3)
 				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
 			})
 	}

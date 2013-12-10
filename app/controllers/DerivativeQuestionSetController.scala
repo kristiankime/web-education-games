@@ -24,7 +24,7 @@ object DerivativeQuestionSetController extends Controller {
 	def selfQuizQuestionSetAnswer(id: Long) = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionSetsModel.readQuestion(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set(s._1, s._2))
-			case None => Ok(views.html.self_quiz_question_set_create(DerivativeQuestionsModel.all))
+			case None => Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
 		}
 	}
 

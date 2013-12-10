@@ -3,13 +3,13 @@
 @import helper._
 @import controllers.DerivativeQuestionAnswerHTML
  
-@main("Answer a Self Quiz Question") {
+@main("Self Quiz Question Answers") {
     <div>
     	<a href="@routes.DerivativeQuestionController.questions"> Back to the list of questions</a>
     </div>
     
     <div>
-	    <h2>Main Question: What is the Derivative of</h2>
+	    <h2>Question: What is the Derivative of</h2>
     	<script type="math/mml"> @Html(question.mathML.toString) </script>
 	</div>
 	<p>

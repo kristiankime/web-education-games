@@ -3,17 +3,14 @@
 @import helper._
 @import controllers.QuestionSetHTML
  
-@main("List of Self Quiz Questions") {
+@main("Self Quiz Question Set Create") {
     
-    <h2>Welcome to the EdTech Differentition Problem Set editor</h1>
-    
-    <p>
-    	Select the equations you'd like to see in the problem set.
-    </p>
-    
+    <h2>Welcome to the EdTech Self Quiz Question Set Creator</h1>
     
     @form(action = routes.DerivativeQuestionSetController.newSet) {
 
+		<h4>Type the name of the Question Set here</h4> <br>
+    	
     	<input type="text" name="@QuestionSetHTML.name" value="question set name"> <br>
     
 	    <h4>Select which question(s) you want in your question set</h4> <br>

@@ -21,7 +21,9 @@ import play.api.Play.current
 
 object DerivativeQuestionController extends Controller {
 
-	def selfQuiz = questions
+	def selfQuiz =  Action { 
+		Ok(views.html.self_quiz())
+	}
 
 	def questions = DBAction { implicit dbSessionRequest =>
 		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))

@@ -30,7 +30,8 @@ POST   /selfquiz/question/:qid/answer/       controllers.DerivativeQuestionAnswe
 GET    /selfquiz/questionset                 controllers.DerivativeQuestionSetController.sets
 GET    /selfquiz/questionset/:sid            controllers.DerivativeQuestionSetController.setAnswer(sid: Long)
 GET    /selfquiz/questionset/:sid/edit       controllers.DerivativeQuestionSetController.setEdit(sid: Long)
-POST   /selfquiz/questionset/create          controllers.DerivativeQuestionSetController.newSet
+GET    /selfquiz/questionset/create          controllers.DerivativeQuestionSetController.setCreate
+POST   /selfquiz/questionset                 controllers.DerivativeQuestionSetController.newSet
 POST   /selfquiz/questionset/:sid/update     controllers.DerivativeQuestionSetController.updateSet(sid: Long)
 
 

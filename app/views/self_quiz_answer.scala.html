@@ -4,11 +4,12 @@
 @import controllers.DerivativeQuestionAnswerHTML
  
 @main("Answer a Self Quiz Question") {
+	
+	@if(questionSet.isEmpty){
     <div>
     	<a href="@routes.DerivativeQuestionController.questions"> Back to the list of questions</a>
     </div>
-    
-    @if(questionSet.nonEmpty){
+    } else {
     <div>
     	<a href="@routes.DerivativeQuestionSetController.setAnswer(questionSet.get.id)"> Back to the question set "@questionSet.get.name" </a>
     </div>

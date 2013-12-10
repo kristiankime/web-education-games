@@ -3,16 +3,13 @@
 @import helper._
 @import controllers.QuestionSetHTML
  
-@main("List of Self Quiz Questions") {
+@main("Self Quiz Question Set Edit") {
     
-    <h2>Welcome to the EdTech Differentition Problem Set editor</h1>
-    
-    <p>
-    	Select the equations you'd like to see in the problem set.
-    </p>
-    
+    <h2>Welcome to the EdTech Self Quiz Question Set editor</h1>
     
     @form(action = routes.DerivativeQuestionSetController.updateSet(questionSet._1.id) ) {
+    
+    	<h4>Change the name of the Question Set here</h4> <br>
     
     	<input type="text" name="@QuestionSetHTML.name" value="@questionSet._1.name"> <br>
     

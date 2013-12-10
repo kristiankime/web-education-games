@@ -5,12 +5,11 @@
  
 @main("List of Self Quiz Questions") {
     
-    <h2>Welcome to the EdTech Differentition Self Quiz</h1>
+    <h2>Welcome to the EdTech Self Quiz Questions Page</h1>
     
     <p>
-    	Pick one of the equations below to try figure out it's derivative.
+    	Pick one of the equations below to try figure out it's derivative (or see previous answers to the question).
     </p>
-    
     
     <h4>@derivativeQs.size Derivative Question(s)</h4>
     
@@ -18,12 +17,9 @@
         @derivativeQs.map { derivativeQ =>
             <li>
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
-                
-                <a href=@routes.DerivativeQuestionController.question(derivativeQ.id, None)> answer </a>
-                
-                @form(routes.DerivativeQuestionController.deleteQuestion(derivativeQ.id)) {
-                    <input type="submit" value="Delete">
-                }
+                [<a href=@routes.DerivativeQuestionController.question(derivativeQ.id, None)>answer</a>]
+                [<a href=@routes.DerivativeQuestionAnswerController.answers(derivativeQ.id)>previous answers</a>]
+                @form(routes.DerivativeQuestionController.deleteQuestion(derivativeQ.id)) { <input type="submit" value="Delete"> }
             </li>
         }
     </ul>

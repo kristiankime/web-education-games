@@ -21,57 +21,47 @@ import play.api.Play.current
 
 object DerivativeQuestionSetController extends Controller {
 
-	def selfQuizQuestionSetAnswer(id: Long) = DBAction { implicit dbSessionRequest =>
+	def sets = DBAction { implicit dbSessionRequest =>
+		Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
+	}
+
+	def setAnswer(id: Long) = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionSetsModel.readQuestion(id) match {
-			case Some(s) => Ok(views.html.self_quiz_question_set(s._1, s._2))
+			case Some(s) => Ok(views.html.self_quiz_question_set_answer(s._1, s._2))
 			case None => Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
 		}
 	}
 
-	def selfQuizQuestionSetEdit(id: Long) = DBAction { implicit dbSessionRequest =>
+	def setEdit(id: Long) = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionSetsModel.read(id) match {
-			case Some(s) => Ok(views.html.self_quiz_question_set_update(s, DerivativeQuestionsModel.all))
+			case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, DerivativeQuestionsModel.all))
 			case None => Ok(views.html.self_quiz_question_set_create(DerivativeQuestionsModel.all))
 		}
 	}
 
-	def selfQuizQuestionSets = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all))
-	}
-
-	def updateSelfQuizQuestionSet = DBAction { implicit dbSessionRequest =>
-		QuestionSetEditHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
-			form => {
-				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(form._1, form._2), form._3)
-				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
-			})
-	}
-
-	def newSelfQuizQuestionSet = DBAction { implicit dbSessionRequest =>
-		QuestionSetCreateHTML.form.bindFromRequest.fold(
+	def newSet = DBAction { implicit dbSessionRequest =>
+		QuestionSetHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
 			form => {
 				val id = DerivativeQuestionSetsModel.create(form._1, form._2)
-				Redirect(routes.DerivativeQuestionSetController.selfQuizQuestionSets)
+				Redirect(routes.DerivativeQuestionSetController.sets)
+			})
+	}
+
+	def updateSet(id: Long) = DBAction { implicit dbSessionRequest =>
+		QuestionSetHTML.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.self_quiz_question_sets(DerivativeQuestionSetsModel.all)),
+			form => {
+				DerivativeQuestionSetsModel.update(DerivativeQuestionSet(id, form._1), form._2)
+				Redirect(routes.DerivativeQuestionSetController.sets)
 			})
 	}
 
 }
 
 object QuestionSetHTML {
-	val id = "id"
 	val name = "name"
 	val questionId = "questionId"
 	def questionId(i: Int) = "questionId[" + i + "]"
-}
-
-object QuestionSetEditHTML {
-	import QuestionSetHTML._
-	val form = Form(tuple(id -> longNumber, name -> nonEmptyText, questionId -> list(longNumber)))
-}
-
-object QuestionSetCreateHTML {
-	import QuestionSetHTML._
 	val form = Form(tuple(name -> nonEmptyText, questionId -> list(longNumber)))
 }

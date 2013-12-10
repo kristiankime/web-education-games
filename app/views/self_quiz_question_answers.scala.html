@@ -5,7 +5,7 @@
  
 @main("Answer a Self Quiz Question") {
     <div>
-    	<a href="@routes.DerivativeQuestionController.selfQuizQuestions"> Back to the list of questions</a>
+    	<a href="@routes.DerivativeQuestionController.questions"> Back to the list of questions</a>
     </div>
     
     <div>
@@ -20,13 +20,13 @@
             <li>
             	<script type="math/mml"> @Html(answer.mathML.toString) </script>
             	this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
-                <a href=@routes.DerivativeQuestionAnswerController.selfQuizAnswer(answer.questionId, answer.id)> details </a>
+                <a href=@routes.DerivativeQuestionAnswerController.answer(answer.questionId, answer.id, None)> details </a>
             </li>
         }
     </ul>
     <p>
 	
 	<div>
-		To answer this questions <a href=@routes.DerivativeQuestionController.selfQuizQuestion(question.id)> go here </a>
+		To answer this questions <a href=@routes.DerivativeQuestionController.question(question.id)> go here </a>
 	</div>
 }

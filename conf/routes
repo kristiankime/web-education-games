@@ -16,22 +16,22 @@ POST   /equation/:id/delete                  controllers.EquationController.dele
 
 # Derivative question pages
 GET    /selfquiz                             controllers.DerivativeQuestionController.selfQuiz
-GET    /selfquiz/question                    controllers.DerivativeQuestionController.selfQuizQuestions
-GET    /selfquiz/question/:qid               controllers.DerivativeQuestionController.selfQuizQuestion(qid: Long)
-POST   /selfquiz/question                    controllers.DerivativeQuestionController.newSelfQuizQuestion
-POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestionController.deleteSelfQuizQuestion(qid: Long) 
+GET    /selfquiz/question                    controllers.DerivativeQuestionController.questions
+GET    /selfquiz/question/:qid               controllers.DerivativeQuestionController.question(qid: Long)
+POST   /selfquiz/question                    controllers.DerivativeQuestionController.newQuestion
+POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestionController.deleteQuestion(qid: Long) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestionAnswerController.selfQuizAnswers(qid: Long)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswerController.selfQuizAnswer(qid: Long, aid : Long)
-POST   /selfquiz/question/answer/            controllers.DerivativeQuestionAnswerController.answerSelfQuizQuestion
+GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestionAnswerController.answers(qid: Long)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswerController.answer(qid: Long, aid : Long, sid: Option[Long])
+POST   /selfquiz/question/:qid/answer/       controllers.DerivativeQuestionAnswerController.newAnswer(qid: Long, sid: Option[Long])
 
 # Derivative queston set pages
-GET    /selfquiz/questionset                 controllers.DerivativeQuestionSetController.selfQuizQuestionSets
-GET    /selfquiz/questionset/:sid            controllers.DerivativeQuestionSetController.selfQuizQuestionSetEdit(sid: Long)
-GET    /selfquiz/questionset/:sid/answer     controllers.DerivativeQuestionSetController.selfQuizQuestionSetAnswer(sid: Long)
-POST   /selfquiz/questionset/create          controllers.DerivativeQuestionSetController.newSelfQuizQuestionSet
-POST   /selfquiz/questionset/update          controllers.DerivativeQuestionSetController.updateSelfQuizQuestionSet
+GET    /selfquiz/questionset                 controllers.DerivativeQuestionSetController.sets
+GET    /selfquiz/questionset/:sid            controllers.DerivativeQuestionSetController.setAnswer(sid: Long)
+GET    /selfquiz/questionset/:sid/edit       controllers.DerivativeQuestionSetController.setEdit(sid: Long)
+POST   /selfquiz/questionset/create          controllers.DerivativeQuestionSetController.newSet
+POST   /selfquiz/questionset/:sid/update     controllers.DerivativeQuestionSetController.updateSet(sid: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

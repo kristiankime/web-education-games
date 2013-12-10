@@ -18,8 +18,8 @@
         @questonsSets.map { set =>
             <li>
             	@set.name
-            	<a href=@routes.DerivativeQuestionSetController.selfQuizQuestionSetEdit(set.id)> edit </a>
-            	<a href=@routes.DerivativeQuestionSetController.selfQuizQuestionSetAnswer(set.id)> answer </a>
+            	<a href=@routes.DerivativeQuestionSetController.setEdit(set.id)> edit </a>
+            	<a href=@routes.DerivativeQuestionSetController.setAnswer(set.id)> answer </a>
             </li>
         }
     </ul>

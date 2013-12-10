@@ -21,26 +21,26 @@ import play.api.Play.current
 
 object DerivativeQuestionController extends Controller {
 
-	def selfQuiz = selfQuizQuestions
+	def selfQuiz = questions
 
-	def selfQuizQuestions = DBAction { implicit dbSessionRequest =>
+	def questions = DBAction { implicit dbSessionRequest =>
 		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
 	}
 
-	def selfQuizQuestion(id: Long) = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None)) // TODO can be null
+	def question(id: Long) = DBAction { implicit dbSessionRequest =>
+		Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None, None)) // TODO can be null
 	}
 
-	def newSelfQuizQuestion = DBAction { implicit dbSessionRequest =>
+	def newQuestion = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestionsModel.all())),
 			form => {
 				MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
-				Redirect(routes.DerivativeQuestionController.selfQuizQuestions)
+				Redirect(routes.DerivativeQuestionController.questions)
 			})
 	}
 
-	def deleteSelfQuizQuestion(id: Long) = DBAction { implicit dbSessionRequest =>
+	def deleteQuestion(id: Long) = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionsModel.delete(id);
 		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
 	}

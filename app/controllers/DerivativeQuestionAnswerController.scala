@@ -21,38 +21,39 @@ import play.api.Play.current
 
 object DerivativeQuestionAnswerController extends Controller {
 
-	def selfQuizAnswers(id: Long) = DBAction { implicit dbSessionRequest =>
+	def answers(id: Long) = DBAction { implicit dbSessionRequest =>
 		// TODO can be null
 		Ok(views.html.self_quiz_question_answers(DerivativeQuestionsModel.read(id).get, DerivativeQuestionAnswersModel.read(id)))
 	}
 
-	def selfQuizAnswer(qid: Long, aid: Long) = DBAction { implicit dbSessionRequest =>
+	def answer(qid: Long, aid: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
 		val question = DerivativeQuestionsModel.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswersModel.read(qid, aid)
-		Ok(views.html.self_quiz_answer(question, answer))
+		val set = sid.flatMap(DerivativeQuestionSetsModel.read(_).map(_._1))
+		Ok(views.html.self_quiz_answer(question, answer, set))
 	}
 
-	def answerSelfQuizQuestion = DBAction { implicit dbSessionRequest =>
+	def newAnswer(qid: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
 		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
 			errors => {
-				BadRequest(views.html.self_quiz_answer(DerivativeQuestionsModel.read(errors.get._1).get, None)) // TODO currently we assume we can get the problem id here
-			}, 			answerForm => {
-				val question = DerivativeQuestionsModel.read(answerForm._1).get // TODO check for no question here
-				val mathML = MathML(answerForm._2).get // TODO can fail here
-				val rawStr = answerForm._3
-				val synched = answerForm._4
+				BadRequest(views.html.self_quiz_answer(DerivativeQuestionsModel.read(qid).get, None, None)) // TODO currently we assume we can get the problem id here
+			},
+			answerForm => {
+				val question = DerivativeQuestionsModel.read(qid).get // TODO check for no question here
+				val mathML = MathML(answerForm._1).get // TODO can fail here
+				val rawStr = answerForm._2
+				val synched = answerForm._3
 
-				val answerId = DerivativeQuestionAnswersModel.create(question, rawStr, mathML, synched);
-				Redirect(routes.DerivativeQuestionAnswerController.selfQuizAnswer(question.id, answerId))
+				val answerId = DerivativeQuestionAnswersModel.create(question, rawStr, mathML, synched)
+				Redirect(routes.DerivativeQuestionAnswerController.answer(question.id, answerId, sid))
 			})
 	}
 
 }
 
 object DerivativeQuestionAnswerHTML {
-	val questionId = "questionId"
 	val mathML = "mathML"
 	val rawStr = "rawStr"
 	val current = "current"
-	val form = Form(tuple(questionId -> number, mathML -> text, rawStr -> text, current -> boolean))
+	val form = Form(tuple(mathML -> text, rawStr -> text, current -> boolean))
 }

@@ -12,9 +12,7 @@
     </p>
     
     
-    @form(action = routes.DerivativeQuestionSetController.updateSelfQuizQuestionSet ) {
-		
-		<input type="hidden" name="@QuestionSetHTML.id" value="@questionSet._1.id">
+    @form(action = routes.DerivativeQuestionSetController.updateSet(questionSet._1.id) ) {
     
     	<input type="text" name="@QuestionSetHTML.name" value="@questionSet._1.name"> <br>
     

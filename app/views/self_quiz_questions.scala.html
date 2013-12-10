@@ -19,7 +19,7 @@
             <li>
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
                 
-                <a href=@routes.DerivativeQuestionController.question(derivativeQ.id)> answer </a>
+                <a href=@routes.DerivativeQuestionController.question(derivativeQ.id, None)> answer </a>
                 
                 @form(routes.DerivativeQuestionController.deleteQuestion(derivativeQ.id)) {
                     <input type="submit" value="Delete">

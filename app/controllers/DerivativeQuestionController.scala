@@ -27,8 +27,9 @@ object DerivativeQuestionController extends Controller {
 		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
 	}
 
-	def question(id: Long) = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None, None)) // TODO can be null
+	def question(id: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
+		val set = sid.flatMap( DerivativeQuestionSetsModel.read(_) )
+		Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None, set)) // TODO can be null
 	}
 
 	def newQuestion = DBAction { implicit dbSessionRequest =>

@@ -29,7 +29,7 @@ object DerivativeQuestionAnswerController extends Controller {
 	def answer(qid: Long, aid: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
 		val question = DerivativeQuestionsModel.read(qid).get // TODO can be null
 		val answer = DerivativeQuestionAnswersModel.read(qid, aid)
-		val set = sid.flatMap(DerivativeQuestionSetsModel.read(_).map(_._1))
+		val set = sid.flatMap(DerivativeQuestionSetsModel.read(_))
 		Ok(views.html.self_quiz_answer(question, answer, set))
 	}
 

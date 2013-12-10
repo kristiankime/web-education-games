@@ -17,7 +17,7 @@ POST   /equation/:id/delete                  controllers.EquationController.dele
 # Derivative question pages
 GET    /selfquiz                             controllers.DerivativeQuestionController.selfQuiz
 GET    /selfquiz/question                    controllers.DerivativeQuestionController.questions
-GET    /selfquiz/question/:qid               controllers.DerivativeQuestionController.question(qid: Long)
+GET    /selfquiz/question/:qid               controllers.DerivativeQuestionController.question(qid: Long, sid: Option[Long])
 POST   /selfquiz/question                    controllers.DerivativeQuestionController.newQuestion
 POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestionController.deleteQuestion(qid: Long) 
 

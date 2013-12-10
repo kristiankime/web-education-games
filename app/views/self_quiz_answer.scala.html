@@ -34,7 +34,7 @@
 	</div>
 		
 	<div>
-	@form(routes.DerivativeQuestionAnswerController.newAnswer(question.id, None) , 'id -> "answerForm" ) {
+	@form(routes.DerivativeQuestionAnswerController.newAnswer(question.id, questionSet.map(_.id)) , 'id -> "answerForm" ) {
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.rawStr" id="answerRawStr">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.mathML" id="answerMathML">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.current" id="answerCurrent">

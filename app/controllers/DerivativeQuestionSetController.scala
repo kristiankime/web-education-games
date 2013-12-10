@@ -33,7 +33,7 @@ object DerivativeQuestionSetController extends Controller {
 	}
 
 	def setEdit(id: Long) = DBAction { implicit dbSessionRequest =>
-		DerivativeQuestionSetsModel.read(id) match {
+		DerivativeQuestionSetsModel.readIds(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, DerivativeQuestionsModel.all))
 			case None => Ok(views.html.self_quiz_question_set_create(DerivativeQuestionsModel.all))
 		}

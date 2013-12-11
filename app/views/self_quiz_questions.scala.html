@@ -19,7 +19,6 @@
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
                 [<a href=@routes.DerivativeQuestionController.question(derivativeQ.id, None)>answer</a>]
                 [<a href=@routes.DerivativeQuestionAnswerController.answers(derivativeQ.id)>previous answers</a>]
-                @form(routes.DerivativeQuestionController.deleteQuestion(derivativeQ.id)) { <input type="submit" value="Delete"> }
             </li>
         }
     </ul>
@@ -28,7 +27,7 @@
     
     <p>
 		Type in an equation and press "Save Question": <br> 
-		Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^,  sin, cos, tan) <br> 
+		Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow), ln, sin, cos, tan, ) <br> 
 		@mathml_editor("QUESTION")
 	</p>
 

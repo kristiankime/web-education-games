@@ -53,20 +53,22 @@ package object scalar {
 	val `37` = Cn(37)
 	val `38` = Cn(38)
 	val `39` = Cn(39)
+	val `100` = Cn(100)
 
 	val `-.5` = Cn(-.5)
 	val `.5` = Cn(.5)
 	val `1.5` = Cn(1.5)
 	val `2.5` = Cn(2.5)
 	val `3.5` = Cn(3.5)
-	
+	val `-100` = Cn(-100)
+
 	val ln_10 = Cn(math.log(10))
 
 	val x = Ci("x")
 
 	val y = Ci("y")
-	
+
 	val e = ExponentialE
-	
+
 	val π = Pi
 }

@@ -74,7 +74,7 @@ object MathML {
 		(x - y).abs <= ε * (x.abs + y.abs)
 	}
 
-	def apply(text: String): Try[MathMLElem] = Try(xml.XML.loadString(text)).map(apply(_)).flatten
+	def apply(text: String): Try[MathMLElem] = Try(xml.XML.loadString(text)).flatMap(apply(_))
 
 	def apply(xml: Elem): Try[MathMLElem] = {
 		xml.label.toLowerCase match {

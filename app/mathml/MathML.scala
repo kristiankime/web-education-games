@@ -20,7 +20,6 @@ object MathML {
 	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
-		
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
 		
 		matches.reduce((_, _) match {
@@ -64,11 +63,15 @@ object MathML {
 		}
 	}
 
-	private val accuracy = .00001d; // LATER this is a hack to ensure equality even with some inaccuracy due to double computations
 	private def doubleCloseEnough(x: Double, y: Double) = {
-		if (x.isNaN || y.isNaN || x.isInfinite || y.isInfinite ) Inconclusive
-		else if ((x - accuracy) <= y && (x + accuracy >= y)) Yes
+		if (x.isNaN || y.isNaN || x.isInfinite || y.isInfinite) Inconclusive
+		else if (doubleNumbersCloseEnough(x, y)) Yes
 		else No
+	}
+	
+	private val ε = .00001d
+	def doubleNumbersCloseEnough(x: Double, y: Double) = {
+		(x - y).abs <= ε * (x.abs + y.abs)
 	}
 
 	def apply(text: String): Try[MathMLElem] = Try(xml.XML.loadString(text)).map(apply(_)).flatten

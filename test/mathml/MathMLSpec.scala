@@ -222,4 +222,46 @@ class MathMLSpec extends Specification {
 		}
 	}
 
+	"doubleNumbersCloseEnough" should {
+
+		"be true for two identical numbers (near 1)" in {
+			MathML.doubleNumbersCloseEnough(1.23e+1, 1.23e+1) must beTrue
+		}
+
+		"be true for two close numbers (near 1)" in {
+			MathML.doubleNumbersCloseEnough(1.2300005e+1, 1.23e+1) must beTrue
+		}
+
+		"be false for two different numbers (near 1)" in {
+			MathML.doubleNumbersCloseEnough(1.24e+1, 1.23e+1) must beFalse
+		}
+		
+		"be true for two identical very large numbers " in {
+			MathML.doubleNumbersCloseEnough(1.23e+100, 1.23e+100) must beTrue
+		}
+
+		"be true for two close very large numbers" in {
+			MathML.doubleNumbersCloseEnough(1.2300005e+100, 1.23e+100) must beTrue
+		}
+		
+		"be false for two different very large numbers " in {
+			MathML.doubleNumbersCloseEnough(1.24e+100, 1.23e+100) must beFalse
+		}
+		
+		"be true for two identical very small numbers " in {
+			MathML.doubleNumbersCloseEnough(1.23e-100, 1.23e-100) must beTrue
+		}
+
+		"be true for two close very small numbers" in {
+			MathML.doubleNumbersCloseEnough(1.2300005e-100, 1.23e-100) must beTrue
+		}
+		
+		"be false for two different very small numbers " in {
+			MathML.doubleNumbersCloseEnough(1.24e-100, 1.23e-100) must beFalse
+		}
+		
+		"be false for one large and one small  numbers " in {
+			MathML.doubleNumbersCloseEnough(1.24e+100, 1.23e-100) must beFalse
+		}
+	}
 }

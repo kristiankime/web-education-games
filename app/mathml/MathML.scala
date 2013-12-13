@@ -21,7 +21,7 @@ object MathML {
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
-		
+
 		matches.reduce((_, _) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match
@@ -35,16 +35,13 @@ object MathML {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val eval1 = checkEval(variableName, eq1, eq2, (-5 to 5).map(_.doubleValue))
-
-			val eval = if (eval1 == Inconclusive) {
-				val ran = new Random(0L)
-				checkEval(variableName, eq1, eq2, Seq.fill(10)((ran.nextDouble * 2000d) - 1000d))
-			} else { eval1 }
+			val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
+			val vals = Vector.fill(20)((ran.nextDouble * 2000d) - 1000d).sorted
+			val eval = checkEval(variableName, eq1, eq2, vals)
 
 			eval match {
 				case No => false
-				case Inconclusive => false
+				case Inconclusive => false //LATER do something more substantial with inconclusive
 				case Yes => true
 			}
 		}
@@ -63,12 +60,15 @@ object MathML {
 		}
 	}
 
+	private val tooSmall = 1e-320
 	private def doubleCloseEnough(x: Double, y: Double) = {
 		if (x.isNaN || y.isNaN || x.isInfinite || y.isInfinite) Inconclusive
+		else if (x == y) Yes
+		else if (x < tooSmall && y < tooSmall) Inconclusive
 		else if (doubleNumbersCloseEnough(x, y)) Yes
 		else No
 	}
-	
+
 	private val ε = .00001d
 	def doubleNumbersCloseEnough(x: Double, y: Double) = {
 		(x - y).abs <= ε * (x.abs + y.abs)

@@ -13,6 +13,8 @@ object EquationsModel {
 
 	def create(equation: String)(implicit s:Session): Long = table.autoInc.insert(equation)
 	
+	def read(id: Long)(implicit s:Session) = Query(table).where(_.id === id).firstOption
+	
 	def delete(id: Long)(implicit s: Session) = table.where(_.id === id).delete
 }
 

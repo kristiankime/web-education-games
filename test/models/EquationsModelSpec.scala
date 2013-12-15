@@ -8,21 +8,6 @@ import play.api.test.Helpers._
 import play.api.db.slick.DB
 import scala.slick.session.Session
 
-object DBTest {
-
-	def withSessionAndRollback[T](f: Session => T): T = {
-		import play.api.Play.current
-		DB.withSession { implicit s: Session =>
-			s.withTransaction {
-				val r = f(s)
-				s.rollback
-				r
-			}
-		}
-	}
-
-}
-
 @RunWith(classOf[JUnitRunner])
 class EquationsModelSpec extends Specification {
 

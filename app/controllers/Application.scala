@@ -19,7 +19,7 @@ import scala.slick.session.Session
 import play.api.Logger
 import play.api.Play.current
 
-object Application extends Controller {
+object Application extends Controller with securesocial.core.SecureSocial {
 
 	/**
 	 * Application does not use trailing slashes so indicate to browsers
@@ -28,7 +28,7 @@ object Application extends Controller {
 		MovedPermanently("/" + path)
 	}
 
-	def index = Action {
+	def index = SecuredAction {
 		Ok(views.html.index())
 	}
 

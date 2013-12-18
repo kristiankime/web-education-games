@@ -75,6 +75,9 @@ http://securesocial.ws/guide/getting-started.html
 Samples
 https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
 
+mailer
+https://github.com/typesafehub/play-plugins/tree/master/mailer
+
 Get Keys for each provider
 Facebook
 facebook login

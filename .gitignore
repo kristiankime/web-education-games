@@ -18,4 +18,5 @@ dist
 /bin
 .DS_Store
 local_environment_variables_use_postgres.sh
+local_environment_variables_secure_social.sh
 heroku_environment_variables.sh

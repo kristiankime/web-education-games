@@ -19,25 +19,49 @@ import scala.slick.session.Session
 import play.api.Logger
 import play.api.Play.current
 
-object EquationController extends Controller {
+object EquationController extends Controller with securesocial.core.SecureSocial {
 
-	def equations = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
+	def equations = SecuredAction {
+		DB.withSession { implicit session: Session =>
+			Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
+		}
 	}
 
-	def newEquation = DBAction { implicit dbSessionRequest =>
-		EquationHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
-			equation => {
-				EquationsModel.create(equation)
-				Redirect(routes.EquationController.equations)
-			})
+	//	def equations = DBAction { implicit dbSessionRequest =>
+	//		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
+	//	}
+
+	def newEquation = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			EquationHTML.form.bindFromRequest.fold(
+				errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
+				equation => {
+					EquationsModel.create(equation)
+					Redirect(routes.EquationController.equations)
+				})
+		}
 	}
 
-	def deleteEquation(id: Long) = DBAction { implicit dbSessionRequest =>
-		EquationsModel.delete(id)
-		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
+	//	def newEquation = DBAction { implicit dbSessionRequest =>
+	//		EquationHTML.form.bindFromRequest.fold(
+	//			errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
+	//			equation => {
+	//				EquationsModel.create(equation)
+	//				Redirect(routes.EquationController.equations)
+	//			})
+	//	}
+
+	def deleteEquation(id: Long) = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			EquationsModel.delete(id)
+			Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
+		}
 	}
+
+	//	def deleteEquation(id: Long) = DBAction { implicit dbSessionRequest =>
+	//		EquationsModel.delete(id)
+	//		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
+	//	}
 
 }
 

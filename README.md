@@ -75,11 +75,15 @@ http://securesocial.ws/guide/getting-started.html
 Samples
 https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
 
-mailer
+#### mailer
 https://github.com/typesafehub/play-plugins/tree/master/mailer
 
-Get Keys for each provider
-Facebook
+#### Slick UserService
+http://blog.lunatech.com/2013/07/04/play-securesocial-slick
+
+#### Get Keys for each provider
+
+##### Facebook
 facebook login
 https://developers.facebook.com/apps/?action=create
 https://developers.facebook.com/
@@ -90,6 +94,8 @@ http://stackoverflow.com/questions/2459728/how-to-test-facebook-connect-locally
 
 Set config vars locally and on Heroku
 https://devcenter.heroku.com/articles/config-vars
+
+##### Google
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

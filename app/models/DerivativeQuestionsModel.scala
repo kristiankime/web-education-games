@@ -7,6 +7,7 @@ import mathml.scalar._
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
+import models.mapper.MathMLMapper._
 
 case class DerivativeQuestion(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
 
@@ -25,16 +26,11 @@ object DerivativeQuestionsModel {
 }
 
 class DerivativeQuestionsTable extends Table[DerivativeQuestion]("derivative_questions") {
-	implicit val mathMLTypeMapper = MappedTypeMapper.base[MathMLElem, String](
-		{ mathML => mathML.toString },
-		{ string => MathML(string).getOrElse(Math(`0`)) })
-
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)
 	def synched = column[Boolean]("synched", O.NotNull)
-	def * = id ~ mathML ~ rawStr ~ synched <> (DerivativeQuestion, DerivativeQuestion.unapply _)
-	
+	def * = id ~ mathML ~ rawStr ~ synched <> (DerivativeQuestion, DerivativeQuestion.unapply _)	
 	def autoInc = mathML ~ rawStr ~ synched returning id
 }
 

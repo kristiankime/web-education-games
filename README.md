@@ -60,6 +60,10 @@ Using H2 with play
 Quick note when using slick with postgres, String is currently mapped to VARCHAR(254)
 https://github.com/slick/slick/issues/129 
  
+Using Joda with Slick
+https://gist.github.com/dragisak/4756344
+https://github.com/tototoshi/slick-joda-mapper 
+ 
 ### [H2](http://www.h2database.com/) 
 Using H2 with play 
 

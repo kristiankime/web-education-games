@@ -6,9 +6,11 @@ import securesocial.core.providers.Token
 import models.UsersTable
 import play.api.db.slick.DB
 import scala.slick.session.Session
+import models.TokenTable
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 
+	// =========== Identity Methods ===========
 	def find(id: IdentityId) = DB.withSession { implicit s: Session =>
 		UsersTable.findByIdentityId(id)
 	}
@@ -17,10 +19,28 @@ class SlickUserService(implicit application: Application) extends UserServicePlu
 		UsersTable.save(user)
 	}
 
-	// TODO implement these
-	def findByEmailAndProvider(email: String, providerId: String) = None
-	def save(token: Token) {}
-	def findToken(token: String) = None
-	def deleteToken(uuid: String) {}
-	def deleteExpiredTokens() {}
+	def findByEmailAndProvider(email: String, providerId: String) = DB.withSession { implicit s: Session =>
+		UsersTable.findByEmailAndProvider(email, providerId)
+	}
+
+	// =========== Token Methods ===========
+	def save(token: Token) = DB.withSession { implicit s: Session =>
+		TokenTable.save(token)
+	}
+
+	def findToken(uuid: String): Option[Token] = DB.withSession { implicit s: Session =>
+		TokenTable.findToken(uuid)
+	}
+
+	def deleteToken(uuid: String) = DB.withSession { implicit s: Session =>
+		TokenTable.deleteToken(uuid)
+	}
+
+	def deleteTokens() = DB.withSession { implicit s: Session =>
+		TokenTable.deleteTokens()
+	}
+
+	def deleteExpiredTokens() = DB.withSession { implicit s: Session =>
+		TokenTable.deleteExpiredTokens()
+	}
 }

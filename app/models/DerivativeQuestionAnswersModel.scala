@@ -8,6 +8,7 @@ import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import scala.slick.lifted.ForeignKeyAction
+import models.mapper.MathMLMapper._
 
 case class DerivativeQuestionAnswer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
@@ -29,10 +30,6 @@ object DerivativeQuestionAnswersModel {
 }
 
 class DerivativeQuestionAnswersTable extends Table[DerivativeQuestionAnswer]("derivative_question_answers") {
-	implicit val mathMLTypeMapper = MappedTypeMapper.base[MathMLElem, String](
-		{ mathML => mathML.toString },
-		{ string => MathML(string).getOrElse(Math(`0`)) })
-
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def questionId = column[Long]("question_id", O.NotNull)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)

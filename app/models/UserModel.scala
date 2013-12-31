@@ -21,6 +21,9 @@ case class User(uid: Long,
 	oAuth2Info: Option[OAuth2Info],
 	passwordInfo: Option[PasswordInfo] = None) extends Identity
 
+// TODO add ::: PasswordInfo(hasher: String, password: String, salt: Option[String] = None)
+	
+	
 object UsersTable extends Table[User]("user") {
 
 	def uid = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -72,6 +75,15 @@ object UsersTable extends Table[User]("user") {
 		val q = for {
 			user <- UsersTable
 			if (user.userId is userId.userId) && (user.providerId is userId.providerId)
+		} yield user
+
+		q.firstOption
+	}
+
+	def findByEmailAndProvider(email: String, providerId: String)(implicit s: Session): Option[User] = {
+		val q = for {
+			user <- UsersTable
+			if (user.email is email) && (user.providerId is providerId)
 		} yield user
 
 		q.firstOption

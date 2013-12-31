@@ -4,6 +4,9 @@
 heroku config:set FACEBOOK_APP_ID=put_app_id_here
 heroku config:set FACEBOOK_APP_SECRET=put_app_secret_here
 
+heroku config:set GOOGLE_CLIENT_ID=put_google_client_id_here
+heroku config:set GOOGLE_SECRET=put_google_secret_here
+
 # Database configuration
 heroku config:set DATABASE_DRIVER=put_db_driver_here
 # DATABASE_URL is usually already set by heroku 

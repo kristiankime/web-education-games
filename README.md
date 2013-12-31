@@ -57,6 +57,9 @@ Using H2 with play
 * https://github.com/freekh/play-slick
 * http://blog.lunatech.com/2013/08/08/play-slick-getting-started
  
+Quick note when using slick with postgres, String is currently mapped to VARCHAR(254)
+https://github.com/slick/slick/issues/129 
+ 
 ### [H2](http://www.h2database.com/) 
 Using H2 with play 
 
@@ -89,13 +92,30 @@ https://developers.facebook.com/apps/?action=create
 https://developers.facebook.com/
 https://developers.facebook.com/docs/facebook-login/
 
-Create a production and local app on Heroku
+Create a production and local app on Facebook since facebooks auth doesn't like localhost
 http://stackoverflow.com/questions/2459728/how-to-test-facebook-connect-locally
 
 Set config vars locally and on Heroku
 https://devcenter.heroku.com/articles/config-vars
 
 ##### Google
+https://developers.google.com/accounts/docs/OAuth2Login#registeringyourapp
+https://cloud.google.com/console#/project
+http://stackoverflow.com/questions/19384906/secure-social-connect-provider
+
+local vs prod
+https://developers.google.com/accounts/docs/OAuth2InstalledApp
+https://groups.google.com/forum/#!topic/instagram-api-developers/XOp42EUFzDo
+http://stackoverflow.com/questions/11485271/google-oauth-2-authorization-error-redirect-uri-mismatch
+
+Local Setup
+create "Client ID for web application"
+Redirect URIs = http://localhost:9000/authenticate/google
+Javascript Origins = https://www.localhost.com
+
+oauth without registration
+http://googlecode.blogspot.com/2009/11/oauth-enhancements.html
+
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

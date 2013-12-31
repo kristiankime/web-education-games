@@ -1,51 +1,54 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
-import play.api.libs.json._
-import play.api.libs.iteratee._
-import play.api.data._
-import play.api.data.Forms._
-import akka.actor._
-import scala.concurrent.duration._
-import models._
-import mathml._
-import scala.util._
-import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick._
 import scala.slick.session.Session
 
-//===
-import play.api.Logger
+import mathml.MathML
+import models.DerivativeQuestionSetsModel
+import models.DerivativeQuestionsModel
 import play.api.Play.current
+import play.api.data.Form
+import play.api.data.Forms.boolean
+import play.api.data.Forms.text
+import play.api.data.Forms.tuple
+import play.api.db.slick.DB
+import play.api.mvc.Controller
+import securesocial.core.SecureSocial
 
-object DerivativeQuestionController extends Controller {
+object DerivativeQuestionController extends Controller with SecureSocial {
 
-	def selfQuiz =  Action { 
+	def selfQuiz = SecuredAction {
 		Ok(views.html.self_quiz())
 	}
 
-	def questions = DBAction { implicit dbSessionRequest =>
-		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
+	def questions = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
+		}
 	}
 
-	def question(id: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
-		val set = sid.flatMap( DerivativeQuestionSetsModel.read(_) )
-		Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None, set)) // TODO can be null
+	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			val set = sid.flatMap(DerivativeQuestionSetsModel.read(_))
+			Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None, set)) // TODO can be null
+		}
 	}
 
-	def newQuestion = DBAction { implicit dbSessionRequest =>
-		DerivativeQuestionHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestionsModel.all())),
-			form => {
-				MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
-				Redirect(routes.DerivativeQuestionController.questions)
-			})
+	def newQuestion = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			DerivativeQuestionHTML.form.bindFromRequest.fold(
+				errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestionsModel.all())),
+				form => {
+					MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
+					Redirect(routes.DerivativeQuestionController.questions)
+				})
+		}
 	}
 
-	def deleteQuestion(id: Long) = DBAction { implicit dbSessionRequest =>
-		DerivativeQuestionsModel.delete(id);
-		Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
+	def deleteQuestion(id: Long) = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			DerivativeQuestionsModel.delete(id);
+			Ok(views.html.self_quiz_questions(DerivativeQuestionsModel.all()))
+		}
 	}
 
 }

@@ -1,52 +1,54 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
-import play.api.libs.json._
-import play.api.libs.iteratee._
-import play.api.data._
-import play.api.data.Forms._
-import akka.actor._
-import scala.concurrent.duration._
-import models._
-import mathml._
-import scala.util._
-import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick._
 import scala.slick.session.Session
 
-//===
-import play.api.Logger
+import mathml.MathML
+import models.DerivativeQuestionAnswersModel
+import models.DerivativeQuestionSetsModel
+import models.DerivativeQuestionsModel
 import play.api.Play.current
+import play.api.data.Form
+import play.api.data.Forms.boolean
+import play.api.data.Forms.text
+import play.api.data.Forms.tuple
+import play.api.db.slick.DB
+import play.api.mvc.Controller
+import securesocial.core.SecureSocial
 
-object DerivativeQuestionAnswerController extends Controller {
+object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 
-	def answers(id: Long) = DBAction { implicit dbSessionRequest =>
-		// TODO can be null
-		Ok(views.html.self_quiz_question_answers(DerivativeQuestionsModel.read(id).get, DerivativeQuestionAnswersModel.read(id)))
+	def answers(id: Long) = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			val question = DerivativeQuestionsModel.read(id).get // TODO can be null
+			Ok(views.html.self_quiz_question_answers(question, DerivativeQuestionAnswersModel.read(id)))
+		}
 	}
 
-	def answer(qid: Long, aid: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
-		val question = DerivativeQuestionsModel.read(qid).get // TODO can be null
-		val answer = DerivativeQuestionAnswersModel.read(qid, aid)
-		val set = sid.flatMap(DerivativeQuestionSetsModel.read(_))
-		Ok(views.html.self_quiz_answer(question, answer, set))
+	def answer(qid: Long, aid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			val question = DerivativeQuestionsModel.read(qid).get // TODO can be null
+			val answer = DerivativeQuestionAnswersModel.read(qid, aid)
+			val set = sid.flatMap(DerivativeQuestionSetsModel.read(_))
+			Ok(views.html.self_quiz_answer(question, answer, set))
+		}
 	}
 
-	def newAnswer(qid: Long, sid: Option[Long]) = DBAction { implicit dbSessionRequest =>
-		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
-			errors => {
-				BadRequest(views.html.self_quiz_answer(DerivativeQuestionsModel.read(qid).get, None, None)) // TODO currently we assume we can get the problem id here
-			},
-			answerForm => {
-				val question = DerivativeQuestionsModel.read(qid).get // TODO check for no question here
-				val mathML = MathML(answerForm._1).get // TODO can fail here
-				val rawStr = answerForm._2
-				val synched = answerForm._3
+	def newAnswer(qid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
+		DB.withSession { implicit session: Session =>
+			DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
+				errors => {
+					BadRequest(views.html.self_quiz_answer(DerivativeQuestionsModel.read(qid).get, None, None)) // TODO currently we assume we can get the problem id here
+				},
+				answerForm => {
+					val question = DerivativeQuestionsModel.read(qid).get // TODO check for no question here
+					val mathML = MathML(answerForm._1).get // TODO can fail here
+					val rawStr = answerForm._2
+					val synched = answerForm._3
 
-				val answerId = DerivativeQuestionAnswersModel.create(question, rawStr, mathML, synched)
-				Redirect(routes.DerivativeQuestionAnswerController.answer(question.id, answerId, sid))
-			})
+					val answerId = DerivativeQuestionAnswersModel.create(question, rawStr, mathML, synched)
+					Redirect(routes.DerivativeQuestionAnswerController.answer(question.id, answerId, sid))
+				})
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import securesocial.core.Identity
 import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
 import play.api.Play.current
+import models.mapper.SecurityMapper._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 object UserTable extends Table[User]("user") {
@@ -39,50 +40,25 @@ object UserTable extends Table[User]("user") {
 
 	def autoInc = userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken returning uid
 
-	implicit def string2AuthenticationMethod: TypeMapper[AuthenticationMethod] = MappedTypeMapper.base[AuthenticationMethod, String](
-		authenticationMethod => authenticationMethod.method,
-		string => AuthenticationMethod(string))
-
-	implicit def tuple2OAuth1Info(tuple: (Option[String], Option[String])): Option[OAuth1Info] = tuple match {
-		case (Some(token), Some(secret)) => Some(OAuth1Info(token, secret))
-		case _ => None
-	}
-
-	implicit def tuple2OAuth2Info(tuple: (Option[String], Option[String], Option[Int], Option[String])): Option[OAuth2Info] = tuple match {
-		case (Some(token), tokenType, expiresIn, refreshToken) => Some(OAuth2Info(token, tokenType, expiresIn, refreshToken))
-		case _ => None
-	}
-
-	implicit def tuple2IdentityId(tuple: (String, String)): IdentityId = tuple match {
-		case (userId, providerId) => IdentityId(userId, providerId)
-	}
-
 	def create(t: UserTmp)(implicit s: Session) = this.autoInc.insert(t.identityId.userId, t.identityId.providerId, t.firstName, t.lastName, t.fullName, t.email, t.avatarUrl, t.authMethod, t.oAuth1Info.map(_.token), t.oAuth1Info.map(_.secret), t.oAuth2Info.map(_.accessToken), t.oAuth2Info.flatMap(_.tokenType), t.oAuth2Info.flatMap(_.expiresIn), t.oAuth2Info.flatMap(_.refreshToken))
 
 	def findById(id: Long)(implicit s: Session) = Query(UserTable).where(_.uid is id).firstOption
 
 	def findByIdentityId(userId: IdentityId)(implicit s: Session): Option[User] = {
-		val q = for {
+		(for {
 			user <- UserTable
 			if (user.userId is userId.userId) && (user.providerId is userId.providerId)
-		} yield user
-
-		q.firstOption
+		} yield user).firstOption
 	}
 
 	def findByEmailAndProvider(email: String, providerId: String)(implicit s: Session): Option[User] = {
-		val q = for {
+		(for {
 			user <- UserTable
 			if (user.email is email) && (user.providerId is providerId)
-		} yield user
-
-		q.firstOption
+		} yield user).firstOption
 	}
 
-	def all(implicit s: Session) = {
-		val q = for { user <- UserTable } yield user
-		q.list
-	}
+	def all(implicit s: Session) = Query(UserTable).list
 
 	def save(i: Identity)(implicit s: Session): User = this.save(UserTmp(i))
 
@@ -90,12 +66,11 @@ object UserTable extends Table[User]("user") {
 		findByIdentityId(t.identityId) match {
 			case None => {
 				val uid = create(t)
-				Query(UserTable).where(_.uid is create(t)).first
+				Query(UserTable).where(_.uid is uid).first
 			}
 			case Some(existingUser) => {
-				val userRow = for { u <- UserTable if u.uid is existingUser.uid } yield u
 				val updatedUser = t(existingUser.uid)
-				userRow.update(updatedUser)
+				Query(UserTable).where(_.uid is existingUser.uid).update(updatedUser)
 				updatedUser
 			}
 		}

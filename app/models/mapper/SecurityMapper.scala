@@ -2,13 +2,12 @@ package models.mapper
 
 import scala.slick.lifted.MappedTypeMapper
 import scala.slick.lifted.TypeMapper
-
 import securesocial.core.AuthenticationMethod
 import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
 import securesocial.core.OAuth2Info
+import securesocial.core.PasswordInfo
 
-// taken from https://gist.github.com/dragisak/4756344
 object SecurityMapper {
 
 	implicit def string2AuthenticationMethod: TypeMapper[AuthenticationMethod] = MappedTypeMapper.base[AuthenticationMethod, String](
@@ -29,4 +28,9 @@ object SecurityMapper {
 		case (userId, providerId) => IdentityId(userId, providerId)
 	}
 
+	implicit def tuple2PasswordInfo(tuple: (Option[String], Option[String], Option[String])): Option[PasswordInfo] = tuple match {
+		case (Some(hasher), Some(password), salt) => Some(PasswordInfo(hasher, password, salt))
+		case _ => None
+	}
+	
 }

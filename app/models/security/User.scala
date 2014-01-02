@@ -18,7 +18,7 @@ case class User(uid: Long,
 	authMethod: AuthenticationMethod,
 	oAuth1Info: Option[OAuth1Info],
 	oAuth2Info: Option[OAuth2Info],
-	passwordInfo: Option[PasswordInfo] = None) extends Identity
+	passwordInfo: Option[PasswordInfo]) extends Identity
 
 // A helper class that is "the same" but missing the uid, to be used when the object has not yet been persisted and thus has no uid
 case class UserTmp(identityId: IdentityId,

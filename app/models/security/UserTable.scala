@@ -2,11 +2,9 @@ package models.security
 
 import securesocial.core._
 import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
 import securesocial.core.Identity
 import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
-import play.api.Play.current
 import models.mapper.SecurityMapper._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
@@ -34,9 +32,9 @@ object UserTable extends Table[User]("user") {
 	def password = column[Option[String]]("password")
 	def salt = column[Option[String]]("salt")
 
-	def * = uid ~ userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken <> (
-		u => User(u._1, (u._2, u._3), u._4, u._5, u._6, u._7, u._8, u._9, (u._10, u._11), (u._12, u._13, u._14, u._15)),
-		(u: User) => Some((u.uid, u.identityId.userId, u.identityId.providerId, u.firstName, u.lastName, u.fullName, u.email, u.avatarUrl, u.authMethod, u.oAuth1Info.map(_.token), u.oAuth1Info.map(_.secret), u.oAuth2Info.map(_.accessToken), u.oAuth2Info.flatMap(_.tokenType), u.oAuth2Info.flatMap(_.expiresIn), u.oAuth2Info.flatMap(_.refreshToken))))
+	def * = uid ~ userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken ~ hasher ~ password ~ salt <> (
+		u => User(u._1, (u._2, u._3), u._4, u._5, u._6, u._7, u._8, u._9, (u._10, u._11), (u._12, u._13, u._14, u._15), (u._16, u._17, u._18)),
+		(u: User) => Some((u.uid, u.identityId.userId, u.identityId.providerId, u.firstName, u.lastName, u.fullName, u.email, u.avatarUrl, u.authMethod, u.oAuth1Info.map(_.token), u.oAuth1Info.map(_.secret), u.oAuth2Info.map(_.accessToken), u.oAuth2Info.flatMap(_.tokenType), u.oAuth2Info.flatMap(_.expiresIn), u.oAuth2Info.flatMap(_.refreshToken), u.passwordInfo.map(_.hasher), u.passwordInfo.map(_.password), u.passwordInfo.flatMap(_.salt))))
 
 	def autoInc = userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken returning uid
 
@@ -66,7 +64,7 @@ object UserTable extends Table[User]("user") {
 		findByIdentityId(t.identityId) match {
 			case None => {
 				val uid = create(t)
-				Query(UserTable).where(_.uid is uid).first
+				t(uid)
 			}
 			case Some(existingUser) => {
 				val updatedUser = t(existingUser.uid)

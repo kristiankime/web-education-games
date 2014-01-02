@@ -85,6 +85,8 @@ https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
 #### mailer
 https://github.com/typesafehub/play-plugins/tree/master/mailer
 
+Setting up a gmail account
+
 #### Slick UserService
 http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 

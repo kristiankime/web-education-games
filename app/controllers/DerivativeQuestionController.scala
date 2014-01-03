@@ -3,8 +3,8 @@ package controllers
 import scala.slick.session.Session
 
 import mathml.MathML
-import models.DerivativeQuestionSetsModel
-import models.DerivativeQuestionsModel
+import models.question.DerivativeQuestionSetsModel
+import models.question.DerivativeQuestionsModel
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms.boolean

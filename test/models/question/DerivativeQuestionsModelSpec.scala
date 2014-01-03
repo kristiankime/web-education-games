@@ -1,15 +1,14 @@
-package models
+package models.question
 
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
-import play.api.db.slick.DB
-import scala.slick.session.Session
-
 import mathml.scalar._
 import mathml.scalar.apply._
+import models.DBTest
+import scala.slick.session.Session
 
 @RunWith(classOf[JUnitRunner])
 class DerivativeQuestionsModelSpec extends Specification {
@@ -47,8 +46,8 @@ class DerivativeQuestionsModelSpec extends Specification {
 		"delete a question when requested" in new WithApplication {
 			DBTest.withSessionAndRollback { implicit s: Session =>
 				val id = DerivativeQuestionsModel.create(x + `2`, "x + 2", true)
-				EquationsModel.delete(id)
-				val eq = EquationsModel.read(id)
+				DerivativeQuestionsModel.delete(id)
+				val eq = DerivativeQuestionsModel.read(id)
 
 				eq must beNone
 			}

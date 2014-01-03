@@ -1,11 +1,10 @@
 package controllers
 
 import scala.slick.session.Session
-
 import mathml.MathML
-import models.DerivativeQuestionAnswersModel
-import models.DerivativeQuestionSetsModel
-import models.DerivativeQuestionsModel
+import models.question.DerivativeQuestionAnswersModel
+import models.question.DerivativeQuestionSetsModel
+import models.question.DerivativeQuestionsModel
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms.boolean
@@ -14,6 +13,7 @@ import play.api.data.Forms.tuple
 import play.api.db.slick.DB
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
+import models.question.DerivativeQuestionAnswersModel
 
 object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 

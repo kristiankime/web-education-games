@@ -2,9 +2,9 @@ package controllers
 
 import scala.slick.session.Session
 
-import models.DerivativeQuestionSet
-import models.DerivativeQuestionSetsModel
-import models.DerivativeQuestionsModel
+import models.question.DerivativeQuestionSet
+import models.question.DerivativeQuestionSetsModel
+import models.question.DerivativeQuestionsModel
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms.list

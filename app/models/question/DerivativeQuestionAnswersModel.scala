@@ -1,12 +1,9 @@
-package models
+package models.question
 
-import scala.collection.mutable.LinkedHashMap
-import scala.xml.XML
 import mathml._
 import mathml.scalar._
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
 import scala.slick.lifted.ForeignKeyAction
 import models.mapper.MathMLMapper._
 

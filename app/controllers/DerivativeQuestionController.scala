@@ -1,7 +1,6 @@
 package controllers
 
 import scala.slick.session.Session
-
 import mathml.MathML
 import models.question.DerivativeQuestionSetsModel
 import models.question.DerivativeQuestionsModel
@@ -13,6 +12,7 @@ import play.api.data.Forms.tuple
 import play.api.db.slick.DB
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
+import models.security.UserTable
 
 object DerivativeQuestionController extends Controller with SecureSocial {
 
@@ -29,7 +29,8 @@ object DerivativeQuestionController extends Controller with SecureSocial {
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
 			val set = sid.flatMap(DerivativeQuestionSetsModel.read(_))
-			Ok(views.html.self_quiz_answer(DerivativeQuestionsModel.read(id).get, None, set)) // TODO can be null
+			val question = DerivativeQuestionsModel.read(id).get // TODO better error if this is empty
+			Ok(views.html.self_quiz_answer(question, None, set))
 		}
 	}
 
@@ -38,7 +39,9 @@ object DerivativeQuestionController extends Controller with SecureSocial {
 			DerivativeQuestionHTML.form.bindFromRequest.fold(
 				errors => BadRequest(views.html.self_quiz_questions(DerivativeQuestionsModel.all())),
 				form => {
-					MathML(form._1).foreach(DerivativeQuestionsModel.create(_, form._2, form._3))
+					val user = UserTable.findByIdentityId(request.user.identityId).get // TODO better error if this is empty
+					val mathML = MathML(form._1).get // TODO better error if this is empty
+					DerivativeQuestionsModel.create(user, mathML, form._2, form._3)
 					Redirect(routes.DerivativeQuestionController.questions)
 				})
 		}

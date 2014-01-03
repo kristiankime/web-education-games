@@ -1,7 +1,8 @@
-# This file is for convenience with the slick DDL automatic evolution generation
-# delete it to generate new SQL then update the appropriate evolutions
-# then revert it stop the auto generation again
+## This file is kept for convenience in having Slick DDL generate evolutions delete this line to have Slick DDL generation start again
+# --- Created by Slick DDL
+# To stop Slick DDL generation, remove this comment and start using Evolutions
 
 # --- !Ups
 
 # --- !Downs
+

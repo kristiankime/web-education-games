@@ -6,7 +6,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.mapper.MathMLMapper._
 import models.question.Question
 
-object DerivativeQuestionsTable extends Table[Question]("derivative_questions") {
+object QuestionsTable extends Table[Question]("derivative_questions") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)

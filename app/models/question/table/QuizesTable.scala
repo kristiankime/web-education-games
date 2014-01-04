@@ -5,7 +5,7 @@ import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import models.question.Quiz
 
-object DerivativeQuestionSetsTable extends Table[Quiz]("derivative_question_sets") {
+object QuizesTable extends Table[Quiz]("derivative_question_sets") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def * = id ~ name <> (Quiz, Quiz.unapply _)

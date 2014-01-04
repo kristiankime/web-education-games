@@ -8,7 +8,7 @@ import scala.slick.lifted.ForeignKeyAction
 import models.question.table.DerivativeQuestionSetLinksTable
 import models.question.table.DerivativeQuestionsTable
 
-object DerivativeQuestionSetLinksModel {
+object QuizQuestions {
 	def all()(implicit s: Session) = Query(DerivativeQuestionSetLinksTable).list
 
 	def create(questionId: Long, questionSetId: Long)(implicit s: Session) = DerivativeQuestionSetLinksTable.insert(questionId, questionSetId)

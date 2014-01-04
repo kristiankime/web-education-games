@@ -18,19 +18,19 @@ import play.api.test.Helpers.inMemoryDatabase
 import play.api.db.slick.DB
 
 @RunWith(classOf[JUnitRunner])
-class DerivativeQuestionsModelSpec extends Specification {
+class QuestionsSpec extends Specification {
 
-	"DerivativeQuestionsModel" should {
+	"Questions" should {
 
 		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			//			DBTest.withSessionAndRollback { implicit s: Session =>
 			DB.withSession { implicit session: Session =>
 				val user = UserTable.save(UserTmpTest())
 
-				val id = DerivativeQuestionsModel.create(user, x + `1`, "x + 1", true)
-				val eq = DerivativeQuestionsModel.read(id)
+				val id = Questions.create(user, x + `1`, "x + 1", true)
+				val eq = Questions.read(id)
 
-				eq.get must beEqualTo(DerivativeQuestion(id, x + `1`, "x + 1", true))
+				eq.get must beEqualTo(Question(id, x + `1`, "x + 1", true))
 			}
 		}
 
@@ -39,10 +39,10 @@ class DerivativeQuestionsModelSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = UserTable.save(UserTmpTest())
 
-				DerivativeQuestionsModel.create(user, x + `1`, "x + 2", true)
-				DerivativeQuestionsModel.create(user, x + `2`, "x + 2", true)
+				Questions.create(user, x + `1`, "x + 2", true)
+				Questions.create(user, x + `2`, "x + 2", true)
 
-				val eqs = DerivativeQuestionsModel.all.map(_.mathML)
+				val eqs = Questions.all.map(_.mathML)
 				eqs must beEqualTo(List(x + `1`, x + `2`))
 			}
 		}
@@ -50,7 +50,7 @@ class DerivativeQuestionsModelSpec extends Specification {
 		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			//			DBTest.withSessionAndRollback { implicit s: Session =>
 			DB.withSession { implicit session: Session =>
-				val eq = DerivativeQuestionsModel.read(Int.MaxValue)
+				val eq = Questions.read(Int.MaxValue)
 
 				eq must beNone
 			}
@@ -61,9 +61,9 @@ class DerivativeQuestionsModelSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = UserTable.save(UserTmpTest())
 
-				val id = DerivativeQuestionsModel.create(user, x + `2`, "x + 2", true)
-				DerivativeQuestionsModel.delete(id)
-				val eq = DerivativeQuestionsModel.read(id)
+				val id = Questions.create(user, x + `2`, "x + 2", true)
+				Questions.delete(id)
+				val eq = Questions.read(id)
 
 				eq must beNone
 			}

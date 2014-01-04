@@ -9,9 +9,9 @@ import models.security.User
 import models.question.authorization.UserQuestionsTable
 import models.question.table.DerivativeQuestionsTable
 
-case class DerivativeQuestion(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
+case class Question(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
 
-object DerivativeQuestionsModel {
+object Questions {
 	def all()(implicit s: Session) = Query(DerivativeQuestionsTable).list
 
 	def create(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean)(implicit s: Session): Long = {

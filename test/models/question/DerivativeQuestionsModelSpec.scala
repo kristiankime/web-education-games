@@ -12,14 +12,19 @@ import scala.slick.session.Session
 import models.security.UserTable
 import models.security.UserTmp
 import models.security.UserTmpTest
+import models.DBTest.inMemH2
+import play.api.test.FakeApplication
+import play.api.test.Helpers.inMemoryDatabase
+import play.api.db.slick.DB
 
 @RunWith(classOf[JUnitRunner])
 class DerivativeQuestionsModelSpec extends Specification {
 
 	"DerivativeQuestionsModel" should {
 
-		"create a new questions when asked" in new WithApplication {
-			DBTest.withSessionAndRollback { implicit s: Session =>
+		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			//			DBTest.withSessionAndRollback { implicit s: Session =>
+			DB.withSession { implicit session: Session =>
 				val user = UserTable.save(UserTmpTest())
 
 				val id = DerivativeQuestionsModel.create(user, x + `1`, "x + 1", true)
@@ -29,8 +34,9 @@ class DerivativeQuestionsModelSpec extends Specification {
 			}
 		}
 
-		"return all the questions that were created when asked" in new WithApplication {
-			DBTest.withSessionAndRollback { implicit s: Session =>
+		"return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			//			DBTest.withSessionAndRollback { implicit s: Session =>
+			DB.withSession { implicit session: Session =>
 				val user = UserTable.save(UserTmpTest())
 
 				DerivativeQuestionsModel.create(user, x + `1`, "x + 2", true)
@@ -41,16 +47,18 @@ class DerivativeQuestionsModelSpec extends Specification {
 			}
 		}
 
-		"return None when the request question does not exists" in new WithApplication {
-			DBTest.withSessionAndRollback { implicit s: Session =>
+		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			//			DBTest.withSessionAndRollback { implicit s: Session =>
+			DB.withSession { implicit session: Session =>
 				val eq = DerivativeQuestionsModel.read(Int.MaxValue)
 
 				eq must beNone
 			}
 		}
 
-		"delete a question when requested" in new WithApplication {
-			DBTest.withSessionAndRollback { implicit s: Session =>
+		"delete a question when requested" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			//			DBTest.withSessionAndRollback { implicit s: Session =>
+			DB.withSession { implicit session: Session =>
 				val user = UserTable.save(UserTmpTest())
 
 				val id = DerivativeQuestionsModel.create(user, x + `2`, "x + 2", true)

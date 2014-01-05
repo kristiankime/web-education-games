@@ -23,15 +23,15 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 
 	def setCreate = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
-			Ok(views.html.self_quiz_question_set_create(Questions.all))
+			Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
 		}
 	}
 
 	def setEdit(id: Long) = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
 			Quizes.findQuizAndQuestionIds(id) match {
-				case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, Questions.all))
-				case None => Ok(views.html.self_quiz_question_set_create(Questions.all))
+				case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, Questions.allQuestions))
+				case None => Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
 			}
 		}
 	}

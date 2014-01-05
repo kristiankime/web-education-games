@@ -3,11 +3,9 @@ package service
 import play.api.Application
 import securesocial.core.{ IdentityId, Identity, UserServicePlugin }
 import securesocial.core.providers.Token
-import models.security.UserTable
 import play.api.db.slick.DB
 import scala.slick.session.Session
-import models.security.TokenTable
-import models.security.UserTmp
+import service.table._
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 

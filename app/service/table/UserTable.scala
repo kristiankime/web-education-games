@@ -1,10 +1,8 @@
-package models.security
+package service.table
 
 import securesocial.core._
 import play.api.db.slick.Config.driver.simple._
-import securesocial.core.Identity
 import securesocial.core.IdentityId
-import securesocial.core.OAuth1Info
 import models.mapper.SecurityMapper._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick

@@ -5,23 +5,33 @@ import mathml.scalar._
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import models.mapper.MathMLMapper._
-import models.security.User
+import service.table.User
 import models.question.table._
+import play.api.db.slick.DB
+import play.api.Play.current
 
 case class Question(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
 
 object Questions {
-	def all()(implicit s: Session) = Query(QuestionsTable).list
+	def allQuestions() = DB.withSession { implicit session: Session =>
+		Query(QuestionsTable).list
+	}
 
-	def create(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean)(implicit s: Session): Long = {
+	def createQuestion(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean): Long = DB.withSession { implicit session: Session =>
 		val qid = QuestionsTable.autoInc.insert(mathML, rawStr, synched)
-		UsersQuestionsTable.create(owner, qid)
+		UsersQuestionsTable.insert(owner, qid)
 		qid
 	}
 
-	def read(id: Long)(implicit s: Session) = Query(QuestionsTable).where(_.id === id).firstOption
+	def findQuestion(questionId: Long) = DB.withSession { implicit session: Session =>
+		Query(QuestionsTable).where(_.id === questionId).firstOption
+	}
 
-	def read(ids: List[Long])(implicit s: Session) = Query(QuestionsTable).where(_.id inSet ids).list
+	def findQuestions(questionIds: List[Long]) = DB.withSession { implicit session: Session =>
+		Query(QuestionsTable).where(_.id inSet questionIds).list
+	}
 
-	def delete(id: Long)(implicit s: Session) = QuestionsTable.where(_.id === id).delete
+	def deleteQuestion(id: Long) = DB.withSession { implicit session: Session =>
+		QuestionsTable.where(_.id === id).delete
+	}
 }

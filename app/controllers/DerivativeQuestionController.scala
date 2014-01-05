@@ -11,7 +11,7 @@ import play.api.data.Forms.tuple
 import play.api.db.slick.DB
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
-import models.security.UserTable
+import service.table._
 
 object DerivativeQuestionController extends Controller with SecureSocial {
 
@@ -20,37 +20,37 @@ object DerivativeQuestionController extends Controller with SecureSocial {
 	}
 
 	def questions = SecuredAction { implicit request =>
-		DB.withSession { implicit session: Session =>
-			Ok(views.html.self_quiz_questions(Questions.all()))
-		}
+		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}
 
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
 			val set = sid.flatMap(Quizes.findQuiz(_))
-			val question = Questions.read(id).get // TODO better error if this is empty
+			val question = Questions.findQuestion(id).get // TODO better error if this is empty
 			Ok(views.html.self_quiz_answer(question, None, set))
 		}
 	}
 
 	def newQuestion = SecuredAction { implicit request =>
-		DB.withSession { implicit session: Session =>
-			DerivativeQuestionHTML.form.bindFromRequest.fold(
-				errors => BadRequest(views.html.self_quiz_questions(Questions.all())),
-				form => {
-					val user = UserTable.findByIdentityId(request.user.identityId).get // TODO better error if this is empty
-					val mathML = MathML(form._1).get // TODO better error if this is empty
-					Questions.create(user, mathML, form._2, form._3)
-					Redirect(routes.DerivativeQuestionController.questions)
-				})
+		request.user match {
+			case user: User => {
+				DerivativeQuestionHTML.form.bindFromRequest.fold(
+					errors => BadRequest(views.html.self_quiz_questions(Questions.allQuestions())),
+					form => {
+
+						val mathML = MathML(form._1).get // TODO better error if this is empty
+						Questions.createQuestion(user, mathML, form._2, form._3)
+						Redirect(routes.DerivativeQuestionController.questions)
+					})
+			}
+			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
 		}
+
 	}
 
 	def deleteQuestion(id: Long) = SecuredAction { implicit request =>
-		DB.withSession { implicit session: Session =>
-			Questions.delete(id);
-			Ok(views.html.self_quiz_questions(Questions.all()))
-		}
+		Questions.deleteQuestion(id);
+		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}
 
 }

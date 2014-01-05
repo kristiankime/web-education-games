@@ -11,11 +11,11 @@ import models.DBTest.inMemH2
 import play.api.test.FakeApplication
 import models.EquationsModel
 import securesocial.core.Identity
-import models.security.UserTmpTest
 import securesocial.core.IdentityId
 import java.util.UUID
 import org.joda.time.DateTime
 import securesocial.core.providers.Token
+import service.table._
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])

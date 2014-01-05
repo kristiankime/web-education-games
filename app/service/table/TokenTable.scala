@@ -1,4 +1,4 @@
-package models.security
+package service.table
 
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._

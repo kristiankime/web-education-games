@@ -1,12 +1,10 @@
-package models.security
+package service.table
 
 import securesocial.core._
 import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
 import securesocial.core.Identity
 import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
-import play.api.Play.current
 
 case class User(uid: Long,
 	identityId: IdentityId,

@@ -2,8 +2,10 @@ package controllers
 
 import play.api.mvc.Action
 import play.api.mvc.Controller
+import securesocial.core.SecureSocial
 
-object Application extends Controller with securesocial.core.SecureSocial {
+
+object Application extends Controller with SecureSocial {
 
 	/**
 	 * Application does not use trailing slashes so indicate to browsers

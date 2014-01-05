@@ -7,21 +7,29 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import models.mapper.MathMLMapper._
 import models.question.table._
+import play.api.db.slick.DB
+import play.api.Play.current
 
 case class Answer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object Answers {
-	def all()(implicit s: Session) = Query(AnswersTable).list
 
-	def create(question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean)(implicit s: Session): Long =
+	def createAnswer(question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): Long = DB.withSession { implicit session: Session =>
 		AnswersTable.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
+	}
 
 	private def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
 
-	def read(qid: Long)(implicit s: Session) = Query(AnswersTable).where(_.questionId === qid).list
+	def findAnswers(qid: Long) = DB.withSession { implicit session: Session =>
+		Query(AnswersTable).where(_.questionId === qid).list
+	}
 
-	def read(qid: Long, aid: Long)(implicit s: Session) = Query(AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
+	def findAnswer(qid: Long, aid: Long) = DB.withSession { implicit session: Session =>
+		Query(AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
+	}
 
-	def delete(id: Long)(implicit s: Session) = Query(AnswersTable).where(_.id === id).delete
+	def deleteAnswer(id: Long) = DB.withSession { implicit session: Session =>
+		Query(AnswersTable).where(_.id === id).delete
+	}
 }
 

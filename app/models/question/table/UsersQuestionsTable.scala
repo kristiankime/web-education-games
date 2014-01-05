@@ -3,7 +3,6 @@ package models.question.table
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
-import models.security._
 import models.question.table._
 import service.table.User
 import service.table.UserTable

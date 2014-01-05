@@ -3,12 +3,8 @@ package controllers
 import scala.slick.session.Session
 import mathml.MathML
 import models.question._
-import play.api.Play.current
 import play.api.data.Form
-import play.api.data.Forms.boolean
-import play.api.data.Forms.text
-import play.api.data.Forms.tuple
-import play.api.db.slick.DB
+import play.api.data.Forms._
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.table._
@@ -24,11 +20,9 @@ object DerivativeQuestionController extends Controller with SecureSocial {
 	}
 
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>
-		DB.withSession { implicit session: Session =>
-			val set = sid.flatMap(Quizes.findQuiz(_))
-			val question = Questions.findQuestion(id).get // TODO better error if this is empty
-			Ok(views.html.self_quiz_answer(question, None, set))
-		}
+		val set = sid.flatMap(Quizes.findQuiz(_))
+		val question = Questions.findQuestion(id).get // TODO better error if this is empty
+		Ok(views.html.self_quiz_answer(question, None, set))
 	}
 
 	def newQuestion = SecuredAction { implicit request =>

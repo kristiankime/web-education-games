@@ -13,27 +13,21 @@ import securesocial.core.SecureSocial
 object EquationController extends Controller with SecureSocial {
 
 	def equations = SecuredAction {
-		DB.withSession { implicit session: Session =>
-			Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
-		}
+		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
 	}
 
 	def newEquation = SecuredAction { implicit request =>
-		DB.withSession { implicit session: Session =>
-			EquationHTML.form.bindFromRequest.fold(
-				errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
-				equation => {
-					EquationsModel.create(equation)
-					Redirect(routes.EquationController.equations)
-				})
-		}
+		EquationHTML.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
+			equation => {
+				EquationsModel.create(equation)
+				Redirect(routes.EquationController.equations)
+			})
 	}
 
 	def deleteEquation(id: Long) = SecuredAction { implicit request =>
-		DB.withSession { implicit session: Session =>
-			EquationsModel.delete(id)
-			Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
-		}
+		EquationsModel.delete(id)
+		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
 	}
 
 }

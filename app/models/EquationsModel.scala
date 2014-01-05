@@ -3,19 +3,28 @@ package models
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
+import play.api.Play.current
 
 case class Equation(id: Long, equation: String)
 
 object EquationsModel {
 	val table = new EquationsTable
 
-	def all()(implicit s: Session) = Query(table).list
+	def all() = DB.withSession { implicit session: Session =>
+		Query(table).list
+	}
 
-	def create(equation: String)(implicit s:Session): Long = table.autoInc.insert(equation)
-	
-	def read(id: Long)(implicit s:Session) = Query(table).where(_.id === id).firstOption
-	
-	def delete(id: Long)(implicit s: Session) = table.where(_.id === id).delete
+	def create(equation: String): Long = DB.withSession { implicit session: Session =>
+		table.autoInc.insert(equation)
+	}
+
+	def read(id: Long) = DB.withSession { implicit session: Session =>
+		Query(table).where(_.id === id).firstOption
+	}
+
+	def delete(id: Long) = DB.withSession { implicit session: Session =>
+		table.where(_.id === id).delete
+	}
 }
 
 class EquationsTable extends Table[Equation]("equations") {

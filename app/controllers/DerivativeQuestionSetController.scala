@@ -17,7 +17,7 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 
 	def sets = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
-			Ok(views.html.self_quiz_question_sets(Quizes.all))
+			Ok(views.html.self_quiz_question_sets(Quizes.allQuizes))
 		}
 	}
 
@@ -29,7 +29,7 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 
 	def setEdit(id: Long) = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
-			Quizes.readIds(id) match {
+			Quizes.findQuizAndQuestionIds(id) match {
 				case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, Questions.all))
 				case None => Ok(views.html.self_quiz_question_set_create(Questions.all))
 			}
@@ -38,9 +38,9 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 
 	def setAnswer(id: Long) = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
-			Quizes.readQuestion(id) match {
+			Quizes.findQuizAndQuestions(id) match {
 				case Some(s) => Ok(views.html.self_quiz_question_set_answer(s._1, s._2))
-				case None => Ok(views.html.self_quiz_question_sets(Quizes.all))
+				case None => Ok(views.html.self_quiz_question_sets(Quizes.allQuizes))
 			}
 		}
 	}
@@ -48,9 +48,9 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 	def newSet = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
 			QuestionSetHTML.form.bindFromRequest.fold(
-				errors => BadRequest(views.html.self_quiz_question_sets(Quizes.all)),
+				errors => BadRequest(views.html.self_quiz_question_sets(Quizes.allQuizes)),
 				form => {
-					val id = Quizes.create(form._1, form._2)
+					val id = Quizes.createQuiz(form._1, form._2)
 					Redirect(routes.DerivativeQuestionSetController.sets)
 				})
 		}
@@ -59,9 +59,9 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 	def updateSet(id: Long) = SecuredAction { implicit request =>
 		DB.withSession { implicit session: Session =>
 			QuestionSetHTML.form.bindFromRequest.fold(
-				errors => BadRequest(views.html.self_quiz_question_sets(Quizes.all)),
+				errors => BadRequest(views.html.self_quiz_question_sets(Quizes.allQuizes)),
 				form => {
-					Quizes.update(Quiz(id, form._1), form._2)
+					Quizes.updateQuiz(Quiz(id, form._1), form._2)
 					Redirect(routes.DerivativeQuestionSetController.sets)
 				})
 		}

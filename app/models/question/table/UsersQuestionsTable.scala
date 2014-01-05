@@ -6,7 +6,7 @@ import scala.slick.lifted.ForeignKeyAction
 import models.security._
 import models.question.table._
 
-object UserQuestionsTable extends Table[(Long, Long)]("user_questions") {
+object UsersQuestionsTable extends Table[(Long, Long)]("user_questions") {
 	def userId = column[Long]("user_id", O.NotNull)
 	def questionId = column[Long]("question_id", O.NotNull)
 	def * = userId ~ questionId
@@ -16,5 +16,5 @@ object UserQuestionsTable extends Table[(Long, Long)]("user_questions") {
 	def userIdFK = foreignKey("user_questions_user_fk", userId, UserTable)(_.uid, onDelete = ForeignKeyAction.Cascade)
 	def questionIdFK = foreignKey("user_questions_question_fk", questionId, QuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-	def create(owner: User, question: Long)(implicit s: Session) { this.insert((owner.uid, question)) }
+	def create(owner: User, question: Long)(implicit s: Session) { ((UsersQuestionsTable.this)).insert((owner.uid, question)) }
 }

@@ -5,10 +5,12 @@ import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 
-object QuizQuestionsTable extends Table[(Long, Long)]("derivative_question_set_links") {
+case class Question2Quiz(questionId: Long, quizId: Long)
+
+object QuizQuestionsTable extends Table[Question2Quiz]("derivative_question_set_links") {
 	def questionId = column[Long]("question_id", O.NotNull)
 	def questionSetId = column[Long]("question_set_id", O.NotNull)
-	def * = questionId ~ questionSetId
+	def * = questionId ~ questionSetId <> (Question2Quiz, Question2Quiz.unapply _)
 
 	def pk = primaryKey("derivative_question_set_links_pk", (questionId, questionSetId))
 

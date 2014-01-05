@@ -6,7 +6,6 @@ import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import models.mapper.MathMLMapper._
 import models.security.User
-import models.question.table.UserQuestionsTable
 import models.question.table._
 
 case class Question(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
@@ -16,7 +15,7 @@ object Questions {
 
 	def create(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean)(implicit s: Session): Long = {
 		val qid = QuestionsTable.autoInc.insert(mathML, rawStr, synched)
-		UserQuestionsTable.create(owner, qid)
+		UsersQuestionsTable.create(owner, qid)
 		qid
 	}
 

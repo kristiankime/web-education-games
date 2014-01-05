@@ -25,7 +25,7 @@ object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 		DB.withSession { implicit session: Session =>
 			val question = Questions.read(qid).get // TODO can be null
 			val answer = Answers.read(qid, aid)
-			val set = sid.flatMap(Quizes.read(_))
+			val set = sid.flatMap(Quizes.findQuiz(_))
 			Ok(views.html.self_quiz_answer(question, answer, set))
 		}
 	}

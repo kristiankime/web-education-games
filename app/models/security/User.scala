@@ -31,7 +31,7 @@ case class UserTmp(identityId: IdentityId,
 	oAuth1Info: Option[OAuth1Info],
 	oAuth2Info: Option[OAuth2Info],
 	passwordInfo: Option[PasswordInfo]) {
-
+	
 	def apply(uid: Long) = User(uid, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo)
 }
 

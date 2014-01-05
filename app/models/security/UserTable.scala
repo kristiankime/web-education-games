@@ -58,8 +58,6 @@ object UserTable extends Table[User]("user") {
 
 	def all(implicit s: Session) = Query(UserTable).list
 
-	def save(i: Identity)(implicit s: Session): User = this.save(UserTmp(i))
-
 	def save(t: UserTmp)(implicit s: Session) = {
 		findByIdentityId(t.identityId) match {
 			case None => {

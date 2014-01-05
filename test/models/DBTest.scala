@@ -8,18 +8,18 @@ import play.api.test.FakeApplication
 
 object DBTest {
 
-	val inMemH2 = inMemoryDatabase(options=Map("MODE" -> "PostgreSQL"))
-	val appInMemH2 = FakeApplication(additionalConfiguration = inMemH2)
-	
-	def withSessionAndRollback[T](f: Session => T): T = {
-		import play.api.Play.current
-		DB.withSession { implicit s: Session =>
-			s.withTransaction {
-				val r = f(s)
-				s.rollback
-				r
-			}
-		}
-	}
+	val inMemH2 = inMemoryDatabase(options = Map("MODE" -> "PostgreSQL"))
+//	val appInMemH2 = FakeApplication(additionalConfiguration = inMemH2)
+//	
+//	def withSessionAndRollback[T](f: Session => T): T = {
+//		import play.api.Play.current
+//		DB.withSession { implicit s: Session =>
+//			s.withTransaction {
+//				val r = f(s)
+//				s.rollback
+//				r
+//			}
+//		}
+//	}
 
 }

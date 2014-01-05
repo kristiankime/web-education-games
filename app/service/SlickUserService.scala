@@ -7,16 +7,17 @@ import models.security.UserTable
 import play.api.db.slick.DB
 import scala.slick.session.Session
 import models.security.TokenTable
+import models.security.UserTmp
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 
 	// =========== Identity Methods ===========
-	def find(id: IdentityId) = DB.withSession { implicit s: Session =>
-		UserTable.findByIdentityId(id)
+	def save(user: Identity) = DB.withSession { implicit s: Session =>
+		UserTable.save(UserTmp(user))
 	}
 
-	def save(user: Identity) = DB.withSession { implicit s: Session =>
-		UserTable.save(user)
+	def find(id: IdentityId) = DB.withSession { implicit s: Session =>
+		UserTable.findByIdentityId(id)
 	}
 
 	def findByEmailAndProvider(email: String, providerId: String) = DB.withSession { implicit s: Session =>

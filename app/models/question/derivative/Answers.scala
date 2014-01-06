@@ -1,14 +1,13 @@
-package models.question
+package models.question.derivative
 
 import mathml._
 import mathml.scalar._
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
-import scala.slick.lifted.ForeignKeyAction
-import models.question.table._
 import play.api.db.slick.DB
 import play.api.Play.current
-import service.User
+import service._
+import models.question.derivative.table._
 
 case class Answer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 

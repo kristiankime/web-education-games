@@ -1,11 +1,11 @@
-package models.question.table
+package models.question.derivative.table
 
 import mathml._
 import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
-import models.question.table.MathMLMapper._
-import models.question.Answer
+import models.question.derivative.table.MathMLMapper._
+import models.question.derivative._
 
 object AnswersTable extends Table[Answer]("derivative_answers") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)

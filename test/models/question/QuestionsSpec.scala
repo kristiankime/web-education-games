@@ -15,6 +15,8 @@ import play.api.test.FakeApplication
 import play.api.test.Helpers.inMemoryDatabase
 import play.api.db.slick.DB
 import service.UserTmpTest
+import models.question.derivative.Questions
+import models.question.derivative.Question
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {

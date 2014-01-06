@@ -19,6 +19,7 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Web Hosting: [Heroku](https://www.heroku.com/)
 * Database: [Slick](http://slick.typesafe.com/) for accessing [H2](http://www.h2database.com/) for development & [PostgreSQL](http://www.postgresql.org/) for production
 * Authentication (TDB): [SecureSocial.ws](http://securesocial.ws/)
+* HTML UI: [Twitter Bootstrap](http://getbootstrap.com/)
 
 
 ### [Git](http://git-scm.com/)
@@ -81,6 +82,9 @@ Using H2 with play
 http://securesocial.ws/guide/getting-started.html
 Samples
 https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
+
+### [Twitter Bootstrap](http://getbootstrap.com/)
+http://stackoverflow.com/questions/10436815/how-to-use-twitter-bootstrap-2-with-play-framework-2-x
 
 #### mailer
 https://github.com/typesafehub/play-plugins/tree/master/mailer

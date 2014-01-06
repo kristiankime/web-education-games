@@ -1,9 +1,10 @@
-package models.question.table
+package models.question.derivative.table
 
 import mathml._
 import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
+import models.question.derivative._
 
 case class Quiz2Question(quizId: Long, questionId: Long)
 

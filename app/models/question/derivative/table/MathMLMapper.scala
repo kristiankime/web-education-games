@@ -1,4 +1,4 @@
-package models.question.table
+package models.question.derivative.table
 
 import scala.slick.lifted.MappedTypeMapper
 import mathml.Math

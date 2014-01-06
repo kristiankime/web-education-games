@@ -1,12 +1,12 @@
 package controllers
 
 import scala.slick.session.Session
-
 import models.question._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
+import models.question.derivative._
 
 object DerivativeQuestionSetController extends Controller with SecureSocial {
 

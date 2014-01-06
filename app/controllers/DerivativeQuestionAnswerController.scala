@@ -8,6 +8,9 @@ import play.api.data.Forms._
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
+import models.question.derivative.Quizes
+import models.question.derivative.Questions
+import models.question.derivative.Answers
 
 object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 

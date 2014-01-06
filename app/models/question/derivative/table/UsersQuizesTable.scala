@@ -1,11 +1,11 @@
-package models.question.table
+package models.question.derivative.table
 
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
-import models.question.table._
 import service.table._
-import service.User
+import service._
+import models.question.derivative._
 
 case class User2Quiz(userId: Long, questionId: Long)
 

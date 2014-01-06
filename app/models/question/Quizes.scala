@@ -14,7 +14,7 @@ object Quizes {
 
 	def createQuiz(name: String, questionIds: List[Long]) = DB.withSession { implicit session: Session =>
 		val quizId = QuizesTable.autoInc.insert(name)
-		QuizQuestionsTable.insertAll(questionIds.map(Question2Quiz(_, quizId)): _*)
+		QuizesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quizId, _)): _*)
 		quizId
 	}
 
@@ -27,12 +27,12 @@ object Quizes {
 	}
 
 	def findQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
-		Query(QuizQuestionsTable).where(_.questionSetId === quizId).list.map(_.questionId)
+		Query(QuizesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
 	}
 
 	def findQuestions(quizId: Long) = DB.withSession { implicit session: Session =>
 		(for {
-			l <- QuizQuestionsTable if l.questionSetId === quizId
+			l <- QuizesQuestionsTable if l.quizId === quizId
 			q <- QuestionsTable if l.questionId === q.id
 		} yield q).list
 	}
@@ -48,8 +48,8 @@ object Quizes {
 	def updateQuiz(quiz: Quiz, questionIds: List[Long]) = DB.withSession { implicit session: Session =>
 		QuizesTable.where(_.id === quiz.id).update(quiz)
 		// LATER do this more efficiently
-		QuizQuestionsTable.where(_.questionSetId === quiz.id).delete
-		QuizQuestionsTable.insertAll(questionIds.map(Question2Quiz(_, quiz.id)): _*)
+		QuizesQuestionsTable.where(_.quizId === quiz.id).delete
+		QuizesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
 	}
 
 	def deleteQuiz(id: Long) = DB.withSession { implicit session: Session =>

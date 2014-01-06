@@ -7,7 +7,7 @@ import scala.slick.lifted.ForeignKeyAction
 import models.mapper.MathMLMapper._
 import models.question.Answer
 
-object AnswersTable extends Table[Answer]("derivative_question_answers") {
+object AnswersTable extends Table[Answer]("derivative_answers") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def questionId = column[Long]("question_id", O.NotNull)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
@@ -18,5 +18,5 @@ object AnswersTable extends Table[Answer]("derivative_question_answers") {
 
 	def autoInc = questionId ~ mathML ~ rawStr ~ synched ~ correct returning id
 
-	def questionFK = foreignKey("question_fk", questionId, QuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionFK = foreignKey("derivative_answers_fk", questionId, QuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

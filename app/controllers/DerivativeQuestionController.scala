@@ -39,7 +39,6 @@ object DerivativeQuestionController extends Controller with SecureSocial {
 			}
 			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
 		}
-
 	}
 
 	def deleteQuestion(id: Long) = SecuredAction { implicit request =>

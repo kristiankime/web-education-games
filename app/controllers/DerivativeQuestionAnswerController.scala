@@ -7,6 +7,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
+import service.table.User
 
 object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 
@@ -23,19 +24,24 @@ object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 	}
 
 	def newAnswer(qid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
-		DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
-			errors => {
-				BadRequest(views.html.self_quiz_answer(Questions.findQuestion(qid).get, None, None)) // TODO currently we assume we can get the problem id here
-			},
-			answerForm => {
-				val question = Questions.findQuestion(qid).get // TODO check for no question here
-				val mathML = MathML(answerForm._1).get // TODO can fail here
-				val rawStr = answerForm._2
-				val synched = answerForm._3
+		request.user match {
+			case user: User => {
+				DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
+					errors => {
+						BadRequest(views.html.self_quiz_answer(Questions.findQuestion(qid).get, None, None)) // TODO currently we assume we can get the problem id here
+					},
+					answerForm => {
+						val question = Questions.findQuestion(qid).get // TODO check for no question here
+						val mathML = MathML(answerForm._1).get // TODO can fail here
+						val rawStr = answerForm._2
+						val synched = answerForm._3
 
-				val answerId = Answers.createAnswer(question, rawStr, mathML, synched)
-				Redirect(routes.DerivativeQuestionAnswerController.answer(question.id, answerId, sid))
-			})
+						val answerId = Answers.createAnswer(user, question, rawStr, mathML, synched)
+						Redirect(routes.DerivativeQuestionAnswerController.answer(question.id, answerId, sid))
+					})
+			}
+			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
+		}
 	}
 
 }

@@ -9,13 +9,16 @@ import models.mapper.MathMLMapper._
 import models.question.table._
 import play.api.db.slick.DB
 import play.api.Play.current
+import service.table.User
 
 case class Answer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object Answers {
 
-	def createAnswer(question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): Long = DB.withSession { implicit session: Session =>
-		AnswersTable.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
+	def createAnswer(answerer: User, question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): Long = DB.withSession { implicit session: Session =>
+		val answerId = AnswersTable.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
+		UsersAnswersTable.insert(answerer, answerId)
+		answerId
 	}
 
 	private def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)

@@ -4,7 +4,7 @@ import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import models.question.table._
-import service.table.User
+import service.User
 import service.table.UserTable
 
 case class User2Question(userId: Long, questionId: Long)

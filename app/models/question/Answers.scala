@@ -5,11 +5,10 @@ import mathml.scalar._
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
-import models.mapper.MathMLMapper._
 import models.question.table._
 import play.api.db.slick.DB
 import play.api.Play.current
-import service.table.User
+import service.User
 
 case class Answer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 

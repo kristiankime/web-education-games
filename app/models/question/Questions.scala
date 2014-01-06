@@ -4,8 +4,7 @@ import mathml._
 import mathml.scalar._
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
-import models.mapper.MathMLMapper._
-import service.table.User
+import service.User
 import models.question.table._
 import play.api.db.slick.DB
 import play.api.Play.current

@@ -1,4 +1,4 @@
-package models.mapper
+package service.table
 
 import scala.slick.lifted.MappedTypeMapper
 import scala.slick.lifted.TypeMapper

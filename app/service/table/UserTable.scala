@@ -3,7 +3,8 @@ package service.table
 import securesocial.core._
 import play.api.db.slick.Config.driver.simple._
 import securesocial.core.IdentityId
-import models.mapper.SecurityMapper._
+import service.table.SecurityMapper._
+import service._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 object UserTable extends Table[User]("user") {

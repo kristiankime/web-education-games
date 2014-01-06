@@ -1,9 +1,8 @@
-package models.mapper
+package models.question.table
 
 import scala.slick.lifted.MappedTypeMapper
 import mathml.Math
 import mathml.MathML
-import mathml.scalar.`0`
 import mathml.scalar.MathMLElem
 import mathml.scalar.Cn
 

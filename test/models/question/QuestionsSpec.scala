@@ -14,6 +14,7 @@ import models.DBTest.inMemH2
 import play.api.test.FakeApplication
 import play.api.test.Helpers.inMemoryDatabase
 import play.api.db.slick.DB
+import service.UserTmpTest
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {

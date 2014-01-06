@@ -3,7 +3,7 @@ package models.question.table
 import mathml._
 import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
-import models.mapper.MathMLMapper._
+import models.question.table.MathMLMapper._
 import models.question.Question
 
 object QuestionsTable extends Table[Question]("derivative_questions") {

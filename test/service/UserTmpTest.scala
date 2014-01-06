@@ -1,4 +1,4 @@
-package service.table
+package service
 
 import securesocial.core._
 

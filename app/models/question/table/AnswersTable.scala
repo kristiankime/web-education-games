@@ -4,7 +4,7 @@ import mathml._
 import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
-import models.mapper.MathMLMapper._
+import models.question.table.MathMLMapper._
 import models.question.Answer
 
 object AnswersTable extends Table[Answer]("derivative_answers") {

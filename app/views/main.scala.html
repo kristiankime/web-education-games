@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, headers: Html*)(content: Html)
 
 <!DOCTYPE html>
 
@@ -24,7 +24,12 @@
     <body>
 
     <header>
-        <a href="@routes.Application.index">@title</a>
+        <a href="@routes.Application.index">[ Home ]</a>
+        <a href="@routes.Application.userInfo">[ User ]</a>
+        @for(header <- headers) {
+        	[ @header ]
+        }
+        [ @title ]
     </header>
 
 	<hr>

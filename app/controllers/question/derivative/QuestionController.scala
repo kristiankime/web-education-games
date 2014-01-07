@@ -10,7 +10,6 @@ import securesocial.core.SecureSocial
 import service.table._
 import service.User
 import models.question.derivative._
-import controllers.question.derivative._
 
 object QuestionController extends Controller with SecureSocial {
 

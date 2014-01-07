@@ -31,6 +31,13 @@ object Questions {
 		Query(QuestionsTable).where(_.id inSet questionIds).list
 	}
 
+	def findQuestionsForUser(userId: Long) = DB.withSession { implicit session: Session =>
+		(for {
+			uq <- UsersQuestionsTable if uq.userId === userId
+			q <- QuestionsTable if uq.questionId === q.id
+		} yield q).list
+	}
+	
 	def deleteQuestion(id: Long) = DB.withSession { implicit session: Session =>
 		QuestionsTable.where(_.id === id).delete
 	}

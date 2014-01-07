@@ -20,6 +20,10 @@ object QuestionController extends Controller with SecureSocial {
 	def questions = SecuredAction { implicit request =>
 		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}
+	
+	def questionsByUser(uid: Long) = SecuredAction { implicit request =>
+		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(uid)))
+	}
 
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		val set = sid.flatMap(Quizzes.findQuiz(_))

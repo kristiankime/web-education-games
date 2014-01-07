@@ -1,6 +1,7 @@
 @(user: service.User)
 
 @import helper._
+@import controllers.question.derivative._
  
 @main("EdTech Welcome Page") {
     
@@ -9,6 +10,10 @@
     <p>
     	You are logged in as: @user.fullName <br>
     	You email is: @user.fullName
+    </p>
+    
+    <p>
+        <a href="@routes.QuestionController.questionsByUser(user.uid)"> See the questions you have created </a>
     </p>
     
 }

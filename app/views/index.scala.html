@@ -1,7 +1,6 @@
 @()
 
 @import helper._
-@import controllers.{EquationHTML => EQ}
  
 @main("EdTech Welcome Page") {
     
@@ -13,7 +12,7 @@
     
     <ul>
      <li> <a href=@routes.EquationController.equations> Try out the LaTeX equation editor</a> </li>
-     <li> <a href=@routes.DerivativeQuestionController.selfQuiz> Take a Self Quiz </a> </li>
+     <li> <a href=@controllers.question.derivative.routes.QuestionController.selfQuiz> Take a Self Quiz </a> </li>
     </ul>
     
 }

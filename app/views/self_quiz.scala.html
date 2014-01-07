@@ -1,7 +1,7 @@
 @()
 
 @import helper._
-@import controllers.{EquationHTML => EQ}
+@import controllers.question.derivative._ 
  
 @main("EdTech Self Quiz") {
     
@@ -12,9 +12,9 @@
     </p>
     
     <ul>
-     <li> <a href=@routes.DerivativeQuestionController.questions> See a list of all the questions</a> (You can try to answer one or make your own) </li>
-     <li> <a href=@routes.DerivativeQuestionSetController.sets> See a list of questions sets</a> (and pick one to answer) </li>
-     <li> <a href=@routes.DerivativeQuestionSetController.setCreate> Create your own set of questions</a> </li>
+     <li> <a href=@routes.QuestionController.questions> See a list of all the questions</a> (You can try to answer one or make your own) </li>
+     <li> <a href=@routes.QuizController.sets> See a list of questions sets</a> (and pick one to answer) </li>
+     <li> <a href=@routes.QuizController.setCreate> Create your own set of questions</a> </li>
     </ul>
     
 }

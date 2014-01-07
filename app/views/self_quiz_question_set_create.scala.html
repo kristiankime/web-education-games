@@ -1,13 +1,13 @@
 @(derivativeQs: List[derivative.Question])
 
 @import helper._
-@import controllers.QuestionSetHTML
+@import controllers.question.derivative._ 
  
 @main("Self Quiz Question Set Create") {
     
     <h2>Welcome to the EdTech Self Quiz Question Set Creator</h1>
     
-    @form(action = routes.DerivativeQuestionSetController.newSet) {
+    @form(action = routes.QuizController.newSet) {
 
 		<h4>Type the name of the Question Set here</h4> <br>
     	

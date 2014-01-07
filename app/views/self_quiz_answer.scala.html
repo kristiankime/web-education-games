@@ -1,17 +1,17 @@
  @(question: derivative.Question, answer: Option[derivative.Answer], questionSet: Option[derivative.Quiz])
 
 @import helper._
-@import controllers.DerivativeQuestionAnswerHTML
+@import controllers.question.derivative._ 
  
 @main("Answer a Self Quiz Question") {
 	
 	@if(questionSet.isEmpty){
     <div>
-    	<a href="@routes.DerivativeQuestionController.questions"> Back to the list of questions</a>
+    	<a href="@routes.QuestionController.questions"> Back to the list of questions</a>
     </div>
     } else {
     <div>
-    	<a href="@routes.DerivativeQuestionSetController.setAnswer(questionSet.get.id)"> Back to the question set "@questionSet.get.name" </a>
+    	<a href="@routes.QuizController.setAnswer(questionSet.get.id)"> Back to the question set "@questionSet.get.name" </a>
     </div>
     }
     
@@ -35,7 +35,7 @@
 	</div>
 		
 	<div>
-	@form(routes.DerivativeQuestionAnswerController.newAnswer(question.id, questionSet.map(_.id)) , 'id -> "answerForm" ) {
+	@form(routes.AnswerController.newAnswer(question.id, questionSet.map(_.id)) , 'id -> "answerForm" ) {
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.rawStr" id="answerRawStr">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.mathML" id="answerMathML">
     	<input type="hidden" name="@DerivativeQuestionAnswerHTML.current" id="answerCurrent">

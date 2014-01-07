@@ -1,7 +1,7 @@
 @(derivativeQs: List[derivative.Question])
 
 @import helper._
-@import controllers.DerivativeQuestionHTML
+@import controllers.question.derivative._ 
  
 @main("List of Self Quiz Questions") {
     
@@ -17,8 +17,8 @@
         @derivativeQs.map { derivativeQ =>
             <li>
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
-                [<a href=@routes.DerivativeQuestionController.question(derivativeQ.id, None)>answer</a>]
-                [<a href=@routes.DerivativeQuestionAnswerController.answers(derivativeQ.id)>previous answers</a>]
+                [<a href=@routes.QuestionController.question(derivativeQ.id, None)>answer</a>]
+                [<a href=@routes.AnswerController.answers(derivativeQ.id)>previous answers</a>]
             </li>
         }
     </ul>
@@ -31,7 +31,7 @@
 		@mathml_editor("QUESTION")
 	</p>
 
-    @form(routes.DerivativeQuestionController.newQuestion, 'id -> "derivativeqForm" ) {
+    @form(routes.QuestionController.newQuestion, 'id -> "derivativeqForm" ) {
     	<input type="hidden" name="@DerivativeQuestionHTML.mathML" id="derivativeQuestionMathML">
     	<input type="hidden" name="@DerivativeQuestionHTML.rawStr" id="derivativeQuestionRawStr">
     	<input type="hidden" name="@DerivativeQuestionHTML.current" id="derivativeQuestionCurrent">

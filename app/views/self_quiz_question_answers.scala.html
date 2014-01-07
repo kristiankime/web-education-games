@@ -1,11 +1,11 @@
 @(question: derivative.Question, answers: List[derivative.Answer])
 
 @import helper._
-@import controllers.DerivativeQuestionAnswerHTML
+@import controllers.question.derivative._ 
  
 @main("Self Quiz Question Answers") {
     <div>
-    	<a href="@routes.DerivativeQuestionController.questions"> Back to the list of questions</a>
+    	<a href="@routes.QuestionController.questions"> Back to the list of questions</a>
     </div>
     
     <div>
@@ -20,13 +20,13 @@
             <li>
             	<script type="math/mml"> @Html(answer.mathML.toString) </script>
             	this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
-                <a href=@routes.DerivativeQuestionAnswerController.answer(answer.questionId, answer.id, None)> details </a>
+                <a href=@routes.AnswerController.answer(answer.questionId, answer.id, None)> details </a>
             </li>
         }
     </ul>
     <p>
 	
 	<div>
-		To answer this questions <a href=@routes.DerivativeQuestionController.question(question.id, None)> go here </a>
+		To answer this questions <a href=@routes.QuestionController.question(question.id, None)> go here </a>
 	</div>
 }

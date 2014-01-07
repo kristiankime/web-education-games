@@ -1,6 +1,5 @@
-package controllers
+package controllers.question.derivative
 
-import scala.slick.session.Session
 import mathml.MathML
 import models.question._
 import play.api.data.Form
@@ -9,8 +8,9 @@ import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
 import models.question.derivative._
+import controllers.question.derivative._
 
-object DerivativeQuestionAnswerController extends Controller with SecureSocial {
+object AnswerController extends Controller with SecureSocial {
 
 	def answers(id: Long) = SecuredAction { implicit request =>
 		val question = Questions.findQuestion(id).get // TODO can be null
@@ -38,7 +38,7 @@ object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 						val synched = answerForm._3
 
 						val answerId = Answers.createAnswer(user, question, rawStr, mathML, synched)
-						Redirect(routes.DerivativeQuestionAnswerController.answer(question.id, answerId, sid))
+						Redirect(routes.AnswerController.answer(question.id, answerId, sid))
 					})
 			}
 			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 

@@ -15,24 +15,24 @@ POST   /equation                             controllers.EquationController.newE
 POST   /equation/:id/delete                  controllers.EquationController.deleteEquation(id: Long)
 
 # Derivative question pages
-GET    /selfquiz                             controllers.DerivativeQuestionController.selfQuiz
-GET    /selfquiz/question                    controllers.DerivativeQuestionController.questions
-GET    /selfquiz/question/:qid               controllers.DerivativeQuestionController.question(qid: Long, sid: Option[Long])
-POST   /selfquiz/question                    controllers.DerivativeQuestionController.newQuestion
-POST   /selfquiz/question/:qid/delete        controllers.DerivativeQuestionController.deleteQuestion(qid: Long) 
+GET    /selfquiz                             controllers.question.derivative.QuestionController.selfQuiz
+GET    /selfquiz/question                    controllers.question.derivative.QuestionController.questions
+GET    /selfquiz/question/:qid               controllers.question.derivative.QuestionController.question(qid: Long, sid: Option[Long])
+POST   /selfquiz/question                    controllers.question.derivative.QuestionController.newQuestion
+POST   /selfquiz/question/:qid/delete        controllers.question.derivative.QuestionController.deleteQuestion(qid: Long) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.DerivativeQuestionAnswerController.answers(qid: Long)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.DerivativeQuestionAnswerController.answer(qid: Long, aid : Long, sid: Option[Long])
-POST   /selfquiz/question/:qid/answer/       controllers.DerivativeQuestionAnswerController.newAnswer(qid: Long, sid: Option[Long])
+GET    /selfquiz/question/:qid/answer        controllers.question.derivative.AnswerController.answers(qid: Long)
+GET    /selfquiz/question/:qid/answer/:aid   controllers.question.derivative.AnswerController.answer(qid: Long, aid : Long, sid: Option[Long])
+POST   /selfquiz/question/:qid/answer/       controllers.question.derivative.AnswerController.newAnswer(qid: Long, sid: Option[Long])
 
 # Derivative queston set pages
-GET    /selfquiz/questionset                 controllers.DerivativeQuestionSetController.sets
-GET    /selfquiz/questionset/create          controllers.DerivativeQuestionSetController.setCreate
-GET    /selfquiz/questionset/:sid            controllers.DerivativeQuestionSetController.setAnswer(sid: Long)
-GET    /selfquiz/questionset/:sid/edit       controllers.DerivativeQuestionSetController.setEdit(sid: Long)
-POST   /selfquiz/questionset                 controllers.DerivativeQuestionSetController.newSet
-POST   /selfquiz/questionset/:sid/update     controllers.DerivativeQuestionSetController.updateSet(sid: Long)
+GET    /selfquiz/questionset                 controllers.question.derivative.QuizController.sets
+GET    /selfquiz/questionset/create          controllers.question.derivative.QuizController.setCreate
+GET    /selfquiz/questionset/:sid            controllers.question.derivative.QuizController.setAnswer(sid: Long)
+GET    /selfquiz/questionset/:sid/edit       controllers.question.derivative.QuizController.setEdit(sid: Long)
+POST   /selfquiz/questionset                 controllers.question.derivative.QuizController.newSet
+POST   /selfquiz/questionset/:sid/update     controllers.question.derivative.QuizController.updateSet(sid: Long)
 
 # START Routes for Secure Social
 # Login page

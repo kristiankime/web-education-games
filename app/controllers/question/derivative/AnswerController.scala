@@ -27,7 +27,7 @@ object AnswerController extends Controller with SecureSocial {
 	def newAnswer(qid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		request.user match {
 			case user: User => {
-				DerivativeQuestionAnswerHTML.form.bindFromRequest.fold(
+				AnswerHTML.form.bindFromRequest.fold(
 					errors => {
 						BadRequest(views.html.self_quiz_answer(Questions.findQuestion(qid).get, None, None)) // TODO currently we assume we can get the problem id here
 					},
@@ -47,7 +47,7 @@ object AnswerController extends Controller with SecureSocial {
 
 }
 
-object DerivativeQuestionAnswerHTML {
+object AnswerHTML {
 	val mathML = "mathML"
 	val rawStr = "rawStr"
 	val current = "current"

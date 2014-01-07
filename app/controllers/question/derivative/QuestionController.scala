@@ -31,7 +31,7 @@ object QuestionController extends Controller with SecureSocial {
 	def newQuestion = SecuredAction { implicit request =>
 		request.user match {
 			case user: User => {
-				DerivativeQuestionHTML.form.bindFromRequest.fold(
+				QuestionHTML.form.bindFromRequest.fold(
 					errors => BadRequest(views.html.self_quiz_questions(Questions.allQuestions())),
 					form => {
 
@@ -51,7 +51,7 @@ object QuestionController extends Controller with SecureSocial {
 
 }
 
-object DerivativeQuestionHTML {
+object QuestionHTML {
 	val mathML = "mathML"
 	val rawStr = "rawStr"
 	val current = "current"

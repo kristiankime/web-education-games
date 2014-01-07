@@ -37,7 +37,7 @@ object QuizController extends Controller with SecureSocial {
 	def newSet = SecuredAction { implicit request =>
 		request.user match {
 			case user: User => {
-				QuestionSetHTML.form.bindFromRequest.fold(
+				QuizHTML.form.bindFromRequest.fold(
 					errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 					form => {
 						val id = Quizzes.createQuiz(user, form._1, form._2)
@@ -49,7 +49,7 @@ object QuizController extends Controller with SecureSocial {
 	}
 
 	def updateSet(id: Long) = SecuredAction { implicit request =>
-		QuestionSetHTML.form.bindFromRequest.fold(
+		QuizHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {
 				Quizzes.updateQuiz(Quiz(id, form._1), form._2)
@@ -59,7 +59,7 @@ object QuizController extends Controller with SecureSocial {
 
 }
 
-object QuestionSetHTML {
+object QuizHTML {
 	val name = "name"
 	val questionId = "questionId"
 	def questionId(i: Int) = "questionId[" + i + "]"

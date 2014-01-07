@@ -11,7 +11,7 @@
     
     	<h4>Change the name of the Question Set here</h4> <br>
     
-    	<input type="text" name="@QuestionSetHTML.name" value="@questionSet._1.name"> <br>
+    	<input type="text" name="@QuizHTML.name" value="@questionSet._1.name"> <br>
     
 	    <h4>Select which question(s) you want in your quiz</h4> <br>
 	    
@@ -19,7 +19,7 @@
 	    	@derivativeQs.zip(0 until derivativeQs.size).map{ q =>
 	            <li>
 	            	<script type="math/mml"> @Html(q._1.mathML.toString) </script>
-	            	<input type="checkbox" name="@QuestionSetHTML.questionId(q._2)" value="@q._1.id" @if(questionSet._2.contains(q._1.id) ){ checked }>
+	            	<input type="checkbox" name="@QuizHTML.questionId(q._2)" value="@q._1.id" @if(questionSet._2.contains(q._1.id) ){ checked }>
 	            </li>
 	        }
 	    </ul>

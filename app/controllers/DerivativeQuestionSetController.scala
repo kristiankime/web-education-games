@@ -7,11 +7,12 @@ import play.api.data.Forms._
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import models.question.derivative._
+import service.User
 
 object DerivativeQuestionSetController extends Controller with SecureSocial {
 
 	def sets = SecuredAction { implicit request =>
-		Ok(views.html.self_quiz_question_sets(Quizes.allQuizes))
+		Ok(views.html.self_quiz_question_sets(Quizzes.allQuizzes))
 	}
 
 	def setCreate = SecuredAction { implicit request =>
@@ -19,33 +20,38 @@ object DerivativeQuestionSetController extends Controller with SecureSocial {
 	}
 
 	def setEdit(id: Long) = SecuredAction { implicit request =>
-		Quizes.findQuizAndQuestionIds(id) match {
+		Quizzes.findQuizAndQuestionIds(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, Questions.allQuestions))
 			case None => Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
 		}
 	}
 
 	def setAnswer(id: Long) = SecuredAction { implicit request =>
-		Quizes.findQuizAndQuestions(id) match {
+		Quizzes.findQuizAndQuestions(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_answer(s._1, s._2))
-			case None => Ok(views.html.self_quiz_question_sets(Quizes.allQuizes))
+			case None => Ok(views.html.self_quiz_question_sets(Quizzes.allQuizzes))
 		}
 	}
 
 	def newSet = SecuredAction { implicit request =>
-		QuestionSetHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_question_sets(Quizes.allQuizes)),
-			form => {
-				val id = Quizes.createQuiz(form._1, form._2)
-				Redirect(routes.DerivativeQuestionSetController.sets)
-			})
+		request.user match {
+			case user: User => {
+				QuestionSetHTML.form.bindFromRequest.fold(
+					errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
+					form => {
+						val id = Quizzes.createQuiz(user, form._1, form._2)
+						Redirect(routes.DerivativeQuestionSetController.sets)
+					})
+			}
+			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
+		}
 	}
 
 	def updateSet(id: Long) = SecuredAction { implicit request =>
 		QuestionSetHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.self_quiz_question_sets(Quizes.allQuizes)),
+			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {
-				Quizes.updateQuiz(Quiz(id, form._1), form._2)
+				Quizzes.updateQuiz(Quiz(id, form._1), form._2)
 				Redirect(routes.DerivativeQuestionSetController.sets)
 			})
 	}

@@ -7,18 +7,19 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.Play.current
 import models.question.derivative.table._
+import service.User
 
 case class Quiz(id: Long, name: String)
 
-object Quizes {
+object Quizzes {
 
-	def createQuiz(name: String, questionIds: List[Long]) = DB.withSession { implicit session: Session =>
+	def createQuiz(creator: User, name: String, questionIds: List[Long]) = DB.withSession { implicit session: Session =>
 		val quizId = QuizesTable.autoInc.insert(name)
-		QuizesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quizId, _)): _*)
+		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quizId, _)): _*)
 		quizId
 	}
 
-	def allQuizes() = DB.withSession { implicit session: Session =>
+	def allQuizzes() = DB.withSession { implicit session: Session =>
 		Query(QuizesTable).list
 	}
 
@@ -27,12 +28,12 @@ object Quizes {
 	}
 
 	def findQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
-		Query(QuizesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
+		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
 	}
 
 	def findQuestions(quizId: Long) = DB.withSession { implicit session: Session =>
 		(for {
-			l <- QuizesQuestionsTable if l.quizId === quizId
+			l <- QuizzesQuestionsTable if l.quizId === quizId
 			q <- QuestionsTable if l.questionId === q.id
 		} yield q).list
 	}
@@ -48,8 +49,8 @@ object Quizes {
 	def updateQuiz(quiz: Quiz, questionIds: List[Long]) = DB.withSession { implicit session: Session =>
 		QuizesTable.where(_.id === quiz.id).update(quiz)
 		// LATER do this more efficiently
-		QuizesQuestionsTable.where(_.quizId === quiz.id).delete
-		QuizesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
+		QuizzesQuestionsTable.where(_.quizId === quiz.id).delete
+		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
 	}
 
 	def deleteQuiz(id: Long) = DB.withSession { implicit session: Session =>

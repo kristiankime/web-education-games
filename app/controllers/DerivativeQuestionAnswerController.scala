@@ -8,9 +8,7 @@ import play.api.data.Forms._
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
-import models.question.derivative.Quizes
-import models.question.derivative.Questions
-import models.question.derivative.Answers
+import models.question.derivative._
 
 object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 
@@ -22,7 +20,7 @@ object DerivativeQuestionAnswerController extends Controller with SecureSocial {
 	def answer(qid: Long, aid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		val question = Questions.findQuestion(qid).get // TODO can be null
 		val answer = Answers.findAnswer(qid, aid)
-		val set = sid.flatMap(Quizes.findQuiz(_))
+		val set = sid.flatMap(Quizzes.findQuiz(_))
 		Ok(views.html.self_quiz_answer(question, answer, set))
 	}
 

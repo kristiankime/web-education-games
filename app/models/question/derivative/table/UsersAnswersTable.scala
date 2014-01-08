@@ -18,7 +18,7 @@ object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") 
 	def pk = primaryKey("derivative_users_answers_pk", (userId, answerId))
 
 	def userIdFK = foreignKey("derivative_users_answers_user_fk", userId, UserTable)(_.uid, onDelete = ForeignKeyAction.Cascade)
-	def questionIdFK = foreignKey("derivative_users_answers_question_fk", answerId, AnswersTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def answerIdFK = foreignKey("derivative_users_answers_question_fk", answerId, AnswersTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 	def insert(answerer: User, answerId: Long)(implicit s: Session) { this.insert(User2Answer(answerer.uid, answerId)) }
 }

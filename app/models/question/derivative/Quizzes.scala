@@ -8,6 +8,7 @@ import play.api.db.slick.DB
 import play.api.Play.current
 import models.question.derivative.table._
 import service.User
+import models.question.derivative.table._
 
 case class Quiz(id: Long, name: String)
 

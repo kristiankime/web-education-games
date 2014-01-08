@@ -1,0 +1,21 @@
+@(courses: List[(Course, Boolean)])
+
+@import helper._
+ 
+@main("List of Courses") {
+    
+    <h2>Welcome to the EdTech Course Catalog</h1>
+    
+    <p>
+    	Select the course you would like to take.
+    </p>
+    
+    <ul>
+        @courses.map { course =>
+            <li>
+            	@course._1.name
+            </li>
+        }
+    </ul>
+    
+}

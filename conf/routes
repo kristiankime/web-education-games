@@ -10,6 +10,9 @@ GET    /*path/                               controllers.Application.untrail(pat
 GET    /                                     controllers.Application.index
 GET    /user                                 controllers.Application.userInfo
 
+# Organization pages
+GET    /courses	                             controllers.organization.CoursesController.courseList
+
 # Equation pages
 GET    /equation                             controllers.EquationController.equations
 POST   /equation                             controllers.EquationController.newEquation

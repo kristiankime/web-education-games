@@ -20,7 +20,7 @@ object QuestionController extends Controller with SecureSocial {
 	def questions = SecuredAction { implicit request =>
 		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}
-	
+
 	def questionsByUser(uid: Long) = SecuredAction { implicit request =>
 		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(uid)))
 	}
@@ -32,19 +32,15 @@ object QuestionController extends Controller with SecureSocial {
 	}
 
 	def newQuestion = SecuredAction { implicit request =>
-		request.user match {
-			case user: User => {
-				QuestionHTML.form.bindFromRequest.fold(
-					errors => BadRequest(views.html.self_quiz_questions(Questions.allQuestions())),
-					form => {
+		QuestionHTML.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.self_quiz_questions(Questions.allQuestions())),
+			form => {
 
-						val mathML = MathML(form._1).get // TODO better error if this is empty
-						Questions.createQuestion(user, mathML, form._2, form._3)
-						Redirect(routes.QuestionController.questions)
-					})
-			}
-			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
-		}
+				val mathML = MathML(form._1).get // TODO better error if this is empty
+				Questions.createQuestion(User(request), mathML, form._2, form._3)
+				Redirect(routes.QuestionController.questions)
+			})
+
 	}
 
 	def deleteQuestion(id: Long) = SecuredAction { implicit request =>

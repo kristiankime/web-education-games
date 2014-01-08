@@ -34,17 +34,12 @@ object QuizController extends Controller with SecureSocial {
 	}
 
 	def newSet = SecuredAction { implicit request =>
-		request.user match {
-			case user: User => {
-				QuizHTML.form.bindFromRequest.fold(
-					errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
-					form => {
-						val id = Quizzes.createQuiz(user, form._1, form._2)
-						Redirect(routes.QuizController.sets)
-					})
-			}
-			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
-		}
+		QuizHTML.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
+			form => {
+				val id = Quizzes.createQuiz(User(request), form._1, form._2)
+				Redirect(routes.QuizController.sets)
+			})
 	}
 
 	def updateSet(id: Long) = SecuredAction { implicit request =>

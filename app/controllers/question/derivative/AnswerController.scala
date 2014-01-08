@@ -24,24 +24,19 @@ object AnswerController extends Controller with SecureSocial {
 	}
 
 	def newAnswer(qid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
-		request.user match {
-			case user: User => {
-				AnswerHTML.form.bindFromRequest.fold(
-					errors => {
-						BadRequest(views.html.self_quiz_answer(Questions.findQuestion(qid).get, None, None)) // TODO currently we assume we can get the problem id here
-					},
-					answerForm => {
-						val question = Questions.findQuestion(qid).get // TODO check for no question here
-						val mathML = MathML(answerForm._1).get // TODO can fail here
-						val rawStr = answerForm._2
-						val synched = answerForm._3
+		AnswerHTML.form.bindFromRequest.fold(
+			errors => {
+				BadRequest(views.html.self_quiz_answer(Questions.findQuestion(qid).get, None, None)) // TODO currently we assume we can get the problem id here
+			},
+			answerForm => {
+				val question = Questions.findQuestion(qid).get // TODO check for no question here
+				val mathML = MathML(answerForm._1).get // TODO can fail here
+				val rawStr = answerForm._2
+				val synched = answerForm._3
 
-						val answerId = Answers.createAnswer(user, question, rawStr, mathML, synched)
-						Redirect(routes.AnswerController.answer(question.id, answerId, sid))
-					})
-			}
-			case _ => throw new IllegalStateException("User was not the expected type this should not happen") // did not get a User instance, log error throw exception 
-		}
+				val answerId = Answers.createAnswer(User(request), question, rawStr, mathML, synched)
+				Redirect(routes.AnswerController.answer(question.id, answerId, sid))
+			})
 	}
 
 }

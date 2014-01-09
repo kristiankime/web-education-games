@@ -9,6 +9,8 @@ import play.api.db.slick.DB
 import play.api.Play.current
 import models.question.derivative.table.QuestionsTable
 import models.question.derivative.table.UsersQuestionsTable
+import models.id._
+import models.id.Ids._
 
 case class Question(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
 
@@ -31,7 +33,7 @@ object Questions {
 		Query(QuestionsTable).where(_.id inSet questionIds).list
 	}
 
-	def findQuestionsForUser(userId: Long) = DB.withSession { implicit session: Session =>
+	def findQuestionsForUser(userId: UID) = DB.withSession { implicit session: Session =>
 		(for {
 			uq <- UsersQuestionsTable if uq.userId === userId
 			q <- QuestionsTable if uq.questionId === q.id

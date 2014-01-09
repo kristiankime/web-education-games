@@ -7,6 +7,8 @@ import service.table._
 import service._
 import models.question.derivative._
 import models.question.derivative.table.QuizesTable
+import models.id.Ids._
+import models.id._
 
 case class Course2Quiz(courseId: Long, quizId: Long)
 
@@ -19,6 +21,4 @@ object CoursesQuizzesTable extends Table[Course2Quiz]("derivative_courses_quizze
 
 	def courseIdFK = foreignKey("derivative_courses_quizzes_course_fk", courseId, CoursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionIdFK = foreignKey("derivative_courses_quizzes_quiz_fk", quizId, QuizesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-
-	def insert(owner: User, quizId: Long)(implicit s: Session) { this.insert(Course2Quiz(owner.uid, quizId)) }
 }

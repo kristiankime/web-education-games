@@ -9,6 +9,8 @@ import mathml.scalar._
 import models.question.derivative.table._
 import models.organization.table._
 import service._
+import models.id.Ids._
+import models.id._
 
 case class Course(id: Long, name: String)
 
@@ -28,10 +30,8 @@ object Courses {
 
 	def createCourse(teacher: User, courseInfo: CourseTmp, quizes: Long*) = DB.withSession { implicit session: Session =>
 		val courseId = CoursesTable.insert(courseInfo)
-
 		UsersCoursesTable.insert(User2Course(teacher.uid, courseId))
-
-		UsersCoursesTable.insertAll(quizes.map(User2Course(courseId, _)): _*)
+		CoursesQuizzesTable.insertAll(quizes.map(Course2Quiz(courseId, _)): _*)
 		courseId
 	}
 	//

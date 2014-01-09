@@ -7,11 +7,13 @@ import service.table._
 import service._
 import models.question.derivative._
 import models.question.derivative.table.QuizesTable
+import models.id.Ids._
+import models.id._
 
-case class User2Course(userId: Long, courseId: Long)
+case class User2Course(userId: UID, courseId: Long)
 
 object UsersCoursesTable extends Table[User2Course]("users_courses") {
-	def userId = column[Long]("user_id", O.NotNull)
+	def userId = column[UID]("user_id", O.NotNull)
 	def courseId = column[Long]("course_id", O.NotNull)
 	def * = userId ~ courseId <> (User2Course, User2Course.unapply _)
 

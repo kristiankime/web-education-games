@@ -7,11 +7,13 @@ import service._
 import service.table._
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
+import models.id.Ids._
+import models.id._
 
-case class User2Answer(userId: Long, answerId: Long)
+case class User2Answer(userId: UID, answerId: Long)
 
 object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") {
-	def userId = column[Long]("user_id", O.NotNull)
+	def userId = column[UID]("user_id", O.NotNull)
 	def answerId = column[Long]("answer_id", O.NotNull)
 	def * = userId ~ answerId <> (User2Answer, User2Answer.unapply _)
 

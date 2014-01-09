@@ -10,6 +10,8 @@ import securesocial.core.SecureSocial
 import service.table._
 import service.User
 import models.question.derivative._
+import models.id._
+
 
 object QuestionController extends Controller with SecureSocial {
 
@@ -22,7 +24,7 @@ object QuestionController extends Controller with SecureSocial {
 	}
 
 	def questionsByUser(uid: Long) = SecuredAction { implicit request =>
-		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(uid)))
+		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(UID(uid))))
 	}
 
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>

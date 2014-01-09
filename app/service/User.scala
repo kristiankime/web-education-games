@@ -8,8 +8,9 @@ import securesocial.core.OAuth1Info
 import securesocial.core.SecuredRequest
 import play.api.mvc.AnyContent
 import play.api.mvc.Result
+import models.id.UID
 
-case class User(uid: Long,
+case class User(uid: UID,
 	identityId: IdentityId,
 	firstName: String,
 	lastName: String,
@@ -42,7 +43,7 @@ case class UserTmp(identityId: IdentityId,
 	oAuth2Info: Option[OAuth2Info],
 	passwordInfo: Option[PasswordInfo]) {
 
-	def apply(uid: Long) = User(uid, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo)
+	def apply(uid: UID) = User(uid, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo)
 }
 
 object UserTmp {

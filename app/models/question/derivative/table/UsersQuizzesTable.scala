@@ -6,11 +6,13 @@ import scala.slick.lifted.ForeignKeyAction
 import service.table._
 import service._
 import models.question.derivative._
+import models.id.Ids._
+import models.id._
 
-case class User2Quiz(userId: Long, quizId: Long)
+case class User2Quiz(userId: UID, quizId: Long)
 
 object UsersQuizzesTable extends Table[User2Quiz]("derivative_users_quizzes") {
-	def userId = column[Long]("user_id", O.NotNull)
+	def userId = column[UID]("user_id", O.NotNull)
 	def quizId = column[Long]("quiz_id", O.NotNull)
 	def * = userId ~ quizId <> (User2Quiz, User2Quiz.unapply _)
 

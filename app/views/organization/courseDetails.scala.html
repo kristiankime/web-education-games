@@ -1,0 +1,21 @@
+@(course: Course, enrolled: Boolean, quizes: List[derivative.Quiz])
+
+@import helper._
+@import controllers.question.derivative._ 
+ 
+@main("List of Courses") {
+    
+    <h2>Welcome to the @course.name information page</h1>
+    
+    @if(enrolled){<h5>You are currently enrolled in this course</h5>}
+    
+    <h4>There are @quizes.size Question sets associated with this class:</h4>
+    <ul>
+        @quizes.map { quiz =>
+            <li>
+            	<a href=@routes.QuizController.setAnswer(quiz.id)> @quiz.name </a>
+            </li>
+        }
+    </ul>
+    
+}

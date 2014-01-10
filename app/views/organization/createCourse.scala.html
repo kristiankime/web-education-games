@@ -1,0 +1,29 @@
+@(quizes: List[derivative.Quiz])
+
+@import helper._
+@import controllers.organization.CourseHTML
+ 
+@main("Create a Course") {
+    
+    <h2>Please enter the information about your course</h1>
+    
+    @form(action = controllers.organization.routes.CoursesController.createCourse) {
+
+		<h4>Type the name of the Course here</h4> <br>
+    	
+    	<input type="text" name="@CourseHTML.name" value="question set name"> <br>
+    
+	    <h4>Select which quiz(es) you want in your Course</h4> <br>
+	    
+	    <ul>
+	    	@quizes.zip(0 until quizes.size).map{ q =>
+	            <li>
+	            	<a href=@controllers.question.derivative.routes.QuizController.setEdit(q._1.id)> @q._1.name </a>
+	            	<input type="checkbox" name="@CourseHTML.quizId(q._2)" value="@q._1.id">
+	            </li>
+	        }
+	    </ul>
+	    <input type="submit" value="Submit">
+    }
+    
+}

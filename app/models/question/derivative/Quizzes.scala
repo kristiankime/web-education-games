@@ -28,6 +28,10 @@ object Quizzes {
 		Query(QuizesTable).where(_.id === quizId).firstOption
 	}
 
+	def findQuizzes(quizIds: List[Long]) = DB.withSession { implicit session: Session =>
+		Query(QuizesTable).where(_.id inSet quizIds.toSet).firstOption
+	}
+	
 	def findQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
 		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
 	}

@@ -20,6 +20,17 @@ case class CourseTmp(name: String) {
 
 object Courses {
 
+	def coursesAndEnrollment(courseId: Long)(implicit user: User) = DB.withSession { implicit session: Session =>
+		val course = Query(CoursesTable).where(_.id === courseId).firstOption
+		val enrolled = Query(UsersCoursesTable).where(uc => uc.userId === user.uid && uc.courseId === courseId).firstOption.nonEmpty
+		val quizes = (for {
+			cq <- CoursesQuizzesTable if cq.courseId === courseId
+			q <- QuizesTable if cq.quizId === q.id
+		} yield q).list
+
+		course.map((_, enrolled, quizes))
+	}
+
 	def coursesAndEnrollment(implicit user: User) = DB.withSession { implicit session: Session =>
 		(for {
 			c <- CoursesTable

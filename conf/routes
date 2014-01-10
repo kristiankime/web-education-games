@@ -11,7 +11,11 @@ GET    /                                     controllers.Application.index
 GET    /user                                 controllers.Application.userInfo
 
 # Organization pages
-GET    /courses	                             controllers.organization.CoursesController.courseList
+GET    /course                               controllers.organization.CoursesController.courseList
+GET    /course/:id                           controllers.organization.CoursesController.courseDetails(id: Long)
+POST   /course                               controllers.organization.CoursesController.createCourse
+# POST   /course/:id/update                    controllers.organization.CoursesController.updateCourse(id: Long)
+
 
 # Equation pages
 GET    /equation                             controllers.EquationController.equations
@@ -41,23 +45,23 @@ POST   /selfquiz/questionset/:sid/update     controllers.question.derivative.Qui
 
 # START Routes for Secure Social
 # Login page
-GET     /login                      securesocial.controllers.LoginPage.login
-GET     /logout                     securesocial.controllers.LoginPage.logout
+GET    /login                                securesocial.controllers.LoginPage.login
+GET    /logout                               securesocial.controllers.LoginPage.logout
 # User Registration and password handling 
-GET     /signup                     securesocial.controllers.Registration.startSignUp
-POST    /signup                     securesocial.controllers.Registration.handleStartSignUp
-GET     /signup/:token              securesocial.controllers.Registration.signUp(token)
-POST    /signup/:token              securesocial.controllers.Registration.handleSignUp(token)
-GET     /reset                      securesocial.controllers.Registration.startResetPassword
-POST    /reset                      securesocial.controllers.Registration.handleStartResetPassword
-GET     /reset/:token               securesocial.controllers.Registration.resetPassword(token)
-POST    /reset/:token               securesocial.controllers.Registration.handleResetPassword(token)
-GET     /password                   securesocial.controllers.PasswordChange.page
-POST    /password                   securesocial.controllers.PasswordChange.handlePasswordChange
+GET    /signup                               securesocial.controllers.Registration.startSignUp
+POST   /signup                               securesocial.controllers.Registration.handleStartSignUp
+GET    /signup/:token                        securesocial.controllers.Registration.signUp(token)
+POST   /signup/:token                        securesocial.controllers.Registration.handleSignUp(token)
+GET    /reset                                securesocial.controllers.Registration.startResetPassword
+POST   /reset                                securesocial.controllers.Registration.handleStartResetPassword
+GET    /reset/:token                         securesocial.controllers.Registration.resetPassword(token)
+POST   /reset/:token                         securesocial.controllers.Registration.handleResetPassword(token)
+GET    /password                             securesocial.controllers.PasswordChange.page
+POST   /password                             securesocial.controllers.PasswordChange.handlePasswordChange
 # Providers entry points
-GET     /authenticate/:provider     securesocial.controllers.ProviderController.authenticate(provider)
-POST    /authenticate/:provider     securesocial.controllers.ProviderController.authenticateByPost(provider)
-GET     /not-authorized             securesocial.controllers.ProviderController.notAuthorized
+GET    /authenticate/:provider               securesocial.controllers.ProviderController.authenticate(provider)
+POST   /authenticate/:provider               securesocial.controllers.ProviderController.authenticateByPost(provider)
+GET    /not-authorized                       securesocial.controllers.ProviderController.notAuthorized
 # END Routes for Secure Social
 
 

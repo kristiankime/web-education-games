@@ -11,7 +11,7 @@ import models.id._
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 object UserTable extends Table[User]("user") {
 	// General
-	def uid = column[UID]("id", O.PrimaryKey, O.AutoInc)
+	def id = column[UID]("id", O.PrimaryKey, O.AutoInc)
 	def userId = column[String]("userId")
 	def providerId = column[String]("providerId")
 	def email = column[Option[String]]("email")
@@ -33,15 +33,15 @@ object UserTable extends Table[User]("user") {
 	def password = column[Option[String]]("password")
 	def salt = column[Option[String]]("salt")
 
-	def * = uid ~ userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken ~ hasher ~ password ~ salt <> (
+	def * = id ~ userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken ~ hasher ~ password ~ salt <> (
 		u => User(u._1, (u._2, u._3), u._4, u._5, u._6, u._7, u._8, u._9, (u._10, u._11), (u._12, u._13, u._14, u._15), (u._16, u._17, u._18)),
-		(u: User) => Some((u.uid, u.identityId.userId, u.identityId.providerId, u.firstName, u.lastName, u.fullName, u.email, u.avatarUrl, u.authMethod, u.oAuth1Info.map(_.token), u.oAuth1Info.map(_.secret), u.oAuth2Info.map(_.accessToken), u.oAuth2Info.flatMap(_.tokenType), u.oAuth2Info.flatMap(_.expiresIn), u.oAuth2Info.flatMap(_.refreshToken), u.passwordInfo.map(_.hasher), u.passwordInfo.map(_.password), u.passwordInfo.flatMap(_.salt))))
+		(u: User) => Some((u.id, u.identityId.userId, u.identityId.providerId, u.firstName, u.lastName, u.fullName, u.email, u.avatarUrl, u.authMethod, u.oAuth1Info.map(_.token), u.oAuth1Info.map(_.secret), u.oAuth2Info.map(_.accessToken), u.oAuth2Info.flatMap(_.tokenType), u.oAuth2Info.flatMap(_.expiresIn), u.oAuth2Info.flatMap(_.refreshToken), u.passwordInfo.map(_.hasher), u.passwordInfo.map(_.password), u.passwordInfo.flatMap(_.salt))))
 
-	def autoInc = userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken returning uid
+	def autoInc = userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken returning id
 
 	def create(t: UserTmp)(implicit s: Session) = this.autoInc.insert(t.identityId.userId, t.identityId.providerId, t.firstName, t.lastName, t.fullName, t.email, t.avatarUrl, t.authMethod, t.oAuth1Info.map(_.token), t.oAuth1Info.map(_.secret), t.oAuth2Info.map(_.accessToken), t.oAuth2Info.flatMap(_.tokenType), t.oAuth2Info.flatMap(_.expiresIn), t.oAuth2Info.flatMap(_.refreshToken))
 
-	def findById(id: UID)(implicit s: Session) = Query(UserTable).where(_.uid is id).firstOption
+	def findById(id: UID)(implicit s: Session) = Query(UserTable).where(_.id is id).firstOption
 
 	def findByIdentityId(userId: IdentityId)(implicit s: Session): Option[User] = {
 		(for {
@@ -66,8 +66,8 @@ object UserTable extends Table[User]("user") {
 				t(uid)
 			}
 			case Some(existingUser) => {
-				val updatedUser = t(existingUser.uid)
-				Query(UserTable).where(_.uid is existingUser.uid).update(updatedUser)
+				val updatedUser = t(existingUser.id)
+				Query(UserTable).where(_.id is existingUser.id).update(updatedUser)
 				updatedUser
 			}
 		}

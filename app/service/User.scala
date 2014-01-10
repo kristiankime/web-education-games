@@ -10,7 +10,7 @@ import play.api.mvc.AnyContent
 import play.api.mvc.Result
 import models.id.UID
 
-case class User(uid: UID,
+case class User(id: UID,
 	identityId: IdentityId,
 	firstName: String,
 	lastName: String,

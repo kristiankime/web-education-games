@@ -6,9 +6,11 @@ import mathml.scalar._
 import models._
 import models.question.derivative._
 import models.organization._
+import models.id._
+import models.id.Ids._
 
 object CoursesTable extends Table[Course]("courses") {
-	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def * = id ~ name <> (Course, Course.unapply _)
 

@@ -8,6 +8,7 @@ import securesocial.core.SecureSocial
 import service.User
 import models.organization._
 import models.question.derivative._
+import models.id._
 
 object CoursesController extends Controller with SecureSocial {
 
@@ -18,7 +19,7 @@ object CoursesController extends Controller with SecureSocial {
 
 	def courseDetails(id: Long) = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		Courses.coursesAndEnrollment(id) match {
+		Courses.coursesAndEnrollment(CourseId(id)) match {
 			case Some((course, enrolled, quizes)) => Ok(views.html.organization.courseDetails(course, enrolled, quizes))
 			case None => Ok("")
 		}

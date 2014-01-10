@@ -8,6 +8,8 @@ import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
 import models.question.derivative._
+import models.id._
+import models.id.Ids._
 
 object AnswerController extends Controller with SecureSocial {
 
@@ -18,7 +20,7 @@ object AnswerController extends Controller with SecureSocial {
 
 	def answer(qid: Long, aid: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		val question = Questions.findQuestion(qid).get // TODO can be null
-		val answer = Answers.findAnswer(qid, aid)
+		val answer = Answers.findAnswer(qid, AnswerId(aid))
 		val set = sid.flatMap(Quizzes.findQuiz(_))
 		Ok(views.html.self_quiz_answer(question, answer, set))
 	}
@@ -35,7 +37,7 @@ object AnswerController extends Controller with SecureSocial {
 				val synched = answerForm._3
 
 				val answerId = Answers.createAnswer(User(request), question, rawStr, mathML, synched)
-				Redirect(routes.AnswerController.answer(question.id, answerId, sid))
+				Redirect(routes.AnswerController.answer(question.id, answerId.v, sid))
 			})
 	}
 

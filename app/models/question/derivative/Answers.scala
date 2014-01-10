@@ -8,12 +8,14 @@ import play.api.db.slick.DB
 import play.api.Play.current
 import service._
 import models.question.derivative.table._
+import models.id._
+import models.id.Ids._
 
-case class Answer(id: Long, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
+case class Answer(id: AnswerId, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object Answers {
 
-	def createAnswer(answerer: User, question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): Long = DB.withSession { implicit session: Session =>
+	def createAnswer(answerer: User, question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): AnswerId = DB.withSession { implicit session: Session =>
 		val answerId = AnswersTable.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
 		UsersAnswersTable.insert(answerer, answerId)
 		answerId
@@ -25,11 +27,11 @@ object Answers {
 		Query(AnswersTable).where(_.questionId === qid).list
 	}
 
-	def findAnswer(qid: Long, aid: Long) = DB.withSession { implicit session: Session =>
+	def findAnswer(qid: Long, aid: AnswerId) = DB.withSession { implicit session: Session =>
 		Query(AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
 	}
 
-	def deleteAnswer(id: Long) = DB.withSession { implicit session: Session =>
+	def deleteAnswer(id: AnswerId) = DB.withSession { implicit session: Session =>
 		Query(AnswersTable).where(_.id === id).delete
 	}
 }

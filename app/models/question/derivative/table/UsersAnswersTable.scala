@@ -10,11 +10,11 @@ import models.question.derivative._
 import models.id.Ids._
 import models.id._
 
-case class User2Answer(userId: UID, answerId: Long)
+case class User2Answer(userId: UID, answerId: AnswerId)
 
 object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") {
 	def userId = column[UID]("user_id", O.NotNull)
-	def answerId = column[Long]("answer_id", O.NotNull)
+	def answerId = column[AnswerId]("answer_id", O.NotNull)
 	def * = userId ~ answerId <> (User2Answer, User2Answer.unapply _)
 
 	def pk = primaryKey("derivative_users_answers_pk", (userId, answerId))
@@ -22,5 +22,5 @@ object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") 
 	def userIdFK = foreignKey("derivative_users_answers_user_fk", userId, UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def answerIdFK = foreignKey("derivative_users_answers_question_fk", answerId, AnswersTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-	def insert(answerer: User, answerId: Long)(implicit s: Session) { this.insert(User2Answer(answerer.id, answerId)) }
+	def insert(answerer: User, answerId: AnswerId)(implicit s: Session) { this.insert(User2Answer(answerer.id, answerId)) }
 }

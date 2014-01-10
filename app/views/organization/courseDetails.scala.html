@@ -13,7 +13,7 @@
     <ul>
         @quizes.map { quiz =>
             <li>
-            	<a href=@routes.QuizController.setAnswer(quiz.id)> @quiz.name </a>
+            	<a href=@routes.QuizController.setAnswer(quiz.id.v)> @quiz.name </a>
             </li>
         }
     </ul>

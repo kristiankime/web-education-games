@@ -18,7 +18,7 @@
         @derivativeQs.map { derivativeQ =>
             <li>
             	<script type="math/mml"> @Html(derivativeQ.mathML.toString) </script>
-                <a href=@routes.QuestionController.question(derivativeQ.id.v, Some(set.id))> answer </a>
+                <a href=@routes.QuestionController.question(derivativeQ.id.v, Some(set.id.v))> answer </a>
             </li>
         }
     </ul>

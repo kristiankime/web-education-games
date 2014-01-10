@@ -11,7 +11,7 @@
     </div>
     } else {
     <div>
-    	<a href="@routes.QuizController.setAnswer(questionSet.get.id)"> Back to the question set "@questionSet.get.name" </a>
+    	<a href="@routes.QuizController.setAnswer(questionSet.get.id.v)"> Back to the question set "@questionSet.get.name" </a>
     </div>
     }
     
@@ -35,7 +35,7 @@
 	</div>
 		
 	<div>
-	@form(routes.AnswerController.newAnswer(question.id.v, questionSet.map(_.id)) , 'id -> "answerForm" ) {
+	@form(routes.AnswerController.newAnswer(question.id.v, questionSet.map(_.id.v)) , 'id -> "answerForm" ) {
     	<input type="hidden" name="@AnswerHTML.mathML" id="answerMathML">
     	<input type="hidden" name="@AnswerHTML.rawStr" id="answerRawStr">
     	<input type="hidden" name="@AnswerHTML.current" id="answerCurrent">

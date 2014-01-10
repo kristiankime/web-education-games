@@ -39,7 +39,7 @@ object Courses {
 
 	}
 
-	def createCourse(teacher: User, courseInfo: CourseTmp, quizes: Long*) = DB.withSession { implicit session: Session =>
+	def createCourse(teacher: User, courseInfo: CourseTmp, quizes: QuizId*) = DB.withSession { implicit session: Session =>
 		val courseId = CoursesTable.insert(courseInfo)
 		UsersCoursesTable.insert(User2Course(teacher.id, courseId))
 		CoursesQuizzesTable.insertAll(quizes.map(Course2Quiz(courseId, _)): _*)

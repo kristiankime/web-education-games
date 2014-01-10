@@ -12,7 +12,7 @@ import models.question.derivative.table._
 import models.id._
 import models.id.Ids._
 
-case class Quiz(id: Long, name: String)
+case class Quiz(id: QuizId, name: String)
 
 object Quizzes {
 
@@ -26,30 +26,30 @@ object Quizzes {
 		Query(QuizzesTable).list
 	}
 
-	def findQuiz(quizId: Long) = DB.withSession { implicit session: Session =>
+	def findQuiz(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		Query(QuizzesTable).where(_.id === quizId).firstOption
 	}
 
-	def findQuizzes(quizIds: List[Long]) = DB.withSession { implicit session: Session =>
+	def findQuizzes(quizIds: List[QuizId]) = DB.withSession { implicit session: Session =>
 		Query(QuizzesTable).where(_.id inSet quizIds.toSet).firstOption
 	}
 	
-	def findQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
+	def findQuestionIds(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
 	}
 
-	def findQuestions(quizId: Long) = DB.withSession { implicit session: Session =>
+	def findQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		(for {
 			l <- QuizzesQuestionsTable if l.quizId === quizId
 			q <- QuestionsTable if l.questionId === q.id
 		} yield q).list
 	}
 
-	def findQuizAndQuestions(quizId: Long) = DB.withSession { implicit session: Session =>
+	def findQuizAndQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		findQuiz(quizId).map { (_, findQuestions(quizId)) }
 	}
 
-	def findQuizAndQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
+	def findQuizAndQuestionIds(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		findQuiz(quizId).map { (_, findQuestionIds(quizId).map(_.v)) }
 	}
 
@@ -60,7 +60,7 @@ object Quizzes {
 		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
 	}
 
-	def deleteQuiz(id: Long) = DB.withSession { implicit session: Session =>
+	def deleteQuiz(id: QuizId) = DB.withSession { implicit session: Session =>
 		QuizzesTable.where(_.id === id).delete
 	}
 

@@ -10,11 +10,11 @@ import models.question.derivative.table.QuizzesTable
 import models.id.Ids._
 import models.id._
 
-case class Course2Quiz(courseId: CourseId, quizId: Long)
+case class Course2Quiz(courseId: CourseId, quizId: QuizId)
 
 object CoursesQuizzesTable extends Table[Course2Quiz]("derivative_courses_quizzes") {
 	def courseId = column[CourseId]("course_id", O.NotNull)
-	def quizId = column[Long]("quiz_id", O.NotNull)
+	def quizId = column[QuizId]("quiz_id", O.NotNull)
 	def * = courseId ~ quizId <> (Course2Quiz, Course2Quiz.unapply _)
 
 	def pk = primaryKey("derivative_courses_quizzes_pk", (courseId, quizId))

@@ -9,11 +9,11 @@ import models.question.derivative._
 import models.id.Ids._
 import models.id._
 
-case class User2Quiz(userId: UID, quizId: Long)
+case class User2Quiz(userId: UID, quizId: QuizId)
 
 object UsersQuizzesTable extends Table[User2Quiz]("derivative_users_quizzes") {
 	def userId = column[UID]("user_id", O.NotNull)
-	def quizId = column[Long]("quiz_id", O.NotNull)
+	def quizId = column[QuizId]("quiz_id", O.NotNull)
 	def * = userId ~ quizId <> (User2Quiz, User2Quiz.unapply _)
 
 	def pk = primaryKey("derivative_users_quiz_pk", (userId, quizId))
@@ -21,5 +21,5 @@ object UsersQuizzesTable extends Table[User2Quiz]("derivative_users_quizzes") {
 	def userIdFK = foreignKey("derivative_users_quizzes_user_fk", userId, UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def quizIdFK = foreignKey("derivative_users_quizzes_quiz_fk", quizId, QuizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-	def insert(owner: User, quizId: Long)(implicit s: Session) { this.insert(User2Quiz(owner.id, quizId)) }
+	def insert(owner: User, quizId: QuizId)(implicit s: Session) { this.insert(User2Quiz(owner.id, quizId)) }
 }

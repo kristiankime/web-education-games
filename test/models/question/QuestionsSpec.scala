@@ -17,6 +17,7 @@ import play.api.db.slick.DB
 import service.UserTmpTest
 import models.question.derivative.Questions
 import models.question.derivative.Question
+import models.id._
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {
@@ -40,7 +41,7 @@ class QuestionsSpec extends Specification {
 		}
 
 		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			val eq = Questions.findQuestion(Int.MaxValue)
+			val eq = Questions.findQuestion(QuestionId(Int.MaxValue))
 
 			eq must beNone
 		}

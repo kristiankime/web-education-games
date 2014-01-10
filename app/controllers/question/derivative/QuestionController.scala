@@ -29,7 +29,7 @@ object QuestionController extends Controller with SecureSocial {
 
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>
 		val set = sid.flatMap(Quizzes.findQuiz(_))
-		val question = Questions.findQuestion(id).get // TODO better error if this is empty
+		val question = Questions.findQuestion(QuestionId(id)).get // TODO better error if this is empty
 		Ok(views.html.self_quiz_answer(question, None, set))
 	}
 
@@ -46,7 +46,7 @@ object QuestionController extends Controller with SecureSocial {
 	}
 
 	def deleteQuestion(id: Long) = SecuredAction { implicit request =>
-		Questions.deleteQuestion(id);
+		Questions.deleteQuestion(QuestionId(id));
 		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}
 

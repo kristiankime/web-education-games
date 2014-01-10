@@ -5,9 +5,11 @@ import mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
+import models.id._
+import models.id.Ids._
 
 object QuestionsTable extends Table[Question]("derivative_questions") {
-	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+	def id = column[QuestionId]("id", O.PrimaryKey, O.AutoInc)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)
 	def synched = column[Boolean]("synched", O.NotNull)

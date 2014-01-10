@@ -12,24 +12,24 @@ import models.question.derivative.table.UsersQuestionsTable
 import models.id._
 import models.id.Ids._
 
-case class Question(id: Long, mathML: MathMLElem, rawStr: String, synched: Boolean)
+case class Question(id: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean)
 
 object Questions {
 	def allQuestions() = DB.withSession { implicit session: Session =>
 		Query(QuestionsTable).list
 	}
 
-	def createQuestion(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean): Long = DB.withSession { implicit session: Session =>
+	def createQuestion(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean): QuestionId = DB.withSession { implicit session: Session =>
 		val qid = QuestionsTable.autoInc.insert(mathML, rawStr, synched)
 		UsersQuestionsTable.insert(owner, qid)
 		qid
 	}
 
-	def findQuestion(questionId: Long) = DB.withSession { implicit session: Session =>
+	def findQuestion(questionId: QuestionId) = DB.withSession { implicit session: Session =>
 		Query(QuestionsTable).where(_.id === questionId).firstOption
 	}
 
-	def findQuestions(questionIds: List[Long]) = DB.withSession { implicit session: Session =>
+	def findQuestions(questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
 		Query(QuestionsTable).where(_.id inSet questionIds).list
 	}
 
@@ -40,7 +40,7 @@ object Questions {
 		} yield q).list
 	}
 	
-	def deleteQuestion(id: Long) = DB.withSession { implicit session: Session =>
+	def deleteQuestion(id: QuestionId) = DB.withSession { implicit session: Session =>
 		QuestionsTable.where(_.id === id).delete
 	}
 }

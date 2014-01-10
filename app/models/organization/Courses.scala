@@ -25,7 +25,7 @@ object Courses {
 		val enrolled = Query(UsersCoursesTable).where(uc => uc.userId === user.id && uc.courseId === courseId).firstOption.nonEmpty
 		val quizes = (for {
 			cq <- CoursesQuizzesTable if cq.courseId === courseId
-			q <- QuizesTable if cq.quizId === q.id
+			q <- QuizzesTable if cq.quizId === q.id
 		} yield q).list
 
 		course.map((_, enrolled, quizes))

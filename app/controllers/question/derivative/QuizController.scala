@@ -8,6 +8,8 @@ import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import models.question.derivative._
 import service.User
+import models.id._
+import models.id.Ids._
 
 object QuizController extends Controller with SecureSocial {
 
@@ -37,7 +39,7 @@ object QuizController extends Controller with SecureSocial {
 		QuizHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {
-				val id = Quizzes.createQuiz(User(request), form._1, form._2)
+				val id = Quizzes.createQuiz(User(request), form._1, form._2.map(QuestionId(_)))
 				Redirect(routes.QuizController.sets)
 			})
 	}
@@ -46,7 +48,7 @@ object QuizController extends Controller with SecureSocial {
 		QuizHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {
-				Quizzes.updateQuiz(Quiz(id, form._1), form._2)
+				Quizzes.updateQuiz(Quiz(id, form._1), form._2.map(QuestionId(_)))
 				Redirect(routes.QuizController.sets)
 			})
 	}

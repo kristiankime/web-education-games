@@ -11,7 +11,7 @@ import models.question.derivative.table._
 import models.id._
 import models.id.Ids._
 
-case class Answer(id: AnswerId, questionId: Long, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
+case class Answer(id: AnswerId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 
 object Answers {
 
@@ -23,11 +23,11 @@ object Answers {
 
 	private def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
 
-	def findAnswers(qid: Long) = DB.withSession { implicit session: Session =>
+	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
 		Query(AnswersTable).where(_.questionId === qid).list
 	}
 
-	def findAnswer(qid: Long, aid: AnswerId) = DB.withSession { implicit session: Session =>
+	def findAnswer(qid: QuestionId, aid: AnswerId) = DB.withSession { implicit session: Session =>
 		Query(AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
 	}
 

@@ -6,7 +6,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 
-object QuizesTable extends Table[Quiz]("derivative_quizes") {
+object QuizzesTable extends Table[Quiz]("derivative_quizzes") {
 	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def * = id ~ name <> (Quiz, Quiz.unapply _)

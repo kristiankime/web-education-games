@@ -6,7 +6,7 @@ import scala.slick.lifted.ForeignKeyAction
 import service.table._
 import service._
 import models.question.derivative._
-import models.question.derivative.table.QuizesTable
+import models.question.derivative.table.QuizzesTable
 import models.id.Ids._
 import models.id._
 
@@ -20,5 +20,5 @@ object CoursesQuizzesTable extends Table[Course2Quiz]("derivative_courses_quizze
 	def pk = primaryKey("derivative_courses_quizzes_pk", (courseId, quizId))
 
 	def courseIdFK = foreignKey("derivative_courses_quizzes_course_fk", courseId, CoursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def questionIdFK = foreignKey("derivative_courses_quizzes_quiz_fk", quizId, QuizesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionIdFK = foreignKey("derivative_courses_quizzes_quiz_fk", quizId, QuizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

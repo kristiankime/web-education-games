@@ -6,7 +6,7 @@ import scala.slick.lifted.ForeignKeyAction
 import service.table._
 import service._
 import models.question.derivative._
-import models.question.derivative.table.QuizesTable
+import models.question.derivative.table._
 import models.id.Ids._
 import models.id._
 

@@ -8,10 +8,10 @@ import service._
 import models.id.Ids._
 import models.id._
 
-case class User2Question(userId: UID, questionId: QuestionId)
+case class User2Question(userId: UserId, questionId: QuestionId)
 
 object UsersQuestionsTable extends Table[User2Question]("derivative_users_questions") {
-	def userId = column[UID]("user_id", O.NotNull)
+	def userId = column[UserId]("user_id", O.NotNull)
 	def questionId = column[QuestionId]("question_id", O.NotNull)
 	def * = userId ~ questionId <> (User2Question, User2Question.unapply _)
 

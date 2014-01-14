@@ -24,7 +24,7 @@ object QuestionController extends Controller with SecureSocial {
 	}
 
 	def questionsByUser(uid: Long) = SecuredAction { implicit request =>
-		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(UID(uid))))
+		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(UserId(uid))))
 	}
 
 	def question(id: Long, sid: Option[Long]) = SecuredAction { implicit request =>

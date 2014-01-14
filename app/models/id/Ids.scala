@@ -7,17 +7,17 @@ import scala.util.Try
 // For path binding example http://julien.richard-foy.fr/blog/2012/04/09/how-to-implement-a-custom-pathbindable-with-play-2/
 object Ids {
 
-	implicit def long2userId = MappedTypeMapper.base[UID, Long](
+	implicit def long2userId = MappedTypeMapper.base[UserId, Long](
 		id => id.v,
-		long => UID(long))
+		long => UserId(long))
 
-	implicit def userIdPathBindable(implicit longBinder: PathBindable[Long]) = new PathBindable[UID] {
-		def bind(key: String, value: String): Either[String, UID] = {
-			try { Right(UID(value.toLong)) }
+	implicit def userIdPathBindable(implicit longBinder: PathBindable[Long]) = new PathBindable[UserId] {
+		def bind(key: String, value: String): Either[String, UserId] = {
+			try { Right(UserId(value.toLong)) }
 			catch { case e: NumberFormatException => Left("Could not parse " + value + " as a UserId => " + e.getMessage) }
 		}
 
-		def unbind(key: String, id: UID): String = longBinder.unbind(key, id.v)
+		def unbind(key: String, id: UserId): String = longBinder.unbind(key, id.v)
 	}
 
 	implicit def long2courseId = MappedTypeMapper.base[CourseId, Long](
@@ -90,7 +90,7 @@ object Ids {
 /**
  * User Id
  */
-case class UID(v: Long)
+case class UserId(v: Long)
 
 case class CourseId(v: Long)
 

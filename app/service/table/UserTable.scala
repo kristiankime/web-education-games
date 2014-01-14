@@ -11,7 +11,7 @@ import models.id._
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 object UserTable extends Table[User]("user") {
 	// General
-	def id = column[UID]("id", O.PrimaryKey, O.AutoInc)
+	def id = column[UserId]("id", O.PrimaryKey, O.AutoInc)
 	def userId = column[String]("userId")
 	def providerId = column[String]("providerId")
 	def email = column[Option[String]]("email")
@@ -41,7 +41,7 @@ object UserTable extends Table[User]("user") {
 
 	def create(t: UserTmp)(implicit s: Session) = this.autoInc.insert(t.identityId.userId, t.identityId.providerId, t.firstName, t.lastName, t.fullName, t.email, t.avatarUrl, t.authMethod, t.oAuth1Info.map(_.token), t.oAuth1Info.map(_.secret), t.oAuth2Info.map(_.accessToken), t.oAuth2Info.flatMap(_.tokenType), t.oAuth2Info.flatMap(_.expiresIn), t.oAuth2Info.flatMap(_.refreshToken))
 
-	def findById(id: UID)(implicit s: Session) = Query(UserTable).where(_.id is id).firstOption
+	def findById(id: UserId)(implicit s: Session) = Query(UserTable).where(_.id is id).firstOption
 
 	def findByIdentityId(userId: IdentityId)(implicit s: Session): Option[User] = {
 		(for {

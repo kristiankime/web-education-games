@@ -33,7 +33,7 @@ object Questions {
 		Query(QuestionsTable).where(_.id inSet questionIds).list
 	}
 
-	def findQuestionsForUser(userId: UID) = DB.withSession { implicit session: Session =>
+	def findQuestionsForUser(userId: UserId) = DB.withSession { implicit session: Session =>
 		(for {
 			uq <- UsersQuestionsTable if uq.userId === userId
 			q <- QuestionsTable if uq.questionId === q.id

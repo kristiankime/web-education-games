@@ -10,10 +10,10 @@ import models.question.derivative._
 import models.id.Ids._
 import models.id._
 
-case class User2Answer(userId: UID, answerId: AnswerId)
+case class User2Answer(userId: UserId, answerId: AnswerId)
 
 object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") {
-	def userId = column[UID]("user_id", O.NotNull)
+	def userId = column[UserId]("user_id", O.NotNull)
 	def answerId = column[AnswerId]("answer_id", O.NotNull)
 	def * = userId ~ answerId <> (User2Answer, User2Answer.unapply _)
 

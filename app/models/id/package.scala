@@ -3,10 +3,15 @@ package models
 import scala.slick.lifted.MappedTypeMapper
 import play.api.mvc._
 import scala.util.Try
+import service.Access
 
 // For path binding example http://julien.richard-foy.fr/blog/2012/04/09/how-to-implement-a-custom-pathbindable-with-play-2/
 // For Query string binding check out https://gist.github.com/julienrf/2344517
 package object id {
+
+	implicit def short2access = MappedTypeMapper.base[Access, Short](
+		access => Access.toNum(access),
+		short => Access.fromNum(short))
 
 	implicit def long2userId = MappedTypeMapper.base[UserId, Long](
 		id => id.v,

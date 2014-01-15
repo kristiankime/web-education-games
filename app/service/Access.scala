@@ -4,17 +4,17 @@ import scala.slick.lifted.MappedTypeMapper
 
 object Access {
 	def toNum(access: Access): Short = access match {
-		case Own => 4
-		case Edit => 3
-		case View => 2
-		case Non => 1
+		case Own => 40
+		case Edit => 30
+		case View => 20
+		case Non => 10
 	}
 
 	def fromNum(access: Short) = access match {
-		case 4 => Own
-		case 3 => Edit
-		case 2 => View
-		case 1 => Non
+		case 40 => Own
+		case 30 => Edit
+		case 20 => View
+		case 10 => Non
 		case _ => throw new IllegalArgumentException("number " + access + " does not match an access level")
 	}
 	

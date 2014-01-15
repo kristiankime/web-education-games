@@ -11,39 +11,39 @@ import models.organization.table._
 import service._
 import models.id._
 
-case class Course(id: CourseId, name: String)
+case class Section(id: SectionId, name: String)
 
-case class CourseTmp(name: String) {
-	def apply(id: CourseId) = { Course(id, name) }
+case class SectionTmp(name: String) {
+	def apply(id: SectionId) = { Section(id, name) }
 }
 
-object Courses {
+object Sections {
 
-	def coursesAndEnrollment(courseId: CourseId)(implicit user: User) = DB.withSession { implicit session: Session =>
-		val course = Query(CoursesTable).where(_.id === courseId).firstOption
-		val enrolled = Query(UsersCoursesTable).where(uc => uc.userId === user.id && uc.courseId === courseId).firstOption.nonEmpty
-		val quizes = (for {
-			cq <- CoursesQuizzesTable if cq.courseId === courseId
-			q <- QuizzesTable if cq.quizId === q.id
-		} yield q).list
-
-		course.map((_, enrolled, quizes))
-	}
-
-	def coursesAndEnrollment(implicit user: User) = DB.withSession { implicit session: Session =>
-		(for {
-			c <- CoursesTable
-			uc <- UsersCoursesTable if c.id === uc.courseId && uc.userId === user.id
-		} yield (c, uc != null)).list
-
-	}
-
-	def createCourse(teacher: User, courseInfo: CourseTmp, quizes: QuizId*) = DB.withSession { implicit session: Session =>
-		val courseId = CoursesTable.insert(courseInfo)
-		UsersCoursesTable.insert(User2Course(teacher.id, courseId, Own))
-		CoursesQuizzesTable.insertAll(quizes.map(Course2Quiz(courseId, _)): _*)
-		courseId
-	}
+//	def coursesAndEnrollment(courseId: CourseId)(implicit user: User) = DB.withSession { implicit session: Session =>
+//		val course = Query(CoursesTable).where(_.id === courseId).firstOption
+//		val enrolled = Query(UsersCoursesTable).where(uc => uc.userId === user.id && uc.courseId === courseId).firstOption.nonEmpty
+//		val quizes = (for {
+//			cq <- CoursesQuizzesTable if cq.courseId === courseId
+//			q <- QuizzesTable if cq.quizId === q.id
+//		} yield q).list
+//
+//		course.map((_, enrolled, quizes))
+//	}
+//
+//	def coursesAndEnrollment(implicit user: User) = DB.withSession { implicit session: Session =>
+//		(for {
+//			c <- CoursesTable
+//			uc <- UsersCoursesTable if c.id === uc.courseId && uc.userId === user.id
+//		} yield (c, uc != null)).list
+//
+//	}
+//
+//	def createCourse(teacher: User, courseInfo: CourseTmp, quizes: QuizId*) = DB.withSession { implicit session: Session =>
+//		val courseId = CoursesTable.insert(courseInfo)
+//		UsersCoursesTable.insert(User2Course(teacher.id, courseId))
+//		CoursesQuizzesTable.insertAll(quizes.map(Course2Quiz(courseId, _)): _*)
+//		courseId
+//	}
 	//
 	//	def allQuizzes() = DB.withSession { implicit session: Session =>
 	//		Query(QuizesTable).list

@@ -9,12 +9,13 @@ import models.question.derivative._
 import models.question.derivative.table._
 import models.id._
 
-case class User2Course(userId: UserId, courseId: CourseId)
+case class User2Course(userId: UserId, courseId: CourseId, access: Access)
 
 object UsersCoursesTable extends Table[User2Course]("users_courses") {
 	def userId = column[UserId]("user_id", O.NotNull)
 	def courseId = column[CourseId]("course_id", O.NotNull)
-	def * = userId ~ courseId <> (User2Course, User2Course.unapply _)
+	def access = column[Access]("access", O.NotNull) 
+	def * = userId ~ courseId ~ access <> (User2Course, User2Course.unapply _)
 
 	def pk = primaryKey("users_courses_pk", (userId, courseId))
 

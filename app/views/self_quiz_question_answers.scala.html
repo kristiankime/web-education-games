@@ -20,13 +20,13 @@
             <li>
             	<script type="math/mml"> @Html(answer.mathML.toString) </script>
             	this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
-                <a href=@routes.AnswerController.answer(answer.questionId.v, answer.id.v, None)> details </a>
+                <a href=@routes.AnswerController.answer(answer.questionId, answer.id, None)> details </a>
             </li>
         }
     </ul>
     <p>
 	
 	<div>
-		To answer this questions <a href=@routes.QuestionController.question(question.id.v, None)> go here </a>
+		To answer this questions <a href=@routes.QuestionController.question(question.id, None)> go here </a>
 	</div>
 }

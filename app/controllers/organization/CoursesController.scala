@@ -17,9 +17,9 @@ object CoursesController extends Controller with SecureSocial {
 		Ok(views.html.organization.courseList(Courses.coursesAndEnrollment))
 	}
 
-	def courseDetails(id: Long) = SecuredAction { implicit request =>
+	def courseDetails(id: CourseId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		Courses.coursesAndEnrollment(CourseId(id)) match {
+		Courses.coursesAndEnrollment(id) match {
 			case Some((course, enrolled, quizes)) => Ok(views.html.organization.courseDetails(course, enrolled, quizes))
 			case None => Ok("")
 		}

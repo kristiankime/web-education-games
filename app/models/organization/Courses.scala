@@ -10,7 +10,6 @@ import models.question.derivative.table._
 import models.organization.table._
 import service._
 import models.id._
-import models.id.Ids._
 
 case class Course(id: CourseId, name: String)
 

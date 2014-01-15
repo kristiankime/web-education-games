@@ -6,7 +6,6 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import models.question.derivative._
 import models.id._
-import models.id.Ids._
 
 case class Quiz2Question(quizId: QuizId, questionId: QuestionId)
 

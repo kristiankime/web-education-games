@@ -18,7 +18,7 @@
 	    <ul>
 	    	@quizes.zip(0 until quizes.size).map{ q =>
 	            <li>
-	            	<a href=@controllers.question.derivative.routes.QuizController.setEdit(q._1.id.v)> @q._1.name </a>
+	            	<a href=@controllers.question.derivative.routes.QuizController.setEdit(q._1.id)> @q._1.name </a>
 	            	<input type="checkbox" name="@CourseHTML.quizId(q._2)" value="@q._1.id">
 	            </li>
 	        }

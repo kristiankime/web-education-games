@@ -5,7 +5,6 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import service.table._
 import service._
-import models.id.Ids._
 import models.id._
 
 case class User2Question(userId: UserId, questionId: QuestionId)

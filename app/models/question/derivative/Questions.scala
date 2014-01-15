@@ -10,7 +10,6 @@ import play.api.Play.current
 import models.question.derivative.table.QuestionsTable
 import models.question.derivative.table.UsersQuestionsTable
 import models.id._
-import models.id.Ids._
 
 case class Question(id: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean)
 

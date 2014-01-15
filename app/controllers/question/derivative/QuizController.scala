@@ -9,7 +9,6 @@ import securesocial.core.SecureSocial
 import models.question.derivative._
 import service.User
 import models.id._
-import models.id.Ids._
 
 object QuizController extends Controller with SecureSocial {
 
@@ -21,15 +20,15 @@ object QuizController extends Controller with SecureSocial {
 		Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
 	}
 
-	def setEdit(id: Long) = SecuredAction { implicit request =>
-		Quizzes.findQuizAndQuestionIds(QuizId(id)) match {
+	def setEdit(id: QuizId) = SecuredAction { implicit request =>
+		Quizzes.findQuizAndQuestionIds(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, Questions.allQuestions))
 			case None => Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
 		}
 	}
 
-	def setAnswer(id: Long) = SecuredAction { implicit request =>
-		Quizzes.findQuizAndQuestions(QuizId(id)) match {
+	def setAnswer(id: QuizId) = SecuredAction { implicit request =>
+		Quizzes.findQuizAndQuestions(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_answer(s._1, s._2))
 			case None => Ok(views.html.self_quiz_question_sets(Quizzes.allQuizzes))
 		}
@@ -44,11 +43,11 @@ object QuizController extends Controller with SecureSocial {
 			})
 	}
 
-	def updateSet(id: Long) = SecuredAction { implicit request =>
+	def updateSet(id: QuizId) = SecuredAction { implicit request =>
 		QuizHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {
-				Quizzes.updateQuiz(Quiz(QuizId(id), form._1), form._2.map(QuestionId(_)))
+				Quizzes.updateQuiz(Quiz(id, form._1), form._2.map(QuestionId(_)))
 				Redirect(routes.QuizController.sets)
 			})
 	}

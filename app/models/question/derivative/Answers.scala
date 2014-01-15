@@ -9,7 +9,6 @@ import play.api.Play.current
 import service._
 import models.question.derivative.table._
 import models.id._
-import models.id.Ids._
 
 case class Answer(id: AnswerId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
 

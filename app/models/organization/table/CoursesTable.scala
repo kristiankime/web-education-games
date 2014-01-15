@@ -7,7 +7,6 @@ import models._
 import models.question.derivative._
 import models.organization._
 import models.id._
-import models.id.Ids._
 
 object CoursesTable extends Table[Course]("courses") {
 	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)

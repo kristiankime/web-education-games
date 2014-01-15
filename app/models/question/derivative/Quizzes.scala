@@ -10,7 +10,6 @@ import models.question.derivative.table._
 import service.User
 import models.question.derivative.table._
 import models.id._
-import models.id.Ids._
 
 case class Quiz(id: QuizId, name: String)
 

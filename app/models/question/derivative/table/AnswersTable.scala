@@ -7,7 +7,6 @@ import scala.slick.lifted.ForeignKeyAction
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.id._
-import models.id.Ids._
 
 object AnswersTable extends Table[Answer]("derivative_answers") {
 	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)

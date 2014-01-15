@@ -7,7 +7,6 @@ import service.table._
 import service._
 import models.question.derivative._
 import models.question.derivative.table.QuizzesTable
-import models.id.Ids._
 import models.id._
 
 case class Course2Quiz(courseId: CourseId, quizId: QuizId)

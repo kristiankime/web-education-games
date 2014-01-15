@@ -27,4 +27,4 @@ resolvers ++= Seq(
 
 templatesImport += "models.question._,models.organization._"
 
-routesImport += "id.Ids._"
+routesImport += "models.id._"

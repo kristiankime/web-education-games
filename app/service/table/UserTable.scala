@@ -5,7 +5,6 @@ import play.api.db.slick.Config.driver.simple._
 import securesocial.core.IdentityId
 import service.table.SecurityMapper._
 import service._
-import models.id.Ids._
 import models.id._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick

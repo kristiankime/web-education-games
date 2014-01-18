@@ -9,6 +9,7 @@ import securesocial.core.SecuredRequest
 import play.api.mvc.AnyContent
 import play.api.mvc.Result
 import models.id.UserId
+import org.joda.time.DateTime
 
 case class User(id: UserId,
 	identityId: IdentityId,
@@ -20,7 +21,9 @@ case class User(id: UserId,
 	authMethod: AuthenticationMethod,
 	oAuth1Info: Option[OAuth1Info],
 	oAuth2Info: Option[OAuth2Info],
-	passwordInfo: Option[PasswordInfo]) extends Identity
+	passwordInfo: Option[PasswordInfo],
+	creationDate: DateTime,
+	updateDate: DateTime) extends Identity
 
 object User {
 	def apply(implicit request: SecuredRequest[_]) = {
@@ -41,11 +44,12 @@ case class UserTmp(identityId: IdentityId,
 	authMethod: AuthenticationMethod,
 	oAuth1Info: Option[OAuth1Info],
 	oAuth2Info: Option[OAuth2Info],
-	passwordInfo: Option[PasswordInfo]) {
+	passwordInfo: Option[PasswordInfo],
+	date: DateTime) {
 
-	def apply(uid: UserId) = User(uid, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo)
+	def apply(id: UserId) = User(id, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, date, date)
 }
 
 object UserTmp {
-	def apply(i: Identity): UserTmp = UserTmp(i.identityId, i.firstName, i.lastName, i.fullName, i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info, i.passwordInfo)
+	def apply(i: Identity, date: DateTime): UserTmp = UserTmp(i.identityId, i.firstName, i.lastName, i.fullName, i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info, i.passwordInfo, date)
 }

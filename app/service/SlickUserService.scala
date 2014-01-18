@@ -6,12 +6,13 @@ import securesocial.core.providers.Token
 import play.api.db.slick.DB
 import scala.slick.session.Session
 import service.table._
+import org.joda.time.DateTime
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 
 	// =========== Identity Methods ===========
-	def save(user: Identity) = DB.withSession { implicit s: Session =>
-		UserTable.save(UserTmp(user))
+	def save(identity: Identity) = DB.withSession { implicit s: Session =>
+		UserTable.save(UserTmp(identity, DateTime.now))
 	}
 
 	def find(id: IdentityId) = DB.withSession { implicit s: Session =>

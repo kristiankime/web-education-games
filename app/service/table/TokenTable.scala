@@ -1,8 +1,8 @@
 package service.table
 
-import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import securesocial.core.providers.Token
+import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
 
 object TokenTable extends Table[Token]("token") {

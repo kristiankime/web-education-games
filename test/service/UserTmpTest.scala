@@ -1,6 +1,7 @@
 package service
 
 import securesocial.core._
+import org.joda.time.DateTime
 
 object UserTmpTest {
 	def apply(identityId: IdentityId = IdentityId("userId", "providerId"),
@@ -12,5 +13,6 @@ object UserTmpTest {
 		authMethod: AuthenticationMethod = AuthenticationMethod("test only"),
 		oAuth1Info: Option[OAuth1Info] = None,
 		oAuth2Info: Option[OAuth2Info] = None,
-		passwordInfo: Option[PasswordInfo] = None) = new UserTmp(identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo) with Identity
+		passwordInfo: Option[PasswordInfo] = None,
+		date: DateTime = DateTime.now) = new UserTmp(identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, date) with Identity
 }

@@ -10,11 +10,12 @@ import models.question.derivative.table._
 import models.organization.table._
 import service._
 import models.id._
+import org.joda.time.DateTime
 
-case class Course(id: CourseId, name: String)
+case class Course(id: CourseId, name: String, creationDate: DateTime, updateDate: DateTime)
 
-case class CourseTmp(name: String) {
-	def apply(id: CourseId) = { Course(id, name) }
+case class CourseTmp(name: String, date: DateTime) {
+	def apply(id: CourseId) = { Course(id, name, date, date) }
 }
 
 object Courses {
@@ -44,43 +45,5 @@ object Courses {
 		CoursesQuizzesTable.insertAll(quizes.map(Course2Quiz(courseId, _)): _*)
 		courseId
 	}
-	//
-	//	def allQuizzes() = DB.withSession { implicit session: Session =>
-	//		Query(QuizesTable).list
-	//	}
-	//
-	//	def findQuiz(quizId: Long) = DB.withSession { implicit session: Session =>
-	//		Query(QuizesTable).where(_.id === quizId).firstOption
-	//	}
-	//
-	//	def findQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
-	//		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
-	//	}
-	//
-	//	def findQuestions(quizId: Long) = DB.withSession { implicit session: Session =>
-	//		(for {
-	//			l <- QuizzesQuestionsTable if l.quizId === quizId
-	//			q <- QuestionsTable if l.questionId === q.id
-	//		} yield q).list
-	//	}
-	//
-	//	def findQuizAndQuestions(quizId: Long) = DB.withSession { implicit session: Session =>
-	//		findQuiz(quizId).map { (_, findQuestions(quizId)) }
-	//	}
-	//
-	//	def findQuizAndQuestionIds(quizId: Long) = DB.withSession { implicit session: Session =>
-	//		findQuiz(quizId).map { (_, findQuestionIds(quizId)) }
-	//	}
-	//
-	//	def updateQuiz(quiz: Quiz, questionIds: List[Long]) = DB.withSession { implicit session: Session =>
-	//		QuizesTable.where(_.id === quiz.id).update(quiz)
-	//		// LATER do this more efficiently
-	//		QuizzesQuestionsTable.where(_.quizId === quiz.id).delete
-	//		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
-	//	}
-	//
-	//	def deleteQuiz(id: Long) = DB.withSession { implicit session: Session =>
-	//		QuizesTable.where(_.id === id).delete
-	//	}
-
+	
 }

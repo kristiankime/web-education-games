@@ -9,6 +9,7 @@ import service.User
 import models.organization._
 import models.question.derivative._
 import models.id._
+import org.joda.time.DateTime
 
 object CoursesController extends Controller with SecureSocial {
 
@@ -30,7 +31,7 @@ object CoursesController extends Controller with SecureSocial {
 		CourseHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.organization.courseList(Courses.coursesAndEnrollment)),
 			form => {
-				val id = Courses.createCourse(user, CourseTmp(form._1), form._2.map(QuizId(_)): _*)
+				val id = Courses.createCourse(user, CourseTmp(form._1, DateTime.now), form._2.map(QuizId(_)): _*)
 				Courses.coursesAndEnrollment(id) match {
 					case Some((course, enrolled, quizes)) => Ok(views.html.organization.courseDetails(course, enrolled, quizes))
 					case None => Ok("")

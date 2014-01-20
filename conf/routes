@@ -11,11 +11,19 @@ GET    /                                     controllers.Application.index
 GET    /user                                 controllers.Application.userInfo
 
 # Organization pages
+GET    /courses                              controllers.organization.CoursesController.list
+GET    /courses/add                          controllers.organization.CoursesController.add
+POST   /courses                              controllers.organization.CoursesController.create
+GET    /courses/:id                          controllers.organization.CoursesController.view(id: CourseId)
+GET    /courses/:id/edit                     controllers.organization.CoursesController.edit(id: CourseId)
+POST   /courses/:id                          controllers.organization.CoursesController.update(id: CourseId)
+POST   /courses/:id/delete                   controllers.organization.CoursesController.delete(id: CourseId)
+
+# TODO Remove these
 GET    /course                               controllers.organization.CoursesController.courseList
 GET    /course/:id                           controllers.organization.CoursesController.courseDetails(id: CourseId)
+GET    /course                               controllers.organization.CoursesController.createCourse
 POST   /course                               controllers.organization.CoursesController.createCourse
-# POST   /course/:id/update                    controllers.organization.CoursesController.updateCourse(id: CourseId)
-
 
 # Equation pages
 GET    /equation                             controllers.EquationController.equations

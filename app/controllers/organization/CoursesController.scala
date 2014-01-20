@@ -13,16 +13,29 @@ import org.joda.time.DateTime
 
 object CoursesController extends Controller with SecureSocial {
 
-	def list = SecuredAction { implicit request =>
+	def list = TODO
+
+	def add = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		Ok(views.html.organization.courseList(Courses.coursesAndEnrollment))
+		Ok(views.html.organization.courseAdd())
 	}
 
-	def add = TODO
-	def create = TODO
+	def create = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		CourseHTML.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.organization.courseList(Courses.coursesAndEnrollment)),
+			form => {
+				val course = Courses.create(user, CourseTmp(form._1, DateTime.now))
+				Ok(views.html.organization.courseView(course))
+			})
+	}
+
 	def view(id: CourseId) = TODO
+
 	def edit(id: CourseId) = TODO
+
 	def update(id: CourseId) = TODO
+
 	def delete(id: CourseId) = TODO
 
 	def courseList = SecuredAction { implicit request =>

@@ -17,8 +17,8 @@ object CoursesTable extends Table[Course]("courses") {
 	def updateDate = column[DateTime]("updateDate")
 	def * = id ~ name ~ creationDate ~ updateDate <> (Course, Course.unapply _)
 
-	def autoInc = name returning id
+	def autoInc = name ~ creationDate ~ updateDate returning id
 	
-	def insert(t: CourseTmp)(implicit s: Session) = this.autoInc.insert(t.name)
+	def insert(t: CourseTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.date, t.date)
 
 }

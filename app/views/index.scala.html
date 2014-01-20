@@ -1,18 +1,16 @@
 @()
-
-@import helper._
  
 @main("EdTech Welcome Page") {
     
-    <h1>Welcome to the EdTech Math Games Server</h1>
+    <h1>Welcome to the EdTech Web Education server</h1>
     
     <p>
     	Please pick one of the options below:
     </p>
     
     <ul>
-     <li> <a href=@routes.EquationController.equations> Try out the LaTeX equation editor</a> </li>
-     <li> <a href=@controllers.question.derivative.routes.QuestionController.selfQuiz> Take a Self Quiz </a> </li>
+     <li> <a href=@controllers.organization.routes.CoursesController.add> I'm a teacher looking to create a course </a> </li>
+     <li> I'd like to sign up for a course </li>
     </ul>
     
 }

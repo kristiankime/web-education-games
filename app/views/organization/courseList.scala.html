@@ -1,18 +1,14 @@
 @(courses: List[Course])
 
-@import helper._
+@import controllers.organization.routes._
  
 @main("List of Courses") {
     
     <h2>Welcome to the EdTech Course Catalog</h1>
-    
-    <p>
-    	Select the course you would like to take.
-    </p>
-    
+        
     <ul>
         @courses.map { course =>
-            <li> <a href=@controllers.organization.routes.CoursesController.add> @course.name </a> </li>
+            <li> @course.name <a href=@SectionsController.add(course.id)> [ add a section ]</a> </li>
         }
     </ul>
     

@@ -29,7 +29,7 @@ object CoursesController extends Controller with SecureSocial {
 			errors => BadRequest(views.html.index()),
 			form => {
 				val courseId = Courses.create(user, CourseTmp(form, DateTime.now))
-				Redirect(routes.CoursesController.edit(courseId))
+				Redirect(routes.CoursesController.view(courseId))
 			})
 	}
 
@@ -37,14 +37,6 @@ object CoursesController extends Controller with SecureSocial {
 		implicit val user = User(request)
 		Courses.find(id) match {
 			case Some(course) => Ok(views.html.organization.courseView(course, Sections.findByCourse(id)))
-			case None => BadRequest(views.html.index())
-		}
-	}
-
-	def edit(id: CourseId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
-		Courses.find(id) match {
-			case Some(course) => Ok(views.html.organization.courseEdit(course, Sections.findByCourse(id)))
 			case None => BadRequest(views.html.index())
 		}
 	}

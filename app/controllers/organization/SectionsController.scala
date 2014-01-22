@@ -33,7 +33,7 @@ object SectionsController extends Controller with SecureSocial {
 			errors => BadRequest(views.html.index()),
 			form => {
 				Sections.create(user, SectionTmp(form, courseId, DateTime.now))
-				Redirect(routes.CoursesController.edit(courseId))
+				Redirect(routes.CoursesController.view(courseId))
 			})
 	}
 

@@ -1,10 +1,19 @@
 @(course: Course, sections: List[Section])
 
-@import helper._
-@import controllers.question.derivative._ 
- 
+@import  controllers.organization.routes._
+
 @main(course.name) {
     
-    <h2>Welcome to the @course.name information page</h1>
-        
+    <h2>Welcome to the information page for the course: @course.name</h2>
+    
+    <h4> The course has the following section(s) </h4>
+    
+	<p>
+    	<ul>
+    		@for(section <- sections){
+	    		<li> @section.name </li>	
+    		}
+    	</ul>
+    	<a href=@SectionsController.add(course.id)>[ add a section ]</a>
+    </p>
 }

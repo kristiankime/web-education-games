@@ -1,0 +1,17 @@
+@(course: Course, sections: List[Section])
+ 
+@main(course.name) {
+    
+    <h2>Welcome to the edit page for the course @course.name</h1>
+    
+    <h4> The course has the following section(s) </h4>
+    
+	<p>
+    	<ul>
+    		@for(section <- sections){
+	    		<li> @section.name </li>	
+    		}
+    	</ul>
+    	<a href=@controllers.organization.routes.SectionsController.add(course.id)> Click here to add a section </a>
+    </p>
+}

@@ -1,7 +1,7 @@
 @()
 
 @import helper._
-@import controllers.organization.CourseHTML
+@import controllers.organization.CourseForm
  
 @main("Create a new Course") {
     
@@ -9,9 +9,7 @@
     
     @form(action = controllers.organization.routes.CoursesController.create) {
 
-		<h4>Type the name of the Course here</h4> <br>
-    	
-    	<input type="text" name="@CourseHTML.name" value="course name"> <br>
+		Name: <input type="text" name="@CourseForm.name" value="course name"> <br>
     
 	    <input type="submit" value="Submit">
     }

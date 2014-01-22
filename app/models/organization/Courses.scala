@@ -47,9 +47,12 @@ object Courses {
 	}
 	
 	def create(teacher: User, courseInfo: CourseTmp) = DB.withSession { implicit session: Session =>
-		System.err.println(courseInfo)
 		val courseId = CoursesTable.insert(courseInfo)
 		UsersCoursesTable.insert(User2Course(teacher.id, courseId, Own))
-		courseInfo(courseId)
+		courseId
+	}
+	
+	def find(id: CourseId) = DB.withSession { implicit session: Session =>
+		Query(CoursesTable).where(_.id === id).firstOption
 	}
 }

@@ -11,6 +11,7 @@ GET    /                                     controllers.Application.index
 GET    /user                                 controllers.Application.userInfo
 
 # Organization pages
+# Courses
 GET    /courses                              controllers.organization.CoursesController.list
 GET    /courses/add                          controllers.organization.CoursesController.add
 POST   /courses                              controllers.organization.CoursesController.create
@@ -18,6 +19,14 @@ GET    /courses/:id                          controllers.organization.CoursesCon
 GET    /courses/:id/edit                     controllers.organization.CoursesController.edit(id: CourseId)
 POST   /courses/:id                          controllers.organization.CoursesController.update(id: CourseId)
 POST   /courses/:id/delete                   controllers.organization.CoursesController.delete(id: CourseId)
+# Sections
+GET    /courses/:cid/sections                controllers.organization.SectionsController.list(cid: CourseId)
+GET    /courses/:cid/sections/add            controllers.organization.SectionsController.add(cid: CourseId)
+POST   /courses/:cid/sections                controllers.organization.SectionsController.create(cid: CourseId)
+GET    /courses/:cid/sections/:id            controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
+GET    /courses/:cid/sections/:id/edit       controllers.organization.SectionsController.edit(cid: CourseId, id: SectionId)
+POST   /courses/:cid/sections/:id            controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
+POST   /courses/:cid/sections/:id/delete     controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
 
 # TODO Remove these
 GET    /course                               controllers.organization.CoursesController.courseList

@@ -22,22 +22,36 @@ object CoursesController extends Controller with SecureSocial {
 
 	def create = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		CourseHTML.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.organization.courseList(Courses.coursesAndEnrollment)),
+		CourseForm.values.bindFromRequest.fold(
+			errors => BadRequest(views.html.index()),
 			form => {
-				val course = Courses.create(user, CourseTmp(form._1, DateTime.now))
-				Ok(views.html.organization.courseView(course))
+				val courseId = Courses.create(user, CourseTmp(form, DateTime.now))
+				Redirect(routes.CoursesController.edit(courseId))
 			})
 	}
 
-	def view(id: CourseId) = TODO
+	def view(id: CourseId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		Courses.find(id) match {
+			case Some(course) => Ok(views.html.organization.courseView(course, Sections.findByCourse(id)))
+			case None => BadRequest(views.html.index())
+		}
+	}
 
-	def edit(id: CourseId) = TODO
+	def edit(id: CourseId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		Courses.find(id) match {
+			case Some(course) => Ok(views.html.organization.courseEdit(course, Sections.findByCourse(id)))
+			case None => BadRequest(views.html.index())
+		}
+	}
 
 	def update(id: CourseId) = TODO
 
 	def delete(id: CourseId) = TODO
 
+	// === TODO delete below here
+	
 	def courseList = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		Ok(views.html.organization.courseList(Courses.coursesAndEnrollment))
@@ -70,4 +84,9 @@ object CourseHTML {
 	val quizId = "quizId"
 	def quizId(i: Int) = "quizId[" + i + "]"
 	val form = Form(tuple(name -> nonEmptyText, quizId -> list(longNumber)))
+}
+
+object CourseForm {
+	val name = "name"
+	val values = Form(name -> nonEmptyText)
 }

@@ -26,7 +26,7 @@ object SectionsController extends Controller with SecureSocial {
 	def create(courseId: CourseId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		SectionForm.values.bindFromRequest.fold(
-			errors => BadRequest(views.html.organization.courseList(Courses.coursesAndEnrollment)),
+			errors => BadRequest(views.html.index()),
 			form => {
 				Sections.create(user, SectionTmp(form, courseId, DateTime.now))
 				Redirect(routes.CoursesController.edit(courseId))

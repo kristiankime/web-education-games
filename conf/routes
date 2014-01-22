@@ -28,12 +28,6 @@ GET    /courses/:cid/sections/:id/edit       controllers.organization.SectionsCo
 POST   /courses/:cid/sections/:id            controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
 POST   /courses/:cid/sections/:id/delete     controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
 
-# TODO Remove these
-GET    /course                               controllers.organization.CoursesController.courseList
-GET    /course/:id                           controllers.organization.CoursesController.courseDetails(id: CourseId)
-GET    /course                               controllers.organization.CoursesController.createCourse
-POST   /course                               controllers.organization.CoursesController.createCourse
-
 # Equation pages
 GET    /equation                             controllers.EquationController.equations
 POST   /equation                             controllers.EquationController.newEquation

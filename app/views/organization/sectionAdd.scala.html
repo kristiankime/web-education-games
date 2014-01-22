@@ -9,9 +9,7 @@
     
     @form(action = controllers.organization.routes.SectionsController.create(course.id)) {
 
-		<h4>Type the name of the Section here</h4> <br>
-    	
-    	<input type="text" name="@SectionForm.name" value="section name"> <br>
+		name: <input type="text" name="@SectionForm.name" value="section name"> <br>
     
 	    <input type="submit" value="Submit">
     }

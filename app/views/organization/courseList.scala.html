@@ -1,4 +1,4 @@
-@(courses: List[(Course, Boolean)])
+@(courses: List[Course])
 
 @import helper._
  
@@ -12,7 +12,7 @@
     
     <ul>
         @courses.map { course =>
-            <li> @course._1.name </li>
+            <li> @course.name </li>
         }
     </ul>
     

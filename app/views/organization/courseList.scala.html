@@ -12,7 +12,7 @@
     
     <ul>
         @courses.map { course =>
-            <li> @course.name </li>
+            <li> <a href=@controllers.organization.routes.CoursesController.add> @course.name </a> </li>
         }
     </ul>
     

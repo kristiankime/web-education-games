@@ -10,10 +10,14 @@ import models.organization._
 import models.question.derivative._
 import models.id._
 import org.joda.time.DateTime
+import service.Access
 
 object SectionsController extends Controller with SecureSocial {
 
-	def list(courseId: CourseId) = TODO
+	def list = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		Ok(views.html.organization.sectionList(Sections.list))
+	}
 
 	def add(courseId: CourseId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
@@ -40,6 +44,17 @@ object SectionsController extends Controller with SecureSocial {
 	def update(courseId: CourseId, id: SectionId) = TODO
 
 	def delete(courseId: CourseId, id: SectionId) = TODO
+	
+	def enroll(courseId: CourseId, id: SectionId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		Sections.find(id) match {
+			case Some(section) => {
+				Sections.enroll(user, section)
+				Redirect(routes.CoursesController.view(courseId))
+			}
+			case None => BadRequest(views.html.index())
+		}
+	}
 }
 
 object SectionForm {

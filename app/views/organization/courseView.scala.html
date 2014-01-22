@@ -1,19 +1,30 @@
-@(course: Course, sections: List[Section])
+@(course: Course, sections: List[Section], quizzes: List[derivative.Quiz])
 
 @import  controllers.organization.routes._
+@import  controllers.question.derivative.routes._
 
 @main(course.name) {
     
     <h2>Welcome to the information page for the course: @course.name</h2>
     
     <h4> The course has the following section(s) </h4>
-    
 	<p>
     	<ul>
-    		@for(section <- sections){
-	    		<li> @section.name </li>	
-    		}
+		@for(section <- sections){
+    		<li> @section.name </li>	
+		}
     	</ul>
     	<a href=@SectionsController.add(course.id)>[ add a section ]</a>
+    </p>
+    
+    <h4> The course has the following quiz(zes) </h4>
+	<p>
+    	<ul>
+		@for(quiz <- quizzes){
+    		<li> <a href=@QuizzesController.view(quiz.id)> @quiz.name </a> </li>	
+		}
+    	</ul>
+    	<a href=@QuizzesController.add(Some(course.id))> [ add a quiz ] </a>
+    	
     </p>
 }

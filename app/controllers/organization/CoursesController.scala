@@ -36,7 +36,7 @@ object CoursesController extends Controller with SecureSocial {
 	def view(id: CourseId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		Courses.find(id) match {
-			case Some(course) => Ok(views.html.organization.courseView(course, Sections.findByCourse(id)))
+			case Some(course) => Ok(views.html.organization.courseView(course, Sections.findByCourse(id), Quizzes.findByCourse(id)))
 			case None => BadRequest(views.html.index())
 		}
 	}

@@ -27,6 +27,17 @@ POST   /courses/:cid/sections/:id/enroll     controllers.organization.SectionsCo
 POST   /courses/:cid/sections/:id            controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
 POST   /courses/:cid/sections/:id/delete     controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
 
+# Questions pages
+# Quizzes
+GET    /quizzes                              controllers.question.derivative.QuizzesController.list
+GET    /quizzes/add                          controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
+POST   /quizzes                              controllers.question.derivative.QuizzesController.create
+GET    /quizzes/:id                          controllers.question.derivative.QuizzesController.view(id: QuizId)
+POST   /quizzes/:id                          controllers.question.derivative.QuizzesController.update(id: QuizId)
+POST   /quizzes/:id/delete                   controllers.question.derivative.QuizzesController.delete(id: QuizId)
+
+
+# ======== TODO START DEPRICATED ========
 # Equation pages
 GET    /equation                             controllers.EquationController.equations
 POST   /equation                             controllers.EquationController.newEquation
@@ -52,6 +63,7 @@ GET    /selfquiz/questionset/:sid            controllers.question.derivative.Qui
 GET    /selfquiz/questionset/:sid/edit       controllers.question.derivative.QuizController.setEdit(sid: QuizId)
 POST   /selfquiz/questionset                 controllers.question.derivative.QuizController.newSet
 POST   /selfquiz/questionset/:sid/update     controllers.question.derivative.QuizController.updateSet(sid: QuizId)
+# ======== END DEPRICATED ========
 
 # START Routes for Secure Social
 # Login page

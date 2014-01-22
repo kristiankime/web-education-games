@@ -2,17 +2,18 @@ package models
 
 import scala.slick.lifted.MappedTypeMapper
 import play.api.mvc._
-import scala.util.Try
 import service.Access
 
 // For path binding example http://julien.richard-foy.fr/blog/2012/04/09/how-to-implement-a-custom-pathbindable-with-play-2/
 // For Query string binding check out https://gist.github.com/julienrf/2344517
 package object id {
 
+	// Access
 	implicit def short2access = MappedTypeMapper.base[Access, Short](
 		access => Access.toNum(access),
 		short => Access.fromNum(short))
 
+	// UserId
 	implicit def long2userId = MappedTypeMapper.base[UserId, Long](
 		id => id.v,
 		long => UserId(long))
@@ -26,6 +27,7 @@ package object id {
 		def unbind(key: String, id: UserId): String = longBinder.unbind(key, id.v)
 	}
 
+	// CourseId
 	implicit def long2courseId = MappedTypeMapper.base[CourseId, Long](
 		id => id.v,
 		long => CourseId(long))
@@ -39,6 +41,20 @@ package object id {
 		def unbind(key: String, id: CourseId): String = longBinder.unbind(key, id.v)
 	}
 
+	implicit def courseIdQueryStringBindable(implicit longBinder: QueryStringBindable[Long]) = new QueryStringBindable[CourseId] {
+		def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, CourseId]] = {
+			for { either <- longBinder.bind(key, params) } yield {
+				either match {
+					case Right(long) => Right(CourseId(long))
+					case _ => Left("Unable to bind a CourseId for key " + key)
+				}
+			}
+		}
+
+		def unbind(key: String, id: CourseId): String = longBinder.unbind(key, id.v)
+	}
+
+	// SectionId
 	implicit def long2sectionId = MappedTypeMapper.base[SectionId, Long](
 		id => id.v,
 		long => SectionId(long))
@@ -52,6 +68,7 @@ package object id {
 		def unbind(key: String, id: SectionId): String = longBinder.unbind(key, id.v)
 	}
 
+	// QuizId
 	implicit def long2quizId = MappedTypeMapper.base[QuizId, Long](
 		id => id.v,
 		long => QuizId(long))
@@ -67,8 +84,8 @@ package object id {
 
 	implicit def quizIdQueryStringBindable(implicit longBinder: QueryStringBindable[Long]) = new QueryStringBindable[QuizId] {
 		def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, QuizId]] = {
-			for { eitherQuiz <- longBinder.bind(key, params) } yield {
-				eitherQuiz match {
+			for { either <- longBinder.bind(key, params) } yield {
+				either match {
 					case Right(long) => Right(QuizId(long))
 					case _ => Left("Unable to bind a QuizId for key " + key)
 				}
@@ -78,6 +95,7 @@ package object id {
 		def unbind(key: String, id: QuizId): String = longBinder.unbind(key, id.v)
 	}
 
+	// QuestionId
 	implicit def long2questionId = MappedTypeMapper.base[QuestionId, Long](
 		id => id.v,
 		long => QuestionId(long))
@@ -91,6 +109,7 @@ package object id {
 		def unbind(key: String, id: QuestionId): String = longBinder.unbind(key, id.v)
 	}
 
+	// AnswerId
 	implicit def long2answerId = MappedTypeMapper.base[AnswerId, Long](
 		id => id.v,
 		long => AnswerId(long))

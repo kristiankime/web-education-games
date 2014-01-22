@@ -6,14 +6,21 @@ import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.Play.current
+import models.organization.table._
 import models.question.derivative.table._
 import service.User
-import models.question.derivative.table._
 import models.id._
 
 case class Quiz(id: QuizId, name: String)
 
 object Quizzes {
+
+	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
+		(for (
+			q <- QuizzesTable;
+			cq <- CoursesQuizzesTable if cq.quizId === q.id
+		) yield q).list
+	}
 
 	def createQuiz(creator: User, name: String, questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
 		val quizId = QuizzesTable.autoInc.insert(name)
@@ -32,7 +39,7 @@ object Quizzes {
 	def findQuizzes(quizIds: List[QuizId]) = DB.withSession { implicit session: Session =>
 		Query(QuizzesTable).where(_.id inSet quizIds.toSet).firstOption
 	}
-	
+
 	def findQuestionIds(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
 	}

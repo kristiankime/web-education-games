@@ -21,8 +21,12 @@ case class CourseTmp(name: String, date: DateTime) {
 object Courses {
 	
 	def list = DB.withSession { implicit session: Session =>
-		Query(CoursesTable).list
+		(for (
+			s <- SectionsTable;
+			c <- CoursesTable if s.courseId === c.id
+		) yield (c, s)).list.groupBy(_._1).mapValues(_.map(_._2))
 	}
+
 	
 	def create(teacher: User, courseInfo: CourseTmp) = DB.withSession { implicit session: Session =>
 		val courseId = CoursesTable.insert(courseInfo)

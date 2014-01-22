@@ -1,15 +1,31 @@
-@(courses: List[Course])
+@(courses: Map[Course, List[Section]])
 
+@import helper._
 @import controllers.organization.routes._
  
 @main("List of Courses") {
     
     <h2>Welcome to the EdTech Course Catalog</h1>
-        
+    
     <ul>
-        @courses.map { course =>
-            <li> @course.name <a href=@SectionsController.add(course.id)> [ add a section ]</a> </li>
+    @courses.map { course =>
+    	<li> 
+    		course: 
+    		<a href=@CoursesController.view(course._1.id)> @course._1.name </a>
+    		<a href=@SectionsController.add(course._1.id)> [ add a section ]</a>
+    		sections: 
+    	</li>
+    
+        <ul>
+        @course._2.map { section => 
+            <li>       
+            @form(action = SectionsController.enroll(course._1.id, section.id)) {
+            	@section.name <input type="submit" value="Enroll">
+            }
+            </li>
         }
+        </ul>
+    }
     </ul>
     
 }

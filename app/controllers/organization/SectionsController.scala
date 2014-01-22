@@ -14,10 +14,7 @@ import service.Access
 
 object SectionsController extends Controller with SecureSocial {
 
-	def list = SecuredAction { implicit request =>
-		implicit val user = User(request)
-		Ok(views.html.organization.sectionList(Sections.list))
-	}
+	def list(courseId: CourseId) = TODO
 
 	def add(courseId: CourseId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
@@ -38,8 +35,6 @@ object SectionsController extends Controller with SecureSocial {
 	}
 
 	def view(courseId: CourseId, id: SectionId) = TODO
-
-	def edit(courseId: CourseId, id: SectionId) = TODO
 
 	def update(courseId: CourseId, id: SectionId) = TODO
 

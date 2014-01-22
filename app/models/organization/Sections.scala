@@ -20,13 +20,6 @@ case class SectionTmp(name: String, courseId: CourseId, date: DateTime) {
 
 object Sections {
 
-	def list = DB.withSession { implicit session: Session =>
-		(for (
-			s <- SectionsTable;
-			c <- CoursesTable if s.courseId === c.id
-		) yield (c, s)).list
-	}
-
 	def find(sectionId: SectionId) = DB.withSession { implicit session: Session =>
 		Query(SectionsTable).where(_.id === sectionId).firstOption
 	}

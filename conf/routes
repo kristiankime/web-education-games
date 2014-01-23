@@ -31,7 +31,7 @@ POST   /courses/:cid/sections/:id/delete     controllers.organization.SectionsCo
 # Quizzes
 GET    /quizzes                              controllers.question.derivative.QuizzesController.list
 GET    /quizzes/add                          controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
-POST   /quizzes                              controllers.question.derivative.QuizzesController.create
+POST   /quizzes                              controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
 GET    /quizzes/:id                          controllers.question.derivative.QuizzesController.view(id: QuizId)
 POST   /quizzes/:id                          controllers.question.derivative.QuizzesController.update(id: QuizId)
 POST   /quizzes/:id/delete                   controllers.question.derivative.QuizzesController.delete(id: QuizId)

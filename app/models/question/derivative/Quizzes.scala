@@ -10,11 +10,26 @@ import models.organization.table._
 import models.question.derivative.table._
 import service.User
 import models.id._
+import org.joda.time.DateTime
+import service._
 
-case class Quiz(id: QuizId, name: String)
+case class Quiz(id: QuizId, name: String, creationDate: DateTime, updateDate: DateTime)
+
+case class QuizTmp(name: String, date: DateTime){
+	def apply(id: QuizId) = Quiz(id, name, date, date)
+}
 
 object Quizzes {
 
+	def create(owner: User, info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
+		val quizId = QuizzesTable.insert(info)
+		UsersQuizzesTable.insert(User2Quiz(owner.id, quizId, Own))
+		courseId.foreach(c => { CoursesQuizzesTable.insert(Course2Quiz(c, quizId)) })
+		quizId
+	}
+	
+	// ======
+	
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
 		(for (
 			q <- QuizzesTable;
@@ -23,7 +38,8 @@ object Quizzes {
 	}
 
 	def createQuiz(creator: User, name: String, questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
-		val quizId = QuizzesTable.autoInc.insert(name)
+		val now = DateTime.now
+		val quizId = QuizzesTable.autoInc.insert(name, now, now)
 		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quizId, _)): _*)
 		quizId
 	}

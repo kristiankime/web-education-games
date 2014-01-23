@@ -6,14 +6,19 @@ import play.api.db.slick.Config.driver.simple._
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.id._
+import org.joda.time.DateTime
+import com.github.tototoshi.slick.JodaSupport._
 
 object QuestionsTable extends Table[Question]("derivative_questions") {
 	def id = column[QuestionId]("id", O.PrimaryKey, O.AutoInc)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)
 	def synched = column[Boolean]("synched", O.NotNull)
-	def * = id ~ mathML ~ rawStr ~ synched <> (Question, Question.unapply _)
+	def creationDate = column[DateTime]("creationDate")
+	def * = id ~ mathML ~ rawStr ~ synched ~ creationDate <> (Question, Question.unapply _)
 	
-	def autoInc = mathML ~ rawStr ~ synched returning id
+	def autoInc = mathML ~ rawStr ~ synched ~ creationDate returning id
+	
+	def insert(t: QuestionTmp)(implicit s: Session) = this.autoInc.insert(t.mathML, t.rawStr, t.synched, t.creationDate)
 }
 

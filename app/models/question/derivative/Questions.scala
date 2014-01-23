@@ -10,16 +10,31 @@ import play.api.Play.current
 import models.question.derivative.table.QuestionsTable
 import models.question.derivative.table.UsersQuestionsTable
 import models.id._
+import models.id._
+import org.joda.time.DateTime
 
-case class Question(id: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean)
+case class Question(id: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime)
+
+case class QuestionTmp(mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime) {
+	def apply(id: QuestionId) = Question(id, mathML, rawStr, synched, creationDate)
+}
 
 object Questions {
+
+	def create(owner: User, info: QuestionTmp) = DB.withSession { implicit session: Session =>
+		val qid = QuestionsTable.insert(info)
+		UsersQuestionsTable.insert(owner, qid)
+		info(qid)
+	}
+
+	// ==========
+
 	def allQuestions() = DB.withSession { implicit session: Session =>
 		Query(QuestionsTable).list
 	}
 
 	def createQuestion(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean): QuestionId = DB.withSession { implicit session: Session =>
-		val qid = QuestionsTable.autoInc.insert(mathML, rawStr, synched)
+		val qid = QuestionsTable.autoInc.insert(mathML, rawStr, synched, DateTime.now)
 		UsersQuestionsTable.insert(owner, qid)
 		qid
 	}
@@ -38,7 +53,7 @@ object Questions {
 			q <- QuestionsTable if uq.questionId === q.id
 		} yield q).list
 	}
-	
+
 	def deleteQuestion(id: QuestionId) = DB.withSession { implicit session: Session =>
 		QuestionsTable.where(_.id === id).delete
 	}

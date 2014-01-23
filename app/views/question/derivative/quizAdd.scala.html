@@ -1,0 +1,16 @@
+@(course: Option[Course])
+
+@import helper._
+@import controllers.question.derivative.QuizForm 
+@import controllers.question.derivative.routes.QuizzesController
+ 
+@main("Create a Quiz") {
+	
+	<h2>Please enter the information about your quiz:</h2>
+    
+    @form(action = QuizzesController.create( course.map(_.id) ) ) {
+		Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
+	    <input type="submit" value="Submit">
+    }
+    
+}

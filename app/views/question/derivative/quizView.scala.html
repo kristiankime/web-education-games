@@ -1,0 +1,53 @@
+@(quiz: derivative.Quiz, questions: List[derivative.Question])
+
+@import helper._
+@import controllers.question.derivative._ 
+ 
+@main("Quiz " + quiz.name) {
+    
+    <h2>Welcome to page for the quiz: @quiz.name </h1>
+    
+    <p>
+    	Pick one of the equations below to try figure out it's derivative (or see previous answers to the question).
+    </p>
+    
+    <h4>There are @questions.size Question(s)</h4>
+    
+    <ul>
+        @questions.map { question =>
+            <li>
+            	<script type="math/mml"> @Html(question.mathML.toString) </script>
+                [<a href=@routes.QuestionController.question(question.id, None)>answer</a>]
+                [<a href=@routes.AnswerController.answers(question.id)>previous answers</a>]
+            </li>
+        }
+    </ul>
+    
+    <h4>Add a new Question</h4>
+    
+    <p>
+		Type in an equation and press "Save Question": <br> 
+		Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow), ln, sin, cos, tan, ) <br> 
+		@mathml_editor("QUESTION")
+	</p>
+
+    @form(routes.QuestionController.newQuestion, 'id -> "derivativeqForm" ) {
+    	<input type="hidden" name="@QuestionHTML.mathML" id="derivativeQuestionMathML">
+    	<input type="hidden" name="@QuestionHTML.rawStr" id="derivativeQuestionRawStr">
+    	<input type="hidden" name="@QuestionHTML.current" id="derivativeQuestionCurrent">
+    	<input type="button" value="Save Question" onclick="formSubmit()">
+    }
+    
+    <script>
+	formSubmit = function() {
+		if(QUESTION.valid){
+			$("#derivativeQuestionMathML").val(QUESTION.mathML);
+			$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+			$("#derivativeQuestionCurrent").val(QUESTION.current);
+			$("#derivativeqForm").submit();
+		}
+		// TODO indicated that the form did not submit
+    }
+    </script>
+    
+}

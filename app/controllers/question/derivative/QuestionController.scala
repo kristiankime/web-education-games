@@ -12,7 +12,6 @@ import service.User
 import models.question.derivative._
 import models.id._
 
-
 object QuestionController extends Controller with SecureSocial {
 
 	def selfQuiz = SecuredAction {

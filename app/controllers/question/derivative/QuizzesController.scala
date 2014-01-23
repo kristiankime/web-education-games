@@ -9,13 +9,27 @@ import securesocial.core.SecureSocial
 import models.question.derivative._
 import service.User
 import models.id._
+import mathml.MathML
+import org.joda.time.DateTime
+import models.organization.Courses
 
 object QuizzesController extends Controller with SecureSocial {
 	def list = TODO
 
-	def add(courseId: Option[CourseId]) = TODO
+	def add(courseId: Option[CourseId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses.find(_))))
+	}
 
-	def create = TODO
+	def create(courseId: Option[CourseId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		QuizForm.values.bindFromRequest.fold(
+			errors => BadRequest(views.html.index()),
+			form => {
+				val quizId = Quizzes.create(user, QuizTmp(form, DateTime.now), courseId)
+				Redirect(routes.QuizzesController.view(quizId))
+			})
+	}
 
 	def view(quizId: QuizId) = TODO
 
@@ -26,7 +40,6 @@ object QuizzesController extends Controller with SecureSocial {
 
 object QuizForm {
 	val name = "name"
-	val questionId = "questionId"
-	def questionId(i: Int) = "questionId[" + i + "]"
-	val form = Form(tuple(name -> nonEmptyText, questionId -> list(longNumber)))
+
+	val values = Form(name -> nonEmptyText)
 }

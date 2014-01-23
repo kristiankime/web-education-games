@@ -31,7 +31,13 @@ object QuizzesController extends Controller with SecureSocial {
 			})
 	}
 
-	def view(quizId: QuizId) = TODO
+	def view(quizId: QuizId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		Quizzes.find(quizId) match {
+			case Some(quiz) => Ok(views.html.question.derivative.quizView(quiz, Quizzes.findQuestions(quizId)))
+			case None => BadRequest(views.html.index())
+		}
+	}
 
 	def update(quizId: QuizId) = TODO
 

@@ -36,6 +36,9 @@ GET    /quizzes/:id                          controllers.question.derivative.Qui
 POST   /quizzes/:id                          controllers.question.derivative.QuizzesController.update(id: QuizId)
 POST   /quizzes/:id/delete                   controllers.question.derivative.QuizzesController.delete(id: QuizId)
 
+# Questions
+POST   /quizzes/:qid/questions               controllers.question.derivative.QuestionsController.create(qid: QuizId)
+
 
 # ======== TODO START DEPRICATED ========
 # Equation pages

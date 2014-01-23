@@ -31,10 +31,10 @@
 		@mathml_editor("QUESTION")
 	</p>
 
-    @form(routes.QuestionController.newQuestion, 'id -> "derivativeqForm" ) {
-    	<input type="hidden" name="@QuestionHTML.mathML" id="derivativeQuestionMathML">
-    	<input type="hidden" name="@QuestionHTML.rawStr" id="derivativeQuestionRawStr">
-    	<input type="hidden" name="@QuestionHTML.current" id="derivativeQuestionCurrent">
+    @form(routes.QuestionsController.create(quiz.id), 'id -> "derivativeqForm" ) {
+    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
+    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
+    	<input type="hidden" name="@QuestionForm.current" id="derivativeQuestionCurrent">
     	<input type="button" value="Save Question" onclick="formSubmit()">
     }
     

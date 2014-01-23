@@ -12,6 +12,8 @@ import models.question.derivative.table.UsersQuestionsTable
 import models.id._
 import models.id._
 import org.joda.time.DateTime
+import models.question.derivative.table.QuizzesQuestionsTable
+import models.question.derivative.table.Quiz2Question
 
 case class Question(id: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime)
 
@@ -21,10 +23,11 @@ case class QuestionTmp(mathML: MathMLElem, rawStr: String, synched: Boolean, cre
 
 object Questions {
 
-	def create(owner: User, info: QuestionTmp) = DB.withSession { implicit session: Session =>
-		val qid = QuestionsTable.insert(info)
-		UsersQuestionsTable.insert(owner, qid)
-		info(qid)
+	def create(owner: User, info: QuestionTmp, quiz: QuizId) = DB.withSession { implicit session: Session =>
+		val questionId = QuestionsTable.insert(info)
+		UsersQuestionsTable.insert(owner, questionId)
+		QuizzesQuestionsTable.insert(Quiz2Question(quiz, questionId))
+		info(questionId)
 	}
 
 	// ==========

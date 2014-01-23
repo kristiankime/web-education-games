@@ -21,6 +21,17 @@ case class QuizTmp(name: String, date: DateTime){
 
 object Quizzes {
 
+	def find(quizId: QuizId) = DB.withSession { implicit session: Session =>
+		Query(QuizzesTable).where(_.id === quizId).firstOption
+	}
+	
+	def findQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
+		(for {
+			l <- QuizzesQuestionsTable if l.quizId === quizId
+			q <- QuestionsTable if l.questionId === q.id
+		} yield q).list
+	}
+	
 	def create(owner: User, info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
 		val quizId = QuizzesTable.insert(info)
 		UsersQuizzesTable.insert(User2Quiz(owner.id, quizId, Own))
@@ -58,13 +69,6 @@ object Quizzes {
 
 	def findQuestionIds(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
-	}
-
-	def findQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
-		(for {
-			l <- QuizzesQuestionsTable if l.quizId === quizId
-			q <- QuestionsTable if l.questionId === q.id
-		} yield q).list
 	}
 
 	def findQuizAndQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>

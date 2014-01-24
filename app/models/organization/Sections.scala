@@ -12,11 +12,13 @@ import service._
 import models.id._
 import org.joda.time.DateTime
 
-case class Section(id: SectionId, name: String, courseId: CourseId, creationDate: DateTime, updateDate: DateTime)
+case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime)
 
-case class SectionTmp(name: String, courseId: CourseId, date: DateTime) {
-	def apply(id: SectionId) = { Section(id, name, courseId, date, date) }
+case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
+	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
 }
+
+case class SectionDetails(section: Section, owner: User, access: Access)
 
 object Sections {
 
@@ -28,10 +30,8 @@ object Sections {
 		Query(SectionsTable).where(_.courseId === courseId).list
 	}
 
-	def create(teacher: User, sectionInfo: SectionTmp) = DB.withSession { implicit session: Session =>
-		val sectionId = SectionsTable.insert(sectionInfo)
-		UsersSectionsTable.insert(User2Section(teacher.id, sectionId, Own))
-		sectionId
+	def create(sectionTmp: SectionTmp) = DB.withSession { implicit session: Session =>
+		sectionTmp(SectionsTable.insert(sectionTmp))
 	}
 
 	def enroll(student: User, section: Section) = DB.withSession { implicit session: Session =>

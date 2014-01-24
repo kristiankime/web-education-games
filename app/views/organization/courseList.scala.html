@@ -1,4 +1,4 @@
-@(courses: List[(Course, List[Section])])
+@(courses: List[CourseDetails])
 
 @import helper._
 @import controllers.organization.routes._
@@ -8,19 +8,19 @@
     <h2>Welcome to the EdTech Course Catalog</h1>
     
     <ul>
-    @courses.map { course =>
+    @for(course <- courses){
     	<li> 
     		course: 
-    		<a href=@CoursesController.view(course._1.id)> @course._1.name </a>
-    		<a href=@SectionsController.add(course._1.id)> [ add a section ]</a>
+    		<a href=@CoursesController.view(course.course.id)> @course.course.name </a>
+    		<a href=@SectionsController.add(course.course.id)> [ add a section ]</a>
     		sections: 
     	</li>
     
         <ul>
-        @course._2.map { section => 
+        @for(section <- course.sections){ 
             <li>       
-            @form(action = SectionsController.enroll(course._1.id, section.id)) {
-            	@section.name <input type="submit" value="Enroll">
+            @form(action = SectionsController.enroll(course.course.id, section.section.id)) {
+            	@section.section.name <input type="submit" value="Enroll">
             }
             </li>
         }

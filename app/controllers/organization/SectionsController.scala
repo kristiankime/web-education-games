@@ -11,9 +11,11 @@ import models.question.derivative._
 import models.id._
 import org.joda.time.DateTime
 import service.Access
+import scala.util.Random
 
 object SectionsController extends Controller with SecureSocial {
-
+	val randomEngine = new Random(0L)
+	
 	def list(courseId: CourseId) = TODO
 
 	def add(courseId: CourseId) = SecuredAction { implicit request =>
@@ -29,7 +31,9 @@ object SectionsController extends Controller with SecureSocial {
 		SectionForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
-				Sections.create(user, SectionTmp(form, courseId, DateTime.now))
+				val editCode = "SE-E-" + randomEngine.nextInt(100000)
+				val viewCode = "SE-V-" + randomEngine.nextInt(100000)
+				Sections.create(SectionTmp(form, courseId, user.id, editCode, viewCode, DateTime.now))
 				Redirect(routes.CoursesController.view(courseId))
 			})
 	}

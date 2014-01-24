@@ -2,6 +2,13 @@ package service
 
 import scala.slick.lifted.MappedTypeMapper
 
+object Option2Access extends (Option[Access] => Access) {
+	def apply(in: Option[Access]): Access = in match {
+		case Some(access) => access
+		case None => Non
+	}
+}
+
 object Access {
 	def toNum(access: Access): Short = access match {
 		case Own => 40
@@ -17,7 +24,7 @@ object Access {
 		case 10 => Non
 		case _ => throw new IllegalArgumentException("number " + access + " does not match an access level")
 	}
-	
+
 	def better(a1: Access, a2: Access) = fromNum(math.max(toNum(a1).toInt, toNum(a2).toInt).toShort)
 }
 

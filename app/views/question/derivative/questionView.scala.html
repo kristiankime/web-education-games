@@ -17,8 +17,8 @@
 	
 	@if(answer.nonEmpty){
 	<div>
-		Your answer to this questions was <script type="math/mml"> @Html(answer.get.mathML.toString) </script> <br>
-		That answer was @if(answer.get.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
+		You answered <script type="math/mml"> @Html(answer.get.mathML.toString) </script>
+		that answer was @if(answer.get.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
 	</div>
 	<p>
 	}	
@@ -53,9 +53,9 @@
 	
 	<h4>There have been @answers.size Answer(s)</h4>
     <ul>
-    @answers.map { answer =>
-        <li> 
-	        <script type="math/mml"> @Html(answer.mathML.toString) </script> 
+    @for(answer <- answers){
+        <li>
+        	<script type="math/mml"> @Html(answer.mathML.toString) </script> 
 	        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
         </li>
     }

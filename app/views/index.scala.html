@@ -9,13 +9,12 @@
     </p>
     
 	<ul>
-		<li>I'd like to see what courses I'm associated with</li>
+		<li> <a href=@controllers.routes.Application.userInfo> I'd like to see what courses I'm associated with </a> </li>
 		<li>I'm a teacher looking to...</li>
 	    <ul>
 	    	<li> <a href=@controllers.organization.routes.CoursesController.add> create a new course </a> </li>
 	    	<li> <a href=@controllers.organization.routes.CoursesController.list> create a section for a course that already exists</a> </li>
 	    </ul>
-	    <li> <a href=@controllers.organization.routes.CoursesController.list> I'm a TA looking to register for a course </a> </li>
 	    <li> <a href=@controllers.organization.routes.CoursesController.list> I'm a Student looking to enroll in a course </a> </li>
 
     </ul>

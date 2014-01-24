@@ -36,4 +36,11 @@ object Courses {
 	def find(id: CourseId) = DB.withSession { implicit session: Session =>
 		Query(CoursesTable).where(_.id === id).firstOption
 	}
+	
+	def findByUser(userId: UserId) = DB.withSession { implicit session: Session =>
+		(for (
+			uc <- UsersCoursesTable if uc.userId === userId;
+			c <- CoursesTable if uc.courseId === c.id
+		) yield c).list
+	}
 }

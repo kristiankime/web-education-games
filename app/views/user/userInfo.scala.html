@@ -1,9 +1,9 @@
-@(user: service.User)
+@(user: service.User, courses: List[Course])
 
 @import helper._
-@import controllers.question.derivative._
+@import controllers.organization.routes._
  
-@main("EdTech User Infomation") {
+@main("User Information") {
     
     <h1>Welcome to the EdTech Math Games Server</h1>
     
@@ -11,9 +11,11 @@
     	You are logged in as: @user.fullName <br>
     	You email is: @user.email
     </p>
-    
-    <p>
-        <a href="@routes.QuestionController.questionsByUser(user.id)"> See the questions you have created </a>
-    </p>
-    
+
+    <h4> Your are associated with the following course(s)</h4>
+    <ul>
+    @for(course <- courses){
+    	<li> <a href=@CoursesController.view(course.id)> @course.name </a> </li>
+    }
+    <ul>
 }

@@ -4,6 +4,7 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
+import models.organization.Courses
 
 object Application extends Controller with SecureSocial {
 
@@ -19,7 +20,9 @@ object Application extends Controller with SecureSocial {
 	}
 
 	def userInfo = SecuredAction { implicit request =>
-		Ok(views.html.user.userInfo(User(request)))
+		implicit val user = User(request)
+		val courses = Courses.findByUser(user.id)
+		Ok(views.html.user.userInfo(user, courses))
 	}
 
 }

@@ -21,10 +21,10 @@ case class CourseTmp(name: String, date: DateTime) {
 object Courses {
 
 	def list = DB.withSession { implicit session: Session =>
-		(for (
-			s <- SectionsTable;
-			c <- CoursesTable if s.courseId === c.id
-		) yield (c, s)).list.groupBy(_._1).mapValues(_.map(_._2))
+		// LATER do this efficiently in one call 
+		val courses = Query(CoursesTable).list
+		val coursesAndSections = courses.map(c => (c, Query(SectionsTable).where(_.courseId === c.id).list))
+		coursesAndSections
 	}
 
 	def create(teacher: User, courseInfo: CourseTmp) = DB.withSession { implicit session: Session =>
@@ -36,7 +36,7 @@ object Courses {
 	def find(id: CourseId) = DB.withSession { implicit session: Session =>
 		Query(CoursesTable).where(_.id === id).firstOption
 	}
-	
+
 	def findByUser(userId: UserId) = DB.withSession { implicit session: Session =>
 		(for (
 			uc <- UsersCoursesTable if uc.userId === userId;

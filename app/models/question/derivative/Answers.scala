@@ -14,6 +14,10 @@ case class Answer(id: AnswerId, questionId: QuestionId, mathML: MathMLElem, rawS
 
 object Answers {
 
+	def find(aid: AnswerId) = DB.withSession { implicit session: Session =>
+		Query(AnswersTable).where(_.id === aid).firstOption
+	}
+	
 	def createAnswer(answerer: User, question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): AnswerId = DB.withSession { implicit session: Session =>
 		val answerId = AnswersTable.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
 		UsersAnswersTable.insert(answerer, answerId)

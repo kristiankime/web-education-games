@@ -1,0 +1,63 @@
+ @(quiz: derivative.Quiz, question: derivative.Question, answer: Option[derivative.Answer], answers: List[derivative.Answer])
+
+@import helper._
+@import controllers.question.derivative._ 
+ 
+@main("Question Page") {
+	
+    <div>
+    	<a href="@routes.QuizzesController.view(quiz.id)"> Back to the quiz "@quiz.name" </a>
+    </div>
+    
+    <div>
+	    <h2>What is the Derivative of</h2>
+    	<script type="math/mml"> @Html(question.mathML.toString) </script>
+	</div>
+	<p>
+	
+	@if(answer.nonEmpty){
+	<div>
+		Your answer to this questions was <script type="math/mml"> @Html(answer.get.mathML.toString) </script> <br>
+		That answer was @if(answer.get.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
+	</div>
+	<p>
+	}	
+    
+    <div>
+		Type in your answer, and then hit the submit button <br> 
+		@mathml_editor("ANSWER")
+	</div>
+		
+	<div>
+	@form(routes.AnswersController.create(quiz.id, question.id) , 'id -> "answerForm" ) {
+    	<input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
+    	<input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
+    	<input type="hidden" name="@AnswerForm.current" id="answerCurrent">
+    	<input type="button" value="Submit" onclick="answerFormSubmit()">
+    }
+    </div>
+	
+	<script>
+	var answerFormSubmit = function() {
+		if(ANSWER.valid){
+			$("#answerMathML").val(ANSWER.mathML);
+			$("#answerRawStr").val(ANSWER.rawStr);
+			$("#answerCurrent").val(ANSWER.current);
+			$("#answerForm").submit();
+		}
+		// TODO indicated that the form did not submit
+	}
+    </script>
+    
+    <p>
+	
+	<h4>There have been @answers.size Answer(s)</h4>
+    <ul>
+    @answers.map { answer =>
+        <li> 
+	        <script type="math/mml"> @Html(answer.mathML.toString) </script> 
+	        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
+        </li>
+    }
+    </ul>
+}

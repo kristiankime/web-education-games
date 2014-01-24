@@ -4,91 +4,97 @@
 
 
 # Remove trailing /'s from paths 
-GET    /*path/                               controllers.Application.untrail(path: String)
+GET    /*path/                                     controllers.Application.untrail(path: String)
 
 # Home page
-GET    /                                     controllers.Application.index
-GET    /user                                 controllers.Application.userInfo
+GET    /                                           controllers.Application.index
+GET    /user                                       controllers.Application.userInfo
 
 # Organization pages
 # Courses
-GET    /courses                              controllers.organization.CoursesController.list
-GET    /courses/add                          controllers.organization.CoursesController.add
-POST   /courses                              controllers.organization.CoursesController.create
-GET    /courses/:id                          controllers.organization.CoursesController.view(id: CourseId)
-POST   /courses/:id                          controllers.organization.CoursesController.update(id: CourseId)
-POST   /courses/:id/delete                   controllers.organization.CoursesController.delete(id: CourseId)
+GET    /courses                                    controllers.organization.CoursesController.list
+GET    /courses/add                                controllers.organization.CoursesController.add
+POST   /courses                                    controllers.organization.CoursesController.create
+GET    /courses/:id                                controllers.organization.CoursesController.view(id: CourseId)
+POST   /courses/:id                                controllers.organization.CoursesController.update(id: CourseId)
+POST   /courses/:id/delete                         controllers.organization.CoursesController.delete(id: CourseId)
 # Sections
-GET    /courses/:cid/sections                controllers.organization.SectionsController.list(cid: CourseId)
-GET    /courses/:cid/sections/add            controllers.organization.SectionsController.add(cid: CourseId)
-POST   /courses/:cid/sections                controllers.organization.SectionsController.create(cid: CourseId)
-GET    /courses/:cid/sections/:id            controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
-POST   /courses/:cid/sections/:id/enroll     controllers.organization.SectionsController.enroll(cid: CourseId, id: SectionId)
-POST   /courses/:cid/sections/:id            controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
-POST   /courses/:cid/sections/:id/delete     controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
+GET    /courses/:cid/sections                      controllers.organization.SectionsController.list(cid: CourseId)
+GET    /courses/:cid/sections/add                  controllers.organization.SectionsController.add(cid: CourseId)
+POST   /courses/:cid/sections                      controllers.organization.SectionsController.create(cid: CourseId)
+GET    /courses/:cid/sections/:id                  controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
+POST   /courses/:cid/sections/:id/enroll           controllers.organization.SectionsController.enroll(cid: CourseId, id: SectionId)
+POST   /courses/:cid/sections/:id                  controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
+POST   /courses/:cid/sections/:id/delete           controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
 
 # Questions pages
 # Quizzes
-GET    /quizzes                              controllers.question.derivative.QuizzesController.list
-GET    /quizzes/add                          controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
-POST   /quizzes                              controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
-GET    /quizzes/:id                          controllers.question.derivative.QuizzesController.view(id: QuizId)
-POST   /quizzes/:id                          controllers.question.derivative.QuizzesController.update(id: QuizId)
-POST   /quizzes/:id/delete                   controllers.question.derivative.QuizzesController.delete(id: QuizId)
+GET    /quizzes                                    controllers.question.derivative.QuizzesController.list
+GET    /quizzes/add                                controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
+POST   /quizzes                                    controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
+GET    /quizzes/:id                                controllers.question.derivative.QuizzesController.view(id: QuizId)
+POST   /quizzes/:id                                controllers.question.derivative.QuizzesController.update(id: QuizId)
+POST   /quizzes/:id/delete                         controllers.question.derivative.QuizzesController.delete(id: QuizId)
 
 # Questions
-POST   /quizzes/:qid/questions               controllers.question.derivative.QuestionsController.create(qid: QuizId)
+GET    /quizzes/:qid/questions/:id                 controllers.question.derivative.QuestionsController.view(qid: QuizId, id: QuestionId)
+POST   /quizzes/:qid/questions                     controllers.question.derivative.QuestionsController.create(qid: QuizId)
+
+# Answers
+GET    /quizzes/:qzid/questions/:qid/answers/:id   controllers.question.derivative.AnswersController.view(qzid: QuizId, qid: QuestionId, id: AnswerId)
+POST   /quizzes/:qzid/questions/:qid/answers       controllers.question.derivative.AnswersController.create(qzid: QuizId, qid: QuestionId)
+
 
 
 # ======== TODO START DEPRICATED ========
 # Equation pages
-GET    /equation                             controllers.EquationController.equations
-POST   /equation                             controllers.EquationController.newEquation
-POST   /equation/:id/delete                  controllers.EquationController.deleteEquation(id: Long)
+GET    /equation                                   controllers.EquationController.equations
+POST   /equation                                   controllers.EquationController.newEquation
+POST   /equation/:id/delete                        controllers.EquationController.deleteEquation(id: Long)
 
 # Derivative question pages
-GET    /selfquiz                             controllers.question.derivative.QuestionController.selfQuiz
-GET    /selfquiz/question                    controllers.question.derivative.QuestionController.questions
-GET    /selfquiz/question/:qid               controllers.question.derivative.QuestionController.question(qid: QuestionId, sid: Option[QuizId])
-GET    /selfquiz/question/user/:uid          controllers.question.derivative.QuestionController.questionsByUser(uid: UserId)
-POST   /selfquiz/question                    controllers.question.derivative.QuestionController.newQuestion
-POST   /selfquiz/question/:qid/delete        controllers.question.derivative.QuestionController.deleteQuestion(qid: QuestionId) 
+GET    /selfquiz                                   controllers.question.derivative.QuestionController.selfQuiz
+GET    /selfquiz/question                          controllers.question.derivative.QuestionController.questions
+GET    /selfquiz/question/:qid                     controllers.question.derivative.QuestionController.question(qid: QuestionId, sid: Option[QuizId])
+GET    /selfquiz/question/user/:uid                controllers.question.derivative.QuestionController.questionsByUser(uid: UserId)
+POST   /selfquiz/question                          controllers.question.derivative.QuestionController.newQuestion
+POST   /selfquiz/question/:qid/delete              controllers.question.derivative.QuestionController.deleteQuestion(qid: QuestionId) 
 
 # Derivative answer pages
-GET    /selfquiz/question/:qid/answer        controllers.question.derivative.AnswerController.answers(qid: QuestionId)
-GET    /selfquiz/question/:qid/answer/:aid   controllers.question.derivative.AnswerController.answer(qid: QuestionId, aid : AnswerId, sid: Option[QuizId])
-POST   /selfquiz/question/:qid/answer/       controllers.question.derivative.AnswerController.newAnswer(qid: QuestionId, sid: Option[QuizId])
+GET    /selfquiz/question/:qid/answer              controllers.question.derivative.AnswerController.answers(qid: QuestionId)
+GET    /selfquiz/question/:qid/answer/:aid         controllers.question.derivative.AnswerController.answer(qid: QuestionId, aid : AnswerId, sid: Option[QuizId])
+POST   /selfquiz/question/:qid/answer/             controllers.question.derivative.AnswerController.newAnswer(qid: QuestionId, sid: Option[QuizId])
 
 # Derivative queston set pages
-GET    /selfquiz/questionset                 controllers.question.derivative.QuizController.sets
-GET    /selfquiz/questionset/create          controllers.question.derivative.QuizController.setCreate
-GET    /selfquiz/questionset/:sid            controllers.question.derivative.QuizController.setAnswer(sid: QuizId)
-GET    /selfquiz/questionset/:sid/edit       controllers.question.derivative.QuizController.setEdit(sid: QuizId)
-POST   /selfquiz/questionset                 controllers.question.derivative.QuizController.newSet
-POST   /selfquiz/questionset/:sid/update     controllers.question.derivative.QuizController.updateSet(sid: QuizId)
+GET    /selfquiz/questionset                       controllers.question.derivative.QuizController.sets
+GET    /selfquiz/questionset/create                controllers.question.derivative.QuizController.setCreate
+GET    /selfquiz/questionset/:sid                  controllers.question.derivative.QuizController.setAnswer(sid: QuizId)
+GET    /selfquiz/questionset/:sid/edit             controllers.question.derivative.QuizController.setEdit(sid: QuizId)
+POST   /selfquiz/questionset                       controllers.question.derivative.QuizController.newSet
+POST   /selfquiz/questionset/:sid/update           controllers.question.derivative.QuizController.updateSet(sid: QuizId)
 # ======== END DEPRICATED ========
 
 # START Routes for Secure Social
 # Login page
-GET    /login                                securesocial.controllers.LoginPage.login
-GET    /logout                               securesocial.controllers.LoginPage.logout
+GET    /login                                      securesocial.controllers.LoginPage.login
+GET    /logout                                     securesocial.controllers.LoginPage.logout
 # User Registration and password handling 
-GET    /signup                               securesocial.controllers.Registration.startSignUp
-POST   /signup                               securesocial.controllers.Registration.handleStartSignUp
-GET    /signup/:token                        securesocial.controllers.Registration.signUp(token)
-POST   /signup/:token                        securesocial.controllers.Registration.handleSignUp(token)
-GET    /reset                                securesocial.controllers.Registration.startResetPassword
-POST   /reset                                securesocial.controllers.Registration.handleStartResetPassword
-GET    /reset/:token                         securesocial.controllers.Registration.resetPassword(token)
-POST   /reset/:token                         securesocial.controllers.Registration.handleResetPassword(token)
-GET    /password                             securesocial.controllers.PasswordChange.page
-POST   /password                             securesocial.controllers.PasswordChange.handlePasswordChange
+GET    /signup                                     securesocial.controllers.Registration.startSignUp
+POST   /signup                                     securesocial.controllers.Registration.handleStartSignUp
+GET    /signup/:token                              securesocial.controllers.Registration.signUp(token)
+POST   /signup/:token                              securesocial.controllers.Registration.handleSignUp(token)
+GET    /reset                                      securesocial.controllers.Registration.startResetPassword
+POST   /reset                                      securesocial.controllers.Registration.handleStartResetPassword
+GET    /reset/:token                               securesocial.controllers.Registration.resetPassword(token)
+POST   /reset/:token                               securesocial.controllers.Registration.handleResetPassword(token)
+GET    /password                                   securesocial.controllers.PasswordChange.page
+POST   /password                                   securesocial.controllers.PasswordChange.handlePasswordChange
 # Providers entry points
-GET    /authenticate/:provider               securesocial.controllers.ProviderController.authenticate(provider)
-POST   /authenticate/:provider               securesocial.controllers.ProviderController.authenticateByPost(provider)
-GET    /not-authorized                       securesocial.controllers.ProviderController.notAuthorized
+GET    /authenticate/:provider                     securesocial.controllers.ProviderController.authenticate(provider)
+POST   /authenticate/:provider                     securesocial.controllers.ProviderController.authenticateByPost(provider)
+GET    /not-authorized                             securesocial.controllers.ProviderController.notAuthorized
 # END Routes for Secure Social
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET    /assets/*file                         controllers.Assets.at(path="/public", file)
+GET    /assets/*file                               controllers.Assets.at(path="/public", file)

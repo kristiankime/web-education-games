@@ -16,6 +16,13 @@ import org.joda.time.DateTime
 
 object QuestionsController extends Controller with SecureSocial {
 
+	def view(quizId: QuizId, questionId: QuestionId) = SecuredAction { implicit request =>
+		(Quizzes.find(quizId), Questions.find(questionId)) match {
+			case (Some(quiz), Some(question)) => Ok(views.html.question.derivative.questionView(quiz, question, None, Questions.findAnswers(questionId)))
+			case _ => BadRequest(views.html.index())
+		}
+	}
+
 	def create(quizId: QuizId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		QuestionForm.values.bindFromRequest.fold(

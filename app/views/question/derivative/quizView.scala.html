@@ -8,7 +8,7 @@
     <h2>Welcome to page for the quiz: @quiz.name </h1>
     
     <p>
-    	Pick one of the equations below to try figure out it's derivative (or see previous answers to the question).
+    	Pick one of the equations below:
     </p>
     
     <h4>There are @questions.size Question(s)</h4>
@@ -17,8 +17,7 @@
         @questions.map { question =>
             <li>
             	<script type="math/mml"> @Html(question.mathML.toString) </script>
-                [<a href=@routes.QuestionController.question(question.id, None)>answer</a>]
-                [<a href=@routes.AnswerController.answers(question.id)>previous answers</a>]
+                [<a href=@routes.QuestionsController.view(quiz.id, question.id)>view</a>]
             </li>
         }
     </ul>

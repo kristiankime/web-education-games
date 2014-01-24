@@ -10,9 +10,11 @@ import models.organization._
 import models.question.derivative._
 import models.id._
 import org.joda.time.DateTime
+import scala.util.Random
 
 object CoursesController extends Controller with SecureSocial {
-
+	val randomEngine = new Random(0L)
+	
 	def list = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		Ok(views.html.organization.courseList(Courses.list))
@@ -28,8 +30,10 @@ object CoursesController extends Controller with SecureSocial {
 		CourseForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
-				val courseId = Courses.create(user, CourseTmp(form, DateTime.now))
-				Redirect(routes.CoursesController.view(courseId))
+				val editCode = "CO-E-" + randomEngine.nextInt(100000)
+				val viewCode = "CO-V-" + randomEngine.nextInt(100000)
+				val course = Courses.create(CourseTmp(form, user.id, editCode, viewCode, DateTime.now))
+				Redirect(routes.CoursesController.view(course.id))
 			})
 	}
 
@@ -45,15 +49,6 @@ object CoursesController extends Controller with SecureSocial {
 
 	def delete(id: CourseId) = TODO
 }
-
-/*
-object CourseHTML {
-	val name = "name"
-	val quizId = "quizId"
-	def quizId(i: Int) = "quizId[" + i + "]"
-	val form = Form(tuple(name -> nonEmptyText, quizId -> list(longNumber)))
-} 
-*/
 
 object CourseForm {
 	val name = "name"

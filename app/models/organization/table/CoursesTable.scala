@@ -9,16 +9,23 @@ import models.organization._
 import models.id._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
+import service.table.UserTable
+import scala.slick.lifted.ForeignKeyAction
 
 object CoursesTable extends Table[Course]("courses") {
 	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
+	def owner = column[UserId]("owner", O.NotNull)
+	def editCode = column[String]("editCode", O.NotNull)
+	def viewCode = column[String]("viewCode", O.NotNull)	
 	def creationDate = column[DateTime]("creationDate")
 	def updateDate = column[DateTime]("updateDate")
-	def * = id ~ name ~ creationDate ~ updateDate <> (Course, Course.unapply _)
-
-	def autoInc = name ~ creationDate ~ updateDate returning id
 	
-	def insert(t: CourseTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.date, t.date)
+	def * = id ~ name ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate <> (Course, Course.unapply _)
 
+	def ownerFK = foreignKey("courses_owner_fk", owner, UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	
+	def autoInc = name ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
+	
+	def insert(t: CourseTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.owner, t.editCode, t.viewCode, t.date, t.date)
 }

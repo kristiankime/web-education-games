@@ -12,25 +12,23 @@ import service._
 import models.id._
 import org.joda.time.DateTime
 
-case class Course(id: CourseId, name: String, creationDate: DateTime, updateDate: DateTime)
+case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime)
 
-case class CourseTmp(name: String, date: DateTime) {
-	def apply(id: CourseId) = { Course(id, name, date, date) }
+case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
+	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
 }
 
 object Courses {
 
 	def list = DB.withSession { implicit session: Session =>
-		// LATER do this efficiently in one call 
+		// LATER do this more efficiently in one call 
 		val courses = Query(CoursesTable).list
 		val coursesAndSections = courses.map(c => (c, Query(SectionsTable).where(_.courseId === c.id).list))
 		coursesAndSections
 	}
 
-	def create(teacher: User, courseInfo: CourseTmp) = DB.withSession { implicit session: Session =>
-		val courseId = CoursesTable.insert(courseInfo)
-		UsersCoursesTable.insert(User2Course(teacher.id, courseId, Own))
-		courseId
+	def create(courseTmp: CourseTmp) = DB.withSession { implicit session: Session =>
+		courseTmp(CoursesTable.insert(courseTmp))
 	}
 
 	def find(id: CourseId) = DB.withSession { implicit session: Session =>
@@ -41,6 +39,8 @@ object Courses {
 		(for (
 			uc <- UsersCoursesTable if uc.userId === userId;
 			c <- CoursesTable if uc.courseId === c.id
-		) yield c).list
+		) yield c)
+			.union(
+				(Query(CoursesTable).where(_.owner === userId))).list
 	}
 }

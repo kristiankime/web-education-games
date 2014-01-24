@@ -48,6 +48,8 @@ case class UserTmp(identityId: IdentityId,
 	date: DateTime) {
 
 	def apply(id: UserId) = User(id, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, date, date)
+
+	def apply(user: User) = User(user.id, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, user.creationDate, date)
 }
 
 object UserTmp {

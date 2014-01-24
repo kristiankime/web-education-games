@@ -70,7 +70,7 @@ object UserTable extends Table[User]("user") {
 				t(id)
 			}
 			case Some(existingUser) => {
-				val updatedUser = t(existingUser.id)
+				val updatedUser = t(existingUser)
 				Query(UserTable).where(_.id is existingUser.id).update(updatedUser)
 				updatedUser
 			}

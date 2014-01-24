@@ -20,32 +20,32 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 
 case class CourseDetails(course: Course, owner: User, access: Access, sections: List[SectionDetails])
 
+object CourseDetails {
+	def apply(v: (Course, User, Access), sections: List[SectionDetails]): CourseDetails = CourseDetails(v._1, v._2, v._3, sections)
+}
+
 object Courses {
 
 	def list(implicit user: User) = DB.withSession { implicit session: Session =>
-		val coursesAndOwners = (for (
+		val coursesOwners = (for (
 			c <- CoursesTable;
-			u <- UserTable if c.owner === u.id
-		) yield (c, u)).list
+			u <- UserTable if u.id === c.owner
+		) yield (c, u))
 
-		coursesAndOwners.map(co => courseDetails(user, co._1, co._2))
+		val coursesAccess = Queries.access(user, UsersCoursesTable, coursesOwners)
+
+		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
-	private def courseDetails(user: User, c: Course, owner: User)(implicit session: Session) = {
-		val access = Option2Access(Query(UsersCoursesTable).where(uc => uc.userId === user.id && uc.courseId === c.id).firstOption.map(_.access))
+	def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = {
+		val sectionsOwners = (for (
+			s <- SectionsTable if s.courseId === courseId;
+			u <- UserTable if u.id === s.owner
+		) yield (s, u))
 
-		val sectionsAndUsers = (for (
-			s <- SectionsTable if s.courseId === c.id;
-			u <- UserTable if s.owner === u.id
-		) yield (s, u)).list
-		val sectionsDetails = sectionsAndUsers.map(t => sectionDetails(user, t._1, t._2))
+		val sectionsAccess = Queries.access(user, UsersSectionsTable, sectionsOwners)
 
-		CourseDetails(c, owner, access, sectionsDetails)
-	}
-
-	private def sectionDetails(user: User, s: Section, owner: User)(implicit session: Session) = {
-		val access = Option2Access(Query(UsersSectionsTable).where(us => us.userId === user.id && us.sectionId === s.id).firstOption.map(_.access))
-		SectionDetails(s, owner, access)
+		sectionsAccess.list.map(Access.accessMap(_)).map(SectionDetails(_))
 	}
 
 	def create(courseTmp: CourseTmp) = DB.withSession { implicit session: Session =>
@@ -59,7 +59,7 @@ object Courses {
 	def findByUser(userId: UserId) = DB.withSession { implicit session: Session =>
 		(for (
 			uc <- UsersCoursesTable if uc.userId === userId;
-			c <- CoursesTable if uc.courseId === c.id
+			c <- CoursesTable if uc.id === c.id
 		) yield c)
 			.union(
 				(Query(CoursesTable).where(_.owner === userId))).list

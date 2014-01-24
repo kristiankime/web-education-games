@@ -20,6 +20,10 @@ case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode:
 
 case class SectionDetails(section: Section, owner: User, access: Access)
 
+object SectionDetails {
+	def apply(v: (Section, User, Access)) : SectionDetails = SectionDetails(v._1, v._2, v._3)
+}
+
 object Sections {
 
 	def find(sectionId: SectionId) = DB.withSession { implicit session: Session =>

@@ -12,7 +12,7 @@
     	<li> 
     		course: 
     		<a href=@CoursesController.view(course.course.id)> @course.course.name </a>
-    		<a href=@SectionsController.add(course.course.id)> [ add a section ]</a>
+    		@if(course.access.write){ <a href=@SectionsController.add(course.course.id)> [ add a section ]</a> }
     		sections: 
     	</li>
     

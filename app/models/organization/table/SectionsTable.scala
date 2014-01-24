@@ -12,7 +12,7 @@ import com.github.tototoshi.slick.JodaSupport._
 import service.table.UserTable
 import scala.slick.lifted.ForeignKeyAction
 
-object SectionsTable extends Table[Section]("sections") {
+object SectionsTable extends Table[Section]("sections") with IdentifiedAndOwned[Section, SectionId] {
 	def id = column[SectionId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def courseId = column[CourseId]("courseId", O.NotNull)

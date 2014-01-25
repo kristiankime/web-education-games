@@ -43,8 +43,8 @@ class UserTable extends Table[User]("user") {
 
 	def autoInc = userId ~ providerId ~ firstName ~ lastName ~ fullName ~ email ~ avatarUrl ~ authMethod ~ token ~ secret ~ accessToken ~ tokenType ~ expiresIn ~ refreshToken ~ creationDate ~ updateDate returning id
 
-	def create(t: UserTmp)(implicit s: Session) = this.autoInc.insert(t.identityId.userId, t.identityId.providerId, t.firstName, t.lastName, t.fullName, t.email, t.avatarUrl, t.authMethod, t.oAuth1Info.map(_.token), t.oAuth1Info.map(_.secret), t.oAuth2Info.map(_.accessToken), t.oAuth2Info.flatMap(_.tokenType), t.oAuth2Info.flatMap(_.expiresIn), t.oAuth2Info.flatMap(_.refreshToken), t.date, t.date)
-
+	def insert(t: UserTmp)(implicit s: Session) = t(this.autoInc.insert(t.identityId.userId, t.identityId.providerId, t.firstName, t.lastName, t.fullName, t.email, t.avatarUrl, t.authMethod, t.oAuth1Info.map(_.token), t.oAuth1Info.map(_.secret), t.oAuth2Info.map(_.accessToken), t.oAuth2Info.flatMap(_.tokenType), t.oAuth2Info.flatMap(_.expiresIn), t.oAuth2Info.flatMap(_.refreshToken), t.date, t.date))
+		
 	def findById(id: UserId)(implicit s: Session) = Query(new UserTable).where(_.id is id).firstOption
 
 	def findByIdentityId(userId: IdentityId)(implicit s: Session): Option[User] = {
@@ -66,8 +66,7 @@ class UserTable extends Table[User]("user") {
 	def save(t: UserTmp)(implicit s: Session) = {
 		findByIdentityId(t.identityId) match {
 			case None => {
-				val id = create(t)
-				t(id)
+				insert(t)
 			}
 			case Some(existingUser) => {
 				val updatedUser = t(existingUser)

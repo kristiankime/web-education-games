@@ -33,11 +33,11 @@ object Courses {
 		) yield (c, u))
 
 		val coursesAccess = Queries.access(user, new UsersCoursesTable, coursesOwners)
-
+		
 		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
-	def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = {
+	private def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = {
 		val sectionsOwners = (for (
 			s <- (new SectionsTable) if s.courseId === courseId;
 			u <- (new UserTable) if u.id === s.owner
@@ -52,6 +52,10 @@ object Courses {
 		courseTmp((new CoursesTable).insert(courseTmp))
 	}
 
+	def access(user: User, course: Course, access: Access) = DB.withSession { implicit session: Session =>
+		(new UsersCoursesTable).insert(User2Course(user.id, course.id, access))
+	}
+	
 	def find(id: CourseId) = DB.withSession { implicit session: Session =>
 		Query(new CoursesTable).where(_.id === id).firstOption
 	}

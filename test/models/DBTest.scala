@@ -14,7 +14,7 @@ object DBTest {
 	val inMemH2 = inMemoryDatabase(options = Map("MODE" -> "PostgreSQL"))
 
 	def fakeUser(data: UserTmp) = DB.withSession { implicit session: Session =>
-		(new UserTable).save(data)
+		(new UserTable).insert(data)
 	}
 
 }

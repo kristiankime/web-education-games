@@ -1,4 +1,4 @@
-@(equations: List[Equation], equationForm: Form[String])
+@(equations: List[Equation], equationForm: Form[String])(implicit user: service.User)
 
 @import helper._
 @import controllers.{EquationHTML => EQ}

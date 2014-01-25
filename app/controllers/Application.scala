@@ -15,14 +15,15 @@ object Application extends Controller with SecureSocial {
 		MovedPermanently("/" + path)
 	}
 
-	def index = SecuredAction {
+	def index = SecuredAction  { implicit request =>
+		implicit val user = User(request)
 		Ok(views.html.index())
 	}
 
 	def userInfo = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		val courses = Courses.findByUser(user.id)
-		Ok(views.html.user.userInfo(user, courses))
+		Ok(views.html.user.userInfo(courses))
 	}
 
 }

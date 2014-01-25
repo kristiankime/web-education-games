@@ -13,11 +13,14 @@ import models.id._
 object AnswerController extends Controller with SecureSocial {
 
 	def answers(qid: QuestionId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		val question = Questions.findQuestion(qid).get // TODO can be null
 		Ok(views.html.self_quiz_question_answers(question, Answers.findAnswers(qid)))
 	}
 
 	def answer(qid: QuestionId, aid: AnswerId, sid: Option[QuizId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+
 		val question = Questions.findQuestion(qid).get // TODO can be null
 		val answer = Answers.findAnswer(qid, aid)
 		val set = sid.flatMap(q => Quizzes.findQuiz(q))
@@ -25,6 +28,7 @@ object AnswerController extends Controller with SecureSocial {
 	}
 
 	def newAnswer(qid: QuestionId, sid: Option[QuizId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		AnswerHTML.form.bindFromRequest.fold(
 			errors => {
 				BadRequest(views.html.self_quiz_answer(Questions.findQuestion(qid).get, None, None)) // TODO currently we assume we can get the problem id here

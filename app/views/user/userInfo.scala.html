@@ -1,4 +1,4 @@
-@(user: service.User, courses: List[Course])
+@(courses: List[Course])(implicit user: service.User)
 
 @import helper._
 @import controllers.organization.routes._

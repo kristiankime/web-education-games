@@ -1,4 +1,4 @@
-@(title: String, headers: Html*)(content: Html)
+@(title: String, headers: Html*)(content: Html)(implicit user: service.User)
 
 <!DOCTYPE html>
 
@@ -24,8 +24,8 @@
     <body>
 
     <header>
-        <a href="@routes.Application.index">[ Home ]</a>
-        <a href="@routes.Application.userInfo">[ User ]</a>
+        [ <a href="@routes.Application.index"> Home </a> ]
+        [ <a href="@routes.Application.userInfo"> User( @user.email ) </a> ]
         @for(header <- headers) {
         	[ @header ]
         }

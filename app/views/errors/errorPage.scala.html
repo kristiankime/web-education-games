@@ -1,8 +1,13 @@
 @(throwable: Throwable)
 
-@main("Internal Error") {
+<!DOCTYPE html>
 
-  <h1>An internal error occured:</h1>	
-  <p>@throwable.getMessage</p>    
-
-}
+<html>
+    <head>
+        <title>Internal Error</title>
+    </head>
+    <body>
+  		<h1>An internal error occured:</h1>	
+  		<p>@throwable.getMessage</p>  
+    </body>
+</html>

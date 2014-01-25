@@ -14,14 +14,17 @@ import org.joda.time.DateTime
 object QuizController extends Controller with SecureSocial {
 
 	def sets = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Ok(views.html.self_quiz_question_sets(Quizzes.allQuizzes))
 	}
 
 	def setCreate = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
 	}
 
 	def setEdit(id: QuizId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Quizzes.findQuizAndQuestionIds(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_edit(s, Questions.allQuestions))
 			case None => Ok(views.html.self_quiz_question_set_create(Questions.allQuestions))
@@ -29,6 +32,7 @@ object QuizController extends Controller with SecureSocial {
 	}
 
 	def setAnswer(id: QuizId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Quizzes.findQuizAndQuestions(id) match {
 			case Some(s) => Ok(views.html.self_quiz_question_set_answer(s._1, s._2))
 			case None => Ok(views.html.self_quiz_question_sets(Quizzes.allQuizzes))
@@ -36,6 +40,7 @@ object QuizController extends Controller with SecureSocial {
 	}
 
 	def newSet = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		QuizHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {
@@ -45,6 +50,7 @@ object QuizController extends Controller with SecureSocial {
 	}
 
 	def updateSet(id: QuizId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		QuizHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_question_sets(Quizzes.allQuizzes)),
 			form => {

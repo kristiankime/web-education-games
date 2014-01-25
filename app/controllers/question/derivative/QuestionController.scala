@@ -14,25 +14,30 @@ import models.id._
 
 object QuestionController extends Controller with SecureSocial {
 
-	def selfQuiz = SecuredAction {
+	def selfQuiz = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Ok(views.html.self_quiz())
 	}
 
 	def questions = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}
 
 	def questionsByUser(uid: UserId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Ok(views.html.self_quiz_questions(Questions.findQuestionsForUser(uid)))
 	}
 
 	def question(id: QuestionId, sid: Option[QuizId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		val set = sid.flatMap(q => Quizzes.findQuiz(q))
 		val question = Questions.findQuestion(id).get // TODO better error if this is empty
 		Ok(views.html.self_quiz_answer(question, None, set))
 	}
 
 	def newQuestion = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		QuestionHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.self_quiz_questions(Questions.allQuestions())),
 			form => {
@@ -45,6 +50,7 @@ object QuestionController extends Controller with SecureSocial {
 	}
 
 	def deleteQuestion(id: QuestionId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
 		Questions.deleteQuestion(id);
 		Ok(views.html.self_quiz_questions(Questions.allQuestions()))
 	}

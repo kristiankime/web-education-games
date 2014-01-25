@@ -9,7 +9,7 @@ import models.id._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
 
-object QuestionsTable extends Table[Question]("derivative_questions") {
+class QuestionsTable extends Table[Question]("derivative_questions") {
 	def id = column[QuestionId]("id", O.PrimaryKey, O.AutoInc)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)

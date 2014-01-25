@@ -9,7 +9,7 @@ import models.id._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
 
-object QuizzesTable extends Table[Quiz]("derivative_quizzes") {
+class QuizzesTable extends Table[Quiz]("derivative_quizzes") {
 	def id = column[QuizId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def creationDate = column[DateTime]("creationDate")

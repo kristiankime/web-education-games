@@ -12,7 +12,7 @@ import com.github.tototoshi.slick.JodaSupport._
 import service.table.UserTable
 import scala.slick.lifted.ForeignKeyAction
 
-object CoursesTable extends Table[Course]("courses") with IdentifiedAndOwned[Course, CourseId] {
+class CoursesTable extends Table[Course]("courses") with IdentifiedAndOwned[Course, CourseId] {
 	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def owner = column[UserId]("owner", O.NotNull)
@@ -23,7 +23,7 @@ object CoursesTable extends Table[Course]("courses") with IdentifiedAndOwned[Cou
 
 	def * = id ~ name ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate <> (Course, Course.unapply _)
 
-	def ownerFK = foreignKey("courses_owner_fk", owner, UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("courses_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 	def autoInc = name ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
 

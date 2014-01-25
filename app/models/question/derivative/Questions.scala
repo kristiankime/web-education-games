@@ -25,48 +25,48 @@ case class QuestionTmp(mathML: MathMLElem, rawStr: String, synched: Boolean, cre
 object Questions {
 
 	def find(questionId: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(QuestionsTable).where(_.id === questionId).firstOption
+		Query(new QuestionsTable).where(_.id === questionId).firstOption
 	}
 
 	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(AnswersTable).where(_.questionId === qid).list
+		Query(new AnswersTable).where(_.questionId === qid).list
 	}
 		
 	def create(owner: User, info: QuestionTmp, quiz: QuizId) = DB.withSession { implicit session: Session =>
-		val questionId = QuestionsTable.insert(info)
-		UsersQuestionsTable.insert(owner, questionId)
-		QuizzesQuestionsTable.insert(Quiz2Question(quiz, questionId))
+		val questionId = (new QuestionsTable).insert(info)
+		(new UsersQuestionsTable).insert(owner, questionId)
+		(new QuizzesQuestionsTable).insert(Quiz2Question(quiz, questionId))
 		info(questionId)
 	}
 
 	// ==========
 
 	def allQuestions() = DB.withSession { implicit session: Session =>
-		Query(QuestionsTable).list
+		Query(new QuestionsTable).list
 	}
 
 	def createQuestion(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean): QuestionId = DB.withSession { implicit session: Session =>
-		val qid = QuestionsTable.autoInc.insert(mathML, rawStr, synched, DateTime.now)
-		UsersQuestionsTable.insert(owner, qid)
+		val qid = (new QuestionsTable).autoInc.insert(mathML, rawStr, synched, DateTime.now)
+		(new UsersQuestionsTable).insert(owner, qid)
 		qid
 	}
 
 	def findQuestion(questionId: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(QuestionsTable).where(_.id === questionId).firstOption
+		Query(new QuestionsTable).where(_.id === questionId).firstOption
 	}
 
 	def findQuestions(questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
-		Query(QuestionsTable).where(_.id inSet questionIds).list
+		Query(new QuestionsTable).where(_.id inSet questionIds).list
 	}
 
 	def findQuestionsForUser(userId: UserId) = DB.withSession { implicit session: Session =>
 		(for {
-			uq <- UsersQuestionsTable if uq.userId === userId
-			q <- QuestionsTable if uq.questionId === q.id
+			uq <- (new UsersQuestionsTable) if uq.userId === userId
+			q <- (new QuestionsTable) if uq.questionId === q.id
 		} yield q).list
 	}
 
 	def deleteQuestion(id: QuestionId) = DB.withSession { implicit session: Session =>
-		QuestionsTable.where(_.id === id).delete
+		(new QuestionsTable).where(_.id === id).delete
 	}
 }

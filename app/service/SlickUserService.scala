@@ -9,38 +9,39 @@ import service.table._
 import org.joda.time.DateTime
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
-
+	val tokenTable = new TokenTable
+	
 	// =========== Identity Methods ===========
 	def save(identity: Identity) = DB.withSession { implicit s: Session =>
-		UserTable.save(UserTmp(identity, DateTime.now))
+		(new UserTable).save(UserTmp(identity, DateTime.now))
 	}
 
 	def find(id: IdentityId) = DB.withSession { implicit s: Session =>
-		UserTable.findByIdentityId(id)
+		(new UserTable).findByIdentityId(id)
 	}
 
 	def findByEmailAndProvider(email: String, providerId: String) = DB.withSession { implicit s: Session =>
-		UserTable.findByEmailAndProvider(email, providerId)
+		(new UserTable).findByEmailAndProvider(email, providerId)
 	}
 
 	// =========== Token Methods ===========
 	def save(token: Token) = DB.withSession { implicit s: Session =>
-		TokenTable.save(token)
+		tokenTable.save(token)
 	}
 
 	def findToken(uuid: String): Option[Token] = DB.withSession { implicit s: Session =>
-		TokenTable.findToken(uuid)
+		tokenTable.findToken(uuid)
 	}
 
 	def deleteToken(uuid: String) = DB.withSession { implicit s: Session =>
-		TokenTable.deleteToken(uuid)
+		tokenTable.deleteToken(uuid)
 	}
 
 	def deleteTokens() = DB.withSession { implicit s: Session =>
-		TokenTable.deleteTokens()
+		tokenTable.deleteTokens()
 	}
 
 	def deleteExpiredTokens() = DB.withSession { implicit s: Session =>
-		TokenTable.deleteExpiredTokens()
+		tokenTable.deleteExpiredTokens()
 	}
 }

@@ -15,27 +15,27 @@ case class Answer(id: AnswerId, questionId: QuestionId, mathML: MathMLElem, rawS
 object Answers {
 
 	def find(aid: AnswerId) = DB.withSession { implicit session: Session =>
-		Query(AnswersTable).where(_.id === aid).firstOption
+		Query(new AnswersTable).where(_.id === aid).firstOption
 	}
 	
 	def createAnswer(answerer: User, question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): AnswerId = DB.withSession { implicit session: Session =>
-		val answerId = AnswersTable.autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
-		UsersAnswersTable.insert(answerer, answerId)
+		val answerId = (new AnswersTable).autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
+		(new UsersAnswersTable).insert(answerer, answerId)
 		answerId
 	}
 
 	private def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
 
 	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(AnswersTable).where(_.questionId === qid).list
+		Query(new AnswersTable).where(_.questionId === qid).list
 	}
 
 	def findAnswer(qid: QuestionId, aid: AnswerId) = DB.withSession { implicit session: Session =>
-		Query(AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
+		Query(new AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
 	}
 
 	def deleteAnswer(id: AnswerId) = DB.withSession { implicit session: Session =>
-		Query(AnswersTable).where(_.id === id).delete
+		Query(new AnswersTable).where(_.id === id).delete
 	}
 }
 

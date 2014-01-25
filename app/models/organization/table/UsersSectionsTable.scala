@@ -11,7 +11,7 @@ import models.id._
 
 case class User2Section(userId: UserId, sectionId: SectionId, access: Access)
 
-object UsersSectionsTable extends Table[User2Section]("users_sections") with UserLink[User2Section, SectionId] {
+class UsersSectionsTable extends Table[User2Section]("users_sections") with UserLink[User2Section, SectionId] {
 	def userId = column[UserId]("user_id", O.NotNull)
 	def id = column[SectionId]("section_id", O.NotNull)
 	def access = column[Access]("access", O.NotNull) 
@@ -19,6 +19,6 @@ object UsersSectionsTable extends Table[User2Section]("users_sections") with Use
 
 	def pk = primaryKey("users_sections_pk", (userId, id))
 
-	def userIdFK = foreignKey("users_sections_user_fk", userId, UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def questionIdFK = foreignKey("users_sections_section_fk", id, SectionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def userIdFK = foreignKey("users_sections_user_fk", userId, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionIdFK = foreignKey("users_sections_section_fk", id, new SectionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

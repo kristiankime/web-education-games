@@ -8,7 +8,7 @@ import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.id._
 
-object AnswersTable extends Table[Answer]("derivative_answers") {
+class AnswersTable extends Table[Answer]("derivative_answers") {
 	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)
 	def questionId = column[QuestionId]("question_id", O.NotNull)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
@@ -19,5 +19,5 @@ object AnswersTable extends Table[Answer]("derivative_answers") {
 
 	def autoInc = questionId ~ mathML ~ rawStr ~ synched ~ correct returning id
 
-	def questionFK = foreignKey("derivative_answers_fk", questionId, QuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionFK = foreignKey("derivative_answers_fk", questionId, new QuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

@@ -27,19 +27,19 @@ object SectionDetails {
 object Sections {
 
 	def find(sectionId: SectionId) = DB.withSession { implicit session: Session =>
-		Query(SectionsTable).where(_.id === sectionId).firstOption
+		Query(new SectionsTable).where(_.id === sectionId).firstOption
 	}
 
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
-		Query(SectionsTable).where(_.courseId === courseId).list
+		Query(new SectionsTable).where(_.courseId === courseId).list
 	}
 
 	def create(sectionTmp: SectionTmp) = DB.withSession { implicit session: Session =>
-		sectionTmp(SectionsTable.insert(sectionTmp))
+		sectionTmp((new SectionsTable).insert(sectionTmp))
 	}
 
 	def enroll(student: User, section: Section) = DB.withSession { implicit session: Session =>
-		UsersSectionsTable.insert(User2Section(student.id, section.id, View))
+		(new UsersSectionsTable).insert(User2Section(student.id, section.id, View))
 	}
 
 }

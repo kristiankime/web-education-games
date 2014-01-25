@@ -11,7 +11,7 @@ import models.id._
 
 case class User2Answer(userId: UserId, answerId: AnswerId, access: Access)
 
-object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") {
+class UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") {
 	def userId = column[UserId]("user_id", O.NotNull)
 	def answerId = column[AnswerId]("answer_id", O.NotNull)
 	def access = column[Access]("access", O.NotNull)
@@ -19,8 +19,8 @@ object UsersAnswersTable extends Table[User2Answer]("derivative_users_answers") 
 
 	def pk = primaryKey("derivative_users_answers_pk", (userId, answerId))
 
-	def userIdFK = foreignKey("derivative_users_answers_user_fk", userId, UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def answerIdFK = foreignKey("derivative_users_answers_question_fk", answerId, AnswersTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def userIdFK = foreignKey("derivative_users_answers_user_fk", userId, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def answerIdFK = foreignKey("derivative_users_answers_question_fk", answerId, new AnswersTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 	def insert(answerer: User, answerId: AnswerId)(implicit s: Session) { this.insert(User2Answer(answerer.id, answerId, Own)) }
 }

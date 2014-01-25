@@ -44,34 +44,11 @@ POST   /quizzes/:qid/questions                     controllers.question.derivati
 GET    /quizzes/:qzid/questions/:qid/answers/:id   controllers.question.derivative.AnswersController.view(qzid: QuizId, qid: QuestionId, id: AnswerId)
 POST   /quizzes/:qzid/questions/:qid/answers       controllers.question.derivative.AnswersController.create(qzid: QuizId, qid: QuestionId)
 
-
-
 # ======== TODO START DEPRICATED ========
 # Equation pages
 GET    /equation                                   controllers.EquationController.equations
 POST   /equation                                   controllers.EquationController.newEquation
 POST   /equation/:id/delete                        controllers.EquationController.deleteEquation(id: Long)
-
-# Derivative question pages
-GET    /selfquiz                                   controllers.question.derivative.QuestionController.selfQuiz
-GET    /selfquiz/question                          controllers.question.derivative.QuestionController.questions
-GET    /selfquiz/question/:qid                     controllers.question.derivative.QuestionController.question(qid: QuestionId, sid: Option[QuizId])
-GET    /selfquiz/question/user/:uid                controllers.question.derivative.QuestionController.questionsByUser(uid: UserId)
-POST   /selfquiz/question                          controllers.question.derivative.QuestionController.newQuestion
-POST   /selfquiz/question/:qid/delete              controllers.question.derivative.QuestionController.deleteQuestion(qid: QuestionId) 
-
-# Derivative answer pages
-GET    /selfquiz/question/:qid/answer              controllers.question.derivative.AnswerController.answers(qid: QuestionId)
-GET    /selfquiz/question/:qid/answer/:aid         controllers.question.derivative.AnswerController.answer(qid: QuestionId, aid : AnswerId, sid: Option[QuizId])
-POST   /selfquiz/question/:qid/answer/             controllers.question.derivative.AnswerController.newAnswer(qid: QuestionId, sid: Option[QuizId])
-
-# Derivative queston set pages
-GET    /selfquiz/questionset                       controllers.question.derivative.QuizController.sets
-GET    /selfquiz/questionset/create                controllers.question.derivative.QuizController.setCreate
-GET    /selfquiz/questionset/:sid                  controllers.question.derivative.QuizController.setAnswer(sid: QuizId)
-GET    /selfquiz/questionset/:sid/edit             controllers.question.derivative.QuizController.setEdit(sid: QuizId)
-POST   /selfquiz/questionset                       controllers.question.derivative.QuizController.newSet
-POST   /selfquiz/questionset/:sid/update           controllers.question.derivative.QuizController.updateSet(sid: QuizId)
 # ======== END DEPRICATED ========
 
 # START Routes for Secure Social

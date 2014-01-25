@@ -22,20 +22,20 @@ case class QuizTmp(name: String, date: DateTime){
 object Quizzes {
 
 	def find(quizId: QuizId) = DB.withSession { implicit session: Session =>
-		Query(QuizzesTable).where(_.id === quizId).firstOption
+		Query(new QuizzesTable).where(_.id === quizId).firstOption
 	}
 	
 	def findQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		(for {
-			l <- QuizzesQuestionsTable if l.quizId === quizId
-			q <- QuestionsTable if l.questionId === q.id
+			l <- (new QuizzesQuestionsTable) if l.quizId === quizId
+			q <- (new QuestionsTable) if l.questionId === q.id
 		} yield q).list
 	}
 	
 	def create(owner: User, info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
-		val quizId = QuizzesTable.insert(info)
-		UsersQuizzesTable.insert(User2Quiz(owner.id, quizId, Own))
-		courseId.foreach(c => { CoursesQuizzesTable.insert(Course2Quiz(c, quizId)) })
+		val quizId = (new QuizzesTable).insert(info)
+		(new UsersQuizzesTable).insert(User2Quiz(owner.id, quizId, Own))
+		courseId.foreach(c => { (new CoursesQuizzesTable).insert(Course2Quiz(c, quizId)) })
 		quizId
 	}
 	
@@ -43,32 +43,32 @@ object Quizzes {
 	
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
 		(for (
-			q <- QuizzesTable;
-			cq <- CoursesQuizzesTable if cq.quizId === q.id
+			q <- (new QuizzesTable);
+			cq <- (new CoursesQuizzesTable) if cq.quizId === q.id
 		) yield q).list
 	}
 
 	def createQuiz(creator: User, name: String, questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
 		val now = DateTime.now
-		val quizId = QuizzesTable.autoInc.insert(name, now, now)
-		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quizId, _)): _*)
+		val quizId = (new QuizzesTable).autoInc.insert(name, now, now)
+		(new QuizzesQuestionsTable).insertAll(questionIds.map(Quiz2Question(quizId, _)): _*)
 		quizId
 	}
 
 	def allQuizzes() = DB.withSession { implicit session: Session =>
-		Query(QuizzesTable).list
+		Query(new QuizzesTable).list
 	}
 
 	def findQuiz(quizId: QuizId) = DB.withSession { implicit session: Session =>
-		Query(QuizzesTable).where(_.id === quizId).firstOption
+		Query(new QuizzesTable).where(_.id === quizId).firstOption
 	}
 
 	def findQuizzes(quizIds: List[QuizId]) = DB.withSession { implicit session: Session =>
-		Query(QuizzesTable).where(_.id inSet quizIds.toSet).firstOption
+		Query(new QuizzesTable).where(_.id inSet quizIds.toSet).firstOption
 	}
 
 	def findQuestionIds(quizId: QuizId) = DB.withSession { implicit session: Session =>
-		Query(QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
+		Query(new QuizzesQuestionsTable).where(_.quizId === quizId).list.map(_.questionId)
 	}
 
 	def findQuizAndQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
@@ -80,14 +80,14 @@ object Quizzes {
 	}
 
 	def updateQuiz(quiz: Quiz, questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
-		QuizzesTable.where(_.id === quiz.id).update(quiz)
+		(new QuizzesTable).where(_.id === quiz.id).update(quiz)
 		// LATER do this more efficiently
-		QuizzesQuestionsTable.where(_.quizId === quiz.id).delete
-		QuizzesQuestionsTable.insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
+		(new QuizzesQuestionsTable).where(_.quizId === quiz.id).delete
+		(new QuizzesQuestionsTable).insertAll(questionIds.map(Quiz2Question(quiz.id, _)): _*)
 	}
 
 	def deleteQuiz(id: QuizId) = DB.withSession { implicit session: Session =>
-		QuizzesTable.where(_.id === id).delete
+		(new QuizzesTable).where(_.id === id).delete
 	}
 
 }

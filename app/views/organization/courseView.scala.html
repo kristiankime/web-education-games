@@ -1,30 +1,30 @@
-@(course: Course, sections: List[Section], quizzes: List[derivative.Quiz])(implicit user: service.User)
+@(course: CourseDetails, quizzes: List[derivative.Quiz])(implicit user: service.User)
 
 @import  controllers.organization.routes._
 @import  controllers.question.derivative.routes._
 
-@main(course.name) {
+@main(course.c.name) {
     
-    <h2>Welcome to the information page for the course: @course.name</h2>
+    <h2>Welcome to the information page for the course: @course.c.name</h2>
     
     <h4> The course has the following section(s) </h4>
 	<p>
     	<ul>
-		@for(section <- sections){
-    		<li> @section.name </li>	
+		@for(section <- course.sections){
+    		<li> @section.s.name </li>	
 		}
     	</ul>
-    	<a href=@SectionsController.add(course.id)>[ add a section ]</a>
+    	@if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] }
     </p>
     
     <h4> The course has the following quiz(zes) </h4>
 	<p>
     	<ul>
 		@for(quiz <- quizzes){
-    		<li> <a href=@QuizzesController.view(quiz.id)> @quiz.name </a> </li>	
+    		<li> <a href=@QuizzesController.view(quiz.id)>@quiz.name</a> </li>	
 		}
     	</ul>
-    	<a href=@QuizzesController.add(Some(course.id))> [ add a quiz ] </a>
+    	@if(course.a.write){ [ <a href=@QuizzesController.add(Some(course.c.id))>add a quiz</a> ] }
     	
     </p>
 }

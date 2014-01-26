@@ -18,7 +18,7 @@ case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode:
 	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
 }
 
-case class SectionDetails(section: Section, owner: User, access: Access)
+case class SectionDetails(s: Section, owner: User, a: Access)
 
 object SectionDetails {
 	def apply(v: (Section, User, Access)) : SectionDetails = SectionDetails(v._1, v._2, v._3)

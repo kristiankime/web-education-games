@@ -27,17 +27,21 @@ object Access {
 
 	def better(a1: Access, a2: Access) = fromNum(math.max(toNum(a1).toInt, toNum(a2).toInt).toShort)
 
+	def apply(in: Option[Access]): Access = in match {
+		case Some(access) => access
+		case None => Non
+	}
+
 	def apply(user: User, owner: User, in: Option[Access]): Access =
 		if (user.id == owner.id) {
 			Own
 		} else {
-			in match {
-				case Some(access) => access
-				case None => Non
-			}
+			Access(in)
 		}
-	
+
 	def accessMap[T](v: (T, User, Option[Access]))(implicit user: User) = (v._1, v._2, Access(user, v._2, v._3))
+
+//	def accessMap[T](v: (T, User, Option[Access]), minimumAccess: Access)(implicit user: User) = (v._1, v._2, better(Access(user, v._2, v._3), minimumAccess))
 }
 
 object AccessMapper {

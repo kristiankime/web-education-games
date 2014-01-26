@@ -11,16 +11,19 @@
     @for(course <- courses){
     	<li> 
     		course: 
-    		<a href=@CoursesController.view(course.course.id)> @course.course.name </a>
-    		@if(course.access.write){ <a href=@SectionsController.add(course.course.id)> [ add a section ]</a> }
+    		<a href=@CoursesController.view(course.c.id)>@course.c.name</a>
+    		@if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] }
     		sections: 
     	</li>
     
         <ul>
         @for(section <- course.sections){ 
             <li>       
-            @form(action = SectionsController.enroll(course.course.id, section.section.id)) {
-            	@section.section.name <input type="submit" value="Enroll">
+			@section.s.name
+			@if(!course.a.read){
+            	@form(action = SectionsController.enroll(course.c.id, section.s.id)) { 
+            		<input type="submit" value="Enroll"> 
+            	}
             }
             </li>
         }

@@ -11,10 +11,11 @@ import models.question.derivative._
 import models.id._
 import org.joda.time.DateTime
 import scala.util.Random
+import service._
 
 object CoursesController extends Controller with SecureSocial {
 	val randomEngine = new Random(0L)
-	
+
 	def list = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		Ok(views.html.organization.courseList(Courses.listDetails))
@@ -48,9 +49,45 @@ object CoursesController extends Controller with SecureSocial {
 	def update(id: CourseId) = TODO
 
 	def delete(id: CourseId) = TODO
+
+	def join(id: CourseId) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		CourseJoin.form.bindFromRequest.fold(
+			errors => BadRequest(views.html.index()),
+			form => {
+				Courses.find(id) match {
+					case Some(course) => {
+						if (course.editCode == form) {
+							Courses.grantAccess(user, course, Edit)
+						} else if (course.viewCode == form) {
+							Courses.grantAccess(user, course, View)
+						}
+						// TODO indicate failure of code
+						Redirect(routes.CoursesController.view(course.id))
+					}
+					case None => BadRequest(views.html.index())
+				}
+
+			})
+	}
+
 }
 
 object CourseForm {
 	val name = "name"
 	val values = Form(name -> nonEmptyText)
+}
+
+object CourseJoin {
+	val code = "code"
+	val form = Form(code -> text)
+}
+
+object CourseAccess {
+	def apply(access: Access) = access match {
+		case Own => "Administrator"
+		case Edit => "Teacher"
+		case View => "Student"
+		case Non => "None"
+	}
 }

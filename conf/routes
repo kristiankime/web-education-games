@@ -18,6 +18,7 @@ POST   /courses                                    controllers.organization.Cour
 GET    /courses/:id                                controllers.organization.CoursesController.view(id: CourseId)
 POST   /courses/:id                                controllers.organization.CoursesController.update(id: CourseId)
 POST   /courses/:id/delete                         controllers.organization.CoursesController.delete(id: CourseId)
+POST   /courses/:id/join                           controllers.organization.CoursesController.join(id: CourseId)
 # Sections
 GET    /courses/:cid/sections                      controllers.organization.SectionsController.list(cid: CourseId)
 GET    /courses/:cid/sections/add                  controllers.organization.SectionsController.add(cid: CourseId)

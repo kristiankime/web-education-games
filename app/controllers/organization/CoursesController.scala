@@ -28,7 +28,7 @@ object CoursesController extends Controller with SecureSocial {
 
 	def create = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		CourseForm.values.bindFromRequest.fold(
+		CourseCreate.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
 				val editCode = "CO-E-" + randomEngine.nextInt(100000)
@@ -62,7 +62,7 @@ object CoursesController extends Controller with SecureSocial {
 						} else if (course.viewCode == form) {
 							Courses.grantAccess(user, course, View)
 						}
-						// TODO indicate failure of code
+						// TODO indicate failure in a better fashion
 						Redirect(routes.CoursesController.view(course.id))
 					}
 					case None => BadRequest(views.html.index())
@@ -73,9 +73,9 @@ object CoursesController extends Controller with SecureSocial {
 
 }
 
-object CourseForm {
+object CourseCreate {
 	val name = "name"
-	val values = Form(name -> nonEmptyText)
+	val form = Form(name -> nonEmptyText)
 }
 
 object CourseJoin {

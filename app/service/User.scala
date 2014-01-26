@@ -34,7 +34,7 @@ object User {
 	}
 }
 
-// A helper class that is "the same" but missing the uid, to be used when the object has not yet been persisted and thus has no uid
+// A helper class that is "the same" but missing the id, to be used when the object has not yet been persisted and thus has no id
 case class UserTmp(identityId: IdentityId,
 	firstName: String,
 	lastName: String,

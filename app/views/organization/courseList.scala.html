@@ -10,9 +10,8 @@
     <ul>
     @for(course <- courses){
     	<li> 
-    		course: <a href=@CoursesController.view(course.c.id)>@course.c.name</a>
-    		@if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] }
-    		sections: 
+    		course: <a href=@CoursesController.view(course.c.id)>@course.c.name</a> <br>
+    		sections: @if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] } 
     	</li>
     
         <ul>

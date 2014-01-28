@@ -48,5 +48,17 @@ class SectionSpec extends Specification {
 			Sections.findDetails(section.id)(student).get.a must beEqualTo(Edit)
 			Courses.checkAccess(course.id)(student).get must beEqualTo(Edit)
 		}
+		
+		"never lower access to a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			val courseOwner = DBTest.fakeUser(UserTmpTest())
+			val course = Courses.create(CoursesTmpTest(owner = courseOwner.id))
+			val sectionOwner = DBTest.fakeUser(UserTmpTest())
+			val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
+
+			Sections.grantAccess(courseOwner, section, View) 
+			
+			Sections.findDetails(section.id)(courseOwner).get.a must beEqualTo(View)
+			Courses.checkAccess(course.id)(courseOwner).get must beEqualTo(Own)
+		}
 	}
 }

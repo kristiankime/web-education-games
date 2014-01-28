@@ -48,7 +48,10 @@ object Sections {
 	 * Granting access to the section also grants access to the course
 	 */
 	def grantAccess(student: User, section: Section, access: Access) = DB.withSession { implicit session: Session =>
+		
 		(new UsersCoursesTable).insert(User2Course(student.id, section.courseId, access))
+		
+		
 		(new UsersSectionsTable).insert(User2Section(student.id, section.id, access))
 	}
 

@@ -3,23 +3,30 @@
 @import helper._
 @import controllers.organization.routes._
 @import controllers.organization.SectionJoin
+@import controllers.organization.AccessName
 @import service._ 
  
-@main("List of Courses") {
+@main("Course Catalog") {
     
     <h2> Welcome to the EdTech Course Catalog </h2>
     
-    <h4> Here are the list of couses (and sections) </h4>
-    click on a course or section for more info or to join it
+    <h5> Here are the list of couses and sections </h5>
+    click on a course or section for more info (or to join it)
     
     <ul>
     @for(course <- courses){
-    	<li> <a href=@CoursesController.view(course.c.id)>@course.c.name</a> </li>
+    	<li> 
+    		<a href=@CoursesController.view(course.c.id)>@course.c.name</a> 
+    		@if(course.a != Non){ Access: @AccessName(course.a) } 
+    	</li>
     
     	@if(course.sections.nonEmpty){
 	        <ul>
 	        @for(section <- course.sections){ 
-	            <li> <a href=@SectionsController.view(section.s.courseId, section.s.id)> @section.s.name </a> </li>
+	            <li> 
+	            	<a href=@SectionsController.view(section.s.courseId, section.s.id)> @section.s.name </a> 
+	            	@if(section.a != Non){ <Access: @AccessName(section.a)  > }
+	            </li>
 	        }
 	        </ul>
         }

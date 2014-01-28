@@ -40,12 +40,12 @@ alter table "users_sections" add constraint "users_sections_section_fk" foreign 
 alter table "derivative_answers" add constraint "derivative_answers_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes_questions" add constraint "derivative_quizzes_question_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes_questions" add constraint "derivative_quizzes_question_question_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_users_answers" add constraint "derivative_users_answers_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_answers" add constraint "derivative_users_answers_question_fk" foreign key("answer_id") references "derivative_answers"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_users_answers" add constraint "derivative_users_answers_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_questions" add constraint "derivative_users_questions_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_questions" add constraint "derivative_users_questions_question_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_users_quizzes" add constraint "derivative_users_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_quizzes" add constraint "derivative_users_quizzes_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_users_quizzes" add constraint "derivative_users_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 
 # --- !Downs
 
@@ -62,12 +62,12 @@ alter table "users_sections" drop constraint "users_sections_section_fk";
 alter table "derivative_answers" drop constraint "derivative_answers_fk";
 alter table "derivative_quizzes_questions" drop constraint "derivative_quizzes_question_quiz_fk";
 alter table "derivative_quizzes_questions" drop constraint "derivative_quizzes_question_question_fk";
-alter table "derivative_users_answers" drop constraint "derivative_users_answers_user_fk";
 alter table "derivative_users_answers" drop constraint "derivative_users_answers_question_fk";
+alter table "derivative_users_answers" drop constraint "derivative_users_answers_user_fk";
 alter table "derivative_users_questions" drop constraint "derivative_users_questions_user_fk";
 alter table "derivative_users_questions" drop constraint "derivative_users_questions_question_fk";
-alter table "derivative_users_quizzes" drop constraint "derivative_users_quizzes_quiz_fk";
 alter table "derivative_users_quizzes" drop constraint "derivative_users_quizzes_user_fk";
+alter table "derivative_users_quizzes" drop constraint "derivative_users_quizzes_quiz_fk";
 drop table "equations";
 alter table "derivative_courses_quizzes" drop constraint "derivative_courses_quizzes_pk";
 drop table "derivative_courses_quizzes";

@@ -4,9 +4,11 @@
 @import controllers.organization.SectionCreate
 @import controllers.organization.routes._
  
-@main("Adding a section to " + course.name) {
+@main("Add a section to " + course.name) {
+
+    <h2>Welcome to the add a section page for the Course: @course.name</h2>
     
-    <h2>Please enter the information for a new section for the Course: @course.name</h1>
+    <h5>Please enter the information for a new section:</h5>
     
     @form(action = SectionsController.create(course.id)) {
 

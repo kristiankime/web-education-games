@@ -2,30 +2,27 @@
 
 @import helper._
 @import controllers.organization.routes._
+@import controllers.organization.SectionJoin
+@import service._ 
  
 @main("List of Courses") {
     
-    <h2>Welcome to the EdTech Course Catalog</h1>
+    <h2> Welcome to the EdTech Course Catalog </h2>
+    
+    <h4> Here are the list of couses (and sections) </h4>
+    click on a course or section for more info or to join it
     
     <ul>
     @for(course <- courses){
-    	<li> 
-    		course: <a href=@CoursesController.view(course.c.id)>@course.c.name</a> <br>
-    		sections: @if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] } 
-    	</li>
+    	<li> <a href=@CoursesController.view(course.c.id)>@course.c.name</a> </li>
     
-        <ul>
-        @for(section <- course.sections){ 
-            <li>       
-			@section.s.name
-			@if(!course.a.read){
-            	@form(action = SectionsController.enroll(course.c.id, section.s.id)) { 
-            		<input type="submit" value="Enroll"> 
-            	}
-            }
-            </li>
+    	@if(course.sections.nonEmpty){
+	        <ul>
+	        @for(section <- course.sections){ 
+	            <li> <a href=@SectionsController.view(section.s.courseId, section.s.id)> @section.s.name </a> </li>
+	        }
+	        </ul>
         }
-        </ul>
     }
     </ul>
     

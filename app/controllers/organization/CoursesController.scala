@@ -82,12 +82,3 @@ object CourseJoin {
 	val code = "code"
 	val form = Form(code -> text)
 }
-
-object CourseAccess {
-	def apply(access: Access) = access match {
-		case Own => "Administrator"
-		case Edit => "Teacher"
-		case View => "Student"
-		case Non => "None"
-	}
-}

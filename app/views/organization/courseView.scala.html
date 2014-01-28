@@ -2,7 +2,7 @@
 
 @import controllers.organization.routes._
 @import controllers.organization.CourseJoin
-@import controllers.organization.CourseAccess
+@import controllers.organization.AccessName
 @import controllers.question.derivative.routes._
 @import service._
 @import helper._
@@ -12,11 +12,11 @@
     <header> <h2>Welcome to the information page for the course: @course.c.name</h2> </header>
     
     @if(course.a != Non){
-    	<section> <h4> You are assigned to this course as a(n): <strong> @CourseAccess(course.a) </strong> </h4> </section>
+    	<section> <h4> You are assigned to this course as a(n): <strong> @AccessName(course.a) </strong> </h4> </section>
     }
     
     @if(course.a == Own){
-    	<section> <h4> To allow other teachers to help administrate provide them with this sign up code: <strong> @course.c.editCode </strong> </h4> </section>
+    	<section> <h4> Teacher Access Code: <strong> @course.c.editCode </strong> </h4> </section>
     }
     
     @if(course.a == Non){

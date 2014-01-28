@@ -16,17 +16,17 @@ GET    /courses                                    controllers.organization.Cour
 GET    /courses/add                                controllers.organization.CoursesController.add
 POST   /courses                                    controllers.organization.CoursesController.create
 GET    /courses/:id                                controllers.organization.CoursesController.view(id: CourseId)
-POST   /courses/:id                                controllers.organization.CoursesController.update(id: CourseId)
-POST   /courses/:id/delete                         controllers.organization.CoursesController.delete(id: CourseId)
+# POST   /courses/:id                                controllers.organization.CoursesController.update(id: CourseId)
+# POST   /courses/:id/delete                         controllers.organization.CoursesController.delete(id: CourseId)
 POST   /courses/:id/join                           controllers.organization.CoursesController.join(id: CourseId)
 # Sections
-GET    /courses/:cid/sections                      controllers.organization.SectionsController.list(cid: CourseId)
+# GET    /courses/:cid/sections                      controllers.organization.SectionsController.list(cid: CourseId)
 GET    /courses/:cid/sections/add                  controllers.organization.SectionsController.add(cid: CourseId)
 POST   /courses/:cid/sections                      controllers.organization.SectionsController.create(cid: CourseId)
 GET    /courses/:cid/sections/:id                  controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
-POST   /courses/:cid/sections/:id/enroll           controllers.organization.SectionsController.enroll(cid: CourseId, id: SectionId)
-POST   /courses/:cid/sections/:id                  controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
-POST   /courses/:cid/sections/:id/delete           controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
+POST   /courses/:cid/sections/:id/join             controllers.organization.SectionsController.join(cid: CourseId, id: SectionId)
+# POST   /courses/:cid/sections/:id                  controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
+# POST   /courses/:cid/sections/:id/delete           controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
 
 # Questions pages
 # Quizzes

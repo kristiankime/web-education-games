@@ -1,15 +1,16 @@
 @(course: Course)(implicit user: service.User)
 
 @import helper._
-@import controllers.organization.SectionForm
+@import controllers.organization.SectionCreate
+@import controllers.organization.routes._
  
 @main("Adding a section to " + course.name) {
     
-    <h2>Please enter the information for a new secton for the Course: @course.name</h1>
+    <h2>Please enter the information for a new section for the Course: @course.name</h1>
     
-    @form(action = controllers.organization.routes.SectionsController.create(course.id)) {
+    @form(action = SectionsController.create(course.id)) {
 
-		name: <input type="text" name="@SectionForm.name" value="section name"> <br>
+		name: <input type="text" name="@SectionCreate.name" value="section name"> <br>
     
 	    <input type="submit" value="Submit">
     }

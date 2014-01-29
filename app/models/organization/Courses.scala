@@ -11,17 +11,12 @@ import service._
 import models.id._
 import org.joda.time.DateTime
 import service.table.UserTable
+import views.organization._
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime)
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
-}
-
-case class CourseDetails(c: Course, owner: User, a: Access, sections: List[SectionDetails])
-
-object CourseDetails {
-	def apply(v: (Course, User, Access), sections: List[SectionDetails]): CourseDetails = CourseDetails(v._1, v._2, v._3, sections)
 }
 
 /**

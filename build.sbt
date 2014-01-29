@@ -25,6 +25,6 @@ resolvers ++= Seq(
   Resolver.url("sbt-plugin-releases", new URL("http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)
 )
 
-templatesImport += "models.question._,models.organization._"
+templatesImport += "models.question._,models.organization._,views.organization._"
 
 routesImport += "models.id._"

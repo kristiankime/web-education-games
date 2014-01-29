@@ -1,11 +1,20 @@
-@(quiz: derivative.Quiz, questions: List[derivative.Question])(implicit user: service.User)
+@(course: Option[Course], section: Option[Section], quiz: derivative.Quiz, access: service.Access, questions: List[derivative.Question])(implicit user: service.User)
 
 @import helper._
+@import controllers.organization.routes._
 @import controllers.question.derivative._ 
+@import service._
  
 @main("Quiz " + quiz.name) {
     
     <h2>Welcome to page for the quiz: @quiz.name </h1>
+    
+    @for(c <- course){
+	    <h5> 
+	    	This is a quiz for the course <a href=@CoursesController.view(c.id)>@c.name</a>
+	    	@for(s <- section){ and section <a href=@SectionsController.view(s.courseId, s.id)>@s.name</a> } 
+	    </h5>
+    }
     
     <p>
     	Pick one of the equations below:
@@ -22,31 +31,33 @@
         }
     </ul>
     
-    <h4>Add a new Question</h4>
-    
-    <p>
-		Type in an equation and press "Save Question": <br> 
-		Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow), ln, sin, cos, tan, ) <br> 
-		@mathml_editor("QUESTION")
-	</p>
-
-    @form(routes.QuestionsController.create(quiz.id), 'id -> "derivativeqForm" ) {
-    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
-    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
-    	<input type="hidden" name="@QuestionForm.current" id="derivativeQuestionCurrent">
-    	<input type="button" value="Save Question" onclick="formSubmit()">
+    @if(access.write){
+	    <h4>Add a new Question</h4>
+	    
+	    <p>
+			Type in an equation and press "Save Question": <br> 
+			Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow), ln, sin, cos, tan, ) <br> 
+			@mathml_editor("QUESTION")
+		</p>
+	
+	    @form(routes.QuestionsController.create(quiz.id), 'id -> "derivativeqForm" ) {
+	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
+	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
+	    	<input type="hidden" name="@QuestionForm.current" id="derivativeQuestionCurrent">
+	    	<input type="button" value="Save Question" onclick="formSubmit()">
+	    }
+	    
+	    <script>
+		formSubmit = function() {
+			if(QUESTION.valid){
+				$("#derivativeQuestionMathML").val(QUESTION.mathML);
+				$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+				$("#derivativeQuestionCurrent").val(QUESTION.current);
+				$("#derivativeqForm").submit();
+			}
+			// TODO indicated that the form did not submit
+	    }
+	    </script>
     }
-    
-    <script>
-	formSubmit = function() {
-		if(QUESTION.valid){
-			$("#derivativeQuestionMathML").val(QUESTION.mathML);
-			$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
-			$("#derivativeQuestionCurrent").val(QUESTION.current);
-			$("#derivativeqForm").submit();
-		}
-		// TODO indicated that the form did not submit
-    }
-    </script>
     
 }

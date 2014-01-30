@@ -45,10 +45,6 @@ object QuizzesController extends Controller with SecureSocial {
 			case _ => BadRequest(views.html.index())
 		}
 	}
-
-	def update(quizId: QuizId) = TODO
-
-	def delete(quizId: QuizId) = TODO
 }
 
 object QuizForm {

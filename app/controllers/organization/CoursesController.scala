@@ -46,10 +46,6 @@ object CoursesController extends Controller with SecureSocial {
 		}
 	}
 
-	def update(id: CourseId) = TODO
-
-	def delete(id: CourseId) = TODO
-
 	def join(id: CourseId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
 		CourseJoin.form.bindFromRequest.fold(

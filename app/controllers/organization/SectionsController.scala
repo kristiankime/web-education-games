@@ -47,10 +47,6 @@ object SectionsController extends Controller with SecureSocial {
 		}
 	}
 
-	def update(courseId: CourseId, id: SectionId) = TODO
-
-	def delete(courseId: CourseId, id: SectionId) = TODO
-
 	def join(courseId: CourseId, id: SectionId) = SecuredAction { implicit request =>
 		implicit val user = User(request)
 

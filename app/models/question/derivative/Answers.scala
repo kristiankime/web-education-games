@@ -11,10 +11,10 @@ import models.question.derivative.table._
 import models.id._
 import org.joda.time.DateTime
 
-case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime, updateDate: DateTime)
+case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime)
 
-case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, date: DateTime){
-	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, synched, correct, date, date)
+case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime){
+	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, synched, correct, creationDate)
 }
 
 object Answers {

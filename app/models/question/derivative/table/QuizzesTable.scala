@@ -8,6 +8,8 @@ import models.question.derivative._
 import models.id._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
+import service.table.UserTable
+import scala.slick.lifted.ForeignKeyAction
 
 class QuizzesTable extends Table[Quiz]("derivative_quizzes") {
 	def id = column[QuizId]("id", O.PrimaryKey, O.AutoInc)
@@ -17,6 +19,8 @@ class QuizzesTable extends Table[Quiz]("derivative_quizzes") {
 	def updateDate = column[DateTime]("upadateDate")
 	def * = id ~ owner ~ name ~ creationDate ~ updateDate <> (Quiz, Quiz.unapply _)
 
+	def ownerFK = foreignKey("derivative_quizzes_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	
 	def autoInc = owner ~ name ~ creationDate ~ updateDate returning id
 	
 	def insert(t: QuizTmp)(implicit s: Session) = this.autoInc.insert(t.owner, t.name, t.date, t.date)

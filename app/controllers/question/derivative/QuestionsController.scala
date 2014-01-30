@@ -38,7 +38,7 @@ object QuestionsController extends Controller with SecureSocial {
 			errors => BadRequest(views.html.index()),
 			form => {
 				val mathML = MathML(form._1).get // TODO better handle on error
-				Questions.create(user, QuestionTmp(mathML, form._2, form._3, DateTime.now), quizId)
+				Questions.create(QuestionTmp(user.id, mathML, form._2, form._3, DateTime.now), quizId)
 				Redirect(routes.QuizzesController.view(quizId, courseId))
 			})
 	}

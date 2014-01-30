@@ -36,7 +36,7 @@ object AnswersController extends Controller with SecureSocial {
 		AnswerForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
-				val question = Questions.findQuestion(questionId).get // TODO check for no question here
+				val question = Questions.find(questionId).get // TODO check for no question here
 				val mathML = MathML(form._1).get // TODO can fail here
 				val rawStr = form._2
 				val synched = form._3

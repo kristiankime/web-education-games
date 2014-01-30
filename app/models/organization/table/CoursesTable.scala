@@ -18,8 +18,8 @@ class CoursesTable extends Table[Course]("courses") with IdentifiedAndOwned[Cour
 	def owner = column[UserId]("owner", O.NotNull)
 	def editCode = column[String]("editCode", O.NotNull)
 	def viewCode = column[String]("viewCode", O.NotNull)
-	def creationDate = column[DateTime]("creationDate")
-	def updateDate = column[DateTime]("updateDate")
+	def creationDate = column[DateTime]("creationDate", O.NotNull)
+	def updateDate = column[DateTime]("updateDate", O.NotNull)
 
 	def * = id ~ name ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate <> (Course, Course.unapply _)
 

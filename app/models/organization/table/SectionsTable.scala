@@ -19,8 +19,8 @@ class SectionsTable extends Table[Section]("sections") with IdentifiedAndOwned[S
 	def owner = column[UserId]("owner", O.NotNull)
 	def editCode = column[String]("editCode", O.NotNull)
 	def viewCode = column[String]("viewCode", O.NotNull)
-	def creationDate = column[DateTime]("creationDate")
-	def updateDate = column[DateTime]("updateDate")
+	def creationDate = column[DateTime]("creationDate", O.NotNull)
+	def updateDate = column[DateTime]("updateDate", O.NotNull)
 
 	def * = id ~ name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate <> (Section, Section.unapply _)
 

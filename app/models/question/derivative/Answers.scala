@@ -9,22 +9,25 @@ import play.api.Play.current
 import service._
 import models.question.derivative.table._
 import models.id._
+import org.joda.time.DateTime
 
-case class Answer(id: AnswerId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean)
+case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime, updateDate: DateTime)
+
+case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, date: DateTime){
+	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, synched, correct, date, date)
+}
 
 object Answers {
 
 	def find(aid: AnswerId) = DB.withSession { implicit session: Session =>
 		Query(new AnswersTable).where(_.id === aid).firstOption
 	}
-	
-	def createAnswer(answerer: User, question: Question, rawStr: String, mathML: MathMLElem, synched: Boolean): AnswerId = DB.withSession { implicit session: Session =>
-		val answerId = (new AnswersTable).autoInc.insert(question.id, mathML, rawStr, synched, correct(question, mathML))
-		(new UsersAnswersTable).insert(answerer, answerId)
-		answerId
-	}
 
-	private def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
+	def createAnswer(answerTmp: AnswerTmp) = DB.withSession { implicit session: Session =>
+		answerTmp((new AnswersTable).insert(answerTmp))
+	}
+	
+	def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
 
 	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
 		Query(new AnswersTable).where(_.questionId === qid).list

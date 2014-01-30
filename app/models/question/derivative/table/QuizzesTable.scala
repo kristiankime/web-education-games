@@ -11,12 +11,13 @@ import com.github.tototoshi.slick.JodaSupport._
 
 class QuizzesTable extends Table[Quiz]("derivative_quizzes") {
 	def id = column[QuizId]("id", O.PrimaryKey, O.AutoInc)
+	def owner = column[UserId]("owner", O.NotNull)
 	def name = column[String]("name", O.NotNull)
 	def creationDate = column[DateTime]("creationDate")
 	def updateDate = column[DateTime]("upadateDate")
-	def * = id ~ name ~ creationDate ~ updateDate <> (Quiz, Quiz.unapply _)
+	def * = id ~ owner ~ name ~ creationDate ~ updateDate <> (Quiz, Quiz.unapply _)
 
-	def autoInc = name ~ creationDate ~ updateDate returning id
+	def autoInc = owner ~ name ~ creationDate ~ updateDate returning id
 	
-	def insert(t: QuizTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.date, t.date)
+	def insert(t: QuizTmp)(implicit s: Session) = this.autoInc.insert(t.owner, t.name, t.date, t.date)
 }

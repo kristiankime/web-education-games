@@ -27,7 +27,7 @@ object QuizzesController extends Controller with SecureSocial {
 		QuizForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
-				val quizId = Quizzes.create(user, QuizTmp(form, DateTime.now), courseId)
+				val quizId = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
 				Redirect(routes.QuizzesController.view(quizId, courseId))
 			})
 	}

@@ -2,7 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-
 # Remove trailing /'s from paths 
 GET    /*path/                                     controllers.Application.untrail(path: String)
 
@@ -16,36 +15,27 @@ GET    /courses                                    controllers.organization.Cour
 GET    /courses/add                                controllers.organization.CoursesController.add
 POST   /courses                                    controllers.organization.CoursesController.create
 GET    /courses/:id                                controllers.organization.CoursesController.view(id: CourseId)
-# POST   /courses/:id                                controllers.organization.CoursesController.update(id: CourseId)
-# POST   /courses/:id/delete                         controllers.organization.CoursesController.delete(id: CourseId)
 POST   /courses/:id/join                           controllers.organization.CoursesController.join(id: CourseId)
 # Sections
-# GET    /courses/:cid/sections                      controllers.organization.SectionsController.list(cid: CourseId)
 GET    /courses/:cid/sections/add                  controllers.organization.SectionsController.add(cid: CourseId)
 POST   /courses/:cid/sections                      controllers.organization.SectionsController.create(cid: CourseId)
 GET    /courses/:cid/sections/:id                  controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
 POST   /courses/:cid/sections/:id/join             controllers.organization.SectionsController.join(cid: CourseId, id: SectionId)
-# POST   /courses/:cid/sections/:id                  controllers.organization.SectionsController.update(cid: CourseId, id: SectionId)
-# POST   /courses/:cid/sections/:id/delete           controllers.organization.SectionsController.delete(cid: CourseId, id: SectionId)
 
 # Questions pages
 # Quizzes
 GET    /quizzes                                    controllers.question.derivative.QuizzesController.list
 GET    /quizzes/add                                controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
 POST   /quizzes                                    controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
-GET    /quizzes/:id                                controllers.question.derivative.QuizzesController.view(id: QuizId)
-POST   /quizzes/:id                                controllers.question.derivative.QuizzesController.update(id: QuizId)
-POST   /quizzes/:id/delete                         controllers.question.derivative.QuizzesController.delete(id: QuizId)
-
+GET    /quizzes/:id                                controllers.question.derivative.QuizzesController.view(id: QuizId, cid: Option[CourseId])
 # Questions
-GET    /quizzes/:qid/questions/:id                 controllers.question.derivative.QuestionsController.view(qid: QuizId, id: QuestionId)
-POST   /quizzes/:qid/questions                     controllers.question.derivative.QuestionsController.create(qid: QuizId)
-
+GET    /quizzes/:qid/questions/:id                 controllers.question.derivative.QuestionsController.view(qid: QuizId, id: QuestionId, cid: Option[CourseId])
+POST   /quizzes/:qid/questions                     controllers.question.derivative.QuestionsController.create(qid: QuizId, cid: Option[CourseId])
 # Answers
-GET    /quizzes/:qzid/questions/:qid/answers/:id   controllers.question.derivative.AnswersController.view(qzid: QuizId, qid: QuestionId, id: AnswerId)
-POST   /quizzes/:qzid/questions/:qid/answers       controllers.question.derivative.AnswersController.create(qzid: QuizId, qid: QuestionId)
+GET    /quizzes/:qzid/questions/:qid/answers/:id   controllers.question.derivative.AnswersController.view(qzid: QuizId, qid: QuestionId, id: AnswerId, cid: Option[CourseId])
+POST   /quizzes/:qzid/questions/:qid/answers       controllers.question.derivative.AnswersController.create(qzid: QuizId, qid: QuestionId, cid: Option[CourseId])
 
-# ======== TODO START DEPRICATED ========
+# ======== START DEPRICATED ========
 # Equation pages
 GET    /equation                                   controllers.EquationController.equations
 POST   /equation                                   controllers.EquationController.newEquation

@@ -2,7 +2,6 @@
 
 @import controllers.organization.routes._
 @import controllers.organization.CourseJoin
-@import controllers.organization.AccessName
 @import controllers.question.derivative.routes._
 @import service._
 @import helper._
@@ -46,7 +45,7 @@
     <h5> The course has the following quiz(zes) </h5>
 	<ul>
 	@for(quiz <- quizzes){
-		<li> <a href=@QuizzesController.view(quiz.id)>@quiz.name</a> </li>	
+		<li> <a href=@QuizzesController.view(quiz.id, Some(course.c.id))>@quiz.name</a> </li>	
 	}
 	</ul>
 	@if(course.a.write){ [ <a href=@QuizzesController.add(Some(course.c.id))>add a quiz</a> ] }

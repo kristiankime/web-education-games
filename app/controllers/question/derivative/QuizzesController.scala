@@ -12,6 +12,7 @@ import models.id._
 import mathml.MathML
 import org.joda.time.DateTime
 import models.organization.Courses
+import models.organization.Sections
 
 object QuizzesController extends Controller with SecureSocial {
 	def list = TODO
@@ -27,15 +28,21 @@ object QuizzesController extends Controller with SecureSocial {
 			errors => BadRequest(views.html.index()),
 			form => {
 				val quizId = Quizzes.create(user, QuizTmp(form, DateTime.now), courseId)
-				Redirect(routes.QuizzesController.view(quizId))
+				Redirect(routes.QuizzesController.view(quizId, courseId))
 			})
 	}
 
-	def view(quizId: QuizId) = SecuredAction { implicit request =>
+	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		Quizzes.find(quizId) match {
-			case Some(quiz) => Ok(views.html.question.derivative.quizView(None, None, quiz, Own, Quizzes.findQuestions(quizId))) // TODO get access right
-			case None => BadRequest(views.html.index())
+		
+		val courseOp = courseId.flatMap(Courses.find(_))
+		val quizOp = Quizzes.find(quizId)
+		val access = courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
+		
+		(quizOp, courseOp) match {
+			case (Some(quiz), Some(course)) => Ok(views.html.question.derivative.quizView(access, Some(course), quiz, Quizzes.findQuestions(quizId)))
+			case (Some(quiz), None) => Ok(views.html.question.derivative.quizView(access, None, quiz, Quizzes.findQuestions(quizId)))
+			case _ => BadRequest(views.html.index())
 		}
 	}
 

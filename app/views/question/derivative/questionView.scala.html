@@ -1,12 +1,17 @@
- @(quiz: derivative.Quiz, question: derivative.Question, answer: Option[derivative.Answer], answers: List[derivative.Answer])(implicit user: service.User)
+@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, question: derivative.Question, answer: Option[derivative.Answer], answers: List[derivative.Answer])(implicit user: service.User)
 
 @import helper._
+@import controllers.organization.routes._
 @import controllers.question.derivative._ 
  
 @main("Question Page") {
-	
+
+	<h2>Welcome a question page for quiz: @quiz.name </h1>
+
+   @for(c <- course){ <h5> This is a question for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
+    
     <div>
-    	<a href="@routes.QuizzesController.view(quiz.id)"> Back to the quiz "@quiz.name" </a>
+    	<a href="@routes.QuizzesController.view(quiz.id, course.map(_.id))"> Back to the quiz "@quiz.name" </a>
     </div>
     
     <div>
@@ -29,7 +34,7 @@
 	</div>
 		
 	<div>
-	@form(routes.AnswersController.create(quiz.id, question.id) , 'id -> "answerForm" ) {
+	@form(routes.AnswersController.create(quiz.id, question.id, course.map(_.id)) , 'id -> "answerForm" ) {
     	<input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
     	<input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
     	<input type="hidden" name="@AnswerForm.current" id="answerCurrent">
@@ -51,13 +56,15 @@
     
     <p>
 	
-	<h4>There have been @answers.size Answer(s)</h4>
-    <ul>
-    @for(answer <- answers){
-        <li>
-        	<script type="math/mml"> @Html(answer.mathML.toString) </script> 
-	        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
-        </li>
+	@if(access.write){
+		<h4>There have been @answers.size Answer(s)</h4>
+	    <ul>
+	    @for(answer <- answers){
+	        <li>
+	        	<script type="math/mml"> @Html(answer.mathML.toString) </script> 
+		        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
+	        </li>
+	    }
+	    </ul>
     }
-    </ul>
 }

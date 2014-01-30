@@ -1,4 +1,4 @@
-package controllers.organization
+package models.organization.view
 
 import service._
 

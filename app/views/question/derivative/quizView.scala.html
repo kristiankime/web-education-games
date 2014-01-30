@@ -1,20 +1,14 @@
-@(course: Option[Course], section: Option[Section], quiz: derivative.Quiz, access: service.Access, questions: List[derivative.Question])(implicit user: service.User)
+@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, questions: List[derivative.Question])(implicit user: service.User)
 
 @import helper._
 @import controllers.organization.routes._
 @import controllers.question.derivative._ 
-@import service._
  
 @main("Quiz " + quiz.name) {
     
-    <h2>Welcome to page for the quiz: @quiz.name </h1>
+    <h2>Welcome to the page for quiz: @quiz.name </h1>
     
-    @for(c <- course){
-	    <h5> 
-	    	This is a quiz for the course <a href=@CoursesController.view(c.id)>@c.name</a>
-	    	@for(s <- section){ and section <a href=@SectionsController.view(s.courseId, s.id)>@s.name</a> } 
-	    </h5>
-    }
+    @for(c <- course){ <h5> This is a quiz for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
     
     <p>
     	Pick one of the equations below:
@@ -26,7 +20,7 @@
         @questions.map { question =>
             <li>
             	<script type="math/mml"> @Html(question.mathML.toString) </script>
-                [<a href=@routes.QuestionsController.view(quiz.id, question.id)>view</a>]
+                [<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
             </li>
         }
     </ul>
@@ -40,7 +34,7 @@
 			@mathml_editor("QUESTION")
 		</p>
 	
-	    @form(routes.QuestionsController.create(quiz.id), 'id -> "derivativeqForm" ) {
+	    @form(routes.QuestionsController.create(quiz.id, course.map(_.id)), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
 	    	<input type="hidden" name="@QuestionForm.current" id="derivativeQuestionCurrent">

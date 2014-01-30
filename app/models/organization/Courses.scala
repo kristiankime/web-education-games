@@ -11,7 +11,7 @@ import service._
 import models.id._
 import org.joda.time.DateTime
 import service.table.UserTable
-import views.organization._
+import models.organization.view._
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime)
 

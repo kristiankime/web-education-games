@@ -1,7 +1,8 @@
-package views.organization
+package models.organization.view
 
-import models.organization._
-import service._
+import models.organization.Course
+import service.Access
+import service.User
 
 case class CourseDetails(c: Course, owner: User, a: Access, sections: List[SectionDetails])
 

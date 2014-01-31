@@ -18,11 +18,13 @@
 	    result.updateAnswer = function(mathMLStr) {
 	    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
 	    	if (mathMLStatus.success) {
-	    		result.mathML = mathMLStatus.value;	
-	    		result.valid = true;
-	    		result.current = true;		
-	    		$("#@(editorName+"Indicator")").hide();
-	    		ARTC.updateInnerMathML("@(editorName+"View")", mathMLStatus.value);
+	    		ARTC.xslTransformLoadXSL($.parseXML(mathMLStatus.value), "@routes.Assets.at("javascripts/ctop.xsl")", function(pmml){
+			    		result.mathML = mathMLStatus.value;	
+			    		result.valid = true;
+			    		result.current = true;		
+			    		$("#@(editorName+"Indicator")").hide();
+			    		ARTC.updateInnerMathML("@(editorName+"View")", ARTC.xmlToString(pmml));
+		    		});
 	    	} else {
 	    		result.current = false;
 	    		$("#@(editorName+"Indicator")").show();

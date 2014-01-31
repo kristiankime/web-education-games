@@ -14,6 +14,18 @@ ARTC.xslTransform = function(xml, xsl) {
 	return resultDocument;
 };
 
+
+ARTC.xslTransformLoadXSL = function(xml, xslUrl, callback) {
+    $.ajax({
+	    type: "GET",
+	    url: xslUrl,
+	    dataType: "xml",
+	    success: function(xsl) {
+				callback(ARTC.xslTransform(xml, xsl));
+			}
+	   });
+}
+
 ARTC.xslTransformLoad = function(xmlUrl, xslUrl, callback) {
     var xml = null;
     var xsl = null;
@@ -44,4 +56,12 @@ ARTC.xslTransformLoad = function(xmlUrl, xslUrl, callback) {
 			}
 	   });
     
+}
+
+ARTC.xmlToString = function(xml) {
+     if (window.ActiveXObject) { //code for IE
+	 return xml.xml;
+     } else { // code for Chrome, Safari, Firefox, Opera, etc.
+	 return (new XMLSerializer()).serializeToString(xml);
+     }
 }

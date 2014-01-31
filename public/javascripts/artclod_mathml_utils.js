@@ -33,13 +33,12 @@ ARTC.isFunction = function(obj) {
     return !!(obj && obj.constructor && obj.call && obj.apply);
 };
 
-
 /*
- * Update an HTML element with a string in content MathML format and then have MathJax render it.
+ * Update an HTML element with a string in MathML format and then have MathJax render it.
  * 
- * NOTE: This function will overwrite the inner HTML of an element.
+ * NOTE: This function will overwrite the inner HTML of the specified element.
  * 
- * This functional is designed not to throw any errors but to call a callback function
+ * This function is designed not to throw any errors but to call a callback function
  * with a status object indicating success or failure. If no callback is given errors are ignored.
  * 
  * The error object has three attributes

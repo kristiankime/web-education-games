@@ -52,7 +52,7 @@ ARTC.isFunction = function(obj) {
  *          "invalid id" -> Could not find an element associated with the given id 
  * details - an empty string on success or an error object given more details about the failure
  */ 
-ARTC.updateContentMathML = function(id, mathML, callback) {
+ARTC.updateInnerMathML = function(id, mathML, callback) {
     var safeCallback = function() {/* noop */;};
     if(ARTC.isFunction(callback)){
 	safeCallback = callback;

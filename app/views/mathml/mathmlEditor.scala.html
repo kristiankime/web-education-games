@@ -1,4 +1,3 @@
-@* mathml_editor Template File *@
 @(editorName: String)
 
 	<span id="@(editorName)">
@@ -23,7 +22,7 @@
 	    		result.valid = true;
 	    		result.current = true;		
 	    		$("#@(editorName+"Indicator")").hide();
-	    		ARTC.updateContentMathML("@(editorName+"View")", mathMLStatus.value);
+	    		ARTC.updateInnerMathML("@(editorName+"View")", mathMLStatus.value);
 	    	} else {
 	    		result.current = false;
 	    		$("#@(editorName+"Indicator")").show();

@@ -5,6 +5,8 @@
 # Remove trailing /'s from paths 
 GET    /*path/                                     controllers.Application.untrail(path: String)
 
+GET    /xslttest                                   controllers.Application.xslttest
+
 # Home page
 GET    /                                           controllers.Application.index
 GET    /user                                       controllers.Application.userInfo

@@ -2,7 +2,6 @@ if (!ARTC) {
     var ARTC = {};
 }
 
-
 ARTC.Status = function(success, reason, details, value) {
     this.success = success; 
     this.reason = reason;

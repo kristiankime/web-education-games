@@ -26,4 +26,8 @@ object Application extends Controller with SecureSocial {
 		Ok(views.html.user.userInfo(courses))
 	}
 
+	def xslttest = Action {
+		Ok(views.html.xslttest())
+	}
+	
 }

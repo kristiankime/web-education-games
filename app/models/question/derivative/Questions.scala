@@ -15,6 +15,7 @@ import org.joda.time.DateTime
 import models.question.derivative.table.QuizzesQuestionsTable
 import models.question.derivative.table.Quiz2Question
 import models.question.derivative.table.AnswersTable
+import service.table.UserTable
 
 case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime)
 
@@ -36,38 +37,22 @@ object Questions {
 		Query(new AnswersTable).where(_.questionId === qid).list
 	}
 
+	def findAnswersAndOwners(qid: QuestionId) = DB.withSession { implicit session: Session =>
+		(for (
+			a <- (new AnswersTable) if a.questionId === qid;
+			u <- (new UserTable) if u.id === a.owner
+		) yield (a, u)).list
+		//		Query(new AnswersTable).where(_.questionId === qid).list
+	}
+
+	def findAnswers(qid: QuestionId, owner: User) = DB.withSession { implicit session: Session =>
+		Query(new AnswersTable).where(r => r.questionId === qid && r.owner === owner.id).list
+	}
+
 	def create(info: QuestionTmp, quiz: QuizId) = DB.withSession { implicit session: Session =>
 		val questionId = (new QuestionsTable).insert(info)
 		(new QuizzesQuestionsTable).insert(Quiz2Question(quiz, questionId))
 		info(questionId)
 	}
 
-	//	// ==========
-	//
-	//
-	//	def createQuestion(owner: User, mathML: MathMLElem, rawStr: String, synched: Boolean): QuestionId = DB.withSession { implicit session: Session =>
-	//		val questionTmp = QuestionTmp(owner.id, mathML, rawStr, synched, DateTime.now)
-	//		val qid = (new QuestionsTable).insert(questionTmp)
-	//		(new UsersQuestionsTable).insert(owner, qid)
-	//		qid
-	//	}
-	//
-	//	def findQuestion(questionId: QuestionId) = DB.withSession { implicit session: Session =>
-	//		Query(new QuestionsTable).where(_.id === questionId).firstOption
-	//	}
-	//
-	//	def findQuestions(questionIds: List[QuestionId]) = DB.withSession { implicit session: Session =>
-	//		Query(new QuestionsTable).where(_.id inSet questionIds).list
-	//	}
-	//
-	//	def findQuestionsForUser(userId: UserId) = DB.withSession { implicit session: Session =>
-	//		(for {
-	//			uq <- (new UsersQuestionsTable) if uq.userId === userId
-	//			q <- (new QuestionsTable) if uq.questionId === q.id
-	//		} yield q).list
-	//	}
-	//
-	//	def deleteQuestion(id: QuestionId) = DB.withSession { implicit session: Session =>
-	//		(new QuestionsTable).where(_.id === id).delete
-	//	}
 }

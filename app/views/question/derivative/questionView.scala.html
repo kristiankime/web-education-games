@@ -1,4 +1,4 @@
-@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, question: derivative.Question, answer: Option[derivative.Answer], answers: List[derivative.Answer])(implicit user: service.User)
+@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, question: derivative.Question, currentAnswer: Option[derivative.Answer], previousAnswers: List[derivative.Answer], allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
 
 @import helper._
 @import controllers.organization.routes._
@@ -6,7 +6,7 @@
  
 @main("Question Page") {
 
-	<h2>Welcome a question page for quiz: @quiz.name </h1>
+	<h2>Welcome to a question page for quiz: @quiz.name </h1>
 
    @for(c <- course){ <h5> This is a question for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
     
@@ -20,12 +20,12 @@
 	</div>
 	<p>
 	
-	@if(answer.nonEmpty){
-	<div>
-		You answered <script type="math/mml"> @Html(answer.get.mathML.toString) </script>
-		that answer was @if(answer.get.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
-	</div>
-	<p>
+	@for(answer <- currentAnswer){
+		<div>
+			You answered <script type="math/mml"> @Html(answer.mathML.toString) </script>
+			that answer was @if(answer.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
+		</div>
+		<p>
 	}	
     
     <div>
@@ -56,13 +56,26 @@
     
     <p>
 	
-	@if(access.write){
-		<h4>There have been @answers.size Answer(s)</h4>
+	@if(previousAnswers.nonEmpty){
+		<h4>You have answered this questions @previousAnswers.size time(s)</h4>
 	    <ul>
-	    @for(answer <- answers){
+	    @for(answer <- previousAnswers){
 	        <li>
 	        	<script type="math/mml"> @Html(answer.mathML.toString) </script> 
 		        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
+	        </li>
+	    }
+	    </ul>
+    }
+	
+	@if(access.write){
+		<h4>There have been @allAnswers.size Answer(s) to this question</h4>
+	    <ul>
+	    @for(answer <- allAnswers){
+	        <li>
+	        	@answer._2.email said
+	        	<script type="math/mml"> @Html(answer._1.mathML.toString) </script> 
+		        this answer was @if(answer._1.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
 	        </li>
 	    }
 	    </ul>

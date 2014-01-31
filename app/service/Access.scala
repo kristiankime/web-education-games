@@ -1,6 +1,7 @@
 package service
 
 import scala.slick.lifted.MappedTypeMapper
+import models.id._
 
 object Option2Access extends (Option[Access] => Access) {
 	def apply(in: Option[Access]): Access = in match {
@@ -26,6 +27,8 @@ object Access {
 		case Some(access) => access
 		case None => Non
 	}
+
+	def apply(user: User, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
 	def apply(user: User, owner: User, in: Option[Access]): Access =
 		if (user.id == owner.id) {

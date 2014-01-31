@@ -12,6 +12,7 @@ import models.id._
 import org.joda.time.DateTime
 import models.organization.Courses
 import service.Own
+import service.Access
 
 object AnswersController extends Controller with SecureSocial {
 
@@ -22,11 +23,22 @@ object AnswersController extends Controller with SecureSocial {
 		val quizOp = Quizzes.find(quizId)
 		val questionOp = Questions.find(questionId)
 		val answerOp = Answers.find(answerId)
+
 		val access = courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
 
 		(courseOp, quizOp, questionOp, answerOp) match {
-			case (Some(course), Some(quiz), Some(question), Some(answer)) => Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, Some(answer), Questions.findAnswers(question.id)))
-			case (None, Some(quiz), Some(question), Some(answer)) => Ok(views.html.question.derivative.questionView(access, None, quiz, question, Some(answer), Questions.findAnswers(question.id)))
+			case (Some(course), Some(quiz), Some(question), Some(answer)) => {
+				val access = Access(Courses.checkAccess(course.id))
+				val userAnswers = Questions.findAnswers(questionId, user)
+				val allAnswers = Questions.findAnswersAndOwners(questionId)
+				Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, Some(answer), userAnswers, allAnswers))
+			}
+			case (None, Some(quiz), Some(question), Some(answer)) => {
+				val access = Access(user, question.owner)
+				val userAnswers = Questions.findAnswers(questionId, user)
+				val allAnswers = Questions.findAnswersAndOwners(questionId)
+				Ok(views.html.question.derivative.questionView(access, None, quiz, question, Some(answer), userAnswers, allAnswers))
+			}
 			case _ => BadRequest(views.html.index())
 		}
 	}
@@ -40,7 +52,7 @@ object AnswersController extends Controller with SecureSocial {
 				val mathML = MathML(form._1).get // TODO can fail here
 				val rawStr = form._2
 				val synched = form._3
-				val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr,  synched, Answers.correct(question, mathML), DateTime.now))
+				val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr, synched, Answers.correct(question, mathML), DateTime.now))
 				Redirect(routes.AnswersController.view(quizId, questionId, answer.id, courseId))
 			})
 	}

@@ -19,15 +19,24 @@ object QuestionsController extends Controller with SecureSocial {
 
 	def view(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
 		implicit val user = User(request)
-		
+
 		val courseOp = courseId.flatMap(Courses.find(_))
 		val quizOp = Quizzes.find(quizId)
 		val questionOp = Questions.find(questionId)
-		val access = courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
-		
+
 		(courseOp, quizOp, questionOp) match {
-			case (Some(course), Some(quiz), Some(question)) => Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, None, Questions.findAnswers(questionId)))
-			case (None, Some(quiz), Some(question)) => Ok(views.html.question.derivative.questionView(access, None, quiz, question, None, Questions.findAnswers(questionId)))
+			case (Some(course), Some(quiz), Some(question)) => {
+				val access = Access(Courses.checkAccess(course.id))
+				val userAnswers = Questions.findAnswers(questionId, user)
+				val allAnswers = Questions.findAnswersAndOwners(questionId)
+				Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, None, userAnswers, allAnswers))
+			}
+			case (None, Some(quiz), Some(question)) => {
+				val access = Access(user, question.owner)
+				val userAnswers = Questions.findAnswers(questionId, user)
+				val allAnswers = Questions.findAnswersAndOwners(questionId)
+				Ok(views.html.question.derivative.questionView(access, None, quiz, question, None, userAnswers, allAnswers))
+			}
 			case _ => BadRequest(views.html.index())
 		}
 	}

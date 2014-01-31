@@ -33,7 +33,7 @@ object Courses {
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
 		courseAccess.firstOption.map(v => Access(user, v._2, v._3))
 	}
-
+	
 	def findDetails(courseId: CourseId)(implicit user: User) = DB.withSession { implicit session: Session =>
 		val courseOwner = Queries.owner(courseId, new CoursesTable)
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)

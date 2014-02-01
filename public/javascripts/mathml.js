@@ -9,7 +9,7 @@ function updateJaxTeX(jax, TeX) {
     MathJax.Hub.queue.Push([ "Text", jax, "\\displaystyle{" + TeX + "}" ]);
 }
 
-// Update an html with a string in content MathML format
+// Update an html element with a string in MathML format
 function updateContentMathML(id, mathMLStr) {
     var mathML = ARTC.txt2MathML.parse(mathMLStr);
     var elem = document.getElementById(id);

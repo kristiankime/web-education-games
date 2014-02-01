@@ -11,6 +11,7 @@ import mathml.scalar.apply._
 import mathml.scalar.apply.trig._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
+// with thanks to http://www.ictforu.com/index.php/Core-Java/java-xslt.html
 @RunWith(classOf[JUnitRunner])
 class XSLTransformSpec extends Specification {
 

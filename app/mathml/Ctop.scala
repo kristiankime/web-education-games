@@ -1,6 +1,10 @@
 package mathml
 
+import play.api.Play
+import play.api.Play.current
+
 object Ctop {
-	// LATER can this be pulled from the public/javascript directory?
-	val str = io.Source.fromInputStream(getClass.getResourceAsStream("ctop.xsl")).mkString
+
+	val str = io.Source.fromInputStream(Play.resourceAsStream("public/javascripts/ctop.xsl").get).mkString
+
 }

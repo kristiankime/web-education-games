@@ -14,11 +14,11 @@ class FSpec extends Specification {
 
 	"d" should {
 		"return zero for wrt ! x" in {
-			F d ("y") must beEqualTo(`0`)
+			F d("y") must beEqualTo(`0`)
 		}
 
 		"return Fx for x" in {
-			F d ("x") must beEqualTo(Fdx)
+			F d("x") must beEqualTo(Fdx)
 		}
 	}
 

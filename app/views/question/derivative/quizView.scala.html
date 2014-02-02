@@ -19,7 +19,7 @@
     <ul>
         @questions.map { question =>
             <li>
-            	<script type="math/mml"> @Html(question.mathML.toString) </script>
+            	<script type="math/mml"> @Html(question.mathML.toPresentation.toString) </script>
                 [<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
             </li>
         }

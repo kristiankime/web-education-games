@@ -16,13 +16,13 @@
     
     <div>
 	    <h2>What is the Derivative of</h2>
-    	<script type="math/mml"> @Html(question.mathML.toString) </script>
+    	<script type="math/mml"> @Html(question.mathML.toPresentation.toString) </script>
 	</div>
 	<p>
 	
 	@for(answer <- currentAnswer){
 		<div>
-			You answered <script type="math/mml"> @Html(answer.mathML.toString) </script>
+			You answered <script type="math/mml"> @Html(answer.mathML.toPresentation.toString) </script>
 			that answer was @if(answer.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
 		</div>
 		<p>
@@ -61,7 +61,7 @@
 	    <ul>
 	    @for(answer <- previousAnswers){
 	        <li>
-	        	<script type="math/mml"> @Html(answer.mathML.toString) </script> 
+	        	<script type="math/mml"> @Html(answer.mathML.toPresentation.toString) </script> 
 		        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
 	        </li>
 	    }
@@ -74,7 +74,7 @@
 	    @for(answer <- allAnswers){
 	        <li>
 	        	@answer._2.email said
-	        	<script type="math/mml"> @Html(answer._1.mathML.toString) </script> 
+	        	<script type="math/mml"> @Html(answer._1.mathML.toPresentation.toString) </script> 
 		        this answer was @if(answer._1.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
 	        </li>
 	    }

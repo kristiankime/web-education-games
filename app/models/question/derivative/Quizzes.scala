@@ -42,7 +42,7 @@ object Quizzes {
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
 		(for (
 			q <- (new QuizzesTable);
-			cq <- (new CoursesQuizzesTable) if cq.quizId === q.id
+			cq <- (new CoursesQuizzesTable) if cq.quizId === q.id && cq.courseId === courseId
 		) yield q).list
 	}
 

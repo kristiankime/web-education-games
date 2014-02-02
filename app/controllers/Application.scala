@@ -25,9 +25,4 @@ object Application extends Controller with SecureSocial {
 		val courses = Courses.findByUser(user.id)
 		Ok(views.html.user.userInfo(courses))
 	}
-
-	def xslttest = Action {
-		Ok(views.html.xslttest())
-	}
-	
 }

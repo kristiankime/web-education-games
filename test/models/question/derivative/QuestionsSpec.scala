@@ -1,4 +1,4 @@
-package models.question
+package models.question.derivative
 
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -7,19 +7,11 @@ import play.api.test._
 import play.api.test.Helpers._
 import mathml.scalar._
 import mathml.scalar.apply._
-import models.DBTest
-import scala.slick.session.Session
 import service.table._
-import models.DBTest.inMemH2
-import play.api.test.FakeApplication
-import play.api.test.Helpers.inMemoryDatabase
-import play.api.db.slick.DB
-import service.UserTmpTest
-import models.question.derivative.Questions
-import models.question.derivative.Question
 import models.id._
+import models.DBTest
+import service._
 import org.joda.time.DateTime
-import models.question.derivative.QuestionTmp
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {
@@ -27,8 +19,8 @@ class QuestionsSpec extends Specification {
 //	"Questions" should {
 //		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 //			val user = DBTest.fakeUser(UserTmpTest())
-//			val qTmp = QuestionTmp(x + `1`, "x + 1", true, DateTime.now)
-//			val id = Questions.create(user, QuestionTmp)
+//			val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", true, DateTime.now)
+//			val id = Questions.create(QuestionTmp)
 //			val eq = Questions.findQuestion(id)
 //
 //			eq.get must beEqualTo(Question(id, x + `1`, "x + 1", true, DateTime.now))

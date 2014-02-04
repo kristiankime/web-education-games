@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true ${SBT_OPTS}
+web: target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true

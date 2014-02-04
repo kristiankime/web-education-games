@@ -13,9 +13,9 @@ object Content2Presentation {
 
 	def apply(content: MathMLElem) = {
 		val pres = XSLTransform(content, Ctop.str).get
-		System.err.println(pres)
+		System.err.println("pres: " + pres)
 		val clean = removeEmptyRule.transform(pres)
-		System.err.println(clean)
+		System.err.println("clean: " + clean)
 		clean
 	}
 
@@ -31,14 +31,14 @@ class RemoveEmptyTagsRule extends RewriteRule {
 	}
 
 	private def emptyNode(e: Node): Boolean = {
-		val eText = e.text
-		val eTextLen = e.text.length()
-//		val eTextChar = e.text.charAt(0).toInt
-		val eTextClass = eText.getClass
-		val eTextIsEmpty = e.text.trim.isEmpty()
-		System.err.println(eText + " " + eText.getClass)
-		val emptyT = emptyText(e)
-		System.err.println(e + " e.text [" + e.text + "] emptyText(e) " + emptyText(e) + " emptyAttributes(e) " + emptyAttributes(e) + " emptyChild(e.child) " + emptyChild(e.child) )
+//		val eText = e.text
+//		val eTextLen = e.text.length()
+////		val eTextChar = e.text.charAt(0).toInt
+//		val eTextClass = eText.getClass
+//		val eTextIsEmpty = e.text.trim.isEmpty()
+//		System.err.println(eText + " " + eText.getClass)
+//		val emptyT = emptyText(e)
+//		System.err.println(e + " e.text [" + e.text + "] emptyText(e) " + emptyText(e) + " emptyAttributes(e) " + emptyAttributes(e) + " emptyChild(e.child) " + emptyChild(e.child) )
 		
 		emptyText(e) && emptyAttributes(e) && emptyChild(e.child)
 	}

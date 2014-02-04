@@ -181,6 +181,9 @@ which uses sbt to build not play :(
 
 Potential Solution set the buildpack:
 heroku config:set BUILDPACK_URL=https://github.com/imikushin/heroku-buildpack-play2.git
+Didn't work back to 
+heroku config:set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-play.git
+
 
 ##### Recompile on Heroku without Git Push (TBD)
 https://github.com/heroku/heroku/issues/514

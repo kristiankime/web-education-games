@@ -7,17 +7,17 @@ import xml.Utility.trim
 
 object Content2Presentation {
 	
-	def apply(content: MathMLElem) = XSLTransform(content, Ctop.str).get
+//	def apply(content: MathMLElem) = XSLTransform(content, Ctop.str).get
 	
-//	val removeEmptyRule = new RuleTransformer(new RemoveEmptyTagsRule)
-//
-//	def apply(content: MathMLElem) = {
-//		val pres = XSLTransform(content, Ctop.str).get
-//		System.err.println(pres)
-//		val clean = removeEmptyRule.transform(pres)
-//		System.err.println(clean)
-//		clean
-//	}
+	val removeEmptyRule = new RuleTransformer(new RemoveEmptyTagsRule)
+
+	def apply(content: MathMLElem) = {
+		val pres = XSLTransform(content, Ctop.str).get
+		System.err.println(pres)
+		val clean = removeEmptyRule.transform(pres)
+		System.err.println(clean)
+		clean
+	}
 
 }
 

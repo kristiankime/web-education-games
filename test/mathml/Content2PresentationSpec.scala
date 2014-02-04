@@ -65,7 +65,7 @@ class Content2PresentationSpec extends Specification {
 			removeEmptyRule.transform(before) must beEqualTo(after)
 		}
 
-		"remove nodes with⁢ [⁢] aka invisible unicode characters in them" in {
+		"remove nodes with⁢ the character in these arrows ->⁢<- aka invisible unicode character" in {
 			val before = <math>2<m:mrow><m:mo>⁢</m:mo></m:mrow></math>
 			val after = <math>2</math>
 

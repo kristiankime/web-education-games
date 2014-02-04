@@ -175,6 +175,15 @@ https://devcenter.heroku.com/articles/add-java-version-to-an-existing-maven-app
 ##### Character encoding problems
 https://groups.google.com/forum/?fromgroups#!topic/play-framework/QsC0LubU_30
 
+previous config:
+JAVA_OPTS:                    -Xmx384m -Xss512k -XX:+UseCompressedOops
+SBT_OPTS:                     -Xmx384m -Xss512k -XX:+UseCompressedOops
+
+updating to:
+heroku config:set SBT_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF8" 
+heroku config:set JAVA_OPTS="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF8"
+
+---- DIDN'T WORK----
 Note as of 2014-02-04 heroku uses the scala buildpack for play 2 apps
     https://github.com/heroku/heroku-buildpack-scala
 which uses sbt to build not play :(

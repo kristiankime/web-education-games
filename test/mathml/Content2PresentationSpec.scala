@@ -52,7 +52,7 @@ class Content2PresentationSpec extends Specification {
 
 		"remove nodes with spaces" in {
 			val before = <xml><empty>
-     </empty><nonEmpty>data</nonEmpty></xml>
+			</empty><nonEmpty>data</nonEmpty></xml>
 			val after = <xml><nonEmpty>data</nonEmpty></xml>
 
 			removeEmptyRule.transform(before) must beEqualTo(after)
@@ -64,6 +64,14 @@ class Content2PresentationSpec extends Specification {
 
 			removeEmptyRule.transform(before) must beEqualTo(after)
 		}
+
+		"remove nodes with⁢ [⁢] aka invisible unicode characters in them" in {
+			val before = <math>2<m:mrow><m:mo>⁢</m:mo></m:mrow></math>
+			val after = <math>2</math>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+
 	}
 
 }

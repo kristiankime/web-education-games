@@ -130,6 +130,8 @@ http://googlecode.blogspot.com/2009/11/oauth-enhancements.html
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.
 
+maybe look at http://flurdy.com/docs/herokuplay/play2.html
+
 #### Create a new Repo on Github
 
 #### Clone the repo
@@ -170,4 +172,15 @@ select 'drop table if exists "' || tablename || '" cascade;'
 ##### Adding Java Version
 https://devcenter.heroku.com/articles/add-java-version-to-an-existing-maven-app 
 
+##### Character encoding problems
+https://groups.google.com/forum/?fromgroups#!topic/play-framework/QsC0LubU_30
 
+Note as of 2014-02-04 heroku uses the scala buildpack for play 2 apps
+    https://github.com/heroku/heroku-buildpack-scala
+which uses sbt to build not play :(
+
+Potential Solution set the buildpack:
+heroku config:set BUILDPACK_URL=https://github.com/imikushin/heroku-buildpack-play2.git
+
+##### Recompile on Heroku without Git Push (TBD)
+https://github.com/heroku/heroku/issues/514

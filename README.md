@@ -170,6 +170,7 @@ select 'drop table if exists "' || tablename || '" cascade;'
  where schemaname = 'public';
 
 ##### Adding Java Version
+https://devcenter.heroku.com/articles/scala-support
 https://devcenter.heroku.com/articles/add-java-version-to-an-existing-maven-app 
 
 ##### Character encoding problems

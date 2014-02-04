@@ -187,3 +187,5 @@ heroku config:set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-play.
 
 ##### Recompile on Heroku without Git Push (TBD)
 https://github.com/heroku/heroku/issues/514
+git commit --allow-empty -m "empty commit"
+git push heroku master

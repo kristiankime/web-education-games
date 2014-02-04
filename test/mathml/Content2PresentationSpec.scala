@@ -11,20 +11,59 @@ import mathml.scalar.apply._
 import mathml.scalar.apply.trig._
 import models.DBTest.inMemH2
 
+import xml.transform.{ RuleTransformer, RewriteRule }
+import xml.{ NodeSeq, Node, Elem }
+import xml.Utility.trim
+
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 // with thanks to http://www.ictforu.com/index.php/Core-Java/java-xslt.html
 @RunWith(classOf[JUnitRunner])
 class Content2PresentationSpec extends Specification {
+	val removeEmptyRule = new RuleTransformer(new RemoveEmptyTagsRule)
 
-	// LATER make this work
-	//	"apply" should {
-	//
-	//		"parse 2 + 2" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-	//			val content = MathML(<math xmlns="http://www.w3.org/1998/Math/MathML"> <apply> <plus/> <cn> 2 </cn> <cn> 2 </cn> </apply> </math>).get
-	//			val presentation = <math xmlns="http://www.w3.org/1998/Math/MathML"><m:mrow xmlns:m="http://www.w3.org/1998/Math/MathML"><m:mn>2</m:mn><m:mo>+</m:mo><m:mn>2</m:mn></m:mrow></math>
-	//			Content2Presentation(content) must beEqualTo(presentation)
-	//		}
-	//
-	//	}
+	"RemoveEmptyTagsRule" should {
+		"leave non empty nodes alone" in {
+			val before = <xml><foo>bar</foo><nonEmpty>data</nonEmpty></xml>
+			val after = <xml><foo>bar</foo><nonEmpty>data</nonEmpty></xml>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+
+		"remove <empty/> node" in {
+			val before = <xml><empty/><nonEmpty>data</nonEmpty></xml>
+			val after = <xml><nonEmpty>data</nonEmpty></xml>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+
+		"leave a node with an attribute" in {
+			val before = <xml><nonEmpty name="legend"></nonEmpty><empty/></xml>
+			val after = <xml><nonEmpty name="legend"></nonEmpty></xml>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+
+		"remove <Empty><empty/></Empty> aka nested empty nodes" in {
+			val before = <xml><Empty><empty/></Empty><nonEmpty>data</nonEmpty></xml>
+			val after = <xml><nonEmpty>data</nonEmpty></xml>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+
+		"remove nodes with spaces" in {
+			val before = <xml><empty>
+     </empty><nonEmpty>data</nonEmpty></xml>
+			val after = <xml><nonEmpty>data</nonEmpty></xml>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+
+		"remove nodes with �" in {
+			val before = <math><m:msup><m:mrow><m:mi>sin</m:mi><m:mo>���</m:mo><m:mo>(</m:mo><m:msup><m:mrow><m:mi>x</m:mi></m:mrow><m:mn>3</m:mn></m:msup><m:mo>)</m:mo></m:mrow><m:mn>3</m:mn></m:msup></math>
+			val after = <math><m:msup><m:mrow><m:mi>sin</m:mi><m:mo>(</m:mo><m:msup><m:mrow><m:mi>x</m:mi></m:mrow><m:mn>3</m:mn></m:msup><m:mo>)</m:mo></m:mrow><m:mn>3</m:mn></m:msup></math>
+
+			removeEmptyRule.transform(before) must beEqualTo(after)
+		}
+	}
 
 }

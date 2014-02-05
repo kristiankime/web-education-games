@@ -5,7 +5,7 @@
 		<input size="80" onkeyup="@(editorName).updateAnswer(this.value)" onpaste="@(editorName).updateAnswer(this.value)" oninput="@(editorName).updateAnswer(this.value)"/>
 		<font style:visibility="hidden" id="@(editorName+"Indicator")" color="red"> * </font>
 		<span id="@(editorName+"View")"> <script type="math/mml"> <math> </math> </script> </span>
-	<span>
+	</span>
 
 	<script>
 	var @(editorName) = (function() {

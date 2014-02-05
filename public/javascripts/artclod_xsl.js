@@ -11,6 +11,12 @@ ARTC.xslTransform = function(xml, xsl) {
 		xsltProcessor.importStylesheet(xsl);
 		resultDocument = xsltProcessor.transformToFragment(xml, document);
 	}
+//	console.log("xml");
+//	console.log(xml);
+//	console.log("xsl");
+//	console.log(xsl);
+//	console.log("resultDocument");
+//	console.log(resultDocument);
 	return resultDocument;
 };
 

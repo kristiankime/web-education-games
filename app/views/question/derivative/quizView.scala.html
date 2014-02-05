@@ -19,7 +19,7 @@
     <ul>
         @questions.map { question =>
             <li>
-            	<script type="math/mml"> @Html(question.mathML.toPresentation.toString) </script>
+            	@math.mathmlContent(question.mathML)
                 [<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
             </li>
         }
@@ -31,7 +31,7 @@
 	    <p>
 			Type in an equation and press "Save Question": <br> 
 			Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow), ln, sin, cos, tan, ) <br> 
-			@mathml.mathmlEditor("QUESTION")
+			@math.mathmlEditor("QUESTION")
 		</p>
 	
 	    @form(routes.QuestionsController.create(quiz.id, course.map(_.id)), 'id -> "derivativeqForm" ) {

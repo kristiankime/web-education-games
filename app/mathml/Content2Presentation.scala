@@ -5,21 +5,21 @@ import xml.transform.{ RuleTransformer, RewriteRule }
 import xml.{ NodeSeq, Node, Elem, Text }
 import xml.Utility.trim
 
-object Content2Presentation {
-	
-//	def apply(content: MathMLElem) = XSLTransform(content, Ctop.str).get
-	
-	val removeEmptyRule = new RuleTransformer(new RemoveEmptyTagsRule)
-
-	def apply(content: MathMLElem) = {
-		val pres = XSLTransform(content, Ctop.str).get
-		System.err.println("pres: " + pres)
-		val clean = removeEmptyRule.transform(pres)
-		System.err.println("clean: " + clean)
-		clean
-	}
-
-}
+//object Content2Presentation {
+//	
+////	def apply(content: MathMLElem) = XSLTransform(content, Ctop.str).get
+//	
+//	val removeEmptyRule = new RuleTransformer(new RemoveEmptyTagsRule)
+//
+//	def apply(content: MathMLElem) = {
+//		val pres = XSLTransform(content, Ctop.str).get
+//		System.err.println("pres: " + pres)
+//		val clean = removeEmptyRule.transform(pres)
+//		System.err.println("clean: " + clean)
+//		clean
+//	}
+//
+//}
 
 // http://devblog.point2.com/2011/03/21/removing-empty-xml-elements-in-scala/
 class RemoveEmptyTagsRule extends RewriteRule {

@@ -10,12 +10,14 @@
 	<script>
 	var @(editorName) = (function() {
 	    var result = {
-	    	 	mathML : "", 
+	    	 	mathML : "",
+	    	 	rawStr : "", 
 	    	 	valid : false,
 	    	 	current : false
 	    	 };
 	
 	    result.updateAnswer = function(mathMLStr) {
+	    	result.rawStr = mathMLStr;
 	    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
 	    	if (mathMLStatus.success) {
 	    		ARTC.xslTransformLoadXSL($.parseXML(mathMLStatus.value), "@routes.Assets.at("javascripts/ctop.xsl")", function(pmml){

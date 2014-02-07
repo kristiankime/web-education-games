@@ -16,8 +16,9 @@ import models.question.derivative.table.QuizzesQuestionsTable
 import models.question.derivative.table.Quiz2Question
 import models.question.derivative.table.AnswersTable
 import service.table.UserTable
+import models.question.AsciiMathML
 
-case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime)
+case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime) extends AsciiMathML
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, synched: Boolean, creationDate: DateTime) {
 	def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, synched, creationDate)

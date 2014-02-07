@@ -10,8 +10,9 @@ import service._
 import models.question.derivative.table._
 import models.id._
 import org.joda.time.DateTime
+import models.question.AsciiMathML
 
-case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime)
+case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime) extends AsciiMathML
 
 case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime){
 	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, synched, correct, creationDate)

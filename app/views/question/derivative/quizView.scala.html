@@ -19,7 +19,7 @@
     <ul>
         @questions.map { question =>
             <li>
-            	@math.mathmlContent(question.mathML)
+            	@math.mathmlContent(question)
                 [<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
             </li>
         }

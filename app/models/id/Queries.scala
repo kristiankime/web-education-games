@@ -23,7 +23,10 @@ object Queries {
 	}
 
 	def access[T, L, I](user: User, link: UserLink[L, I], ownerQuery: Query[(IdentifiedAndOwned[T, I], UserTable), (T, User)])(implicit session: Session, evidence: BaseTypeMapper[I]) = {
-		for ((oq, l) <- ownerQuery.leftJoin(tableToQuery(link)).on(_._1.id === _.id)) yield (oq._1, oq._2, l.access.?)
+		for (
+			(oq, l) <- ownerQuery.leftJoin(tableToQuery(link))
+				.on((oq, l) => oq._1.id === l.id && l.userId === user.id)
+		) yield (oq._1, oq._2, l.access.?)
 	}
 
 }

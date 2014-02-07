@@ -37,13 +37,24 @@ object Courses {
 	def findDetails(courseId: CourseId)(implicit user: User) = DB.withSession { implicit session: Session =>
 		val courseOwner = Queries.owner(courseId, new CoursesTable)
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
-		courseAccess.firstOption.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id /*, v._3*/ )))
+		courseAccess.firstOption.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
 	def listDetails(implicit user: User) = DB.withSession { implicit session: Session =>
+		
+		System.err.println(Queries.owners(new CoursesTable).list)
 		val coursesOwners = Queries.owners(new CoursesTable)
+		
 		val coursesAccess = Queries.access(user, new UsersCoursesTable, coursesOwners)
-		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id /*, v._3 */ )))
+		val coursesAccessList = coursesAccess.list
+		
+		System.err.println(coursesAccessList)
+		
+		val coursesAccessMapped = coursesAccessList.map(Access.accessMap(_))
+		
+		System.err.println(coursesAccessMapped)
+		
+		coursesAccessMapped.map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
 	private def sectionsDetailsFor(courseId: CourseId /*, access: Access*/ )(implicit user: User, session: Session) = {

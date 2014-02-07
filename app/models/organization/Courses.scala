@@ -41,20 +41,9 @@ object Courses {
 	}
 
 	def listDetails(implicit user: User) = DB.withSession { implicit session: Session =>
-		
-		System.err.println(Queries.owners(new CoursesTable).list)
 		val coursesOwners = Queries.owners(new CoursesTable)
-		
 		val coursesAccess = Queries.access(user, new UsersCoursesTable, coursesOwners)
-		val coursesAccessList = coursesAccess.list
-		
-		System.err.println(coursesAccessList)
-		
-		val coursesAccessMapped = coursesAccessList.map(Access.accessMap(_))
-		
-		System.err.println(coursesAccessMapped)
-		
-		coursesAccessMapped.map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
+		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
 	private def sectionsDetailsFor(courseId: CourseId /*, access: Access*/ )(implicit user: User, session: Session) = {

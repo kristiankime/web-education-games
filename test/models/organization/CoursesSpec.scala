@@ -75,10 +75,6 @@ class CoursesSpec extends Specification {
 			val teacher = DBTest.fakeUser(UserTmpTest())
 			val student = DBTest.fakeUser(UserTmpTest())
 
-			println("owner   " + owner)
-			println("teacher " + teacher)
-			println("student " + student)
-
 			val course = Courses.create(CoursesTmpTest(owner = owner.id))
 			val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
 

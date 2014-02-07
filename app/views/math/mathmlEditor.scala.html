@@ -4,7 +4,7 @@
 		@*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
 		<input size="80" onkeyup="@(editorName).updateAnswer(this.value)" onpaste="@(editorName).updateAnswer(this.value)" oninput="@(editorName).updateAnswer(this.value)"/>
 		<font style:visibility="hidden" id="@(editorName+"Indicator")" color="red"> * </font>
-		<span id="@(editorName+"View")"> <script type="math/mml"> <math> </math> </script> </span>
+		<span id="@(editorName+"View")"> `` </script> </span>
 	</span>
 
 	<script>
@@ -12,24 +12,21 @@
 	    var result = {
 	    	 	mathML : "",
 	    	 	rawStr : "", 
-	    	 	valid : false,
-	    	 	current : false
+	    	 	valid : false
 	    	 };
 	
 	    result.updateAnswer = function(mathMLStr) {
 	    	result.rawStr = mathMLStr;
 	    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
 	    	if (mathMLStatus.success) {
-	    		ARTC.xslTransformLoadXSL($.parseXML(mathMLStatus.value), "@routes.Assets.at("javascripts/ctop.xsl")", function(pmml){
-			    		result.mathML = mathMLStatus.value;	
-			    		result.valid = true;
-			    		result.current = true;		
-			    		$("#@(editorName+"Indicator")").hide();
-			    		ARTC.updateInnerMathML("@(editorName+"View")", ARTC.xmlToString(pmml));
-		    		});
+	    		
+	    		result.mathML = mathMLStatus.value;	
+			    result.valid = true;
+			    $("#@(editorName+"Indicator")").hide();
+			    ARTC.updateInnerAsciiMath("@(editorName+"View")", result.rawStr);
+
 	    	} else {
 	    		result.valid = false;
-	    		result.current = false;
 	    		$("#@(editorName+"Indicator")").show();
 			}
 	    };

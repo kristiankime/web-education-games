@@ -16,14 +16,13 @@ class QuestionsTable extends Table[Question]("derivative_questions") {
 	def owner = column[UserId]("owner", O.NotNull)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)
-	def synched = column[Boolean]("synched", O.NotNull)
 	def creationDate = column[DateTime]("creationDate")
 
-	def * = id ~ owner ~ mathML ~ rawStr ~ synched ~ creationDate <> (Question, Question.unapply _)
+	def * = id ~ owner ~ mathML ~ rawStr ~ creationDate <> (Question, Question.unapply _)
 
 	def ownerFK = foreignKey("derivative_questions_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	
-	def autoInc = owner ~ mathML ~ rawStr ~ synched ~ creationDate returning id
+	def autoInc = owner ~ mathML ~ rawStr ~ creationDate returning id
 
-	def insert(t: QuestionTmp)(implicit s: Session) = this.autoInc.insert(t.owner, t.mathML, t.rawStr, t.synched, t.creationDate)
+	def insert(t: QuestionTmp)(implicit s: Session) = this.autoInc.insert(t.owner, t.mathML, t.rawStr, t.creationDate)
 }

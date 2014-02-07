@@ -1,4 +1,4 @@
-# To start Slick DDL generation again remove this comment
+# To restart Slick DDL generation remove this comment
 # --- Created by Slick DDL
 # To stop Slick DDL generation, remove this comment and start using Evolutions
 
@@ -15,8 +15,8 @@ create table "users_courses" ("user_id" BIGINT NOT NULL,"course_id" BIGINT NOT N
 alter table "users_courses" add constraint "users_courses_pk" primary key("user_id","course_id");
 create table "users_sections" ("user_id" BIGINT NOT NULL,"section_id" BIGINT NOT NULL,"access" SMALLINT NOT NULL);
 alter table "users_sections" add constraint "users_sections_pk" primary key("user_id","section_id");
-create table "derivative_answers" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"synched" BOOLEAN NOT NULL,"correct" BOOLEAN NOT NULL,"creationDate" TIMESTAMP NOT NULL);
-create table "derivative_questions" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"synched" BOOLEAN NOT NULL,"creationDate" TIMESTAMP NOT NULL);
+create table "derivative_answers" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"correct" BOOLEAN NOT NULL,"creationDate" TIMESTAMP NOT NULL);
+create table "derivative_questions" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"creationDate" TIMESTAMP NOT NULL);
 create table "derivative_quizzes_questions" ("quiz_id" BIGINT NOT NULL,"question_id" BIGINT NOT NULL);
 alter table "derivative_quizzes_questions" add constraint "derivative_quizzes_question_pk" primary key("question_id","quiz_id");
 create table "derivative_quizzes" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"name" TEXT NOT NULL,"creationDate" TIMESTAMP NOT NULL,"upadateDate" TIMESTAMP NOT NULL);

@@ -37,7 +37,6 @@
 	    @form(routes.QuestionsController.create(quiz.id, course.map(_.id)), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
-	    	<input type="hidden" name="@QuestionForm.current" id="derivativeQuestionCurrent">
 	    	<input type="button" value="Save Question" onclick="formSubmit()">
 	    }
 	    
@@ -46,7 +45,6 @@
 			if(QUESTION.valid){
 				$("#derivativeQuestionMathML").val(QUESTION.mathML);
 				$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
-				$("#derivativeQuestionCurrent").val(QUESTION.current);
 				$("#derivativeqForm").submit();
 			}
 			// TODO indicated that the form did not submit

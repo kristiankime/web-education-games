@@ -111,3 +111,60 @@ ARTC.content2Presentation = function(xsltPath) {
 	
     }
 };
+
+
+/*
+ * Update an HTML element with a string in asciimath format and then have MathJax render it.
+ * 
+ * NOTE: This function will overwrite the inner HTML of the specified element.
+ * 
+ * This function is designed not to throw any errors but to call a callback function with a status object indicating success or failure. If no callback is given errors are ignored.
+ * 
+ * The error object has three attributes
+ * 
+ * success - a boolean indicating if everything went well reason - a string which can be one of: "success" -> Indicating success, this is the only string where the success attribute will be true "id falsey" -> The id was falsey "mathMLStr falsey" -> The mathMLStr was falsey "invalid id" -> Could not find an element associated with the given id details - an empty string on success or an error object given more details about the failure
+ */
+ARTC.updateInnerAsciiMath = function(id, asciimath, callback) {
+    var safeCallback = function() {/* noop */
+	;
+    };
+    if (ARTC.isFunction(callback)) {
+	safeCallback = callback;
+    }
+
+    if (!id) {
+	safeCallback({
+	    success : false,
+	    reason : "id falsey",
+	    details : id
+	});
+	return;
+    } else if (!asciimath) {
+	safeCallback({
+	    success : false,
+	    reason : "asciimath falsey",
+	    details : asciimath
+	});
+	return;
+    }
+
+    var elem = document.getElementById(id);
+    if (elem === null) {
+	safeCallback({
+	    success : false,
+	    reason : "invalid id",
+	    details : id
+	});
+	return;
+    }
+
+    elem.innerHTML = '`' + asciimath + '`';
+
+    MathJax.Hub.queue.Push(MathJax.Hub.Queue([ "Typeset", MathJax.Hub, id ]), function() {
+	safeCallback({
+	    success : true,
+	    reason : "success",
+	    details : ""
+	});
+    });
+};

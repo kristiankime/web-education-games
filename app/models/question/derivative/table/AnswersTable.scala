@@ -17,16 +17,15 @@ class AnswersTable extends Table[Answer]("derivative_answers") {
 	def owner = column[UserId]("owner", O.NotNull)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)
-	def synched = column[Boolean]("synched", O.NotNull)
 	def correct = column[Boolean]("correct", O.NotNull)
 	def creationDate = column[DateTime]("creationDate", O.NotNull)
 
-	def * = id ~ owner ~ questionId ~ mathML ~ rawStr ~ synched ~ correct ~ creationDate <> (Answer, Answer.unapply _)
+	def * = id ~ owner ~ questionId ~ mathML ~ rawStr ~ correct ~ creationDate <> (Answer, Answer.unapply _)
 
 	def ownerFK = foreignKey("derivative_answers_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionFK = foreignKey("derivative_answers_fk", questionId, new QuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-	def autoInc = questionId ~ owner ~ mathML ~ rawStr ~ synched ~ correct ~ creationDate returning id
+	def autoInc = questionId ~ owner ~ mathML ~ rawStr ~ correct ~ creationDate returning id
 
-	def insert(t: AnswerTmp)(implicit s: Session) = autoInc.insert(t.questionId, t.owner, t.mathML, t.rawStr, t.synched, t.correct, t.creationDate)
+	def insert(t: AnswerTmp)(implicit s: Session) = autoInc.insert(t.questionId, t.owner, t.mathML, t.rawStr, t.correct, t.creationDate)
 }

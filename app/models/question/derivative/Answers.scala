@@ -12,10 +12,10 @@ import models.id._
 import org.joda.time.DateTime
 import models.question.AsciiMathML
 
-case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime) extends AsciiMathML
+case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML
 
-case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, synched: Boolean, correct: Boolean, creationDate: DateTime){
-	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, synched, correct, creationDate)
+case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime){
+	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, correct, creationDate)
 }
 
 object Answers {

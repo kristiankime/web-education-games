@@ -51,8 +51,7 @@ object AnswersController extends Controller with SecureSocial {
 				val question = Questions.find(questionId).get // TODO check for no question here
 				val mathML = MathML(form._1).get // TODO can fail here
 				val rawStr = form._2
-				val synched = form._3
-				val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr, synched, Answers.correct(question, mathML), DateTime.now))
+				val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr, Answers.correct(question, mathML), DateTime.now))
 				Redirect(routes.AnswersController.view(quizId, questionId, answer.id, courseId))
 			})
 	}
@@ -62,6 +61,5 @@ object AnswersController extends Controller with SecureSocial {
 object AnswerForm {
 	val mathML = "mathML"
 	val rawStr = "rawStr"
-	val current = "current"
-	val values = Form(tuple(mathML -> text, rawStr -> text, current -> boolean))
+	val values = Form(tuple(mathML -> text, rawStr -> text))
 }

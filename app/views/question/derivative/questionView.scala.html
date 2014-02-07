@@ -37,7 +37,6 @@
 	@form(routes.AnswersController.create(quiz.id, question.id, course.map(_.id)) , 'id -> "answerForm" ) {
     	<input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
     	<input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
-    	<input type="hidden" name="@AnswerForm.current" id="answerCurrent">
     	<input type="button" value="Submit" onclick="answerFormSubmit()">
     }
     </div>
@@ -47,7 +46,6 @@
 		if(ANSWER.valid){
 			$("#answerMathML").val(ANSWER.mathML);
 			$("#answerRawStr").val(ANSWER.rawStr);
-			$("#answerCurrent").val(ANSWER.current);
 			$("#answerForm").submit();
 		}
 		// TODO indicated that the form did not submit

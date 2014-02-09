@@ -89,10 +89,40 @@ class MathMLCheckEqSpec extends Specification {
 			(f ?= g) must beTrue
 		}
 		
+		"e ^ 10*x' = 10 * e ^ 10*x" in {
+			val f = (e ^ (`10` * x)) dx
+			val g = `10` * (e ^ (`10` * x))
+			(f ?= g) must beTrue
+		}
+		
+		"e ^ 10*x' != 11* e ^ 10*x" in {
+			val f = (e ^ (`10` * x)) dx
+			val g = `11` * (e ^ (`10` * x))
+			(f ?= g) must beFalse
+		}
+		
 		"e ^ 100*x' = 100 * e ^ 100*x" in {
 			val f = (e ^ (`100` * x)) dx
 			val g = `100` * (e ^ (`100` * x))
 			(f ?= g) must beTrue
+		}
+		
+		"e ^ 100*x' != 101* e ^ 100*x" in {
+			val f = (e ^ (`100` * x)) dx
+			val g = `101` * (e ^ (`100` * x))
+			(f ?= g) must beFalse
+		}
+		
+		"e ^ 1000*x' = 1000 * e ^ 1000*x" in {
+			val f = (e ^ (`1000` * x)) dx
+			val g = `1000` * (e ^ (`1000` * x))
+			(f ?= g) must beTrue
+		}
+		
+		"e ^ 1000*x' != 1001* e ^ 1000*x" in {
+			val f = (e ^ (`1000` * x)) dx
+			val g = `1001` * (e ^ (`1000` * x))
+			(f ?= g) must beFalse
 		}
 		
 		"e ^ -100*x' = -100 * e ^ -100*x" in {

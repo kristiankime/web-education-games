@@ -54,6 +54,9 @@ package object scalar {
 	val `38` = Cn(38)
 	val `39` = Cn(39)
 	val `100` = Cn(100)
+	val `101` = Cn(101)
+	val `1000` = Cn(1000)
+	val `1001` = Cn(1001)
 
 	val `-.5` = Cn(-.5)
 	val `.5` = Cn(.5)

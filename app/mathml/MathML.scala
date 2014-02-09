@@ -31,12 +31,13 @@ object MathML {
 		})
 	}
 
+	val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
+	val vals = (Vector.fill(20)((ran.nextDouble * 2000d) - 1000d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
+
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = {
 		if (simplifyEquals(eq1, eq2)) {
 			true
 		} else {
-			val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
-			val vals = Vector.fill(20)((ran.nextDouble * 2000d) - 1000d).sorted
 			val eval = checkEval(variableName, eq1, eq2, vals)
 
 			eval match {

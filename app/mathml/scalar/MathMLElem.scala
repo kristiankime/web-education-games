@@ -84,5 +84,4 @@ abstract class MathMLElem(
 
 	def ?=(e: MathMLElem) = MathML.checkEq("x", this, e)
 
-//	def toPresentation = Content2Presentation(this)
 }

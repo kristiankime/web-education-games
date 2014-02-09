@@ -14,7 +14,7 @@ object F extends MathMLElem(MathML.h.prefix, "F", MathML.h.attributes, MathML.h.
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cnStep: Option[Constant] = None
+	def constant: Option[Constant] = None
 
 	def simplifyStep() = F.this
 

@@ -47,15 +47,12 @@ abstract class MathMLElem(
 		}
 	}
 
-	/**
-	 * Does "one level" of attempting to turn this element into a constant.
-	 */
-	protected def cnStep: Option[Constant]
+	protected def constant: Option[Constant]
 
 	private var c_ : Option[Constant] = null
 	def c = {
 		if (c_ == null) {
-			c_ = cnStep
+			c_ = constant
 		}
 		c_
 	}

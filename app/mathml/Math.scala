@@ -18,7 +18,7 @@ case class Math(
 
 	def eval(boundVariables: Map[String, Double]) = value.eval(boundVariables)
 
-	def cnStep: Option[Constant] = value.c
+	def constant: Option[Constant] = value.c
 	
 	def simplifyStep() = Math(prefix, attributes, scope, minimizeEmpty, value.s)
 

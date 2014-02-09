@@ -11,7 +11,7 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
 
-	def cnStep: Option[Constant] = if (values.forall(_.c.nonEmpty)) {
+	def constant: Option[Constant] = if (values.forall(_.c.nonEmpty)) {
 		Some(values.map(_.c.get).reduce(_ * _))
 	} else if (values.map(_.c).contains(Some(`0`))) {
 		Some(`0`)

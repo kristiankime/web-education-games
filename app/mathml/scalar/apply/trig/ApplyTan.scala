@@ -10,7 +10,7 @@ case class ApplyTan(value: MathMLElem) extends UnaryFunction(value, Tan) {
 
 	override def eval(b: Map[String, Double]) = Try(math.tan(v.eval(b).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.tan(v))
 		case _ => None
 	}

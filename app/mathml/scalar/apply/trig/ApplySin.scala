@@ -10,7 +10,7 @@ case class ApplySin(value: MathMLElem) extends UnaryFunction(value, Sin) {
 
 	override def eval(b: Map[String, Double]) = Try(math.sin(v.eval(b).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.sin(v))
 		case _ => None
 	}

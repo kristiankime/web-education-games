@@ -14,7 +14,7 @@ case class ApplyMinusU(val value: MathMLElem)
 
 	def eval(boundVariables: Map[String, Double]) = Try(-1d * value.eval(boundVariables).get)
 
-	def cnStep: Option[Constant] = value.c match {
+	def constant: Option[Constant] = value.c match {
 		case Some(v) => Some(v * Cn(-1))
 		case _ => None
 	}

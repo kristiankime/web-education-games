@@ -55,7 +55,7 @@ class ApplyPowerSpec extends Specification {
 		}
 
 		"return None if function is not constant" in {
-			ApplyPower(`2`, x).cnStep must beNone
+			ApplyPower(`2`, x).c must beNone
 		}
 	}
 

@@ -12,7 +12,7 @@ case class Logbase(val value: Constant)
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Logbase should not get evaled, use eval on the surrounding element."))
 
-	def cnStep: Option[Constant] = None
+	def constant: Option[Constant] = None
 
 	def variables: Set[String] = Set()
 

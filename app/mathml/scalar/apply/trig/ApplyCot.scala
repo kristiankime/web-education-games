@@ -10,7 +10,7 @@ case class ApplyCot(value: MathMLElem) extends UnaryFunction(value, Cot) {
 
 	override def eval(b: Map[String, Double]) = Try(Trigonometry.cot(v.eval(b).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.cot(v))
 		case _ => None
 	}

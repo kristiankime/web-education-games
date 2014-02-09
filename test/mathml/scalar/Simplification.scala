@@ -14,7 +14,7 @@ object NeedsSimp extends MathMLElem(MathML.h.prefix, "NeedsSimp", MathML.h.attri
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cnStep: Option[Constant] = None
+	def constant: Option[Constant] = None
 
 	def simplifyStep() = Simplified
 
@@ -29,7 +29,7 @@ object Simplified extends MathMLElem(MathML.h.prefix, "Simplified", MathML.h.att
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
 
-	def cnStep: Option[Constant] = None
+	def constant: Option[Constant] = None
 
 	def simplifyStep() = Simplified
 

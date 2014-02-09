@@ -11,7 +11,7 @@ case class ApplyCos(value: MathMLElem) extends UnaryFunction(value, Cos) {
 
 	override def eval(b: Map[String, Double]) = Try(math.cos(v.eval(b).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.cos(v))
 		case _ => None
 	}

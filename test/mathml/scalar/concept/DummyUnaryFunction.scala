@@ -11,7 +11,7 @@ case class DummyUnaryFunction(override val v: MathMLElem) extends UnaryFunction(
 
 	override def eval(b: Map[String, Double]) = throw new UnsupportedOperationException
 
-	override def cnStep: Option[Constant] = throw new UnsupportedOperationException
+	override def constant: Option[Constant] = throw new UnsupportedOperationException
 
 	def simplifyStep() = throw new UnsupportedOperationException
 

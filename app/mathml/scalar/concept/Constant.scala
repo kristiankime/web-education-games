@@ -3,7 +3,7 @@ package mathml.scalar.concept
 import mathml.MathML
 import mathml.scalar._
 import scala.xml.MetaData
-import scala.util.Try
+import scala.util.{Try, Success, Failure}
 import scala.xml.Node
 import scala.math.BigDecimal.double2bigDecimal
 import scala.xml._
@@ -12,7 +12,7 @@ import scala.xml._
 abstract class Constant(name: String, attributes1: MetaData, minimizeEmpty: Boolean, val v: Any, override val child: Node*)
 	extends MathMLElem(MathML.h.prefix, name, attributes1, MathML.h.scope, minimizeEmpty, child: _*) {
 
-	def cnStep: Option[this.type] = Some(this)
+	def constant: Option[this.type] = Some(this)
 
 	override val c : Option[this.type] = Some(this);
 
@@ -42,7 +42,7 @@ abstract class Constant(name: String, attributes1: MetaData, minimizeEmpty: Bool
 abstract class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigInt, override val child: Node*)
 	extends Constant(name, attributes1, minimizeEmpty, v, child: _*) {
 
-	def eval(boundVariables: Map[String, Double]) = Try(v.doubleValue)
+	def eval(boundVariables: Map[String, Double]) = Success(v.doubleValue)
 
 	override def isZero() = { v.compare(BigInt(0)) == 0 }
 

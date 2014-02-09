@@ -13,7 +13,7 @@ case class ApplyLog10(value: MathMLElem) extends Logarithm(10, value, Seq(Log): 
 
 	override def eval(boundVariables: Map[String, Double]) = Try(math.log10(v.eval(boundVariables).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Logarithm.log10(v))
 		case _ => None
 	}

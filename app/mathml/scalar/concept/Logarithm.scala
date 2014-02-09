@@ -10,7 +10,7 @@ abstract class Logarithm(val b: BigDecimal, val v: MathMLElem, pre: MathMLElem*)
 
 	def eval(boundVariables: Map[String, Double]) = Try(math.log(v.eval(boundVariables).get) / math.log(b.doubleValue))
 
-	def cnStep: Option[Constant] = v.c match {
+	def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Logarithm.log(b, v))
 		case _ => None
 	}

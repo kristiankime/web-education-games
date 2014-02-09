@@ -10,7 +10,7 @@ abstract class Operator(override val label: String)
 
 	def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException("Applyables should not get evaled, use eval on the surrounding apply element."))
 
-	def cnStep: Option[Constant] = None
+	def constant: Option[Constant] = None
 
 	def variables: Set[String] = Set()
 	

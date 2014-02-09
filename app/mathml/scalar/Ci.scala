@@ -14,7 +14,7 @@ case class Ci(val identifier: IdentifierText)
 
 	def eval(boundVariables: Map[String, Double]) = Try(boundVariables.get(text).get)
 
-	def cnStep: Option[Constant] = None
+	def constant: Option[Constant] = None
 
 	def simplifyStep() = this
 

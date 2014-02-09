@@ -10,7 +10,7 @@ case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, S
 
 	override def eval(boundVariables: Map[String, Double]) = Try(math.log(v.eval(boundVariables).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Logarithm.ln(v))
 		case _ => None
 	}

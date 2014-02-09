@@ -10,7 +10,7 @@ case class ApplySec(value: MathMLElem) extends UnaryFunction(value, Sec) {
 
 	override def eval(b: Map[String, Double]) = Try(Trigonometry.sec(v.eval(b).get))
 
-	override def cnStep: Option[Constant] = v.c match {
+	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.sec(v))
 		case _ => None
 	}

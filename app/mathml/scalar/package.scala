@@ -65,6 +65,7 @@ package object scalar {
 	val `2.5` = Cn(2.5)
 	val `3.5` = Cn(3.5)
 	val `-100` = Cn(-100)
+	val `-101` = Cn(-101)
 
 	val ln_10 = Cn(math.log(10))
 

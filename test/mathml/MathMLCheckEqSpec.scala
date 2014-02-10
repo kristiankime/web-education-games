@@ -130,6 +130,12 @@ class MathMLCheckEqSpec extends Specification {
 			val g = `-100` * (e ^ (`-100` * x))
 			(f ?= g) must beTrue
 		}
+		
+		"e ^ -100*x' = -101 * e ^ -100*x" in {
+			val f = (e ^ (`-100` * x)) dx
+			val g = `-101` * (e ^ (`-100` * x))
+			(f ?= g) must beFalse
+		}
 	}
 
 }

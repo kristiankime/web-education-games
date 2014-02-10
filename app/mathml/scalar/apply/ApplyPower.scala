@@ -18,7 +18,7 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	}
 
 	/**
-	 * In actual mathematics a^b is never 0 except when a is 0. 
+	 * In actual mathematics a^b is never 0 except when a is 0.
 	 * So count 0 as Failure here unless the base is 0.
 	 */
 	private def mathPowFailOnZero(bv: Double, ev: Double): Try[Double] = {
@@ -48,28 +48,16 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	def variables: Set[String] = base.variables ++ exp.variables
 
 	def derivative(x: String): MathMLElem = {
-		//		if (!variables.contains(x)) `0`
-		//		else if (!exp.variables.contains(x)) {
-		//			val r = exp.s
-		//			val f = base.s
-		//			val fP = f.d(x)
-		//			// (f(x)^r)' = r*f(x)^(r-1)*f'(x)
-		//			ApplyTimes(r, f ^ (r - `1`).s, fP).s
-		//		} else {
-		// d/dx (f ^ g) = f^(g-1) * (g * f' + f * log(f) * g')
+		// http://en.wikipedia.org/wiki/Differentiation_rules see functional power rule
+		// (f ^ g)' = f^(g-1) * (g * f' + f * log(f) * g')
 		val f = base.s
 		val fP = f.d(x)
 		val g = exp.s
 		val gP = g.d(x)
 
-		val first = (f ^ (g - `1`))
-		val second = (g * fP + f * ApplyLn(f) * gP)
-		val secondSimp = (g * fP + f * ApplyLn(f) * gP) s
+		val first = (f ^ (g - `1`)).s
+		val second = (g * fP + f * ApplyLn(f) * gP).s
 
-		val foo = first * secondSimp
-		val fooSimp = foo.s
-		fooSimp
-		//			(f ^ (g - `1`)) * (g * fP + f * ApplyLn(f) * gP)
-		//		}
+		(first * second).s
 	}
 }

@@ -24,7 +24,7 @@ case class ApplyTimes(val values: MathMLElem*)
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
 			case (Seq(), Seq(elem)) => elem
 			case (Seq(), Seq(elems @ _*)) => ApplyTimes(elems: _*)
-			case (Seq(cns @ _*), Seq(elems @ _*)) =>  ApplyTimes(Seq(cns.reduce(_ * _)).filterNot(_.isOne) ++ elems: _*)
+			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyTimes(Seq(cns.reduce(_ * _)).filterNot(_.isOne) ++ elems: _*)
 		}
 	}
 
@@ -40,14 +40,14 @@ case class ApplyTimes(val values: MathMLElem*)
 
 	def derivative(wrt: String): MathMLElem = values.reduce((a, b) => productRule(wrt, a, b))
 
-	// http://en.wikipedia.org/wiki/Product_rule
-	// (f*g)' = f'*g + f*g'
 	private def productRule(wrt: String, f: MathMLElem, g: MathMLElem) = {
+		// http://en.wikipedia.org/wiki/Product_rule
+		// (f*g)' = f'*g + f*g'
 		val fP = f.d(wrt)
 		val gP = g.d(wrt)
 		val fP_g = (fP * g).s
 		val f_gP = (f * gP).s
-		
+
 		(fP_g + f_gP).s
 	}
 }

@@ -9,7 +9,26 @@ import mathml.scalar.concept.Constant
 case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Power) ++ base ++ exp): _*) {
 
-	def eval(boundVariables: Map[String, Double]) = Try(math.pow(base.eval(boundVariables).get, exp.eval(boundVariables).get))
+	def eval(boundVariables: Map[String, Double]): Try[Double] = {
+		(base.eval(boundVariables), exp.eval(boundVariables)) match {
+			case (bv: Failure[Double], _) => bv
+			case (_, ev: Failure[Double]) => ev
+			case (Success(bv), Success(ev)) => mathPowFailOnZero(bv, ev)
+		}
+	}
+
+	/**
+	 * In actual mathematics a^b is never 0 except when a is 0. 
+	 * So count 0 as Failure here unless the base is 0.
+	 */
+	private def mathPowFailOnZero(bv: Double, ev: Double): Try[Double] = {
+		if (bv == 0d) { return Success(0d) }
+		else {
+			val ret = math.pow(bv, ev)
+			if (ret == 0d) { Failure(new IllegalArgumentException("power returned 0 for " + this)) }
+			else { Success(ret) }
+		}
+	}
 
 	def constant: Option[Constant] = (base.c, exp.c) match {
 		case (Some(b), _) if (b.isZero) => Some(`0`)

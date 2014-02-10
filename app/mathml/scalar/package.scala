@@ -1,6 +1,7 @@
 package mathml
 
 package object scalar {
+	val `-1000` = Cn(-1000)
 	val `-12` = Cn(-12)
 	val `-11` = Cn(-11)
 	val `-10` = Cn(-10)

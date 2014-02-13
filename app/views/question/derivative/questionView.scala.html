@@ -1,4 +1,4 @@
-@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, question: derivative.Question, currentAnswer: Option[derivative.Answer], previousAnswers: List[derivative.Answer], allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
+@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, question: derivative.Question, currentAnswer: Option[Either[derivative.AnswerTmp, derivative.Answer]], previousAnswers: List[derivative.Answer], allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
 
 @import helper._
 @import controllers.organization.routes._
@@ -20,12 +20,15 @@
 	</div>
 	<p>
 	
-	@for(answer <- currentAnswer){
+	@for(answerEither <- currentAnswer){
 		<div>
-			You answered @math.mathmlContent(answer)
-			that answer was @if(answer.correct){ <font color="green"> correct </font> } else { <font color="red"> incorrect </font> }
+		@answerEither match {
+			case Right(answer) => { You answered @math.mathmlContent(answer) that answer was @math.correct(answer.correct) }
+			case Left(answerTmp) => { You answered @math.mathmlContent(answerTmp) Sorry but the system was undable to determine if that answer was correct :( please try another answer }
+		}
 		</div>
 		<p>
+		
 	}	
     
     <div>
@@ -58,10 +61,7 @@
 		<h4>You have answered this questions @previousAnswers.size time(s)</h4>
 	    <ul>
 	    @for(answer <- previousAnswers){
-	        <li>
-	        	@math.mathmlContent(answer)
-		        this answer was @if(answer.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
-	        </li>
+	        <li> @math.mathmlContent(answer) this answer was @math.correct(answer.correct) </li>
 	    }
 	    </ul>
     }
@@ -70,11 +70,7 @@
 		<h4>There have been @allAnswers.size Answer(s) to this question</h4>
 	    <ul>
 	    @for(answer <- allAnswers){
-	        <li>
-	        	@answer._2.email said
-	        	@math.mathmlContent(answer._1)
-		        this answer was @if(answer._1.correct) { <font color="green"> correct </font> } else { <font color="red"> incorrect </font> } 
-	        </li>
+	        <li> @answer._2.email said @math.mathmlContent(answer._1) this answer was @math.correct(answer._1.correct) </li>
 	    }
 	    </ul>
     }

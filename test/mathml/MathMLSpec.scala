@@ -9,6 +9,7 @@ import org.specs2.mutable._
 import mathml.scalar._
 import mathml.scalar.apply._
 import mathml.scalar.apply.trig._
+import mathml.Match._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
@@ -164,61 +165,61 @@ class MathMLSpec extends Specification {
 	"checkEq" should {
 
 		"be true for two equal cns" in {
-			MathML.checkEq("x", `3`, `3`) must beTrue
+			MathML.checkEq("x", `3`, `3`) must beEqualTo(Yes)
 		}
 
 		"be true for two x+2 & 2+x" in {
 			val v1 = x + `2`
 			val v2 = `2` + x
 
-			MathML.checkEq("x", v1, v2) must beTrue
+			MathML.checkEq("x", v1, v2) must beEqualTo(Yes)
 		}
 
 		"be true for x^2 & x^2" in {
 			val v1 = x ^ `2`
 			val v2 = x ^ `2`
 
-			MathML.checkEq("x", v1, v2) must beTrue
+			MathML.checkEq("x", v1, v2) must beEqualTo(Yes)
 		}
 
 		"be true for [x + x + 2] & [2 * (x + 1)]" in {
 			val v1 = x + x + `2`
 			val v2 = `2` * (x + `1`)
 
-			MathML.checkEq("x", v1, v2) must beTrue
+			MathML.checkEq("x", v1, v2) must beEqualTo(Yes)
 		}
 
 		"be false for [x^2] & [x-2]" in {
 			val v1 = x ^ `2`
 			val v2 = x - `2`
 
-			MathML.checkEq("x", v1, v2) must beFalse
+			MathML.checkEq("x", v1, v2) must beEqualTo(Yes)
 		}
 
 		"be false for [2*x] & [x]" in {
 			val v1 = `2` * x
 			val v2 = x
 
-			MathML.checkEq("x", v1, v2) must beFalse
+			MathML.checkEq("x", v1, v2) must beEqualTo(No)
 		}
 
 		"be false for [x^2] & [1]" in {
 			val v1 = x ^ `2`
 			val v2 = `1`
 
-			MathML.checkEq("x", v1, v2) must beFalse
+			MathML.checkEq("x", v1, v2) must beEqualTo(No)
 		}
 
 		"be true for two log(x)s" in {
-			MathML.checkEq("x", ApplyLn(x), ApplyLn(x)) must beTrue
+			MathML.checkEq("x", ApplyLn(x), ApplyLn(x)) must beEqualTo(Yes)
 		}
 
 		"be false for two logs with different bases" in {
-			MathML.checkEq("x", ApplyLog10(x), ApplyLn(x)) must beFalse
+			MathML.checkEq("x", ApplyLog10(x), ApplyLn(x)) must beEqualTo(No)
 		}
 
 		"be false for two logs with different bases" in {
-			MathML.checkEq("x", ApplyLog10(x), ApplyLn(x)) must beFalse
+			MathML.checkEq("x", ApplyLog10(x), ApplyLn(x)) must beEqualTo(No)
 		}
 	}
 

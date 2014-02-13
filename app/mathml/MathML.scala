@@ -34,19 +34,9 @@ object MathML {
 	val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
 	val vals = (Vector.fill(20)((ran.nextDouble * 2000d) - 1000d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
 
-	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = {
-		if (simplifyEquals(eq1, eq2)) {
-			true
-		} else {
-			val eval = checkEval(variableName, eq1, eq2, vals)
-
-			eval match {
-				case No => false
-				case Inconclusive => false //LATER do something more substantial with inconclusive
-				case Yes => true
-			}
-		}
-	}
+	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = 
+		if (simplifyEquals(eq1, eq2)) { Yes } 
+		else { checkEval(variableName, eq1, eq2, vals) }
 
 	def simplifyEquals(eq1: MathMLElem, eq2: MathMLElem) = {
 		eq1.s == eq2.s

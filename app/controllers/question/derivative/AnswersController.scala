@@ -10,9 +10,10 @@ import service.User
 import models.question.derivative._
 import models.id._
 import org.joda.time.DateTime
-import models.organization.Courses
 import service.Own
 import service.Access
+import models.organization._
+import mathml.Match._
 
 object AnswersController extends Controller with SecureSocial {
 
@@ -24,23 +25,19 @@ object AnswersController extends Controller with SecureSocial {
 		val questionOp = Questions.find(questionId)
 		val answerOp = Answers.find(answerId)
 
-		val access = courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
-
 		(courseOp, quizOp, questionOp, answerOp) match {
-			case (Some(course), Some(quiz), Some(question), Some(answer)) => {
-				val access = Access(Courses.checkAccess(course.id))
-				val userAnswers = Questions.findAnswers(questionId, user)
-				val allAnswers = Questions.findAnswersAndOwners(questionId)
-				Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, Some(answer), userAnswers, allAnswers))
-			}
-			case (None, Some(quiz), Some(question), Some(answer)) => {
-				val access = Access(user, question.owner)
-				val userAnswers = Questions.findAnswers(questionId, user)
-				val allAnswers = Questions.findAnswersAndOwners(questionId)
-				Ok(views.html.question.derivative.questionView(access, None, quiz, question, Some(answer), userAnswers, allAnswers))
-			}
+			case (Some(course), Some(quiz), Some(question), Some(answer)) => 
+				questionView(Access(Courses.checkAccess(course.id)), Some(course), quiz, question, Some(Right(answer)))
+			case (None, Some(quiz), Some(question), Some(answer)) => 
+				questionView(Access(user, question.owner), None, quiz, question, Some(Right(answer)))
 			case _ => BadRequest(views.html.index())
 		}
+	}
+
+	private def questionView(access: Access, course: Option[Course], quiz: Quiz, question: Question, answer: Option[Either[AnswerTmp, Answer]])(implicit user: User) = {
+		val userAnswers = Questions.findAnswers(question.id, user)
+		val allAnswers = Questions.findAnswersAndOwners(question.id)
+		Ok(views.html.question.derivative.questionView(access, course, quiz, question, answer, userAnswers, allAnswers))
 	}
 
 	def create(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
@@ -51,8 +48,31 @@ object AnswersController extends Controller with SecureSocial {
 				val question = Questions.find(questionId).get // TODO check for no question here
 				val mathML = MathML(form._1).get // TODO can fail here
 				val rawStr = form._2
-				val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr, Answers.correct(question, mathML), DateTime.now))
-				Redirect(routes.AnswersController.view(quizId, questionId, answer.id, courseId))
+				
+				val correct = Answers.correct(question, mathML)
+
+				correct match {
+					case Yes => {
+						val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr, true, DateTime.now))
+						Redirect(routes.AnswersController.view(quizId, questionId, answer.id, courseId))
+					}
+					case No => {
+						val answer = Answers.createAnswer(AnswerTmp(user.id, question.id, mathML, rawStr, false, DateTime.now))
+						Redirect(routes.AnswersController.view(quizId, questionId, answer.id, courseId))
+					}
+					case Inconclusive => { // No state modification so we don't need to redirect
+						val answerTmp = AnswerTmp(user.id, question.id, mathML, rawStr, false, DateTime.now)
+						val courseOp = courseId.flatMap(Courses.find(_))
+						val quiz = Quizzes.find(quizId).get // TODO can error
+						
+						val access = 
+							if(courseOp.nonEmpty) { Access(Courses.checkAccess(courseOp.get.id)) }
+							else { Access(user, question.owner) }
+									
+						questionView(access, courseOp, quiz, question, Some(Left(answerTmp)))
+					}
+				}
+				
 			})
 	}
 

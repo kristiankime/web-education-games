@@ -14,14 +14,20 @@ import mathml.Match._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
-class MathMLCheckEqSpec extends Specification {
+class MathMLCheckEqPolynomialsSpec extends Specification {
 
-	"Checking equality between symbolic differentiation and manual derivative " should {
+	"Checking equality between symbolic differentiation and manual derivative for these polynomials" should {
 
 		"confirm (5x + 4)' = 5" in {
-			val f = (`5` * x + `4`)dx
+			val f = (`5` * x + `4`) dx
 			val g = `5`
 			(f ?= g) must beEqualTo(Yes)
+		}
+
+		"confirm (5x + 4)' != 4.9" in {
+			val f = (`5` * x + `4`) dx
+			val g = Cn(4.9)
+			(f ?= g) must beEqualTo(No)
 		}
 
 		"confirm (x^3)' = 3x^2" in {
@@ -31,27 +37,33 @@ class MathMLCheckEqSpec extends Specification {
 		}
 
 		"confirm (x^3)' != 4x^2" in {
-			val f = (x ^ `3`)dx
+			val f = (x ^ `3`) dx
 			val g = `4` * (x ^ `2`)
 			(f ?= g) must beEqualTo(No)
 		}
 
-		"confirm work for degree 2 polynomial (2 * x ^ 2 + -3 * x + -2)" in {
-			val f = (`2` * (x ^ `2`) + `-3` * x + `-2`)
-			val d = f.dx
-			MathML.checkEq("x", d, (`4` * x + `-3`)) must beEqualTo(Yes)
+		"confirm (2x^2 + -3x + -2)' = 4x -3" in {
+			val f = (`2` * (x ^ `2`) + `-3` * x + `-2`) dx
+			val g = (`4` * x - `3`)
+			(f ?= g) must beEqualTo(Yes)
 		}
 
-		"confirm work for degree 3 polynomial (x^3 + 3x + 4)" in {
-			val f = ((x ^ `3`) + `3` * x + `4`)
-			val d = f.dx
-			MathML.checkEq("x", d, (`3` * (x ^ `2`)) + `3`) must beEqualTo(Yes)
+		"confirm (2x^2 + -3x + -2)' != 3x -3" in {
+			val f = (`2` * (x ^ `2`) + `-3` * x + `-2`) dx
+			val g = (`3` * x - `3`)
+			(f ?= g) must beEqualTo(No)
+		}
+
+		"confirm (x^3 + 3x + 4)' = 3x^2+3" in {
+			val f = ((x ^ `3`) + `3` * x + `4`) dx
+			val g = (`3` * (x ^ `2`) + `3`)
+			(f ?= g) must beEqualTo(Yes)
 		}
 
 		"confirm (x^3 + 3x) = 3x^2 + 3" in {
-			val f = ((x ^ `3`) + `3` * x)
-			val d = f.dx
-			MathML.checkEq("x", d, (`3` * (x ^ `2`)) + `3`) must beEqualTo(Yes)
+			val f = ((x ^ `3`) + `3` * x) dx
+			val g = (`3` * (x ^ `2`) + `3`)
+			(f ?= g) must beEqualTo(Yes)
 		}
 
 		"confirm ln(x)' = 1 / x" in {
@@ -90,13 +102,13 @@ class MathMLCheckEqSpec extends Specification {
 			(f ?= g) must beEqualTo(Yes)
 		}
 
-		"confirm e ^ x' = e ^ x" in {
+		"confirm (e ^ x)' = e ^ x" in {
 			val f = (e ^ x) dx
 			val g = e ^ x
 			(f ?= g) must beEqualTo(Yes)
 		}
 
-		"confirm e ^ 10*x' = 10 * e ^ 10*x" in {
+		"confirm (e ^ 10*x)' = 10 * e ^ 10*x" in {
 			val f = (e ^ (`10` * x)) dx
 			val g = `10` * (e ^ (`10` * x))
 			(f ?= g) must beEqualTo(Yes)

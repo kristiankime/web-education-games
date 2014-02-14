@@ -18,6 +18,11 @@ case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, 
 	def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, correct, creationDate)
 }
 
+object AnswerTmp{
+	def apply(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean) : AnswerTmp = AnswerTmp(owner, questionId, mathML, rawStr, correct, creationDate)
+}
+
+
 object Answers {
 
 	def find(aid: AnswerId) = DB.withSession { implicit session: Session =>

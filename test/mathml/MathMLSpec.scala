@@ -193,7 +193,7 @@ class MathMLSpec extends Specification {
 			val v1 = x ^ `2`
 			val v2 = x - `2`
 
-			MathML.checkEq("x", v1, v2) must beEqualTo(Yes)
+			MathML.checkEq("x", v1, v2) must beEqualTo(No)
 		}
 
 		"be false for [2*x] & [x]" in {

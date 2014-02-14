@@ -34,36 +34,33 @@ object MathML {
 	val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
 	val vals = (Vector.fill(20)((ran.nextDouble * 2000d) - 1000d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
 
-	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = 
-		if (simplifyEquals(eq1, eq2)) { Yes } 
+	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) =
+		if (simplifyEquals(eq1, eq2)) { Yes }
 		else { checkEval(variableName, eq1, eq2, vals) }
 
 	def simplifyEquals(eq1: MathMLElem, eq2: MathMLElem) = {
 		eq1.s == eq2.s
 	}
 
-	private def closeEnough(v1: Try[Double], v2: Try[Double]) = {
+	private def closeEnough(v1: Try[Double], v2: Try[Double]) =
 		(v1, v2) match {
 			case (Success(x), Success(y)) => doubleCloseEnough(x, y)
 			case (Failure(_), Failure(_)) => Inconclusive
 			case (Failure(_), Success(_)) => No
 			case (Success(_), Failure(_)) => No
 		}
-	}
 
 	private val tooSmall = 1e-320
 	private def doubleCloseEnough(x: Double, y: Double) = {
 		if (x.isNaN || y.isNaN || x.isInfinite || y.isInfinite) Inconclusive
 		else if (x == y) Yes
-		else if (x < tooSmall && y < tooSmall) Inconclusive
+		else if (x.abs < tooSmall && y.abs < tooSmall) Inconclusive
 		else if (doubleNumbersCloseEnough(x, y)) Yes
 		else No
 	}
 
 	private val ε = .00001d
-	def doubleNumbersCloseEnough(x: Double, y: Double) = {
-		(x - y).abs <= ε * (x.abs + y.abs)
-	}
+	def doubleNumbersCloseEnough(x: Double, y: Double) = (x - y).abs <= ε * (x.abs + y.abs)
 
 	def apply(text: String): Try[MathMLElem] = Try(xml.XML.loadString(text)).flatMap(apply(_))
 

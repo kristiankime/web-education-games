@@ -66,7 +66,7 @@ class MathMLCheckEqExponentialSpec extends Specification {
 			(f ?= g) must beEqualTo(Yes)
 		}
 
-		"confirm e ^ -100*x' = -101 * e ^ -100*x" in {
+		"confirm e ^ -100*x' != -101 * e ^ -100*x" in {
 			val f = (e ^ (`-100` * x)) dx
 			val g = `-101` * (e ^ (`-100` * x))
 			(f ?= g) must beEqualTo(No)

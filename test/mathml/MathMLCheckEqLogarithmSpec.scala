@@ -17,7 +17,7 @@ import mathml.Match._
 class MathMLCheckEqLogarithmSpec extends Specification {
 
 	"Checking equality between symbolic differentiation and manual derivative " should {
-
+				
 		"confirm ln(x)' = 1 / x" in {
 			val f = ln(x) dx
 			val g = `1` / x

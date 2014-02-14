@@ -15,9 +15,9 @@ import mathml.scalar.apply.{ ApplyLog => log }
 @RunWith(classOf[JUnitRunner])
 class MathMLDerivativeSpec extends Specification {
 
-	"Checking equality between symbolic differentiaton and manual derivative " should {
+	"Checking symbolic differentiaton and manual derivative " should {
 
-		"ln(x)' = 1 / x" in {
+		"confirm ln(x)' = 1 / x" in {
 			(ln(x) dx) must beEqualTo(`1` / x)
 		}
 

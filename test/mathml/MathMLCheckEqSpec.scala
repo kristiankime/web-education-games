@@ -23,6 +23,13 @@ class MathMLCheckEqSpec extends Specification {
 			val g = x / x
 			(f ?= g) must beEqualTo(Yes)
 		}
+		
+		"confirm (x^2 - x^2)' = 0 " in {
+			val f = ((x^`2`) - (x^`2`))dx
+			val g = `0`
+			(f ?= g) must beEqualTo(Yes)
+		}
+
 
 	}
 

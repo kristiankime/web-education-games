@@ -33,7 +33,7 @@ object Answers {
 		answerTmp((new AnswersTable).insert(answerTmp))
 	}
 	
-	def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathML.checkEq("x", question.mathML.d("x"), mathML)
+	def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathMLEq.checkEq("x", question.mathML.d("x"), mathML)
 
 	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
 		Query(new AnswersTable).where(_.questionId === qid).list

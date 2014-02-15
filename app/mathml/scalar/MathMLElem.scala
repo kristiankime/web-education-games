@@ -79,6 +79,6 @@ abstract class MathMLElem(
 
 	def ^(m: MathMLElem) = ApplyPower(this, m)
 
-	def ?=(e: MathMLElem) = MathML.checkEq("x", this, e)
+	def ?=(e: MathMLElem) = MathMLEq.checkEq("x", this, e)
 
 }

@@ -17,21 +17,18 @@
     <body>
 
     <header>
-        [ <a href="@routes.Application.index"> Home </a> ]
-        [ <a href="@routes.Application.userInfo"> User( @user.email ) </a> ]
-        @for(header <- headers) {
-        	[ @header ]
-        }
-        [ @title ]
+    	<div class="header-links">
+        	<a class="button-link" href="@routes.Application.index">Home</a>
+        	<a class="button-link" href="@routes.Application.userInfo">User(@user.email)</a>
+        	@for(header <- headers) {
+        		@header
+        	}
+        </div>
     </header>
 
-	<hr>
-
-    <section>
+    <section class="content">
         @content
     </section>
-
-	<hr>
 
 	<footer>
 	    Currently we are in very preliminary stages of development and most things are subject to change. <br>

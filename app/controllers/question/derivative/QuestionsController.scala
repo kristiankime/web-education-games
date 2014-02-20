@@ -52,6 +52,16 @@ object QuestionsController extends Controller with SecureSocial {
 			})
 	}
 
+	def remove(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		(Quizzes.find(quizId), Questions.find(questionId)) match {
+			case (Some(quiz), Some(question)) => {
+				Questions.remove(quiz, question)
+				Redirect(routes.QuizzesController.view(quizId, courseId))
+			}
+			case _ => BadRequest(views.html.index())
+		}
+	}
 }
 
 object QuestionForm {

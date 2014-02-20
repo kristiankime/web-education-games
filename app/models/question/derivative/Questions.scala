@@ -56,4 +56,7 @@ object Questions {
 		info(questionId)
 	}
 
+	def remove(quiz: Quiz, question: Question) = DB.withSession { implicit session: Session =>
+		(new QuizzesQuestionsTable).where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+	}
 }

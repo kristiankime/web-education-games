@@ -18,21 +18,24 @@
 
     <header>
     	<div class="header-links">
-        	<a class="header-link" href="@routes.Application.index">Home</a>
-        	<a class="header-link" href="@routes.Application.userInfo">User(@user.email)</a>
+        	[<a href="@routes.Application.index">Home</a>]
+        	[<a href="@routes.Application.userInfo">User(@user.email)</a>]
         	@for(header <- headers) {
         		@header
         	}
         </div>
     </header>
 
+	<hr>
+	
     <section class="content">
         @content
     </section>
 
+	<hr>
+
 	<footer>
-	    Currently we are in very preliminary stages of development and most things are subject to change. <br>
-		If you any feedback please <a href="mailto:edutech.brandeis@@gmail.com?subject=EduTech Calculus CoTutor"> email us</a> 
+	    This site is is in Beta. If you any feedback please <a href="mailto:edutech.brandeis@@gmail.com?subject=EduTech Calculus CoTutor">email us</a> 
 	</footer>
 
     </body>

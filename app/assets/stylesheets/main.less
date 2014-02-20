@@ -6,15 +6,15 @@
 @dark: #17699D;
 
 @header-height: 50px;
-@footer-height: 50px;
+@footer-height: 20px;
 
 // http://www.cssreset.com/creating-fixed-headers-with-css/
-body{
+.body{
 	margin:0px;
     background:@white;
 }
 
-header {
+.header {
     height: @header-height;
     background:@light;
     border:1px solid @medium;
@@ -27,13 +27,14 @@ header {
 	margin: 15px auto;
 }
 
-footer {
+.footer {
     height: @footer-height;
     background:@light;
     border:1px solid @medium;
     width:100%;
     position:fixed;
     bottom:0px;
+    color: @white
 }
 
 .content {

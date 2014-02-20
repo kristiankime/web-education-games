@@ -19,10 +19,10 @@
     <ul>
         @questions.map { question =>
             <li>
-            	@math.mathmlContent(question)
-                [<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
+            	@math.mathmlContent(question) 
+            	[<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
                 @if(access.write){ 
-                	@form(routes.QuestionsController.remove(quiz.id, question.id, course.map(_.id))) { <input type="submit" value="remove"> } 
+                	@form(routes.QuestionsController.remove(quiz.id, question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
                 }
             </li>
         }

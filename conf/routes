@@ -28,6 +28,7 @@ GET    /quizzes                                    controllers.question.derivati
 GET    /quizzes/add                                controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
 POST   /quizzes                                    controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
 GET    /quizzes/:id                                controllers.question.derivative.QuizzesController.view(id: QuizId, cid: Option[CourseId])
+POST   /quizzes/:id/rename                         controllers.question.derivative.QuizzesController.rename(id: QuizId, cid: Option[CourseId])
 # Questions
 GET    /quizzes/:qid/questions/:id                 controllers.question.derivative.QuestionsController.view(qid: QuizId, id: QuestionId, cid: Option[CourseId])
 POST   /quizzes/:qid/questions                     controllers.question.derivative.QuestionsController.create(qid: QuizId, cid: Option[CourseId])

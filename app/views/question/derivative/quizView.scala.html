@@ -3,6 +3,7 @@
 @import helper._
 @import controllers.organization.routes._
 @import controllers.question.derivative._ 
+@import controllers.question.derivative.QuizForm 
  
 @main("Quiz " + quiz.name) {
     
@@ -10,11 +11,14 @@
     
     @for(c <- course){ <h5> This is a quiz for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
     
-    <p>
-    	Pick one of the equations below:
-    </p>
+    @if(access.write){
+    	@form(routes.QuizzesController.rename(quiz.id, course.map(_.id)), 'class -> "inline-block") {
+     		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quiz.name"> 
+    		and click <input type="submit" value="rename" > 
+    	} 
+    }
     
-    <h4>There are @questions.size Question(s)</h4>
+    <h4>There are @questions.size Question(s) in the quiz</h4>
     
     <ul>
         @questions.map { question =>
@@ -33,7 +37,7 @@
 	    
 	    <p>
 			Type in an equation and press "Save Question": <br> 
-			Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow), ln, sin, cos, tan, ) <br> 
+			Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow) or log_base(pow), ln, sin, cos, tan) <br> 
 			@math.mathmlEditor("QUESTION")
 		</p>
 	

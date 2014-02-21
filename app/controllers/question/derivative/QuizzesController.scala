@@ -45,6 +45,16 @@ object QuizzesController extends Controller with SecureSocial {
 			case _ => BadRequest(views.html.index())
 		}
 	}
+	
+	def rename(quizId: QuizId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
+		implicit val user = User(request)
+		QuizForm.values.bindFromRequest.fold(
+			errors => BadRequest(views.html.index()),
+			form => {
+				Quizzes.rename(quizId, form)				
+				Redirect(routes.QuizzesController.view(quizId, courseId))
+			})
+	}
 }
 
 object QuizForm {

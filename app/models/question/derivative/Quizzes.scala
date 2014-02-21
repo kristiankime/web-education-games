@@ -39,6 +39,13 @@ object Quizzes {
 		quizId
 	}
 
+	def rename(quizId: QuizId, name: String) = DB.withSession { implicit session: Session =>
+		Query(new QuizzesTable).where(_.id === quizId).firstOption match {
+			case Some(quiz) => { Query(new QuizzesTable).where(_.id === quizId).update(quiz.copy(name = name)); true }
+			case None => false
+		}
+	}
+	
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
 		(for (
 			q <- (new QuizzesTable);

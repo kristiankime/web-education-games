@@ -26,39 +26,45 @@ class SectionSpec extends Specification {
 	"granting access to a section" should {
 
 		"grant a student view access to the section and the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			val owner = DBTest.fakeUser(UserTmpTest())
-			val course = Courses.create(CoursesTmpTest(owner = owner.id))
-			val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
 
-			val student = DBTest.fakeUser(UserTmpTest())
-			Sections.grantAccess(student, section, View) // View indicates student
-			
-			Sections.findDetails(section.id)(student).get.a must beEqualTo(View)
-			Courses.checkAccess(course.id)(student).get must beEqualTo(View)
+				val student = DBTest.fakeUser(UserTmpTest())
+				Sections.grantAccess(student, section, View) // View indicates student
+
+				Sections.findDetails(section.id)(student).get.a must beEqualTo(View)
+				Courses.checkAccess(course.id)(student, session).get must beEqualTo(View)
+			}
 		}
 
 		"grant a teacher edit access to the section and the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			val owner = DBTest.fakeUser(UserTmpTest())
-			val course = Courses.create(CoursesTmpTest(owner = owner.id))
-			val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
 
-			val student = DBTest.fakeUser(UserTmpTest())
-			Sections.grantAccess(student, section, Edit) // Edit indicates Teacher
-			
-			Sections.findDetails(section.id)(student).get.a must beEqualTo(Edit)
-			Courses.checkAccess(course.id)(student).get must beEqualTo(Edit)
+				val student = DBTest.fakeUser(UserTmpTest())
+				Sections.grantAccess(student, section, Edit) // Edit indicates Teacher
+
+				Sections.findDetails(section.id)(student).get.a must beEqualTo(Edit)
+				Courses.checkAccess(course.id)(student, session).get must beEqualTo(Edit)
+			}
 		}
-		
-		"never lower access to a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			val courseOwner = DBTest.fakeUser(UserTmpTest())
-			val course = Courses.create(CoursesTmpTest(owner = courseOwner.id))
-			val sectionOwner = DBTest.fakeUser(UserTmpTest())
-			val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
 
-			Sections.grantAccess(courseOwner, section, View) 
-			
-			Sections.findDetails(section.id)(courseOwner).get.a must beEqualTo(View)
-			Courses.checkAccess(course.id)(courseOwner).get must beEqualTo(Own)
+		"never lower access to a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val courseOwner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = courseOwner.id))
+				val sectionOwner = DBTest.fakeUser(UserTmpTest())
+				val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
+
+				Sections.grantAccess(courseOwner, section, View)
+
+				Sections.findDetails(section.id)(courseOwner).get.a must beEqualTo(View)
+				Courses.checkAccess(course.id)(courseOwner, session).get must beEqualTo(Own)
+			}
 		}
 	}
 }

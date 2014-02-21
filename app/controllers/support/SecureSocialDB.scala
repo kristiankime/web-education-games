@@ -14,7 +14,6 @@ import service.User
 trait SecureSocialDB extends SecureSocial {
 
 	object SecuredUserAction {
-
 		def apply(f: SecuredRequest[AnyContent] => User => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
 			val user = User(request)
 			f(request)(user)

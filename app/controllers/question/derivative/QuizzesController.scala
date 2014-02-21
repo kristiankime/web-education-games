@@ -13,17 +13,15 @@ import mathml.MathML
 import org.joda.time.DateTime
 import models.organization.Courses
 import models.organization.Sections
+import controllers.support.SecureSocialDB
 
-object QuizzesController extends Controller with SecureSocial {
-	def list = TODO
+object QuizzesController extends Controller with SecureSocialDB {
 
-	def add(courseId: Option[CourseId]) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def add(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses.find(_))))
 	}
 
-	def create(courseId: Option[CourseId]) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		QuizForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
@@ -32,9 +30,7 @@ object QuizzesController extends Controller with SecureSocial {
 			})
 	}
 
-	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
-		implicit val user = User(request)
-		
+	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		val courseOp = courseId.flatMap(Courses.find(_))
 		val quizOp = Quizzes.find(quizId)
 		val access = courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
@@ -46,8 +42,7 @@ object QuizzesController extends Controller with SecureSocial {
 		}
 	}
 	
-	def rename(quizId: QuizId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def rename(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		QuizForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {

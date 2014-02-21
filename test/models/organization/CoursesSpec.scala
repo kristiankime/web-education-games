@@ -24,80 +24,94 @@ class CoursesSpec extends Specification {
 
 	"listDetails: access to course" should {
 
-				"be Non when a user has no connection to the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-					val owner = DBTest.fakeUser(UserTmpTest())
-					val accessor = DBTest.fakeUser(UserTmpTest())
-					val course = Courses.create(CoursesTmpTest(owner = owner.id))
-					val courseDetails = Courses.listDetails(accessor)(0)
-		
-					courseDetails.a must beEqualTo(Non)
-				}
-		
-				"be Own when a user is the owner of the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-					val owner = DBTest.fakeUser(UserTmpTest())
-					val course = Courses.create(CoursesTmpTest(owner = owner.id))
-					val courseDetails = Courses.listDetails(owner)(0)
-		
-					courseDetails.a must beEqualTo(Own)
-				}
-		
-				"be Edit when a user is not the owner of the course but has edit access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-					val owner = DBTest.fakeUser(UserTmpTest())
-					val accessor = DBTest.fakeUser(UserTmpTest())
-					val course = Courses.create(CoursesTmpTest(owner = owner.id))
-					Courses.grantAccess(accessor, course, Edit)
-					val courseDetails = Courses.listDetails(accessor)(0)
-		
-					courseDetails.a must beEqualTo(Edit)
-				}
-		
-				"be View when a user is not the owner of the course but has view access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-					val owner = DBTest.fakeUser(UserTmpTest())
-					val accessor = DBTest.fakeUser(UserTmpTest())
-					val course = Courses.create(CoursesTmpTest(owner = owner.id))
-					Courses.grantAccess(accessor, course, Edit)
-					val courseDetails = Courses.listDetails(accessor)(0)
-		
-					courseDetails.a must beEqualTo(Edit)
-				}
-				
-				"be Own when a user is the owner of the course even if they have other lower access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-					val owner = DBTest.fakeUser(UserTmpTest())
-					val course = Courses.create(CoursesTmpTest(owner = owner.id))
-					Courses.grantAccess(owner, course, Edit)
-					val courseDetails = Courses.listDetails(owner)(0)
-		
-					courseDetails.a must beEqualTo(Own)
-				}
+		"be Non when a user has no connection to the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val accessor = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				val courseDetails = Courses.listDetails(accessor, session)(0)
+
+				courseDetails.a must beEqualTo(Non)
+			}
+		}
+
+		"be Own when a user is the owner of the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				val courseDetails = Courses.listDetails(owner, session)(0)
+
+				courseDetails.a must beEqualTo(Own)
+			}
+		}
+
+		"be Edit when a user is not the owner of the course but has edit access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val accessor = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				Courses.grantAccess(accessor, course, Edit)
+				val courseDetails = Courses.listDetails(accessor, session)(0)
+
+				courseDetails.a must beEqualTo(Edit)
+			}
+		}
+
+		"be View when a user is not the owner of the course but has view access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val accessor = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				Courses.grantAccess(accessor, course, Edit)
+				val courseDetails = Courses.listDetails(accessor, session)(0)
+
+				courseDetails.a must beEqualTo(Edit)
+			}
+		}
+
+		"be Own when a user is the owner of the course even if they have other lower access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				Courses.grantAccess(owner, course, Edit)
+				val courseDetails = Courses.listDetails(owner, session)(0)
+
+				courseDetails.a must beEqualTo(Own)
+			}
+		}
 
 		"be Own for the owner, Edit for a section teacher and View for a section Student" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			val owner = DBTest.fakeUser(UserTmpTest())
-			val teacher = DBTest.fakeUser(UserTmpTest())
-			val student = DBTest.fakeUser(UserTmpTest())
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val teacher = DBTest.fakeUser(UserTmpTest())
+				val student = DBTest.fakeUser(UserTmpTest())
 
-			val course = Courses.create(CoursesTmpTest(owner = owner.id))
-			val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
 
-			Sections.grantAccess(teacher, section, Edit)
-			Sections.grantAccess(student, section, View)
+				Sections.grantAccess(teacher, section, Edit)
+				Sections.grantAccess(student, section, View)
 
-			Courses.listDetails(owner)(0).a must beEqualTo(Own)
-			Courses.listDetails(teacher)(0).a must beEqualTo(Edit)
-			Courses.listDetails(student)(0).a must beEqualTo(View)
+				Courses.listDetails(owner, session)(0).a must beEqualTo(Own)
+				Courses.listDetails(teacher, session)(0).a must beEqualTo(Edit)
+				Courses.listDetails(student, session)(0).a must beEqualTo(View)
+			}
 		}
 	}
 
 	"access to section" should {
 
 		"be Non when a user has no connection to the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			val owner = DBTest.fakeUser(UserTmpTest())
-			val accessor = DBTest.fakeUser(UserTmpTest())
-			val course = Courses.create(CoursesTmpTest(owner = owner.id))
-			val section = Sections.create(SectionTmpTest(courseId = course.id, owner = owner.id))
+			DB.withSession { implicit session: Session =>
+				val owner = DBTest.fakeUser(UserTmpTest())
+				val accessor = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = owner.id))
+				val section = Sections.create(SectionTmpTest(courseId = course.id, owner = owner.id))
 
-			val sectionDetails = Courses.findDetails(course.id)(accessor).get.sections(0)
+				val sectionDetails = Courses.findDetails(course.id)(accessor, session).get.sections(0)
 
-			sectionDetails.a must beEqualTo(Non)
+				sectionDetails.a must beEqualTo(Non)
+			}
 		}
 	}
 }

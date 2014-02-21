@@ -9,16 +9,15 @@ import play.api.db.slick.DB
 import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
+import controllers.support.SecureSocialDB
 
-object EquationController extends Controller with SecureSocial {
+object EquationController extends Controller with SecureSocialDB {
 
-	def equations = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def equations = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
 	}
 
-	def newEquation = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def newEquation = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		EquationHTML.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.equations(EquationsModel.all(), errors)),
 			equation => {
@@ -27,8 +26,7 @@ object EquationController extends Controller with SecureSocial {
 			})
 	}
 
-	def deleteEquation(id: Long) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def deleteEquation(id: Long) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		EquationsModel.delete(id)
 		Ok(views.html.equations(EquationsModel.all(), EquationHTML.form))
 	}

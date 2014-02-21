@@ -14,10 +14,11 @@ import models.id._
 import models.organization.Courses
 import org.joda.time.DateTime
 import service._
+import controllers.support.SecureSocialDB
 
-object QuestionsController extends Controller with SecureSocial {
+object QuestionsController extends Controller with SecureSocialDB {
 
-	def view(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
+	def view(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		implicit val user = User(request)
 
 		val courseOp = courseId.flatMap(Courses.find(_))
@@ -41,7 +42,7 @@ object QuestionsController extends Controller with SecureSocial {
 		}
 	}
 
-	def create(quizId: QuizId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
+	def create(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		implicit val user = User(request)
 		QuestionForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
@@ -52,7 +53,7 @@ object QuestionsController extends Controller with SecureSocial {
 			})
 	}
 
-	def remove(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
+	def remove(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		implicit val user = User(request)
 		(Quizzes.find(quizId), Questions.find(questionId)) match {
 			case (Some(quiz), Some(question)) => {

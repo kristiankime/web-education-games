@@ -16,12 +16,12 @@ import service.Access
 import scala.util._
 import org.joda.time.DateTime
 import org.joda.time.DateTime.now
+import controllers.support.SecureSocialDB
+import scala.slick.session.Session
 
-object AnswersController extends Controller with SecureSocial {
+object AnswersController extends Controller with SecureSocialDB {
 
-	def view(quizId: QuizId, questionId: QuestionId, answerId: AnswerId, courseId: Option[CourseId]) = SecuredAction { implicit request =>
-		implicit val user = User(request)
-
+	def view(quizId: QuizId, questionId: QuestionId, answerId: AnswerId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		val courseOp = courseId.flatMap(Courses.find(_))
 		val quizOp = Quizzes.find(quizId)
 		val questionOp = Questions.find(questionId)
@@ -33,8 +33,7 @@ object AnswersController extends Controller with SecureSocial {
 		}
 	}
 
-	def create(qzId: QuizId, quId: QuestionId, cId: Option[CourseId]) = SecuredAction { implicit request =>
-		implicit val u = User(request)
+	def create(qzId: QuizId, quId: QuestionId, cId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		AnswerForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
@@ -46,7 +45,7 @@ object AnswersController extends Controller with SecureSocial {
 
 				(questionOp, mathOp, quizOp) match {
 					case (Some(qu), Success(m), Some(qz)) => {
-						val aTmp = AnswerTmp(u.id, qu.id, m, rawStr, now)_
+						val aTmp = AnswerTmp(user.id, qu.id, m, rawStr, now)_
 						Answers.correct(qu, m) match {
 							case Yes => Redirect(routes.AnswersController.view(qz.id, qu.id, Answers.createAnswer(aTmp(true)).id, cId))
 							case No => Redirect(routes.AnswersController.view(qz.id, qu.id, Answers.createAnswer(aTmp(false)).id, cId))
@@ -64,8 +63,8 @@ object AnswersController extends Controller with SecureSocial {
 		Ok(views.html.question.derivative.questionView(access, course, quiz, question, answer, userAnswers, allAnswers))
 	}
 
-	private def access(qu: Question, cOp: Option[Course])(implicit user: User) = {
-		val cAccess = Access(cOp.flatMap(c => Courses.checkAccess(c.id)(user)))
+	private def access(qu: Question, cOp: Option[Course])(implicit user: User, session: Session) = {
+		val cAccess = Access(cOp.flatMap(c => Courses.checkAccess(c.id)))
 		val qAccess = Access(user, qu.owner)
 		Access.better(cAccess, qAccess)
 	}

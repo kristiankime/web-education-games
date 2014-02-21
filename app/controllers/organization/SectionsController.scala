@@ -12,22 +12,21 @@ import models.id._
 import org.joda.time.DateTime
 import service._
 import scala.util.Random
+import controllers.support.SecureSocialDB
 
-object SectionsController extends Controller with SecureSocial {
+object SectionsController extends Controller with SecureSocialDB {
 	val randomEngine = new Random(0L)
 
 	def list(courseId: CourseId) = TODO
 
-	def add(courseId: CourseId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def add(courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Courses.find(courseId) match {
 			case Some(course) => Ok(views.html.organization.sectionAdd(course))
 			case None => BadRequest(views.html.index())
 		}
 	}
 
-	def create(courseId: CourseId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def create(courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		SectionCreate.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
@@ -39,17 +38,14 @@ object SectionsController extends Controller with SecureSocial {
 	}
 
 	// TODO theoretically the wrong CourseId could be passed in here and this would still work
-	def view(courseId: CourseId, id: SectionId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		(Courses.find(courseId), Sections.findDetails(id)) match {
 			case (Some(course), Some(sectionDetails)) => Ok(views.html.organization.sectionView(course, sectionDetails, Quizzes.findByCourse(courseId)))
 			case _ => BadRequest(views.html.index())
 		}
 	}
 
-	def join(courseId: CourseId, id: SectionId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
-
+	def join(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		SectionJoin.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {

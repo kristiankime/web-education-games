@@ -12,22 +12,20 @@ import models.id._
 import org.joda.time.DateTime
 import scala.util.Random
 import service._
+import controllers.support.SecureSocialDB
 
-object CoursesController extends Controller with SecureSocial {
+object CoursesController extends Controller with SecureSocialDB {
 	val randomEngine = new Random(0L)
 
-	def list = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def list = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.organization.courseList(Courses.listDetails))
 	}
 
-	def add = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def add = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.organization.courseAdd())
 	}
 
-	def create = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def create = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseCreate.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
@@ -38,16 +36,14 @@ object CoursesController extends Controller with SecureSocial {
 			})
 	}
 
-	def view(id: CourseId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def view(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Courses.findDetails(id) match {
 			case Some(courseDetails) => Ok(views.html.organization.courseView(courseDetails, Quizzes.findByCourse(id)))
 			case None => BadRequest(views.html.index())
 		}
 	}
 
-	def join(id: CourseId) = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def join(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseJoin.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {

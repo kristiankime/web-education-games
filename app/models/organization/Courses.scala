@@ -28,25 +28,25 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
  */
 object Courses {
 
-	def checkAccess(courseId: CourseId)(implicit user: User) = DB.withSession { implicit session: Session =>
+	def checkAccess(courseId: CourseId)(implicit user: User, session: Session) = {
 		val courseOwner = Queries.owner(courseId, new CoursesTable)
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
 		courseAccess.firstOption.map(v => Access(user, v._2, v._3))
 	}
 	
-	def findDetails(courseId: CourseId)(implicit user: User) = DB.withSession { implicit session: Session =>
+	def findDetails(courseId: CourseId)(implicit user: User, session: Session) = {
 		val courseOwner = Queries.owner(courseId, new CoursesTable)
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
 		courseAccess.firstOption.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
-	def listDetails(implicit user: User) = DB.withSession { implicit session: Session =>
+	def listDetails(implicit user: User, session: Session) = {
 		val coursesOwners = Queries.owners(new CoursesTable)
 		val coursesAccess = Queries.access(user, new UsersCoursesTable, coursesOwners)
 		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
-	private def sectionsDetailsFor(courseId: CourseId /*, access: Access*/ )(implicit user: User, session: Session) = {
+	private def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = {
 		val sectionsOwners = (for (
 			s <- (new SectionsTable) if s.courseId === courseId;
 			u <- (new UserTable) if u.id === s.owner
@@ -55,17 +55,11 @@ object Courses {
 		sectionsAccess.list.map(Access.accessMap(_ /*, access*/ )).map(SectionDetails(_))
 	}
 
-	def create(courseTmp: CourseTmp) = DB.withSession { implicit session: Session =>
-		courseTmp((new CoursesTable).insert(courseTmp))
-	}
+	def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
 
-	def grantAccess(user: User, course: Course, access: Access) = DB.withSession { implicit session: Session =>
-		(new UsersCoursesTable).insert(User2Course(user.id, course.id, access))
-	}
+	def grantAccess(user: User, course: Course, access: Access)(implicit session: Session) = (new UsersCoursesTable).insert(User2Course(user.id, course.id, access))
 
-	def find(id: CourseId) = DB.withSession { implicit session: Session =>
-		Query(new CoursesTable).where(_.id === id).firstOption
-	}
+	def find(id: CourseId)(implicit session: Session) = Query(new CoursesTable).where(_.id === id).firstOption
 
 	def findByUser(userId: UserId)(implicit session: Session) = {
 		(for (

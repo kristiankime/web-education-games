@@ -24,7 +24,6 @@ POST   /courses/:cid/sections/:id/join             controllers.organization.Sect
 
 # Questions pages
 # Quizzes
-GET    /quizzes                                    controllers.question.derivative.QuizzesController.list
 GET    /quizzes/add                                controllers.question.derivative.QuizzesController.add(cid: Option[CourseId])
 POST   /quizzes                                    controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
 GET    /quizzes/:id                                controllers.question.derivative.QuizzesController.view(id: QuizId, cid: Option[CourseId])

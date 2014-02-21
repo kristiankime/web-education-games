@@ -10,21 +10,14 @@ case class Equation(id: Long, equation: String)
 object EquationsModel {
 	val table = new EquationsTable
 
-	def all() = DB.withSession { implicit session: Session =>
-		Query(table).list
-	}
+	def all()(implicit session: Session) = Query(table).list
 
-	def create(equation: String): Long = DB.withSession { implicit session: Session =>
-		table.autoInc.insert(equation)
-	}
+	def create(equation: String)(implicit session: Session): Long = table.autoInc.insert(equation)
 
-	def read(id: Long) = DB.withSession { implicit session: Session =>
-		Query(table).where(_.id === id).firstOption
-	}
+	def read(id: Long)(implicit session: Session) =	Query(table).where(_.id === id).firstOption
 
-	def delete(id: Long) = DB.withSession { implicit session: Session =>
-		table.where(_.id === id).delete
-	}
+	def delete(id: Long)(implicit session: Session) = table.where(_.id === id).delete
+
 }
 
 class EquationsTable extends Table[Equation]("equations") {

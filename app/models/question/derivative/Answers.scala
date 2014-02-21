@@ -25,26 +25,17 @@ object AnswerTmp{
 
 object Answers {
 
-	def find(aid: AnswerId) = DB.withSession { implicit session: Session =>
-		Query(new AnswersTable).where(_.id === aid).firstOption
-	}
+	def find(aid: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(_.id === aid).firstOption
 
-	def createAnswer(answerTmp: AnswerTmp) = DB.withSession { implicit session: Session =>
-		answerTmp((new AnswersTable).insert(answerTmp))
-	}
+	def createAnswer(answerTmp: AnswerTmp)(implicit session: Session) = answerTmp((new AnswersTable).insert(answerTmp))
 	
 	def correct(question: Question, mathML: mathml.scalar.MathMLElem) = MathMLEq.checkEq("x", question.mathML.d("x"), mathML)
 
-	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(new AnswersTable).where(_.questionId === qid).list
-	}
+	def findAnswers(qid: QuestionId)(implicit session: Session) = Query(new AnswersTable).where(_.questionId === qid).list
+	
+	def findAnswer(qid: QuestionId, aid: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
 
-	def findAnswer(qid: QuestionId, aid: AnswerId) = DB.withSession { implicit session: Session =>
-		Query(new AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
-	}
+	def deleteAnswer(id: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(_.id === id).delete
 
-	def deleteAnswer(id: AnswerId) = DB.withSession { implicit session: Session =>
-		Query(new AnswersTable).where(_.id === id).delete
-	}
 }
 

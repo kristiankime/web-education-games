@@ -20,28 +20,22 @@ case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode:
 
 object Sections {
 
-	def findDetails(sectionId: SectionId)(implicit user: User) = DB.withSession { implicit session: Session =>
+	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) = {
 		val sectionOwner = Queries.owner(sectionId, new SectionsTable)
 		val sectionAccess = Queries.access(user, new UsersSectionsTable, sectionOwner)
 		sectionAccess.firstOption.map(Access.accessMap(_)).map(v => SectionDetails(v))
 	}
 
-	def find(sectionId: SectionId) = DB.withSession { implicit session: Session =>
-		Query(new SectionsTable).where(_.id === sectionId).firstOption
-	}
+	def find(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
 
-	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
-		Query(new SectionsTable).where(_.courseId === courseId).list
-	}
+	def findByCourse(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).list
 
-	def create(sectionTmp: SectionTmp) = DB.withSession { implicit session: Session =>
-		sectionTmp((new SectionsTable).insert(sectionTmp))
-	}
+	def create(sectionTmp: SectionTmp)(implicit session: Session) = sectionTmp((new SectionsTable).insert(sectionTmp))
 
 	/**
 	 * Granting access to the section also grants access to the course
 	 */
-	def grantAccess(student: User, section: Section, access: Access) = DB.withSession { implicit session: Session =>
+	def grantAccess(student: User, section: Section, access: Access)(implicit session: Session) = {
 		(new UsersCoursesTable).insert(User2Course(student.id, section.courseId, access))
 		(new UsersSectionsTable).insert(User2Section(student.id, section.id, access))
 	}

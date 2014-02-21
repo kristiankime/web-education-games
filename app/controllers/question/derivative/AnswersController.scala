@@ -57,7 +57,7 @@ object AnswersController extends Controller with SecureSocialDB {
 			})
 	}
 
-	private def questionView(access: Access, course: Option[Course], quiz: Quiz, question: Question, answer: Option[Either[AnswerTmp, Answer]])(implicit user: User) = {
+	private def questionView(access: Access, course: Option[Course], quiz: Quiz, question: Question, answer: Option[Either[AnswerTmp, Answer]])(implicit user: User, session: Session) = {
 		val userAnswers = Questions.findAnswers(question.id, user)
 		val allAnswers = Questions.findAnswersAndOwners(question.id)
 		Ok(views.html.question.derivative.questionView(access, course, quiz, question, answer, userAnswers, allAnswers))

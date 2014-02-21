@@ -26,37 +26,26 @@ case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creati
 
 object Questions {
 
-	def allQuestions() = DB.withSession { implicit session: Session =>
-		Query(new QuestionsTable).list
-	}
+	def allQuestions()(implicit session: Session) = Query(new QuestionsTable).list
 
-	def find(questionId: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(new QuestionsTable).where(_.id === questionId).firstOption
-	}
+	def find(questionId: QuestionId)(implicit session: Session) = Query(new QuestionsTable).where(_.id === questionId).firstOption
 
-	def findAnswers(qid: QuestionId) = DB.withSession { implicit session: Session =>
-		Query(new AnswersTable).where(_.questionId === qid).list
-	}
+	def findAnswers(qid: QuestionId)(implicit session: Session) = Query(new AnswersTable).where(_.questionId === qid).list
 
-	def findAnswersAndOwners(qid: QuestionId) = DB.withSession { implicit session: Session =>
+	def findAnswersAndOwners(qid: QuestionId)(implicit session: Session) =
 		(for (
 			a <- (new AnswersTable) if a.questionId === qid;
 			u <- (new UserTable) if u.id === a.owner
 		) yield (a, u)).list
-		//		Query(new AnswersTable).where(_.questionId === qid).list
-	}
 
-	def findAnswers(qid: QuestionId, owner: User) = DB.withSession { implicit session: Session =>
-		Query(new AnswersTable).where(r => r.questionId === qid && r.owner === owner.id).list
-	}
+	def findAnswers(qid: QuestionId, owner: User)(implicit session: Session) = Query(new AnswersTable).where(r => r.questionId === qid && r.owner === owner.id).list
 
-	def create(info: QuestionTmp, quiz: QuizId) = DB.withSession { implicit session: Session =>
+	def create(info: QuestionTmp, quiz: QuizId)(implicit session: Session) ={
 		val questionId = (new QuestionsTable).insert(info)
 		(new QuizzesQuestionsTable).insert(Quiz2Question(quiz, questionId))
 		info(questionId)
 	}
 
-	def remove(quiz: Quiz, question: Question) = DB.withSession { implicit session: Session =>
-		(new QuizzesQuestionsTable).where(r => r.questionId === question.id && r.quizId === quiz.id).delete
-	}
+	def remove(quiz: Quiz, question: Question)(implicit session: Session) = (new QuizzesQuestionsTable).where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+
 }

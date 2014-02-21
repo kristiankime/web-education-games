@@ -10,45 +10,48 @@ import mathml.scalar.apply._
 import service.table._
 import models.id._
 import models.DBTest
+import models.DBTest.inMemH2
 import service._
 import org.joda.time.DateTime
+import play.api.db.slick.DB
+import scala.slick.session.Session
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {
 
-//	"Questions" should {
-//		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-//			val user = DBTest.fakeUser(UserTmpTest())
-//			val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", true, DateTime.now)
-//			val id = Questions.create(QuestionTmp)
-//			val eq = Questions.findQuestion(id)
-//
-//			eq.get must beEqualTo(Question(id, x + `1`, "x + 1", true, DateTime.now))
-//		}
+	"Questions" should {
+		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = DBTest.fakeUser(UserTmpTest())
+				val qzId = Quizzes.create(QuizTmp(user.id, "test", DateTime.now), None)
+				val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", DateTime.now)
+				val question = Questions.create(qTmp, qzId)
+				val eq = Questions.find(question.id)
 
-//		"return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-//			val user = DBTest.fakeUser(UserTmpTest())
-//			Questions.create(QuestionTmp(user.id, x + `1`, "x + 2", true))
-//			Questions.create(user, x + `2`, "x + 2", true)
-//
-//			val eqs = Questions.allQuestions.map(_.mathML)
-//			eqs must beEqualTo(List(x + `1`, x + `2`))
-//		}
+				eq.get must beEqualTo(question)
+			}
+		}
 
-//		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-//			val eq = Questions.findQuestion(QuestionId(Int.MaxValue))
-//
-//			eq must beNone
-//		}
+		"return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = DBTest.fakeUser(UserTmpTest())
+				val qzId = Quizzes.create(QuizTmp(user.id, "test", DateTime.now), None)
 
-//		"delete a question when requested" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-//			val user = DBTest.fakeUser(UserTmpTest())
-//			val id = Questions.createQuestion(user, x + `2`, "x + 2", true)
-//			Questions.deleteQuestion(id)
-//			val eq = Questions.findQuestion(id)
-//
-//			eq must beNone
-//		}
-//	}
+				Questions.create(QuestionTmp(user.id, x + `1`, "x + 2", DateTime.now), qzId)
+				Questions.create(QuestionTmp(user.id, x + `2`, "x + 2", DateTime.now), qzId)
+
+				val eqs = Questions.allQuestions.map(_.mathML)
+				eqs must beEqualTo(List(x + `1`, x + `2`))
+			}
+		}
+
+		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val eq = Questions.find(QuestionId(Int.MaxValue))
+
+				eq must beNone
+			}
+		}
+	}
 
 }

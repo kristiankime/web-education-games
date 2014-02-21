@@ -67,7 +67,7 @@ object Courses {
 		Query(new CoursesTable).where(_.id === id).firstOption
 	}
 
-	def findByUser(userId: UserId) = DB.withSession { implicit session: Session =>
+	def findByUser(userId: UserId)(implicit session: Session) = {
 		(for (
 			uc <- (new UsersCoursesTable) if uc.userId === userId;
 			c <- (new CoursesTable) if uc.id === c.id

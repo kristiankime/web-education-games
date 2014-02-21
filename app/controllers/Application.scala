@@ -5,8 +5,9 @@ import play.api.mvc.Controller
 import securesocial.core.SecureSocial
 import service.User
 import models.organization.Courses
+import controllers.support.SecureSocialDB
 
-object Application extends Controller with SecureSocial {
+object Application extends Controller with SecureSocialDB {
 
 	/**
 	 * Application does not use trailing slashes so indicate to browsers
@@ -15,13 +16,11 @@ object Application extends Controller with SecureSocial {
 		MovedPermanently("/" + path)
 	}
 
-	def index = SecuredAction  { implicit request =>
-		implicit val user = User(request)
+	def index = SecuredUserAction { implicit request => implicit user =>
 		Ok(views.html.index())
 	}
 
-	def userInfo = SecuredAction { implicit request =>
-		implicit val user = User(request)
+	def userInfo = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		val courses = Courses.findByUser(user.id)
 		Ok(views.html.user.userInfo(courses))
 	}

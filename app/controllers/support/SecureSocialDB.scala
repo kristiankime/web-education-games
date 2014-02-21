@@ -13,17 +13,27 @@ import service.User
 
 trait SecureSocialDB extends SecureSocial {
 
+	object SecuredUserAction {
+
+		def apply(f: SecuredRequest[AnyContent] => User => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+			val user = User(request)
+			f(request)(user)
+		}
+	}
+
 	object SecuredDBAction {
-		def apply(f: (SecuredRequest[AnyContent], Session) => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+		def apply(f: SecuredRequest[AnyContent] => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
-				f(request, session)
+				f(request)(session)
 			}
 		}
+	}
 
-		def apply(f: (SecuredRequest[AnyContent], Session, User) => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+	object SecuredUserDBAction {
+		def apply(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+			val user = User(request)
 			DB.withSession { session: Session =>
-				val user = User(request)
-				f(request, session, user)
+				f(request)(user)(session)
 			}
 		}
 	}

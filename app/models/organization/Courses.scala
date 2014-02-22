@@ -13,7 +13,12 @@ import org.joda.time.DateTime
 import service.table.UserTable
 import models.organization.view._
 
-case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime)
+case class Course(id: CourseId, name: String, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) {
+	
+	def owner(implicit session: Session) = Query(new UserTable).where(_.id === ownerId)
+	
+	def access(user: User)(implicit session: Session) = Courses.checkAccess(id)(user, session)
+}
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
@@ -27,7 +32,7 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
  * This means users who are granted access to Sections should also be granted access to the corresponding course.
  */
 object Courses {
-
+	
 	def checkAccess(courseId: CourseId)(implicit user: User, session: Session) = {
 		val courseOwner = Queries.owner(courseId, new CoursesTable)
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
@@ -52,7 +57,7 @@ object Courses {
 			u <- (new UserTable) if u.id === s.owner
 		) yield (s, u))
 		val sectionsAccess = Queries.access(user, new UsersSectionsTable, sectionsOwners)
-		sectionsAccess.list.map(Access.accessMap(_ /*, access*/ )).map(SectionDetails(_))
+		sectionsAccess.list.map(Access.accessMap(_)).map(SectionDetails(_))
 	}
 
 	def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))

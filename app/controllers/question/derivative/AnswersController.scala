@@ -39,7 +39,7 @@ object AnswersController extends Controller with SecureSocialDB {
 			form => {
 				val questionOp = Questions.find(quId)
 				val mathOp = MathML(form._1)
-				val rawStr = form._2 // rawStr
+				val rawStr = form._2
 				val quizOp = Quizzes.find(qzId)
 				val courseOp = cId.flatMap(Courses.find(_))
 

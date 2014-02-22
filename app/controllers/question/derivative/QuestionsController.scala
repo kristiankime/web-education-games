@@ -19,8 +19,6 @@ import controllers.support.SecureSocialDB
 object QuestionsController extends Controller with SecureSocialDB {
 
 	def view(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		implicit val user = User(request)
-
 		val courseOp = courseId.flatMap(Courses.find(_))
 		val quizOp = Quizzes.find(quizId)
 		val questionOp = Questions.find(questionId)

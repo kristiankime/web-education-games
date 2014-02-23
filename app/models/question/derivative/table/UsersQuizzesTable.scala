@@ -10,16 +10,14 @@ import models.id._
 
 case class User2Quiz(userId: UserId, quizId: QuizId, access: Access)
 
-class UsersQuizzesTable extends Table[User2Quiz]("derivative_users_quizzes") {
+class UsersQuizzesTable extends Table[User2Quiz]("derivative_users_quizzes") with UserLink[User2Quiz, QuizId] {
 	def userId = column[UserId]("user_id", O.NotNull)
-	def quizId = column[QuizId]("quiz_id", O.NotNull)
+	def id = column[QuizId]("quiz_id", O.NotNull)
 	def access = column[Access]("access", O.NotNull) 
-	def * = userId ~ quizId ~ access <> (User2Quiz, User2Quiz.unapply _)
+	def * = userId ~ id ~ access <> (User2Quiz, User2Quiz.unapply _)
 
-	def pk = primaryKey("derivative_users_quiz_pk", (userId, quizId))
+	def pk = primaryKey("derivative_users_quiz_pk", (userId, id))
 
 	def userIdFK = foreignKey("derivative_users_quizzes_user_fk", userId, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def quizIdFK = foreignKey("derivative_users_quizzes_quiz_fk", quizId, new QuizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-
-//	def insert(owner: User, quizId: QuizId)(implicit s: Session) { this.insert(User2Quiz(owner.id, quizId, Own)) }
+	def quizIdFK = foreignKey("derivative_users_quizzes_quiz_fk", id, new QuizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

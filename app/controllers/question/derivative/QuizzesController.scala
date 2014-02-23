@@ -33,7 +33,7 @@ object QuizzesController extends Controller with SecureSocialDB {
 	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		val courseOp = courseId.flatMap(Courses.find(_))
 		val quizOp = Quizzes.find(quizId)
-		val access = courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
+		val access = quizOp.map(_.access(courseOp)).toAccess //courseOp.flatMap(c => Courses.checkAccess(c.id)).getOrElse(Own) // TODO get access right
 		
 		(quizOp, courseOp) match {
 			case (Some(quiz), Some(course)) => Ok(views.html.question.derivative.quizView(access, Some(course), quiz, Quizzes.findQuestions(quizId)))
@@ -50,6 +50,7 @@ object QuizzesController extends Controller with SecureSocialDB {
 				Redirect(routes.QuizzesController.view(quizId, courseId))
 			})
 	}
+	
 }
 
 object QuizForm {

@@ -1,23 +1,29 @@
 package models.organization
 
+import scala.math.Ordering._
+import scala.math.Ordering.Implicits._
+
+import org.joda.time.DateTime
+
+import models.id._
+import models.organization.table._
+import models.organization.view._
+import play.api.Play.current
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
-import play.api.Play.current
-import mathml._
-import mathml.scalar._
-import models.question.derivative.table._
-import models.organization.table._
 import service._
-import models.id._
-import org.joda.time.DateTime
 import service.table.UserTable
-import models.organization.view._
+import service._
 
-case class Course(id: CourseId, name: String, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) {
-	
-	def owner(implicit session: Session) = Query(new UserTable).where(_.id === ownerId)
-	
-	def access(user: User)(implicit session: Session) = Courses.checkAccess(id)(user, session)
+case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured[Option[Nothing]] {
+
+	def otherAccess(t: Option[Nothing])(implicit user: User, session: Session): Access = Courses.otherAccess(user, id)
+
+	/**
+	 * This method allows a call to access without the first parameter list
+	 */
+	def access(implicit user: User, session: Session): Access = access(None)
+
 }
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
@@ -32,13 +38,10 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
  * This means users who are granted access to Sections should also be granted access to the corresponding course.
  */
 object Courses {
-	
-	def checkAccess(courseId: CourseId)(implicit user: User, session: Session) = {
-		val courseOwner = Queries.owner(courseId, new CoursesTable)
-		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
-		courseAccess.firstOption.map(v => Access(user, v._2, v._3))
-	}
-	
+
+	def otherAccess(user: User, courseId: CourseId)(implicit session: Session) =
+		Query(new UsersCoursesTable).where(uc => uc.userId === user.id && uc.id === courseId).firstOption.map(_.access).toAccess
+
 	def findDetails(courseId: CourseId)(implicit user: User, session: Session) = {
 		val courseOwner = Queries.owner(courseId, new CoursesTable)
 		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)

@@ -6,6 +6,7 @@ import service.Access
 
 // For path binding example http://julien.richard-foy.fr/blog/2012/04/09/how-to-implement-a-custom-pathbindable-with-play-2/
 // For Query string binding check out https://gist.github.com/julienrf/2344517
+// LATER rename this package, id is no longer accurate
 package object id {
 
 	// Access

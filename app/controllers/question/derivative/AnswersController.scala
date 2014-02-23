@@ -28,7 +28,7 @@ object AnswersController extends Controller with SecureSocialDB {
 		val answerOp = Answers.find(answerId)
 
 		(quizOp, questionOp, answerOp) match {
-			case (Some(qz), Some(qu), Some(a)) => questionView(access(qu, courseOp), courseOp, qz, qu, Some(Right(a)))
+			case (Some(qz), Some(qu), Some(a)) => questionView(qu.access(courseOp), courseOp, qz, qu, Some(Right(a)))
 			case _ => BadRequest(views.html.index())
 		}
 	}
@@ -49,7 +49,7 @@ object AnswersController extends Controller with SecureSocialDB {
 						Answers.correct(qu, m) match {
 							case Yes => Redirect(routes.AnswersController.view(qz.id, qu.id, Answers.createAnswer(aTmp(true)).id, cId))
 							case No => Redirect(routes.AnswersController.view(qz.id, qu.id, Answers.createAnswer(aTmp(false)).id, cId))
-							case Inconclusive => questionView(access(qu, courseOp), courseOp, qz, qu, Some(Left(aTmp(false))))
+							case Inconclusive => questionView(qu.access(courseOp), courseOp, qz, qu, Some(Left(aTmp(false))))
 						}
 					}
 					case _ => BadRequest(views.html.index())
@@ -62,12 +62,7 @@ object AnswersController extends Controller with SecureSocialDB {
 		val allAnswers = Questions.findAnswersAndOwners(question.id)
 		Ok(views.html.question.derivative.questionView(access, course, quiz, question, answer, userAnswers, allAnswers))
 	}
-
-	private def access(qu: Question, cOp: Option[Course])(implicit user: User, session: Session) = {
-		val cAccess = Access(cOp.flatMap(c => Courses.checkAccess(c.id)))
-		val qAccess = Access(user, qu.owner)
-		Access.better(cAccess, qAccess)
-	}
+	
 }
 
 object AnswerForm {

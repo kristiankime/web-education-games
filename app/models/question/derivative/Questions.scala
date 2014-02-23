@@ -1,24 +1,23 @@
 package models.question.derivative
 
+import scala.slick.session.Session
+
+import org.joda.time.DateTime
+
 import mathml._
 import mathml.scalar._
-import scala.slick.session.Session
-import play.api.db.slick.Config.driver.simple._
-import service.User
-import play.api.db.slick.DB
-import play.api.Play.current
-import models.question.derivative.table.QuestionsTable
-import models.question.derivative.table.UsersQuestionsTable
 import models.id._
-import models.id._
-import org.joda.time.DateTime
-import models.question.derivative.table.QuizzesQuestionsTable
-import models.question.derivative.table.Quiz2Question
-import models.question.derivative.table.AnswersTable
-import service.table.UserTable
+import models.organization.Course
 import models.question.AsciiMathML
+import models.question.derivative.table._
+import play.api.db.slick.Config.driver.simple._
+import service._
+import service.table.UserTable
 
-case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML
+case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Secured[Option[Course]] {
+	def otherAccess(course: Option[Course])(implicit user: User, session: Session) : Access =  
+		Seq(course.map(_.access).toAccess, Questions.otherAccess(user, id)).max
+}
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
 	def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)
@@ -26,6 +25,9 @@ case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creati
 
 object Questions {
 
+	def otherAccess(user: User, questionId: QuestionId)(implicit session: Session) = 
+		Query(new UsersQuestionsTable).where(uq => uq.userId === user.id && uq.id === questionId).firstOption.map(_.access).toAccess
+	
 	def allQuestions()(implicit session: Session) = Query(new QuestionsTable).list
 
 	def find(questionId: QuestionId)(implicit session: Session) = Query(new QuestionsTable).where(_.id === questionId).firstOption

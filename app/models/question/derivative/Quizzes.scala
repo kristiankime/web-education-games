@@ -12,26 +12,33 @@ import service.User
 import models.id._
 import org.joda.time.DateTime
 import service._
+import models.organization.Course
 
-case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime)
+case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured[Option[Course]] {
+	def otherAccess(course: Option[Course])(implicit user: User, session: Session): Access =
+		Seq(course.map(_.access).toAccess, Quizzes.otherAccess(user, id)).max
+}
 
-case class QuizTmp(owner: UserId, name: String, date: DateTime){
+case class QuizTmp(owner: UserId, name: String, date: DateTime) {
 	def apply(id: QuizId) = Quiz(id, owner, name, date, date)
 }
 
 object Quizzes {
 
+	def otherAccess(user: User, quizId: QuizId)(implicit session: Session) =
+		Query(new UsersQuizzesTable).where(uq => uq.userId === user.id && uq.id === quizId).firstOption.map(_.access).toAccess
+
 	def find(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		Query(new QuizzesTable).where(_.id === quizId).firstOption
 	}
-	
+
 	def findQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		(for {
 			l <- (new QuizzesQuestionsTable) if l.quizId === quizId
 			q <- (new QuestionsTable) if l.questionId === q.id
 		} yield q).list
 	}
-	
+
 	def create(info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
 		val quizId = (new QuizzesTable).insert(info)
 		(new UsersQuizzesTable).insert(User2Quiz(info.owner, quizId, Own))
@@ -45,7 +52,7 @@ object Quizzes {
 			case None => false
 		}
 	}
-	
+
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
 		(for (
 			q <- (new QuizzesTable);

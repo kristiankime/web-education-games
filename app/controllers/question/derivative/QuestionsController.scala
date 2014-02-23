@@ -25,13 +25,13 @@ object QuestionsController extends Controller with SecureSocialDB {
 
 		(courseOp, quizOp, questionOp) match {
 			case (Some(course), Some(quiz), Some(question)) => {
-				val access = Access(Courses.checkAccess(course.id))
+				val access =  question.access(courseOp) //Access(Courses.checkAccess(course.id))
 				val userAnswers = Questions.findAnswers(questionId, user)
 				val allAnswers = Questions.findAnswersAndOwners(questionId)
 				Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, None, userAnswers, allAnswers))
 			}
 			case (None, Some(quiz), Some(question)) => {
-				val access = Access(user, question.owner)
+				val access =  question.access(courseOp) // Access(user, question.owner)
 				val userAnswers = Questions.findAnswers(questionId, user)
 				val allAnswers = Questions.findAnswersAndOwners(questionId)
 				Ok(views.html.question.derivative.questionView(access, None, quiz, question, None, userAnswers, allAnswers))

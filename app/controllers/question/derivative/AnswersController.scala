@@ -64,7 +64,7 @@ object AnswersController extends Controller with SecureSocialDB {
 	}
 
 	private def access(qu: Question, cOp: Option[Course])(implicit user: User, session: Session) = {
-		val cAccess = Access(cOp.flatMap(c => Courses.checkAccess(c.id)))
+		val cAccess = Access(cOp.map(_.access))
 		val qAccess = Access(user, qu.owner)
 		Seq(cAccess, qAccess).max
 	}

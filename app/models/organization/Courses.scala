@@ -17,16 +17,14 @@ import service._
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-	def otherAccess(implicit user: User, session: Session): Access = Courses.otherAccess(user, id)
+	def otherAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
+
+	def access(implicit user: User, session: Session): Access = CourseAccess(this)
 
 }
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
-}
-
-object CourseAccess {
-	def apply(course: Course)(implicit user: User, session: Session) = course.directAccess
 }
 
 /**
@@ -36,12 +34,15 @@ object CourseAccess {
  * Access to the course determines access to quizzes etc.
  * This means users who are granted access to Sections should also be granted access to the corresponding course.
  */
+object CourseAccess {
+	def apply(course: Course)(implicit user: User, session: Session) = course.directAccess
+}
+
+
 object Courses {
 
-	def checkAccess(courseId: CourseId)(implicit user: User, session: Session) = find(courseId).map(c => CourseAccess(c))
-
-	def otherAccess(user: User, courseId: CourseId)(implicit session: Session) =
-		Query(new UsersCoursesTable).where(uc => uc.userId === user.id && uc.id === courseId).firstOption.map(_.access).toAccess
+	def otherAccess(course: Course)(implicit user: User, session: Session) =
+		Query(new UsersCoursesTable).where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 
 	def findDetails(courseId: CourseId)(implicit user: User, session: Session) = {
 		val courseOwner = Queries.owner(courseId, new CoursesTable)

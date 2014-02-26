@@ -21,6 +21,6 @@ trait Secured {
 	/**
 	 * Does the user have any kind of access to this object (Owner or Otherwise)
 	 */
-	def access(implicit user: User, session: Session) = Seq(ownAccess, otherAccess).max
+	def directAccess(implicit user: User, session: Session) = Seq(ownAccess, otherAccess).max
 	
 }

@@ -19,11 +19,6 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 
 	def otherAccess(implicit user: User, session: Session): Access = Courses.otherAccess(user, id)
 
-	//	/**
-	//	 * This method allows a call to access without the first parameter list
-	//	 */
-	//	def access(implicit user: User, session: Session): Access = access(None)
-
 }
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
@@ -31,7 +26,7 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 }
 
 object CourseAccess {
-	def apply(course: Course)(implicit user: User, session: Session) = Courses.otherAccess(user, course.id)
+	def apply(course: Course)(implicit user: User, session: Session) = course.directAccess
 }
 
 /**
@@ -43,11 +38,8 @@ object CourseAccess {
  */
 object Courses {
 
-	def checkAccess(courseId: CourseId)(implicit user: User, session: Session) = {
-		val courseOwner = Queries.owner(courseId, new CoursesTable)
-		val courseAccess = Queries.access(user, new UsersCoursesTable, courseOwner)
-		courseAccess.firstOption.map(v => Access(user, v._2, v._3))
-	}
+	def checkAccess(courseId: CourseId)(implicit user: User, session: Session) = find(courseId).map(c => CourseAccess(c))
+
 	def otherAccess(user: User, courseId: CourseId)(implicit session: Session) =
 		Query(new UsersCoursesTable).where(uc => uc.userId === user.id && uc.id === courseId).firstOption.map(_.access).toAccess
 

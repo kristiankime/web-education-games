@@ -14,9 +14,9 @@ import play.api.db.slick.Config.driver.simple._
 import service._
 import service.table.UserTable
 
-case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Secured[Option[Course]] {
-	def otherAccess(course: Option[Course])(implicit user: User, session: Session) : Access =  
-		Seq(course.map(_.access).toAccess, Questions.otherAccess(user, id)).max
+case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Secured {
+	def otherAccess(implicit user: User, session: Session) : Access = null
+//		Seq(course.map(_.access).toAccess, Questions.otherAccess(user, id)).max
 }
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {

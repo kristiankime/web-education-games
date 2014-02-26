@@ -14,9 +14,9 @@ import org.joda.time.DateTime
 import service._
 import models.organization.Course
 
-case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured[Option[Course]] {
-	def otherAccess(course: Option[Course])(implicit user: User, session: Session): Access =
-		Seq(course.map(_.access).toAccess, Quizzes.otherAccess(user, id)).max
+case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
+	def otherAccess(implicit user: User, session: Session): Access = null
+//		Seq(course.map(_.access).toAccess, Quizzes.otherAccess(user, id)).max
 }
 
 case class QuizTmp(owner: UserId, name: String, date: DateTime) {

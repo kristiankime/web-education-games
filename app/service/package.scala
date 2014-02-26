@@ -1,4 +1,5 @@
 import models.id.Secured
+import scala.slick.session.Session
 
 package object service {
 
@@ -10,7 +11,8 @@ package object service {
 		def toAccess = Access(v)
 	}
 	
-	implicit class AccessiblePimped[T](val v: Secured[T]) {
-		def toAccess(implicit user: User) = Access(v)
+	implicit class SecuredPimped(val v: Secured) {
+		def toAccess(implicit user: User, session :Session) = v.access
 	}
+	
 }

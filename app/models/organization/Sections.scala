@@ -12,8 +12,8 @@ import models.id._
 import org.joda.time.DateTime
 import models.organization.view._
 
-case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured[Option[Course]] {
-	def otherAccess(course: Option[Course])(implicit user: User, session: Session) : Access = Sections.otherAccess(user, id)	
+case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
+	def otherAccess(implicit user: User, session: Session) : Access = Sections.otherAccess(user, id)	
 }
 
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {

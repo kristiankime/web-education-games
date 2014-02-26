@@ -38,6 +38,9 @@ case object Non extends Access { // This is called Non so as to avoid naming con
 
 object Access {
 	val non: Access = Non // Just for type change
+	val view: Access = View // Just for type change
+	val edit: Access = Edit // Just for type change
+	val own: Access = Own // Just for type change
 
 	def toNum(access: Access): Short = access.v
 
@@ -56,7 +59,7 @@ object Access {
 
 	def apply(user: User, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
-	def apply(hasOwner: Secured[_])(implicit user: User): Access = if (user.id == hasOwner.owner) { Own } else { Non }
+	//	def apply(hasOwner: Secured[_])(implicit user: User): Access = if (user.id == hasOwner.owner) { Own } else { Non }
 
 	def apply(user: User, owner: User, in: Option[Access]): Access =
 		if (user.id == owner.id) {

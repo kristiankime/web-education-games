@@ -23,6 +23,31 @@ import models.id.UserId
 @RunWith(classOf[JUnitRunner])
 class SectionSpec extends Specification {
 
+	"SectionAcess" should {
+		"be edit for the owner of the course that the section is in" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val couseOwner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = couseOwner.id))
+				val sectionOwner = DBTest.fakeUser(UserTmpTest())
+				val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
+
+				section.access(couseOwner, session) must beEqualTo(Edit)
+				course.access(couseOwner, session) must beEqualTo(Own)
+			}
+		}
+		
+		"be Own for the owner of the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val couseOwner = DBTest.fakeUser(UserTmpTest())
+				val course = Courses.create(CoursesTmpTest(owner = couseOwner.id))
+				val sectionOwner = DBTest.fakeUser(UserTmpTest())
+				val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
+
+				section.access(sectionOwner, session) must beEqualTo(Own)
+			}
+		}
+	}
+
 	"granting access to a section" should {
 
 		"grant a student view access to the section and the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
@@ -32,9 +57,9 @@ class SectionSpec extends Specification {
 				val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
 
 				val student = DBTest.fakeUser(UserTmpTest())
-				Sections.grantAccess(student, section, View) // View indicates student
+				Sections.grantAccess(section, View)(student, session) // View indicates student
 
-				Sections.findDetails(section.id)(student, session).get.a must beEqualTo(View)
+				section.access(student, session) must beEqualTo(View)
 				course.access(student, session) must beEqualTo(View)
 			}
 		}
@@ -46,9 +71,9 @@ class SectionSpec extends Specification {
 				val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
 
 				val student = DBTest.fakeUser(UserTmpTest())
-				Sections.grantAccess(student, section, Edit) // Edit indicates Teacher
+				Sections.grantAccess(section, Edit)(student, session) // Edit indicates Teacher
 
-				Sections.findDetails(section.id)(student, session).get.a must beEqualTo(Edit)
+				section.access(student, session) must beEqualTo(Edit)
 				course.access(student, session) must beEqualTo(Edit)
 			}
 		}
@@ -60,9 +85,9 @@ class SectionSpec extends Specification {
 				val sectionOwner = DBTest.fakeUser(UserTmpTest())
 				val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
 
-				Sections.grantAccess(courseOwner, section, View)
+				Sections.grantAccess(section, View)(courseOwner, session)
 
-				Sections.findDetails(section.id)(courseOwner, session).get.a must beEqualTo(Edit)
+				section.access(courseOwner, session) must beEqualTo(Edit)
 				course.access(courseOwner, session) must beEqualTo(Own)
 			}
 		}

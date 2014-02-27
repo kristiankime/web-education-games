@@ -9,7 +9,7 @@ import models.question.derivative._
 import models.question.derivative.table._
 import models.id._
 
-case class User2Section(userId: UserId, sectionId: SectionId, access: Access)
+case class User2Section(userId: UserId, sectionId: SectionId, access: Access) extends UserLinkRow
 
 class UsersSectionsTable extends Table[User2Section]("users_sections") with UserLink[User2Section, SectionId] {
 	def userId = column[UserId]("user_id", O.NotNull)

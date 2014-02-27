@@ -7,7 +7,7 @@ import service.table._
 import service._
 import models.id._
 
-case class User2Question(userId: UserId, questionId: QuestionId, access: Access)
+case class User2Question(userId: UserId, questionId: QuestionId, access: Access) extends UserLinkRow
 
 class UsersQuestionsTable extends Table[User2Question]("derivative_users_questions") with UserLink[User2Question, QuestionId] {
 	def userId = column[UserId]("user_id", O.NotNull)

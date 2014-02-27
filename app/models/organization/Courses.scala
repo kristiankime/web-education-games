@@ -25,6 +25,7 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 
 	def access(implicit user: User, session: Session): Access = CourseAccess(this)
 
+	def grantAccess(access: Access)(implicit user: User, session: Session) = Courses.grantAccess(this, access)
 }
 
 /**
@@ -55,20 +56,18 @@ object Courses {
 		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
-	private def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = 
-//	{
-//		val sectionsOwners = (for (
-//			s <- (new SectionsTable) if s.courseId === courseId;
-//			u <- (new UserTable) if u.id === s.owner
-//		) yield (s, u))
-//		val sectionsAccess = Queries.access(user, new UsersSectionsTable, sectionsOwners)
-//		sectionsAccess.list.map(Access.accessMap(_)).map(SectionDetails(_))
+	private def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) =
+		//	{
+		//		val sectionsOwners = (for (
+		//			s <- (new SectionsTable) if s.courseId === courseId;
+		//			u <- (new UserTable) if u.id === s.owner
+		//		) yield (s, u))
+		//		val sectionsAccess = Queries.access(user, new UsersSectionsTable, sectionsOwners)
+		//		sectionsAccess.list.map(Access.accessMap(_)).map(SectionDetails(_))
 		Query(new SectionsTable).where(_.courseId === courseId).list.map(_.details)
-//	}
+	//	}
 
 	def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
-
-	def grantAccess(user: User, course: Course, access: Access)(implicit session: Session) = (new UsersCoursesTable).insert(User2Course(user.id, course.id, access))
 
 	def find(id: CourseId)(implicit session: Session) = Query(new CoursesTable).where(_.id === id).firstOption
 
@@ -80,4 +79,15 @@ object Courses {
 			.union(
 				(Query(new CoursesTable).where(_.owner === userId))).list
 	}
+
+	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) {
+		if (course.access < access) {
+			Query(new UsersCoursesTable).where(r => r.userId === user.id &&  r.id === course.id).firstOption match {
+				case Some(u2c) if u2c.access < access => Query(new UsersCoursesTable).where(_.id === course.id).update(User2Course(user.id, course.id, access))
+				case None => (new UsersCoursesTable).insert(User2Course(user.id, course.id, access))
+				case _ => {}
+			}
+		}
+	}
+
 }

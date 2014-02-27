@@ -52,9 +52,9 @@ object SectionsController extends Controller with SecureSocialDB {
 				Sections.find(id) match {
 					case Some(section) => {
 						if (section.editCode == form) {
-							Sections.grantAccess(user, section, Edit)
+							Sections.grantAccess(section, Edit)
 						} else if (section.viewCode == form) {
-							Sections.grantAccess(user, section, View)
+							Sections.grantAccess(section, View)
 						}
 
 						Redirect(routes.SectionsController.view(section.courseId, id))

@@ -50,9 +50,9 @@ object CoursesController extends Controller with SecureSocialDB {
 				Courses.find(id) match {
 					case Some(course) => {
 						if (course.editCode == form) {
-							Courses.grantAccess(user, course, Edit)
+							Courses.grantAccess(course, Edit)
 						} else if (course.viewCode == form) {
-							Courses.grantAccess(user, course, View)
+							Courses.grantAccess(course, View)
 						}
 						// TODO indicate failure in a better fashion
 						Redirect(routes.CoursesController.view(course.id))

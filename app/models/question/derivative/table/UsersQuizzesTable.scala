@@ -8,7 +8,7 @@ import service._
 import models.question.derivative._
 import models.id._
 
-case class User2Quiz(userId: UserId, quizId: QuizId, access: Access)
+case class User2Quiz(userId: UserId, quizId: QuizId, access: Access) extends UserLinkRow
 
 class UsersQuizzesTable extends Table[User2Quiz]("derivative_users_quizzes") with UserLink[User2Quiz, QuizId] {
 	def userId = column[UserId]("user_id", O.NotNull)

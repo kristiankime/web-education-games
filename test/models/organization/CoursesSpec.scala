@@ -62,6 +62,19 @@ class CoursesSpec extends Specification {
 				course3.access(user, session) must beEqualTo(Non)
 			}
 		}
+		
+		"only grant the spcified user access to the requested course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val course = Courses.create(CoursesTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
+				val userWithAccess = DBTest.fakeUser(UserTmpTest())
+				val userNoAccess = DBTest.fakeUser(UserTmpTest())
+				
+				course.grantAccess(Edit)(userWithAccess, session)
+				
+				course.access(userWithAccess, session) must beEqualTo(Edit)
+				course.access(userNoAccess, session) must beEqualTo(Non)
+			}
+		}
 	}
 	
 	"listDetails: access to course" should {

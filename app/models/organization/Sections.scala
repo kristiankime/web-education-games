@@ -30,6 +30,13 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
 }
 
+/**
+ * In terms of access level Users can:
+ *     1) Own the Section which grants Own access
+ *     2) Have association access granted at either the Edit or View
+ *     2) Have access to the Section's Course which provides a maximum of Edit access to the section
+ * This means users who are granted access to Sections should also be granted access to the corresponding course.
+ */
 object SectionAccess {
 	def apply(section: Section)(implicit user: User, session: Session) = {
 		val course = section.course.access.maxEdit

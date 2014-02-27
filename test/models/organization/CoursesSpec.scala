@@ -146,11 +146,6 @@ class CoursesSpec extends Specification {
 
 				val student = DBTest.fakeUser(UserTmpTest())
 				Sections.grantAccess(section, View)(student, session)
-
-				System.err.println("owner " + owner)
-				System.err.println("teacher " + teacher)
-				System.err.println("student " + student)
-				System.err.println(Query(new UsersSectionsTable()).list)
 				
 				Courses.listDetails(owner, session)(0).a must beEqualTo(Own)
 				Courses.listDetails(teacher, session)(0).a must beEqualTo(Edit)

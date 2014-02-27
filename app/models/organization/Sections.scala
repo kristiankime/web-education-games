@@ -18,13 +18,16 @@ case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode:
 
 case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-	def otherAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
-
 	def course(implicit session: Session) = Courses.find(courseId).get
 
-	def access(implicit user: User, session: Session) = SectionAccess(this)
-
 	def details(implicit user: User, session: Session) = SectionDetails(this, access)
+
+	def otherAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
+
+	def access(implicit user: User, session: Session) = SectionAccess(this)
+	
+	def grantAccess(access: Access)(implicit user: User, session: Session) = Sections.grantAccess(this, access)
+
 }
 
 object SectionAccess {
@@ -37,27 +40,26 @@ object SectionAccess {
 
 object Sections {
 
-	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =
-		Query(new UsersSectionsTable).where(us => us.userId === user.id && us.id === sectionId).firstOption.map(_.access).toAccess
+	// ======= CREATE ======
+	def create(sectionTmp: SectionTmp)(implicit session: Session) = sectionTmp((new SectionsTable).insert(sectionTmp))
 
-	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) =
-		Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
-
+	// ======= FIND ======
 	def find(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
 
 	def findByCourse(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).list
 
-	/**
-	 * Creating a section also grants 
-	 */
-	def create(sectionTmp: SectionTmp)(implicit session: Session) = sectionTmp((new SectionsTable).insert(sectionTmp))
+	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
+
+	// ======= AUTHORIZATION ======
+	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =
+		Query(new UsersSectionsTable).where(us => us.userId === user.id && us.id === sectionId).firstOption.map(_.access).toAccess
 
 	/**
 	 * Granting access to the section also grants access to the course
 	 */
 	def grantAccess(section: Section, access: Access)(implicit user: User, session: Session) {
 		if (section.access < access) {
-			Query(new UsersSectionsTable).where(r => r.userId === user.id &&  r.id === section.id).firstOption match {
+			Query(new UsersSectionsTable).where(r => r.userId === user.id && r.id === section.id).firstOption match {
 				case Some(u2s) if u2s.access < access => Query(new UsersSectionsTable).where(_.id === section.id).update(User2Section(user.id, section.id, access))
 				case None => (new UsersSectionsTable).insert(User2Section(user.id, section.id, access))
 				case _ => {}

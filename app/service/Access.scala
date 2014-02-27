@@ -10,6 +10,8 @@ sealed abstract class Access extends Ordered[Access] {
 	def write: Boolean
 
 	def compare(that: Access): Int = this.v.compare(that.v)
+
+	def maxEdit = Seq(this, Edit).min
 }
 
 case object Own extends Access {

@@ -36,7 +36,6 @@ class SectionSpec extends Specification {
 
 				Sections.findDetails(section.id)(student, session).get.a must beEqualTo(View)
 				course.access(student, session) must beEqualTo(View)
-//				Courses.checkAccess(course.id)(student, session).get must beEqualTo(View)
 			}
 		}
 
@@ -51,7 +50,6 @@ class SectionSpec extends Specification {
 
 				Sections.findDetails(section.id)(student, session).get.a must beEqualTo(Edit)
 				course.access(student, session) must beEqualTo(Edit)
-//				Courses.checkAccess(course.id)(student, session).get must beEqualTo(Edit)
 			}
 		}
 
@@ -64,9 +62,8 @@ class SectionSpec extends Specification {
 
 				Sections.grantAccess(courseOwner, section, View)
 
-				Sections.findDetails(section.id)(courseOwner, session).get.a must beEqualTo(View)
+				Sections.findDetails(section.id)(courseOwner, session).get.a must beEqualTo(Edit)
 				course.access(courseOwner, session) must beEqualTo(Own)
-//				Courses.checkAccess(course.id)(courseOwner, session).get must beEqualTo(Own)
 			}
 		}
 	}

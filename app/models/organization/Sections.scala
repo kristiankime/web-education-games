@@ -12,25 +12,41 @@ import models.id._
 import org.joda.time.DateTime
 import models.organization.view._
 
-case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
-	def otherAccess(implicit user: User, session: Session) : Access = Sections.otherAccess(user, id)	
-}
-
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
 }
 
+case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
+
+	def otherAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
+
+	def course(implicit session: Session) = Courses.find(courseId).get
+
+	def access(implicit user: User, session: Session) = SectionAccess(this)
+	
+	def details(implicit user: User, session: Session) = SectionDetails(this, access)
+}
+
+object SectionAccess {
+	def apply(section: Section)(implicit user: User, session: Session) = {
+		val course = section.course.access.maxEdit
+		val direct = section.directAccess
+		Seq(course, direct).max
+	}
+}
+
 object Sections {
 
-	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) = 
+	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =
 		Query(new UsersSectionsTable).where(us => us.userId === user.id && us.id === sectionId).firstOption.map(_.access).toAccess
 
-	
-	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) = {
-		val sectionOwner = Queries.owner(sectionId, new SectionsTable)
-		val sectionAccess = Queries.access(user, new UsersSectionsTable, sectionOwner)
-		sectionAccess.firstOption.map(Access.accessMap(_)).map(v => SectionDetails(v))
-	}
+	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) = 
+//	{
+//		val sectionOwner = Queries.owner(sectionId, new SectionsTable)
+//		val sectionAccess = Queries.access(user, new UsersSectionsTable, sectionOwner)
+//		sectionAccess.firstOption.map(Access.accessMap(_)).map(v => SectionDetails(v))
+		Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
+//	}
 
 	def find(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
 

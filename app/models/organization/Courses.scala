@@ -15,16 +15,16 @@ import service._
 import service.table.UserTable
 import service._
 
+case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
+	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
+}
+
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
 	def otherAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
 
 	def access(implicit user: User, session: Session): Access = CourseAccess(this)
 
-}
-
-case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
-	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
 }
 
 /**
@@ -37,7 +37,6 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 object CourseAccess {
 	def apply(course: Course)(implicit user: User, session: Session) = course.directAccess
 }
-
 
 object Courses {
 
@@ -56,14 +55,16 @@ object Courses {
 		coursesAccess.list.map(Access.accessMap(_)).map(v => CourseDetails(v, sectionsDetailsFor(v._1.id)))
 	}
 
-	private def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = {
-		val sectionsOwners = (for (
-			s <- (new SectionsTable) if s.courseId === courseId;
-			u <- (new UserTable) if u.id === s.owner
-		) yield (s, u))
-		val sectionsAccess = Queries.access(user, new UsersSectionsTable, sectionsOwners)
-		sectionsAccess.list.map(Access.accessMap(_)).map(SectionDetails(_))
-	}
+	private def sectionsDetailsFor(courseId: CourseId)(implicit user: User, session: Session) = 
+//	{
+//		val sectionsOwners = (for (
+//			s <- (new SectionsTable) if s.courseId === courseId;
+//			u <- (new UserTable) if u.id === s.owner
+//		) yield (s, u))
+//		val sectionsAccess = Queries.access(user, new UsersSectionsTable, sectionsOwners)
+//		sectionsAccess.list.map(Access.accessMap(_)).map(SectionDetails(_))
+		Query(new SectionsTable).where(_.courseId === courseId).list.map(_.details)
+//	}
 
 	def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
 

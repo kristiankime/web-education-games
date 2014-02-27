@@ -15,7 +15,7 @@ import service._
 import service.table.UserTable
 
 case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Secured {
-	def otherAccess(implicit user: User, session: Session) : Access = null
+	def linkAccess(implicit user: User, session: Session) : Access = null
 //		Seq(course.map(_.access).toAccess, Questions.otherAccess(user, id)).max
 }
 

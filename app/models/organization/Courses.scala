@@ -23,22 +23,18 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 
 	def details(implicit user: User, session: Session) = CourseDetails(this, access, Sections.findByCourse(id).map(_.details))
 
-	def otherAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
+	protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
 
-	def access(implicit user: User, session: Session): Access = CourseAccess(this)
+	/**
+	 * In terms of access level Users can:
+	 *     1) Own the Course which grants Own access
+	 *     2) Have association access granted at either the Edit or View
+	 * Access to the course determines access to quizzes etc.
+	 * This means users who are granted access to Sections should also be granted access to the corresponding course.
+	 */
+	def access(implicit user: User, session: Session): Access = directAccess
 
 	def grantAccess(access: Access)(implicit user: User, session: Session) = Courses.grantAccess(this, access)
-}
-
-/**
- * In terms of access level Users can:
- *     1) Own the Course which grants Own access
- *     2) Have association access granted at either the Edit or View
- * Access to the course determines access to quizzes etc.
- * This means users who are granted access to Sections should also be granted access to the corresponding course.
- */
-object CourseAccess {
-	def apply(course: Course)(implicit user: User, session: Session) = course.directAccess
 }
 
 object Courses {

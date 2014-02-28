@@ -8,41 +8,49 @@ import play.api.db.slick.DB
 import play.api.Play.current
 import models.organization.table._
 import models.question.derivative.table._
-import service.User
 import models.id._
 import org.joda.time.DateTime
 import service._
-import models.organization.Course
+import models.organization._
+import models.question.derivative.view._
+import service.table._
 
 case class QuizTmp(owner: UserId, name: String, date: DateTime) {
 	def apply(id: QuizId) = Quiz(id, owner, name, date, date)
 }
 
-case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime)
+case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) {
+	
+	def studentResults(student: User)(implicit session: Session) = 
+		StudentResults(student, questions.map(v => v.results(student)))
+	
+	def questions(implicit session: Session) = Quizzes.findQuestions(id)
+	
+}
 
 object Quizzes {
 
 	// ======= CREATE ======
-	def create(info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
+	def create(info: QuizTmp, courseId: Option[CourseId])(implicit session: Session) = {
 		val quizId = (new QuizzesTable).insert(info)
 		(new UsersQuizzesTable).insert(User2Quiz(info.owner, quizId, Own))
 		courseId.foreach(c => { (new CoursesQuizzesTable).insert(Course2Quiz(c, quizId)) })
-		quizId
+		info(quizId)
 	}
 
 	// ======= FIND ======
-	def find(quizId: QuizId) = DB.withSession { implicit session: Session =>
+	def find(quizId: QuizId)(implicit session: Session) = {
 		Query(new QuizzesTable).where(_.id === quizId).firstOption
 	}
 
-	def findQuestions(quizId: QuizId) = DB.withSession { implicit session: Session =>
+	def findQuestions(quizId: QuizId)(implicit session: Session) = {
 		(for {
 			l <- (new QuizzesQuestionsTable) if l.quizId === quizId
 			q <- (new QuestionsTable) if l.questionId === q.id
 		} yield q).list
 	}
 
-	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
+	def findByCourse(courseId: CourseId)(implicit session: Session) = {
 		(for (
 			q <- (new QuizzesTable);
 			cq <- (new CoursesQuizzesTable) if cq.quizId === q.id && cq.courseId === courseId
@@ -50,7 +58,7 @@ object Quizzes {
 	}
 
 	// ======= UPDATE ======
-	def rename(quizId: QuizId, name: String) = DB.withSession { implicit session: Session =>
+	def rename(quizId: QuizId, name: String)(implicit session: Session) = {
 		Query(new QuizzesTable).where(_.id === quizId).firstOption match {
 			case Some(quiz) => { Query(new QuizzesTable).where(_.id === quizId).update(quiz.copy(name = name)); true }
 			case None => false

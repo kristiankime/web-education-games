@@ -1,9 +1,7 @@
 package models.question.derivative
 
 import scala.slick.session.Session
-
 import org.joda.time.DateTime
-
 import mathml._
 import mathml.scalar._
 import models.id._
@@ -13,12 +11,25 @@ import models.question.derivative.table._
 import play.api.db.slick.Config.driver.simple._
 import service._
 import service.table.UserTable
+import models.question.derivative.view.QuestionDetails
+import models.question.derivative.view.StudentQuestionResults
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
 	def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)
 }
 
-case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML
+case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML {
+
+	def answers(user: User)(implicit session: Session) =
+		Query(new AnswersTable).where(a => a.questionId === id && a.owner === user.id).list
+
+	def results(user: User)(implicit session: Session) = {
+		val ans = answers(user)
+		val correct = ans.foldLeft(false)(_ || _.correct)
+		StudentQuestionResults(this, correct, ans)
+	}
+
+}
 
 object Questions {
 

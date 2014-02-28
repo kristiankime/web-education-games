@@ -23,6 +23,22 @@ import models.id.UserId
 @RunWith(classOf[JUnitRunner])
 class SectionSpec extends Specification {
 
+	"students" should {
+		"return all the students associated with the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val course = Courses.create(CoursesTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
+				val section = Sections.create(SectionTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id, courseId = course.id))
+
+				val student1 = DBTest.fakeUser(UserTmpTest())
+				section.grantAccess(View)(student1, session)
+				val student2 = DBTest.fakeUser(UserTmpTest())
+				section.grantAccess(View)(student2, session)
+				
+				section.students must beEqualTo(List(student1, student2))
+			}
+		}
+	}
+	
 	"SectionAccess" should {
 		"be Edit for the owner of the course that the section is in" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>

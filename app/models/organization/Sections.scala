@@ -11,6 +11,8 @@ import service._
 import models.id._
 import org.joda.time.DateTime
 import models.organization.view._
+import service.table._
+import service.Access._
 
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
@@ -21,6 +23,12 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 	def course(implicit session: Session) = Courses.find(courseId).get
 
 	def details(implicit user: User, session: Session) = SectionDetails(this, access)
+
+	def students(implicit session: Session) =
+		(for (
+			u <- (new UserTable);
+			us <- (new UsersSectionsTable) if us.userId === u.id && us.id === this.id && us.access === service.Access.view
+		) yield u).list
 
 	protected def linkAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
 

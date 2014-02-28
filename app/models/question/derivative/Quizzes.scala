@@ -14,20 +14,23 @@ import org.joda.time.DateTime
 import service._
 import models.organization.Course
 
-case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
-	def linkAccess(implicit user: User, session: Session): Access = null
-//		Seq(course.map(_.access).toAccess, Quizzes.otherAccess(user, id)).max
-}
-
 case class QuizTmp(owner: UserId, name: String, date: DateTime) {
 	def apply(id: QuizId) = Quiz(id, owner, name, date, date)
 }
 
+case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime)
+
 object Quizzes {
 
-	def otherAccess(user: User, quizId: QuizId)(implicit session: Session) =
-		Query(new UsersQuizzesTable).where(uq => uq.userId === user.id && uq.id === quizId).firstOption.map(_.access).toAccess
+	// ======= CREATE ======
+	def create(info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
+		val quizId = (new QuizzesTable).insert(info)
+		(new UsersQuizzesTable).insert(User2Quiz(info.owner, quizId, Own))
+		courseId.foreach(c => { (new CoursesQuizzesTable).insert(Course2Quiz(c, quizId)) })
+		quizId
+	}
 
+	// ======= FIND ======
 	def find(quizId: QuizId) = DB.withSession { implicit session: Session =>
 		Query(new QuizzesTable).where(_.id === quizId).firstOption
 	}
@@ -39,25 +42,19 @@ object Quizzes {
 		} yield q).list
 	}
 
-	def create(info: QuizTmp, courseId: Option[CourseId]) = DB.withSession { implicit session: Session =>
-		val quizId = (new QuizzesTable).insert(info)
-		(new UsersQuizzesTable).insert(User2Quiz(info.owner, quizId, Own))
-		courseId.foreach(c => { (new CoursesQuizzesTable).insert(Course2Quiz(c, quizId)) })
-		quizId
-	}
-
-	def rename(quizId: QuizId, name: String) = DB.withSession { implicit session: Session =>
-		Query(new QuizzesTable).where(_.id === quizId).firstOption match {
-			case Some(quiz) => { Query(new QuizzesTable).where(_.id === quizId).update(quiz.copy(name = name)); true }
-			case None => false
-		}
-	}
-
 	def findByCourse(courseId: CourseId) = DB.withSession { implicit session: Session =>
 		(for (
 			q <- (new QuizzesTable);
 			cq <- (new CoursesQuizzesTable) if cq.quizId === q.id && cq.courseId === courseId
 		) yield q).list
+	}
+
+	// ======= UPDATE ======
+	def rename(quizId: QuizId, name: String) = DB.withSession { implicit session: Session =>
+		Query(new QuizzesTable).where(_.id === quizId).firstOption match {
+			case Some(quiz) => { Query(new QuizzesTable).where(_.id === quizId).update(quiz.copy(name = name)); true }
+			case None => false
+		}
 	}
 
 }

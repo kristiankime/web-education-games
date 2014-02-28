@@ -27,7 +27,7 @@ object CoursesController extends Controller with SecureSocialDB {
 
 	def create = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseCreate.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index()),
+			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
 				val editCode = "CO-E-" + randomEngine.nextInt(100000)
 				val viewCode = "CO-V-" + randomEngine.nextInt(100000)
@@ -39,13 +39,13 @@ object CoursesController extends Controller with SecureSocialDB {
 	def view(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Courses.findDetails(id) match {
 			case Some(courseDetails) => Ok(views.html.organization.courseView(courseDetails, Quizzes.findByCourse(id)))
-			case None => BadRequest(views.html.index())
+			case None => BadRequest(views.html.index(Courses.listDetails))
 		}
 	}
 
 	def join(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseJoin.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index()),
+			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
 				Courses.find(id) match {
 					case Some(course) => {
@@ -57,7 +57,7 @@ object CoursesController extends Controller with SecureSocialDB {
 						// TODO indicate failure in a better fashion
 						Redirect(routes.CoursesController.view(course.id))
 					}
-					case None => BadRequest(views.html.index())
+					case None => BadRequest(views.html.index(Courses.listDetails))
 				}
 
 			})

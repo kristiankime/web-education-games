@@ -36,13 +36,13 @@ object QuestionsController extends Controller with SecureSocialDB {
 				val allAnswers = Questions.findAnswersAndOwners(questionId)
 				Ok(views.html.question.derivative.questionView(access, None, quiz, question, None, userAnswers, allAnswers))
 			}
-			case _ => BadRequest(views.html.index())
+			case _ => BadRequest(views.html.index(Courses.listDetails))
 		}
 	}
 
 	def create(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		QuestionForm.values.bindFromRequest.fold(
-			errors => BadRequest(views.html.index()),
+			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
 				val mathML = MathML(form._1).get // TODO better handle on error
 				Questions.create(QuestionTmp(user.id, mathML, form._2, DateTime.now), quizId)
@@ -56,7 +56,7 @@ object QuestionsController extends Controller with SecureSocialDB {
 				Questions.remove(quiz, question)
 				Redirect(routes.QuizzesController.view(quizId, courseId))
 			}
-			case _ => BadRequest(views.html.index())
+			case _ => BadRequest(views.html.index(Courses.listDetails))
 		}
 	}
 }

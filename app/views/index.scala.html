@@ -1,21 +1,34 @@
-@()(implicit user: service.User)
+@(courses: List[CourseDetails])(implicit user: service.User)
+
+@import helper._
+@import controllers.organization.routes._
+@import controllers.organization.SectionJoin
+@import service._ 
  
 @main("EdTech Welcome Page") {
     
     <h1>Welcome to the EdTech server</h1>
     
-    <p>
-    	Please pick one of the options below:
-    </p>
+    <h5> Here are the list of couses and sections </h5>
+    click on a course or section for more info (or to join it)
     
-	<ul>
-		<li> <a href=@controllers.routes.Application.userInfo> I'd like to see what courses I'm associated with </a> </li>
-		<li>I'm a teacher looking to...</li>
-	    <ul>
-	    	<li> <a href=@controllers.organization.routes.CoursesController.add> create a new course </a> </li>
-	    	<li> <a href=@controllers.organization.routes.CoursesController.list> create a section for a course that already exists</a> </li>
-	    </ul>
-	    <li> <a href=@controllers.organization.routes.CoursesController.list> I'm a Student looking to enroll in a course </a> </li>
-
+    <ul>
+    @for(course <- courses){
+    	<li> 
+    		<a href=@CoursesController.view(course.c.id)>@course.c.name</a> 
+    		@if(course.a != Non){ Access: @AccessName(course.a) } 
+    	</li>
+    
+    	@if(course.sections.nonEmpty){
+	        <ul>
+	        @for(section <- course.sections){ 
+	            <li> 
+	            	<a href=@SectionsController.view(section.s.courseId, section.s.id)> @section.s.name </a> 
+	            	@if(section.a != Non){ <Access: @AccessName(section.a)  > }
+	            </li>
+	        }
+	        </ul>
+        }
+    }
     </ul>
 }

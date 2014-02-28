@@ -16,8 +16,8 @@ object Application extends Controller with SecureSocialDB {
 		MovedPermanently("/" + path)
 	}
 
-	def index = SecuredUserAction { implicit request => implicit user =>
-		Ok(views.html.index())
+	def index = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+		Ok(views.html.index(Courses.listDetails))
 	}
 
 	def userInfo = SecuredUserDBAction { implicit request => implicit user => implicit session =>

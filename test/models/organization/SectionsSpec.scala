@@ -18,13 +18,35 @@ import models.organization.table._
 import service._
 import service.table._
 import models.id.UserId
+import models.question.derivative.Quizzes
+import models.question.derivative.QuizTmpTest
+import models.question.derivative.view.StudentResults
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
 class SectionSpec extends Specification {
 
+	"results" should {
+		"return results for all the students associated with the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val course = Courses.create(CoursesTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
+				val section = Sections.create(SectionTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id, courseId = course.id))
+				val quiz = Quizzes.create(QuizTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id), Some(course.id))
+				
+				val student1 = DBTest.fakeUser(UserTmpTest())
+				section.grantAccess(View)(student1, session)
+				val student2 = DBTest.fakeUser(UserTmpTest())
+				section.grantAccess(View)(student2, session)
+				
+				val student1Results = StudentResults(student1, List())
+				val student2Results = StudentResults(student2, List())
+				section.results(quiz) must beEqualTo(List(student1Results, student2Results))
+			}
+		}
+	}
+	
 	"students" should {
-		"return all the students associated with the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+		"return all the students associated with the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val course = Courses.create(CoursesTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
 				val section = Sections.create(SectionTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id, courseId = course.id))

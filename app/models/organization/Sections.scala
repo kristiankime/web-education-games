@@ -13,6 +13,7 @@ import org.joda.time.DateTime
 import models.organization.view._
 import service.table._
 import service.Access._
+import models.question.derivative.Quiz
 
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
@@ -24,11 +25,9 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
 	def details(implicit user: User, session: Session) = SectionDetails(this, access)
 
-	def students(implicit session: Session) =
-		(for (
-			u <- (new UserTable);
-			us <- (new UsersSectionsTable) if us.userId === u.id && us.id === this.id && us.access === service.Access.view
-		) yield u).list
+	def students(implicit session: Session) = Sections.students(id)
+
+	def results(quiz: Quiz)(implicit session: Session) = students.map(v => quiz.studentResults(v))
 
 	protected def linkAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
 
@@ -59,6 +58,12 @@ object Sections {
 	def findByCourse(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).list
 
 	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
+
+	def students(sectionId: SectionId)(implicit session: Session) =
+		(for (
+			u <- (new UserTable);
+			us <- (new UsersSectionsTable) if us.userId === u.id && us.id === sectionId && us.access === service.Access.view
+		) yield u).list
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =

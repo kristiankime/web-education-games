@@ -15,29 +15,75 @@ import service._
 import org.joda.time.DateTime
 import play.api.db.slick.DB
 import scala.slick.session.Session
-import models.question.derivative.view.QuestionDetails
-import models.question.derivative.view.StudentQuestionResults
+import models.question.derivative.view._
 
 @RunWith(classOf[JUnitRunner])
 class QuizzesSpec extends Specification {
 
+	"studentResults" should {
+
+		"lists questions with whatever answers they have" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = DBTest.fakeUser(UserTmpTest())
+				val quiz = Quizzes.create(QuizTmpTest(owner = user.id), None)
+				val question1 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+				val student = DBTest.fakeUser(UserTmpTest())
+				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id))
+				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id))
+				
+				val sqr1 = StudentQuestionResults(question1, false, List(answer1, answer2))
+				val sr = StudentResults(student, List(sqr1))
+				quiz.studentResults(student) must beEqualTo(sr)
+			}
+		}
+	
+		"questions with no answers are incorrect" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = DBTest.fakeUser(UserTmpTest())
+				val quiz = Quizzes.create(QuizTmpTest(owner = user.id), None)
+				val question1 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+				val question2 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+				val student = DBTest.fakeUser(UserTmpTest())
+				val answer = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id, correct = true))
+				
+				val sqr1 = StudentQuestionResults(question1, true, List(answer))
+				val sqr2 = StudentQuestionResults(question2, false, List())
+				val sr = StudentResults(student, List(sqr1, sqr2))
+				quiz.studentResults(student) must beEqualTo(sr)
+			}
+		}
+	}
+
 	"questions" should {
-		
+
 		"find all the questions for this quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				
+
 				val user = DBTest.fakeUser(UserTmpTest())
 				val quiz = Quizzes.create(QuizTmpTest(owner = user.id), None)
 
 				val question1 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 				val question2 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 
-				true must beTrue
-//				question.results(user) must beEqualTo(StudentQuestionResults(question, false, List(answer1, answer2)))
+				quiz.questions must beEqualTo(List(question1, question2))
 			}
 		}
-		
-	}
 
+		"not find questions for other quizesz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = DBTest.fakeUser(UserTmpTest())
+				val quiz = Quizzes.create(QuizTmpTest(owner = user.id), None)
+				val otherQuiz = Quizzes.create(QuizTmpTest(owner = user.id), None)
+
+				val question1 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+				val question2 = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+
+				val otherQuestion = Questions.create(QuestionTmpTest(owner = user.id), otherQuiz.id)
+
+				quiz.questions must beEqualTo(List(question1, question2))
+			}
+		}
+
+	}
 
 }

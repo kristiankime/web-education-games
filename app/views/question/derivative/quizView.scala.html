@@ -68,11 +68,17 @@
     	
 		@for(sectionResult <- sectionResults) {
 		<h5>@sectionResult.section.name</h5>
-		<ul>
+		<table>
+			<tr> <th> Student </th> <th> # Questions </th> <th> # Correct </th> <th> # Attempted </th> </tr>
 			@for(studentResult <- sectionResult.studentResults) {
-			<li> @studentResult.student.email @studentResult.studentQuestions.size </li>
+			<tr> 
+				<td> @studentResult.student.email </td>
+				<td> @studentResult.numQuestions </td>
+				<td> @studentResult.numCorrect </td>
+				<td> @studentResult.numAttempted </td>
+			</tr>
 			}
-		</ul>
+		</table>
 		}
     	
     }

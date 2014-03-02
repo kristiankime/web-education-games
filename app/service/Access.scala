@@ -12,6 +12,9 @@ sealed abstract class Access extends Ordered[Access] {
 	def compare(that: Access): Int = this.v.compare(that.v)
 
 	def maxEdit = Seq(this, Edit).min
+
+	def read[T](block: () => T): Option[T] = if (read) { Some(block()) } else { None }
+	def write[T](block: () => T): Option[T] = if (write) { Some(block()) } else { None }
 }
 
 case object Own extends Access {

@@ -6,9 +6,9 @@
 @import service._
 @import helper._
 
-@main(section.s.name) {
+@main(section.section.name) {
     
-    <header> <h2> Welcome to the information page for the section: @section.s.name of course: <a href=@CoursesController.view(course.id)>@course.name</a> </h2> </h2> </header>
+    <header> <h2> Welcome to the information page for the section: @section.section.name of course: <a href=@CoursesController.view(course.id)>@course.name</a> </h2> </h2> </header>
     
     @if(section.a != Non){
     	<section> <h5> You are assigned to this section as a(n): @AccessName(section.a) </h5> </section>
@@ -16,15 +16,15 @@
     
     @if(section.a == Own){
     	<section> 
-    	<h5> Teacher Access Code: @section.s.editCode </h5>
-    	<h5> Student Access Code: @section.s.viewCode </h5> 
+    	<h5> Teacher Access Code: @section.section.editCode </h5>
+    	<h5> Student Access Code: @section.section.viewCode </h5> 
     	</section>
     }
     
     @if(section.a == Non){
 		<section>
     	<h5> To join the section enter your access code here: </h5>
-    	 @form(action = SectionsController.join(course.id, section.s.id)) {
+    	 @form(action = SectionsController.join(course.id, section.section.id)) {
 			<input type="text" name="@CourseJoin.code" placeholder="code goes here"> <br>
 		    <input type="submit" value="Submit">
     	}

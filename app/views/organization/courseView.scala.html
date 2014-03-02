@@ -31,10 +31,10 @@
     <section>
     <h5> The course has the following section(s) </h5>
 	<ul>
-	@for(section <- course.sections){
+	@for(s <- course.sections){
 		<li> 
-			<a href=@SectionsController.view(section.s.courseId, section.s.id)>@section.s.name</a> 
-	        @if(section.a != Non){ Access: @AccessName(section.a) }
+			<a href=@SectionsController.view(s.section.courseId, s.section.id)>@s.section.name</a> 
+	        @if(s.a != Non){ Access: @AccessName(s.a) }
 		</li>	
 	}
 	</ul>

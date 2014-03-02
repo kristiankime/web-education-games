@@ -1,4 +1,8 @@
-@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, questions: List[derivative.Question])(implicit user: service.User)
+@(access: service.Access, 
+	course: Option[Course], 
+	quiz: derivative.Quiz, 
+	questions: List[derivative.Question], 
+	sectionResultsOp: Option[List[SectionResults]])(implicit user: service.User)
 
 @import helper._
 @import controllers.organization.routes._
@@ -59,4 +63,17 @@
 	    </script>
     }
     
+    @for(sectionResults <- sectionResultsOp){
+    <h4>Results by section</h4>
+    	
+		@for(sectionResult <- sectionResults) {
+		<h5>@sectionResult.section.name</h5>
+		<ul>
+			@for(studentResult <- sectionResult.studentResults) {
+			<li> @studentResult.student.email @studentResult.studentQuestions.size </li>
+			}
+		</ul>
+		}
+    	
+    }
 }

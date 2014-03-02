@@ -17,40 +17,47 @@ import controllers.support.SecureSocialDB
 
 object QuizzesController extends Controller with SecureSocialDB {
 
-	def add(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses.find(_))))
+	def add(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request =>
+		implicit user => implicit session =>
+			Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses.find(_))))
 	}
 
-	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		QuizForm.values.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
-			form => {
-				val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
-				Redirect(routes.QuizzesController.view(quiz.id, courseId))
-			})
+	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request =>
+		implicit user => implicit session =>
+			QuizForm.values.bindFromRequest.fold(
+				errors => BadRequest(views.html.index(Courses.listDetails)),
+				form => {
+					val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
+					Redirect(routes.QuizzesController.view(quiz.id, courseId))
+				})
 	}
 
-	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		val courseOp = courseId.flatMap(Courses.find(_))
-		val quizOp = Quizzes.find(quizId)
-		val access = courseOp.map(_.access).getOrElse(Own) // TODO get access right
-		
-		(quizOp, courseOp) match {
-			case (Some(quiz), Some(course)) => Ok(views.html.question.derivative.quizView(access, Some(course), quiz, Quizzes.findQuestions(quizId)))
-			case (Some(quiz), None) => Ok(views.html.question.derivative.quizView(access, None, quiz, Quizzes.findQuestions(quizId)))
-			case _ => BadRequest(views.html.index(Courses.listDetails))
-		}
+	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request =>
+		implicit user => implicit session =>
+			val courseOp = courseId.flatMap(Courses.find(_))
+			val quizOp = Quizzes.find(quizId)
+			val access = courseOp.map(_.access).getOrElse(Own) // TODO get access right
+
+			(quizOp, courseOp) match {
+				case (Some(quiz), Some(course)) => {
+					val results = access.write(() => course.sectionResults(quiz))
+					Ok(views.html.question.derivative.quizView(access, Some(course), quiz, quiz.questions, results))
+				}
+				case (Some(quiz), None) => Ok(views.html.question.derivative.quizView(access, None, quiz, Quizzes.findQuestions(quizId), None))
+				case _ => BadRequest(views.html.index(Courses.listDetails))
+			}
 	}
-	
-	def rename(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		QuizForm.values.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
-			form => {
-				Quizzes.rename(quizId, form)				
-				Redirect(routes.QuizzesController.view(quizId, courseId))
-			})
+
+	def rename(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request =>
+		implicit user => implicit session =>
+			QuizForm.values.bindFromRequest.fold(
+				errors => BadRequest(views.html.index(Courses.listDetails)),
+				form => {
+					Quizzes.rename(quizId, form)
+					Redirect(routes.QuizzesController.view(quizId, courseId))
+				})
 	}
-	
+
 }
 
 object QuizForm {

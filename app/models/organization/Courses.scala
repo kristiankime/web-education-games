@@ -2,9 +2,7 @@ package models.organization
 
 import scala.math.Ordering._
 import scala.math.Ordering.Implicits._
-
 import org.joda.time.DateTime
-
 import models.id._
 import models.organization.table._
 import models.organization.view._
@@ -14,6 +12,7 @@ import play.api.db.slick.DB
 import service._
 import service.table.UserTable
 import service._
+import models.question.derivative.Quiz
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
@@ -21,6 +20,12 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
+	def sections(implicit session: Session) = Sections.findByCourse(id)
+	
+	def results(quiz: Quiz)(implicit session: Session) = sections.map(_.results(quiz))
+	
+	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))
+	
 	def details(implicit user: User, session: Session) = CourseDetails(this, access, Sections.findByCourse(id).map(_.details))
 
 	protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)

@@ -10,7 +10,7 @@
     
     <h2>Welcome to the information page for the course: @course.c.name</h2>
     
-    @if(course.a != Non){
+    @if(course.a > Non){
     	<section> <h5> You are assigned to this course as a(n): @AccessName(course.a) </h5> </section>
     }
     
@@ -41,13 +41,15 @@
 	@if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] }
     </section>
     
-    <section>
-    <h5> The course has the following quiz(zes) </h5>
-	<ul>
-	@for(quiz <- quizzes){
-		<li> <a href=@QuizzesController.view(quiz.id, Some(course.c.id))>@quiz.name</a> </li>	
+    @if(course.a > Non){
+	    <section>
+	    <h5> The course has the following quiz(zes) </h5>
+		<ul>
+		@for(quiz <- quizzes){
+			<li> <a href=@QuizzesController.view(quiz.id, Some(course.c.id))>@quiz.name</a> </li>	
+		}
+		</ul>
+		@if(course.a.write){ [ <a href=@QuizzesController.add(Some(course.c.id))>add a quiz</a> ] }
+		</section>
 	}
-	</ul>
-	@if(course.a.write){ [ <a href=@QuizzesController.add(Some(course.c.id))>add a quiz</a> ] }
-	</section>
 }

@@ -10,7 +10,7 @@
     
     <header> <h2> Welcome to the information page for the section: @section.section.name of course: <a href=@CoursesController.view(course.id)>@course.name</a> </h2> </h2> </header>
     
-    @if(section.a != Non){
+    @if(section.a > Non){
     	<section> <h5> You are assigned to this section as a(n): @AccessName(section.a) </h5> </section>
     }
     
@@ -31,12 +31,14 @@
     	</section>
     }
     
-    <section>
-    <h5> The course has the following quiz(zes) which apply to this section </h5>
-	<ul>
-	@for(quiz <- quizzes){
-		<li> <a href=@QuizzesController.view(quiz.id, Some(course.id))>@quiz.name</a> </li>	
+    @if(section.a > Non){
+	    <section>
+	    <h5> The course has the following quiz(zes) which apply to this section </h5>
+		<ul>
+		@for(quiz <- quizzes){
+			<li> <a href=@QuizzesController.view(quiz.id, Some(course.id))>@quiz.name</a> </li>	
+		}
+		</ul>
+		</section>
 	}
-	</ul>
-	</section>
 }

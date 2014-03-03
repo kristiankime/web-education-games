@@ -11,7 +11,6 @@ import models.question.derivative.table._
 import play.api.db.slick.Config.driver.simple._
 import service._
 import service.table.UserTable
-import models.question.derivative.view.QuestionDetails
 import models.question.derivative.view.StudentQuestionResults
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {

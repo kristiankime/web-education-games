@@ -1,4 +1,10 @@
-@(access: service.Access, course: Option[Course], quiz: derivative.Quiz, question: derivative.Question, currentAnswer: Option[Either[derivative.AnswerTmp, derivative.Answer]], previousAnswers: List[derivative.Answer], allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
+@(access: service.Access, 
+	course: Option[Course], 
+	quiz: derivative.Quiz, 
+	question: derivative.Question, 
+	currentAnswer: Option[Either[derivative.AnswerTmp, derivative.Answer]], 
+	previousAnswers: List[derivative.Answer], 
+	allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
 
 @import helper._
 @import controllers.organization.routes._

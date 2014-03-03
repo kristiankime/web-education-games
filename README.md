@@ -157,6 +157,18 @@ http://www.playframework.com/documentation/2.1.x/IDE
 heroku create
 git push heroku master
 
+##### Start a project on Heroku
+
+set the environment variables for heroku
+
+* look in heroku_environment_variables_EXAMPLE.sh
+* repace all the "put_xxx_here" with your values (found on the auth websites)
+* rename the script to heroku_environment_variables.sh (this should be git ignored)
+* run the script
+
+
+
+
 ##### Problems with Evolutions
 
 Failed evolutions "stick"

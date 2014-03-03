@@ -26,7 +26,7 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 	
 	def questions(implicit session: Session) = Quizzes.findQuestions(id)
 	
-	def results(section: Section)(implicit session: Session) = QuizDetails(this, section.results(this))
+	def results(section: Section)(implicit session: Session) = QuizResults(this, section.results(this))
 }
 
 object Quizzes {

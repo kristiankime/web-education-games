@@ -33,7 +33,7 @@ class QuizzesSpec extends Specification {
 				
 				val sqr1 = QuestionResults(question1, List(answer1, answer2))
 				val sr = UserQuizResults(student, quiz,  List(sqr1))
-				quiz.studentResults(student) must beEqualTo(sr)
+				quiz.results(student) must beEqualTo(sr)
 			}
 		}
 	
@@ -49,7 +49,7 @@ class QuizzesSpec extends Specification {
 				val sqr1 = QuestionResults(question1, List(answer))
 				val sqr2 = QuestionResults(question2, List())
 				val sr = UserQuizResults(student, quiz, List(sqr1, sqr2))
-				quiz.studentResults(student) must beEqualTo(sr)
+				quiz.results(student) must beEqualTo(sr)
 			}
 		}
 	}

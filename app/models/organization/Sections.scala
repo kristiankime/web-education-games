@@ -27,7 +27,7 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
 	def students(implicit session: Session) = Sections.students(id)
 
-	def results(quiz: Quiz)(implicit session: Session) = students.map(v => quiz.studentResults(v))
+	def results(quiz: Quiz)(implicit session: Session) = students.map(s => quiz.results(s))
 
 	protected def linkAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
 
@@ -67,7 +67,7 @@ object Sections {
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =
-		Query(new UsersSectionsTable).where(us => us.userId === user.id && us.id === sectionId).firstOption.map(_.access).toAccess
+		(Query(new UsersSectionsTable).where(us => us.userId === user.id && us.id === sectionId).firstOption.map(_.access)).toAccess
 
 	/**
 	 * Granting access to the section also grants access to the course

@@ -1,7 +1,6 @@
 @(access: service.Access, 
 	course: Option[Course], 
-	quiz: derivative.Quiz, 
-	questions: List[derivative.Question],
+	quizResults: derivative.view.UserQuizResults,
 	sectionResultsOp: Option[List[SectionResults]])(implicit user: service.User)
 
 @import helper._
@@ -9,28 +8,28 @@
 @import controllers.question.derivative._ 
 @import controllers.question.derivative.QuizForm 
  
-@main("Quiz " + quiz.name) {
+@main("Quiz " + quizResults.quiz.name) {
     
-    <h2>Welcome to the page for quiz: @quiz.name </h1>
+    <h2>Welcome to the page for quiz: @quizResults.quiz.name </h1>
     
     @for(c <- course){ <h5> This is a quiz for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
     
     @if(access.write){
-    	@form(routes.QuizzesController.rename(quiz.id, course.map(_.id)), 'class -> "inline-block") {
-     		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quiz.name"> 
+    	@form(routes.QuizzesController.rename(quizResults.quiz.id, course.map(_.id)), 'class -> "inline-block") {
+     		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quizResults.quiz.name"> 
     		and click <input type="submit" value="rename" > 
     	} 
     }
     
-    <h4>There are @questions.size Question(s) in the quiz</h4>
+    <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
     
     <ul>
-        @questions.map { question =>
+        @for(question <- quizResults.questions){
             <li>
             	@math.mathmlContent(question) 
-            	[<a href=@routes.QuestionsController.view(quiz.id, question.id, course.map(_.id))>view</a>]
+            	[<a href=@routes.QuestionsController.view(quizResults.quiz.id, question.id, course.map(_.id))>view</a>]
                 @if(access.write){ 
-                	@form(routes.QuestionsController.remove(quiz.id, question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
+                	@form(routes.QuestionsController.remove(quizResults.quiz.id, question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
                 }
             </li>
         }
@@ -45,7 +44,7 @@
 			@math.mathmlEditor("QUESTION")
 		</p>
 	
-	    @form(routes.QuestionsController.create(quiz.id, course.map(_.id)), 'id -> "derivativeqForm" ) {
+	    @form(routes.QuestionsController.create(quizResults.quiz.id, course.map(_.id)), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
 	    	<input type="button" value="Save Question" onclick="formSubmit()">

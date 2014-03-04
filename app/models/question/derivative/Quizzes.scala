@@ -22,7 +22,7 @@ case class QuizTmp(owner: UserId, name: String, date: DateTime) {
 case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) {
 	
 	def studentResults(student: User)(implicit session: Session) = 
-		StudentResults(student, questions.map(v => v.results(student)))
+		UserQuizResults(student, this, questions.map(v => v.results(student)))
 	
 	def questions(implicit session: Session) = Quizzes.findQuestions(id)
 	

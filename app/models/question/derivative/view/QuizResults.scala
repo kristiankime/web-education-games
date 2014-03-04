@@ -3,14 +3,30 @@ package models.question.derivative.view
 import models.question.derivative._
 import service.User
 
-case class QuizResults(quiz: Quiz, studentResults: List[StudentResults])
+case class QuizResults(quiz: Quiz, results: List[UserQuizResults])
 
-case class StudentResults(student: User, studentQuestions: List[StudentQuestionResults]) {
-	def numQuestions = studentQuestions.size
-	def numCorrect = studentQuestions.map(s => if (s.correct) { 1 } else { 0 }).foldLeft(0)(_ + _)
-	def numAttempted = studentQuestions.map(s => if (s.attempted) { 1 } else { 0 }).foldLeft(0)(_ + _)
+case class UserQuizResults(user: User, quiz: Quiz, results: List[QuestionResults]) {
+
+	def numQuestions = results.size
+
+	val numCorrect = results.map(s => if (s.correct) { 1 } else { 0 }).foldLeft(0)(_ + _)
+
+	val numAttempted = results.map(s => if (s.attempted) { 1 } else { 0 }).foldLeft(0)(_ + _)
+
+	val questions = results.toVector.map(_.question)
+
+	def nextQuestion(question: Question): Option[Question] = {
+		val index = questions.indexOf(question)
+		if (index == -1) { None } // LATER should indicate difference between failure and end of list
+		else if (index == (questions.size - 1)) { None }
+		else { Some(questions(index + 1)) }
+	}
+
 }
 
-case class StudentQuestionResults(question: Question, correct: Boolean, answers: List[Answer]) {
+case class QuestionResults(question: Question, answers: List[Answer]) {
+	
+	val correct = answers.foldLeft(false)(_ || _.correct)
+
 	def attempted = answers.nonEmpty
 }

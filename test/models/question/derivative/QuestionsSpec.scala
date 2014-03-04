@@ -16,7 +16,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.DB
 import scala.slick.session.Session
 import models.question.derivative.view.QuestionDetails
-import models.question.derivative.view.StudentQuestionResults
+import models.question.derivative.view.QuestionResults
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {
@@ -31,7 +31,7 @@ class QuestionsSpec extends Specification {
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 
-				question.results(user) must beEqualTo(StudentQuestionResults(question, false, List(answer1, answer2)))
+				question.results(user) must beEqualTo(QuestionResults(question, List(answer1, answer2)))
 			}
 		}
 		
@@ -44,7 +44,7 @@ class QuestionsSpec extends Specification {
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = true))
 
-				question.results(user) must beEqualTo(StudentQuestionResults(question, true, List(answer1, answer2)))
+				question.results(user) must beEqualTo(QuestionResults(question, List(answer1, answer2)))
 			}
 		}
 	}

@@ -31,8 +31,8 @@ class QuizzesSpec extends Specification {
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id))
 				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id))
 				
-				val sqr1 = StudentQuestionResults(question1, false, List(answer1, answer2))
-				val sr = StudentResults(student, List(sqr1))
+				val sqr1 = QuestionResults(question1, List(answer1, answer2))
+				val sr = UserQuizResults(student, quiz,  List(sqr1))
 				quiz.studentResults(student) must beEqualTo(sr)
 			}
 		}
@@ -46,9 +46,9 @@ class QuizzesSpec extends Specification {
 				val student = DBTest.fakeUser(UserTmpTest())
 				val answer = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id, correct = true))
 				
-				val sqr1 = StudentQuestionResults(question1, true, List(answer))
-				val sqr2 = StudentQuestionResults(question2, false, List())
-				val sr = StudentResults(student, List(sqr1, sqr2))
+				val sqr1 = QuestionResults(question1, List(answer))
+				val sqr2 = QuestionResults(question2, List())
+				val sr = UserQuizResults(student, quiz, List(sqr1, sqr2))
 				quiz.studentResults(student) must beEqualTo(sr)
 			}
 		}

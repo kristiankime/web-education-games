@@ -1,7 +1,7 @@
 @(access: service.Access, 
 	course: Option[Course], 
 	quiz: derivative.Quiz, 
-	questions: List[derivative.Question], 
+	questions: List[derivative.Question],
 	sectionResultsOp: Option[List[SectionResults]])(implicit user: service.User)
 
 @import helper._
@@ -72,7 +72,7 @@
 			<tr> <th> Student </th> <th> # Questions </th> <th> # Correct </th> <th> # Attempted </th> </tr>
 			@for(studentResult <- sectionResult.studentResults) {
 			<tr> 
-				<td> @studentResult.student.email </td>
+				<td> @studentResult.user.email </td>
 				<td> @studentResult.numQuestions </td>
 				<td> @studentResult.numCorrect </td>
 				<td> @studentResult.numAttempted </td>

@@ -11,7 +11,7 @@ import models.question.derivative.table._
 import play.api.db.slick.Config.driver.simple._
 import service._
 import service.table.UserTable
-import models.question.derivative.view.StudentQuestionResults
+import models.question.derivative.view.QuestionResults
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
 	def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)
@@ -22,11 +22,8 @@ case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: S
 	def answers(user: User)(implicit session: Session) =
 		Query(new AnswersTable).where(a => a.questionId === id && a.owner === user.id).list
 
-	def results(user: User)(implicit session: Session) = {
-		val ans = answers(user)
-		val correct = ans.foldLeft(false)(_ || _.correct)
-		StudentQuestionResults(this, correct, ans)
-	}
+	def results(user: User)(implicit session: Session) = 
+		QuestionResults(this, answers(user))
 
 }
 

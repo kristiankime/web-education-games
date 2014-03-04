@@ -6,7 +6,7 @@ import service.User
 case class QuizResults(quiz: Quiz, results: List[UserQuizResults])
 
 case class UserQuizResults(user: User, quiz: Quiz, results: List[QuestionResults]) {
-
+	
 	def numQuestions = results.size
 
 	val numCorrect = results.map(s => if (s.correct) { 1 } else { 0 }).foldLeft(0)(_ + _)

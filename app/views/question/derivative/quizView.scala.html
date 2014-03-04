@@ -24,12 +24,15 @@
     <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
     
     <ul>
-        @for(question <- quizResults.questions){
+        @for(result <- quizResults.results){
             <li>
-            	@math.mathmlContent(question) 
-            	[<a href=@routes.QuestionsController.view(quizResults.quiz.id, question.id, course.map(_.id))>view</a>]
+            	@math.mathmlContent(result.question) 
+            	[<a href=@routes.QuestionsController.view(quizResults.quiz.id, result.question.id, course.map(_.id))>view</a>]
+                @if(result.attempted){
+                	@math.correct(result.correct)
+                }
                 @if(access.write){ 
-                	@form(routes.QuestionsController.remove(quizResults.quiz.id, question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
+                	@form(routes.QuestionsController.remove(quizResults.quiz.id, result.question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
                 }
             </li>
         }

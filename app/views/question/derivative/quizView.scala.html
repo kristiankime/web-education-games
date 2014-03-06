@@ -28,9 +28,7 @@
             <li>
             	@math.mathmlContent(result.question) 
             	[<a href=@routes.QuestionsController.view(quizResults.quiz.id, result.question.id, course.map(_.id))>view</a>]
-                @if(result.attempted){
-                	@math.correct(result.correct)
-                }
+                @views.html.question.status(result.status)
                 @if(access.write){ 
                 	@form(routes.QuestionsController.remove(quizResults.quiz.id, result.question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
                 }

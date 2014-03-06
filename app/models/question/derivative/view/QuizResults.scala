@@ -3,6 +3,7 @@ package models.question.derivative.view
 import models.question.derivative._
 import service.User
 import com.artclod.collection.PimpedSeq
+import models.question.Status
 
 case class QuizResults(quiz: Quiz, results: List[UserQuizResults])
 
@@ -25,4 +26,9 @@ case class QuestionResults(question: Question, answers: List[Answer]) {
 	val correct = answers.foldLeft(false)(_ || _.correct)
 
 	def attempted = answers.nonEmpty
+	
+	val status = Status(attempted, correct)
 }
+
+
+

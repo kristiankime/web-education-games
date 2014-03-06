@@ -68,9 +68,11 @@
 		@for(sectionResult <- sectionResults) {
 		<h5>@sectionResult.section.name</h5>
 		<table>
-			<tr> <th> Student </th> <th> # Questions </th> <th> # Correct </th> <th> # Attempted </th> </tr>
+			<tr> <th> Last Name </th> <th> First Name </th> <th> Email </th> <th> # Questions </th> <th> # Correct </th> <th> # Attempted </th> </tr>
 			@for(studentResult <- sectionResult.studentResults) {
 			<tr> 
+				<td> @studentResult.user.lastName </td>
+				<td> @studentResult.user.firstName </td>
 				<td> @studentResult.user.email </td>
 				<td> @studentResult.numQuestions </td>
 				<td> @studentResult.numCorrect </td>

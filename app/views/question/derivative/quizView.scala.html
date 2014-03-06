@@ -23,18 +23,17 @@
     
     <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
     
-    <ul>
+    <table>
+    	<th>Question</th> <th>Details</th> <th>Status</th> @if(access.write){ <th> Remove </th> }
         @for(result <- quizResults.results){
-            <li>
-            	@math.mathmlContent(result.question) 
-            	[<a href=@routes.QuestionsController.view(quizResults.quiz.id, result.question.id, course.map(_.id))>view</a>]
-                @views.html.question.status(result.status)
-                @if(access.write){ 
-                	@form(routes.QuestionsController.remove(quizResults.quiz.id, result.question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } 
-                }
-            </li>
+            <tr>
+            	<td> @math.mathmlContent(result.question) </td>
+            	<td> <a href=@routes.QuestionsController.view(quizResults.quiz.id, result.question.id, course.map(_.id))>view</a> </td>
+                <td> @views.html.question.status(result.status) </td>
+                @if(access.write){ <td> @form(routes.QuestionsController.remove(quizResults.quiz.id, result.question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
+            </tr>
         }
-    </ul>
+    </table>
     
     @if(access.write){
 	    <h4>Add a new Question</h4>

@@ -63,7 +63,7 @@ object Sections {
 		(for (
 			u <- (new UserTable);
 			us <- (new UsersSectionsTable) if us.userId === u.id && us.id === sectionId && us.access === service.Access.view
-		) yield u).list
+		) yield u).sortBy(_.email).list
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =

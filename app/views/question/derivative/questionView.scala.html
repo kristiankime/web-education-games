@@ -79,10 +79,17 @@
 	
 	@if(access.write){
 		<h4>There have been @allAnswers.size Answer(s) to this question</h4>
-	    <ul>
-	    @for(answer <- allAnswers){
-	        <li> @answer._2.email said @math.mathmlContent(answer._1) this answer was @math.correct(answer._1.correct) </li>
-	    }
+		<table>
+			<tr> <th> Last Name </th> <th> First Name </th> <th> Email </th> <th> Answer </th> <th> Correct </th> </tr>
+		    @for(answer <- allAnswers){
+		    <tr>
+		    	<td> @answer._2.lastName </td>
+		    	<td> @answer._2.firstName </td>
+		    	<td> @answer._2.email </td>
+		    	<td> @math.mathmlContent(answer._1) </td>
+		    	<td> @math.correct(answer._1.correct) </td>
+		    </tr>
+		    }
 	    </ul>
     }
 }

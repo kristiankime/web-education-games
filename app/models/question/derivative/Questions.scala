@@ -47,7 +47,7 @@ object Questions {
 		(for (
 			a <- (new AnswersTable) if a.questionId === qid;
 			u <- (new UserTable) if u.id === a.owner
-		) yield (a, u)).list
+		) yield (a, u)).sortBy(_._2.lastName).list
 
 	def findAnswers(qid: QuestionId, owner: User)(implicit session: Session) = Query(new AnswersTable).where(r => r.questionId === qid && r.owner === owner.id).list
 

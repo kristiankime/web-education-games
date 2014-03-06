@@ -18,6 +18,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTime.now
 import controllers.support.SecureSocialDB
 import scala.slick.session.Session
+import mathml.scalar.MathMLElem
 
 object AnswersController extends Controller with SecureSocialDB {
 
@@ -37,11 +38,11 @@ object AnswersController extends Controller with SecureSocialDB {
 		AnswerForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
-				val questionOp = Questions.find(quId)
-				val mathOp = MathML(form._1)
+				val questionOp : Option[Question] = Questions.find(quId)
+				val mathOp : Try[MathMLElem] = MathML(form._1)
 				val rawStr = form._2
-				val quizOp = Quizzes.find(qzId)
-				val courseOp = cId.flatMap(Courses.find(_))
+				val quizOp : Option[Quiz] = Quizzes.find(qzId)
+				val courseOp  = cId.flatMap(Courses.find(_))
 
 				(questionOp, mathOp, quizOp) match {
 					case (Some(qu), Success(m), Some(qz)) => {
@@ -58,9 +59,9 @@ object AnswersController extends Controller with SecureSocialDB {
 	}
 
 	private def questionView(access: Access, course: Option[Course], quiz: Quiz, question: Question, answer: Option[Either[AnswerTmp, Answer]])(implicit user: User, session: Session) = {
-		val userAnswers = Questions.findAnswers(question.id, user)
 		val allAnswers = Questions.findAnswersAndOwners(question.id)
-		Ok(views.html.question.derivative.questionView(access, course, quiz, question, answer, userAnswers, allAnswers))
+		val nextQuestion = quiz.results(user).nextQuestion(question)
+		Ok(views.html.question.derivative.questionView(access, course, quiz, question.results(user), answer, nextQuestion, allAnswers))
 	}
 
 	private def access(qu: Question, cOp: Option[Course])(implicit user: User, session: Session) = {

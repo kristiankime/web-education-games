@@ -1,9 +1,9 @@
 @(access: service.Access, 
 	course: Option[Course], 
-	quiz: derivative.Quiz, 
-	question: derivative.Question, 
+	quiz: derivative.Quiz,
+	results : derivative.view.QuestionResults,
 	currentAnswer: Option[Either[derivative.AnswerTmp, derivative.Answer]], 
-	previousAnswers: List[derivative.Answer], 
+	nextQuestion: Option[derivative.Question],
 	allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
 
 @import helper._
@@ -22,9 +22,8 @@
     
     <div>
 	    <h2>What is the Derivative of</h2>
-    	@math.mathmlContent(question)
+    	@math.mathmlContent(results.question)
 	</div>
-	<p>
 	
 	@for(answerEither <- currentAnswer){
 		<div>
@@ -33,17 +32,17 @@
 			case Left(answerTmp) => { You answered @math.mathmlContent(answerTmp) Sorry but the system was undable to determine if that answer was correct :( please try another answer }
 		}
 		</div>
-		<p>
-		
 	}	
     
     <div>
+    	<p>
 		Type in your answer, and then hit the submit button <br> 
-		@math.mathmlEditor("ANSWER")
+		@math.mathmlEditor("ANSWER") <br>
+		</p>
 	</div>
-		
+	
 	<div>
-	@form(routes.AnswersController.create(quiz.id, question.id, course.map(_.id)) , 'id -> "answerForm" ) {
+	@form(routes.AnswersController.create(quiz.id, results.question.id, course.map(_.id)) , 'id -> "answerForm" ) {
     	<input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
     	<input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
     	<input type="button" value="Submit" onclick="answerFormSubmit()">
@@ -61,12 +60,14 @@
 	}
     </script>
     
-    <p>
+    @for(next <- nextQuestion){
+    	[<a href=@routes.QuestionsController.view(quiz.id, next.id, course.map(_.id))>next question</a>]
+    }
 	
-	@if(previousAnswers.nonEmpty){
-		<h4>You have answered this questions @previousAnswers.size time(s)</h4>
+	@if(results.answers.nonEmpty){
+		<h4>You have answered this questions @results.answers.size time(s)</h4>
 	    <ul>
-	    @for(answer <- previousAnswers){
+	    @for(answer <- results.answers){
 	        <li> @math.mathmlContent(answer) this answer was @math.correct(answer.correct) </li>
 	    }
 	    </ul>

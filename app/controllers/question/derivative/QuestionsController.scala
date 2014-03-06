@@ -15,6 +15,7 @@ import models.organization.Courses
 import org.joda.time.DateTime
 import service._
 import controllers.support.SecureSocialDB
+import com.artclod.collection.PimpedSeq
 
 object QuestionsController extends Controller with SecureSocialDB {
 
@@ -26,15 +27,15 @@ object QuestionsController extends Controller with SecureSocialDB {
 		(courseOp, quizOp, questionOp) match {
 			case (Some(course), Some(quiz), Some(question)) => {
 				val access =  course.access
-				val userAnswers = Questions.findAnswers(questionId, user)
+				val nextQuestion = quiz.results(user).nextQuestion(question)
 				val allAnswers = Questions.findAnswersAndOwners(questionId)
-				Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question, None, userAnswers, allAnswers))
+				Ok(views.html.question.derivative.questionView(access, Some(course), quiz, question.results(user), None, nextQuestion, allAnswers))
 			}
 			case (None, Some(quiz), Some(question)) => {
 				val access =  Access(user, question.owner)
-				val userAnswers = Questions.findAnswers(questionId, user)
+				val nextQuestion = quiz.results(user).nextQuestion(question)
 				val allAnswers = Questions.findAnswersAndOwners(questionId)
-				Ok(views.html.question.derivative.questionView(access, None, quiz, question, None, userAnswers, allAnswers))
+				Ok(views.html.question.derivative.questionView(access, None, quiz, question.results(user), None, nextQuestion, allAnswers))
 			}
 			case _ => BadRequest(views.html.index(Courses.listDetails))
 		}

@@ -302,33 +302,27 @@ ARTC.txt2MathML = (function() {
       }
 
       function peg$parseTerm_AddSub() {
-        var s0, s1, s2, s3, s4;
+        var s0, s1, s2, s3;
 
         s0 = peg$currPos;
         s1 = peg$parseTerm_MulDiv();
         if (s1 !== peg$FAILED) {
-          s2 = peg$parsews();
+          s2 = [];
+          s3 = peg$parseAdd();
+          if (s3 === peg$FAILED) {
+            s3 = peg$parseSub();
+          }
+          while (s3 !== peg$FAILED) {
+            s2.push(s3);
+            s3 = peg$parseAdd();
+            if (s3 === peg$FAILED) {
+              s3 = peg$parseSub();
+            }
+          }
           if (s2 !== peg$FAILED) {
-            s3 = [];
-            s4 = peg$parseAdd();
-            if (s4 === peg$FAILED) {
-              s4 = peg$parseSub();
-            }
-            while (s4 !== peg$FAILED) {
-              s3.push(s4);
-              s4 = peg$parseAdd();
-              if (s4 === peg$FAILED) {
-                s4 = peg$parseSub();
-              }
-            }
-            if (s3 !== peg$FAILED) {
-              peg$reportedPos = s0;
-              s1 = peg$c3(s1, s3);
-              s0 = s1;
-            } else {
-              peg$currPos = s0;
-              s0 = peg$c1;
-            }
+            peg$reportedPos = s0;
+            s1 = peg$c3(s1, s2);
+            s0 = s1;
           } else {
             peg$currPos = s0;
             s0 = peg$c1;
@@ -342,24 +336,30 @@ ARTC.txt2MathML = (function() {
       }
 
       function peg$parseAdd() {
-        var s0, s1, s2, s3;
+        var s0, s1, s2, s3, s4;
 
         s0 = peg$currPos;
-        if (input.charCodeAt(peg$currPos) === 43) {
-          s1 = peg$c4;
-          peg$currPos++;
-        } else {
-          s1 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c5); }
-        }
+        s1 = peg$parsews();
         if (s1 !== peg$FAILED) {
-          s2 = peg$parsews();
+          if (input.charCodeAt(peg$currPos) === 43) {
+            s2 = peg$c4;
+            peg$currPos++;
+          } else {
+            s2 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$c5); }
+          }
           if (s2 !== peg$FAILED) {
-            s3 = peg$parseTerm_MulDiv();
+            s3 = peg$parsews();
             if (s3 !== peg$FAILED) {
-              peg$reportedPos = s0;
-              s1 = peg$c6(s3);
-              s0 = s1;
+              s4 = peg$parseTerm_MulDiv();
+              if (s4 !== peg$FAILED) {
+                peg$reportedPos = s0;
+                s1 = peg$c6(s4);
+                s0 = s1;
+              } else {
+                peg$currPos = s0;
+                s0 = peg$c1;
+              }
             } else {
               peg$currPos = s0;
               s0 = peg$c1;
@@ -377,24 +377,30 @@ ARTC.txt2MathML = (function() {
       }
 
       function peg$parseSub() {
-        var s0, s1, s2, s3;
+        var s0, s1, s2, s3, s4;
 
         s0 = peg$currPos;
-        if (input.charCodeAt(peg$currPos) === 45) {
-          s1 = peg$c7;
-          peg$currPos++;
-        } else {
-          s1 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c8); }
-        }
+        s1 = peg$parsews();
         if (s1 !== peg$FAILED) {
-          s2 = peg$parsews();
+          if (input.charCodeAt(peg$currPos) === 45) {
+            s2 = peg$c7;
+            peg$currPos++;
+          } else {
+            s2 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$c8); }
+          }
           if (s2 !== peg$FAILED) {
-            s3 = peg$parseTerm_MulDiv();
+            s3 = peg$parsews();
             if (s3 !== peg$FAILED) {
-              peg$reportedPos = s0;
-              s1 = peg$c9(s3);
-              s0 = s1;
+              s4 = peg$parseTerm_MulDiv();
+              if (s4 !== peg$FAILED) {
+                peg$reportedPos = s0;
+                s1 = peg$c9(s4);
+                s0 = s1;
+              } else {
+                peg$currPos = s0;
+                s0 = peg$c1;
+              }
             } else {
               peg$currPos = s0;
               s0 = peg$c1;

@@ -28,52 +28,20 @@ abstract class MathMLElem(
 	 */
 	protected def simplifyStep: MathMLElem
 
-	private def simplifyStepWithCNCheck: MathMLElem = {
-		val foo = c.getOrElse(simplifyStep)
-		
-		if( (this ?= foo) != mathml.Match.Yes ) {
-			System.err.println(this)
-			System.err.println("simplifyStepWithCNCheck simplified to")
-			System.err.println(foo)
-			System.err.println
-		}
-		
-		foo
-	}
+	private def simplifyStepWithCNCheck: MathMLElem = c.getOrElse(simplifyStep)
 
 	private var s_ : MathMLElem = null
-	def s = //this
-	{
+	def s = {
 		if (s_ == null) {
 			s_ = simplifyRecurse(this)
 		}
-		
-		if( (this ?= s_) != mathml.Match.Yes ) {
-			System.err.println(this)
-			System.err.println("s_ simplified to")
-			System.err.println(s_)
-			System.err.println
-		}
-		
 		s_
-//		this
 	}
 
 	@tailrec private def simplifyRecurse(elem: MathMLElem): MathMLElem = {
 		val simp = elem.simplifyStepWithCNCheck
-		
-		if( (elem ?= simp) != mathml.Match.Yes ) {
-			System.err.println(elem)
-			System.err.println("simplifyRecurse simplified to")
-			System.err.println(simp)
-			System.err.println
-		}
-		
-		if (simp == elem) {
-			elem
-		} else {
-			simplifyRecurse(simp)
-		}
+		if (simp == elem) { elem }
+		else { simplifyRecurse(simp) }
 	}
 
 	protected def constant: Option[Constant]
@@ -83,15 +51,6 @@ abstract class MathMLElem(
 		if (c_ == null) {
 			c_ = constant
 		}
-		
-		for(CTest <- c_)
-		if( (this ?= CTest) != mathml.Match.Yes ) {
-			System.err.println(this)
-			System.err.println("c_ simplified to")
-			System.err.println(CTest)
-			System.err.println
-		}
-		
 		c_
 	}
 

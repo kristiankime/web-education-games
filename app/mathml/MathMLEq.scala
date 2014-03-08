@@ -27,10 +27,6 @@ object MathMLEq {
 		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
-
-//		System.err.println(eq1s)
-//		System.err.println(eq2s)
-//		System.err.println(matches)
 		
 		matches.reduce((_, _) match {
 			case (No, _) => No

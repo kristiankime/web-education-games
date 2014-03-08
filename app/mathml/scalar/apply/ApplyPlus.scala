@@ -18,23 +18,13 @@ case class ApplyPlus(val values: MathMLElem*)
 			None
 		}
 
-	def simplifyStep() = {
-		val ret = (cns, flattenedMathMLElems) match {
+	def simplifyStep() = 
+		(cns, flattenedMathMLElems) match {
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ + _)
 			case (Seq(), Seq(elem)) => elem
 			case (Seq(), Seq(elems @ _*)) => ApplyPlus(elems: _*)
 			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyPlus(elems ++ Seq(cns.reduce(_ + _)).filterNot(_.isZero): _*)
 		}
-		
-		if( (this ?= ret) != mathml.Match.Yes ) {
-			System.err.println(this)
-			System.err.println("* simplified to")
-			System.err.println(ret)
-			System.err.println
-		}
-		
-		ret
-	}
 
 	private def cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
 

@@ -20,31 +20,13 @@ case class ApplyTimes(val values: MathMLElem*)
 		None
 	}
 
-	def simplifyStep() = {
-		val ret = (cns, flattenedMathMLElems) match {
+	def simplifyStep() = 
+		(cns, flattenedMathMLElems) match {
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
 			case (Seq(), Seq(elem)) => elem
 			case (Seq(), Seq(elems @ _*)) => ApplyTimes(elems: _*)
 			case (Seq(cns @ _*), Seq(elems @ _*)) => ApplyTimes(Seq(cns.reduce(_ * _)).filterNot(_.isOne) ++ elems: _*)
 		}
-
-		if ((this ?= ret) != mathml.Match.Yes) {
-			System.err.println(this)
-			System.err.println("* simplified to")
-			System.err.println(ret)
-			System.err.println
-		}
-
-		//		if(this != ret){
-		//    		System.err.println(this)
-		//    		System.err.println("* WTF simplified to")
-		//    		System.err.println(ret)
-		//    		System.err.println
-		//		}
-
-		ret
-		//		this
-	}
 
 	private def cns = values.map(_.c).filter(_.nonEmpty).map(_.get)
 
@@ -63,27 +45,8 @@ case class ApplyTimes(val values: MathMLElem*)
 			ApplyPlus((0 until values.size).map(i => derivativeForPos(x, i)): _*)
 		}
 
-	def derivativeForPos(x: String, pos: Int) = {
+	private def derivativeForPos(x: String, pos: Int) = {
 		val items = for (i <- 0 until values.size) yield { if (i == pos) { values(i).d(x) } else { values(i) } }
 		ApplyTimes(items: _*)
-	}
-
-	//	def derivative(x: String): MathMLElem = productRuleRecursive(x, values(0), values.drop(1))
-	//
-	//	@tailrec private def productRuleRecursive(x: String, first: MathMLElem, rest: Seq[MathMLElem]) : MathMLElem = {
-	//		(first, rest) match {
-	//			case (f, Seq()) => f
-	//			case (f, Seq(g)) => productRule(x: String, f: MathMLElem, g: MathMLElem)
-	//			case (f, Seq(rest @ _*)) => productRuleRecursive(x, productRule(x, f, rest(0)), rest.drop(1))
-	//		}
-	//	}
-
-	private def productRule(x: String, f: MathMLElem, g: MathMLElem) = {
-		// http://en.wikipedia.org/wiki/Product_rule
-		// (f*g)' = f'*g + f*g'
-		val fP = f.d(x)
-		val gP = g.d(x)
-
-		(fP * g + f * gP).s
 	}
 }

@@ -17,8 +17,8 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 		case _ => None
 	}
 
-	def simplifyStep() = {
-		val ret = if (denominator.isOne) numerator.s
+	def simplifyStep() =
+		if (denominator.isOne) numerator.s
 		else if (numerator.isZero && !denominator.isZero) `0`
 		else {
 			(numerator.s, denominator.s) match {
@@ -27,16 +27,6 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 				case (n, d) => ApplyDivide(n, d)
 			}
 		}
-		
-		if( (this ?= ret) != mathml.Match.Yes ) {
-			System.err.println(this)
-			System.err.println("* simplified to")
-			System.err.println(ret)
-			System.err.println
-		}
-		
-		ret
-	}
 
 	def variables: Set[String] = numerator.variables ++ denominator.variables
 

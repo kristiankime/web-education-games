@@ -19,21 +19,11 @@ case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
 		case _ => None
 	}
 
-	def simplifyStep() = {
-		val ret = if (value2.isZero) value1.s
+	def simplifyStep() =
+		if (value2.isZero) value1.s
 		else if (value1.isZero) -(value2.s)
 		else (value1.s) - (value2.s)
 		
-		if ((this ?= ret) != mathml.Match.Yes) {
-			System.err.println(this)
-			System.err.println("* simplified to")
-			System.err.println(ret)
-			System.err.println
-		}
-
-		ret
-	}
-
 	def variables: Set[String] = value1.variables ++ value2.variables
 
 	def derivative(x: String): MathMLElem = (value1.d(x).s) - (value2.d(x).s)

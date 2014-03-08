@@ -38,21 +38,11 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 		case _ => None
 	}
 
-	def simplifyStep() = {
-		val ret = if (base.isOne) `1`
+	def simplifyStep() =
+		if (base.isOne) `1`
 		else if (exp.isZero) `1`
 		else if (exp.isOne) base.s
 		else base.s ^ exp.s
-		
-		if( (this ?= ret) != mathml.Match.Yes ) {
-			System.err.println(this)
-			System.err.println("^ simplified to")
-			System.err.println(ret)
-			System.err.println
-		}
-		
-		ret
-	}
 
 	def variables: Set[String] = base.variables ++ exp.variables
 

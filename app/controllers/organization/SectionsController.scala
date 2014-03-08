@@ -15,7 +15,7 @@ import scala.util.Random
 import controllers.support.SecureSocialDB
 
 object SectionsController extends Controller with SecureSocialDB {
-	val randomEngine = new Random(0L)
+	val randomEngine = new Random(DateTime.now.getMillis())
 
 	def list(courseId: CourseId) = TODO
 

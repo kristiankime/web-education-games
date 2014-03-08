@@ -15,7 +15,7 @@ import service._
 import controllers.support.SecureSocialDB
 
 object CoursesController extends Controller with SecureSocialDB {
-	val randomEngine = new Random(0L)
+	val randomEngine = new Random(DateTime.now.getMillis())
 
 	def list = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.organization.courseList(Courses.listDetails))

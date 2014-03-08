@@ -94,7 +94,7 @@ class ApplyTimesSpec extends Specification {
 		}
 
 		// (f(x) g(x) h(x))' = g(x)h(x)f'(x) + f(x)h(x)g'(x) + f(x)g(x)h'(x)
-		"obey the multiple product rule: (f g h)' = " in {
+		"obey the multiple product rule: (fgh)' = f'gh + fg'h + fgh'" in {
 			ApplyTimes(F, G, H).dx must beEqualTo(ApplyPlus(ApplyTimes(Fdx, G, H), ApplyTimes(F, Gdx, H), ApplyTimes(F, G, Hdx)))
 		}
 	}

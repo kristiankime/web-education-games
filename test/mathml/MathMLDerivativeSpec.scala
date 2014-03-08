@@ -31,6 +31,19 @@ class MathMLDerivativeSpec extends Specification {
 		//			(x / ln(x)ʹ) must beEqualTo((ln(x) - `1`) / (ln(x) ^ `2`))
 		//		}
 
+		//		<apply><times/><apply><times/><cn type="integer">4</cn><apply><power/><ci>x</ci><cn type="integer">3</cn></apply></apply><apply><power/><exponentiale/><ci>x</ci></apply></apply>
+		
+//		"(4 * x ^ 3 * e ^ x)' = " in {
+//			val mathF = MathML(<apply><times/><apply><times/><cn type="integer">4</cn><apply><power/><ci>x</ci><cn type="integer">3</cn></apply></apply><apply><power/><exponentiale/><ci>x</ci></apply></apply>).get
+//		    val f =  ((`4` * (x ^ `3`)) * (e ^ x))
+//		    
+//		    System.err.println(f dx);
+//		    
+//		    f must beEqualTo(mathF)
+//		    
+//		    (f dx) must beEqualTo(   Cn(4 * math.E) )
+//		}
+		
 	}
 
 }

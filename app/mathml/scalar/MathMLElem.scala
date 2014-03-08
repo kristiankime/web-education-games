@@ -26,22 +26,51 @@ abstract class MathMLElem(
 	 * Does one round of simplification on this element.
 	 * Implementations of this method should not use the "s".
 	 */
-	protected def simplifyStep(): MathMLElem
+	protected def simplifyStep: MathMLElem
 
-	private def simplifyStepWithCNCheck(): MathMLElem = c.getOrElse(simplifyStep)
+	private def simplifyStepWithCNCheck: MathMLElem = {
+		val foo = c.getOrElse(simplifyStep)
+		
+		if( (this ?= foo) != mathml.Match.Yes ) {
+			System.err.println(this)
+			System.err.println("simplifyStepWithCNCheck simplified to")
+			System.err.println(foo)
+			System.err.println
+		}
+		
+		foo
+	}
 
 	private var s_ : MathMLElem = null
-	def s = {
+	def s = //this
+	{
 		if (s_ == null) {
 			s_ = simplifyRecurse(this)
 		}
+		
+		if( (this ?= s_) != mathml.Match.Yes ) {
+			System.err.println(this)
+			System.err.println("s_ simplified to")
+			System.err.println(s_)
+			System.err.println
+		}
+		
 		s_
+//		this
 	}
 
-	@tailrec private def simplifyRecurse(e: MathMLElem): MathMLElem = {
-		val simp = e.simplifyStepWithCNCheck
-		if (simp == e) {
-			e
+	@tailrec private def simplifyRecurse(elem: MathMLElem): MathMLElem = {
+		val simp = elem.simplifyStepWithCNCheck
+		
+		if( (elem ?= simp) != mathml.Match.Yes ) {
+			System.err.println(elem)
+			System.err.println("simplifyRecurse simplified to")
+			System.err.println(simp)
+			System.err.println
+		}
+		
+		if (simp == elem) {
+			elem
 		} else {
 			simplifyRecurse(simp)
 		}
@@ -54,6 +83,15 @@ abstract class MathMLElem(
 		if (c_ == null) {
 			c_ = constant
 		}
+		
+		for(CTest <- c_)
+		if( (this ?= CTest) != mathml.Match.Yes ) {
+			System.err.println(this)
+			System.err.println("c_ simplified to")
+			System.err.println(CTest)
+			System.err.println
+		}
+		
 		c_
 	}
 
@@ -61,11 +99,11 @@ abstract class MathMLElem(
 
 	protected def derivative(wrt: String): MathMLElem
 
-	def d(wrt: String) = 
+	def d(wrt: String) =
 		if (!variables.contains(wrt)) `0`
 		else derivative(wrt).s
 
-	def dx = derivative("x").s
+	def dx = d("x")
 
 	def +(m: MathMLElem) = ApplyPlus(this, m)
 

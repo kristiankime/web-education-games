@@ -189,7 +189,7 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"product rule" in {
-			ApplyTimes(x, x).derivative("x") must beEqualTo(ApplyPlus(x, x))
+			ApplyTimes(x, x).d("x") must beEqualTo(ApplyPlus(x, x))
 		}
 	}
 

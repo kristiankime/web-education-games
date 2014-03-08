@@ -39,7 +39,7 @@ class ApplyTimesSpec extends Specification {
 			ApplyTimes(x, y).variables must beEqualTo(Set("x", "y"))
 		}
 	}
-	
+
 	"c" should {
 		"return 0 if any value is zero" in {
 			ApplyTimes(`1`, `0`, x).c.get must beEqualTo(`0`)
@@ -78,7 +78,7 @@ class ApplyTimesSpec extends Specification {
 		"remove 1s" in {
 			ApplyTimes(`1`, x).s must beEqualTo(x)
 		}
-		
+
 		"multiply constants and leave variables, with nested elements  (constands go to end)" in {
 			ApplyTimes(x, `4`, y, (`2` * `3`)).s must beEqualTo(ApplyTimes(`24`, x, y))
 		}
@@ -93,10 +93,10 @@ class ApplyTimesSpec extends Specification {
 			ApplyTimes(F, G).dx must beEqualTo(Fdx * G + F * Gdx)
 		}
 
-		//		LATER
-		//		"obey the multiple product rule: (f g h)' = " in {
-		//			ApplyTimes(F, G, H).dx must beEqualTo(Fdx * G + F * Gdx)
-		//		}
+		// (f(x) g(x) h(x))' = g(x)h(x)f'(x) + f(x)h(x)g'(x) + f(x)g(x)h'(x)
+		"obey the multiple product rule: (f g h)' = " in {
+			ApplyTimes(F, G, H).dx must beEqualTo(ApplyPlus(ApplyTimes(Fdx, G, H), ApplyTimes(F, Gdx, H), ApplyTimes(F, G, Hdx)))
+		}
 	}
 
 }

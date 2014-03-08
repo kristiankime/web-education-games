@@ -18,7 +18,7 @@ import Match._
 object MathMLEq {
 	private val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
 	private val vals = (Vector.fill(20)((ran.nextDouble * 2000d) - 1000d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
-	private val tooSmall = 1e-320
+	private val tooSmall = 1e-312
 	private val ε = .00001d
 
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = checkEval(variableName, eq1, eq2, vals)
@@ -28,6 +28,10 @@ object MathMLEq {
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
 
+//		System.err.println(eq1s)
+//		System.err.println(eq2s)
+//		System.err.println(matches)
+		
 		matches.reduce((_, _) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match

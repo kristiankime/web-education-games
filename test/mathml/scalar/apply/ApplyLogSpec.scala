@@ -51,7 +51,7 @@ class ApplyLogSpec extends Specification {
 	}
 
 	"d" should {
-		"obey the ln derivative rule: ln(f)' = f' / ln(b) f" in {
+		"obey the ln derivative rule: log_b(f)' = f' / ln(b) f" in {
 			ApplyLog(E * E, F).dx must beEqualTo(Fdx / (`2` * F))
 		}
 	}

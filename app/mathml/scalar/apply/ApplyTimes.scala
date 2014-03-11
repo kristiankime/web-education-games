@@ -46,7 +46,7 @@ case class ApplyTimes(val values: MathMLElem*)
 		}
 
 	private def derivativeForPos(x: String, pos: Int) = {
-		val items = for (i <- 0 until values.size) yield { if (i == pos) { values(i).d(x) } else { values(i) } }
+		val items = for (i <- 0 until values.size) yield { if (i == pos) { values(i).d(x) } else { values(i).s } }
 		ApplyTimes(items: _*)
 	}
 }

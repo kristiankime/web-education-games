@@ -26,5 +26,5 @@ case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
 		
 	def variables: Set[String] = value1.variables ++ value2.variables
 
-	def derivative(x: String): MathMLElem = (value1.d(x).s) - (value2.d(x).s)
+	def derivative(x: String): MathMLElem = (value1.d(x)) - (value2.d(x))
 }

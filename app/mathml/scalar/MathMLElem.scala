@@ -22,14 +22,6 @@ abstract class MathMLElem(
 
 	def isOne: Boolean = c.map(_.isOne).getOrElse(false)
 
-	/**
-	 * Does one round of simplification on this element.
-	 * Implementations of this method should not use the "s".
-	 */
-	protected def simplifyStep: MathMLElem
-
-	private def simplifyStepWithCNCheck: MathMLElem = c.getOrElse(simplifyStep)
-
 	private var s_ : MathMLElem = null
 	def s = {
 		if (s_ == null) {
@@ -43,6 +35,14 @@ abstract class MathMLElem(
 		if (simp == elem) { elem }
 		else { simplifyRecurse(simp) }
 	}
+
+	private def simplifyStepWithCNCheck: MathMLElem = c.getOrElse(simplifyStep)
+
+	/**
+	 * Does one round of simplification on this element.
+	 * Implementations of this method should not use the "s".
+	 */
+	protected def simplifyStep: MathMLElem
 
 	protected def constant: Option[Constant]
 

@@ -1,8 +1,8 @@
-@(editorName: String)
+@(editorName: String, initialAnswerOp : Option[String] = None)
 
 	<span id="@(editorName)">
 		@*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
-		<input size="80" onkeyup="@(editorName).updateAnswer(this.value)" onpaste="@(editorName).updateAnswer(this.value)" oninput="@(editorName).updateAnswer(this.value)"/>
+		<input id="mathMLInput" size="80" onkeyup="@(editorName).updateAnswer(this.value)" onpaste="@(editorName).updateAnswer(this.value)" oninput="@(editorName).updateAnswer(this.value)"/>
 		<font style:visibility="hidden" id="@(editorName+"Indicator")" color="red"> * </font>
 		<span id="@(editorName+"View")"> `` </script> </span>
 	</span>
@@ -30,6 +30,11 @@
 	    		$("#@(editorName+"Indicator")").show();
 			}
 	    };
+	
+		@for(initialAnswer <- initialAnswerOp){
+		$("#@(editorName) #mathMLInput").val("@initialAnswer")
+		result.updateAnswer("@initialAnswer")
+		}
 	
 	    return result;
 	})();

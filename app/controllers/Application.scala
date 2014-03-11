@@ -8,7 +8,8 @@ import models.organization.Courses
 import controllers.support.SecureSocialDB
 
 object Application extends Controller with SecureSocialDB {
-
+	val version = Version(0, 2, 6)
+	
 	/**
 	 * Application does not use trailing slashes so indicate to browsers
 	 */
@@ -24,4 +25,17 @@ object Application extends Controller with SecureSocialDB {
 		val courses = Courses.findByUser(user.id)
 		Ok(views.html.user.userInfo(courses))
 	}
+}
+
+object Version{
+	def apply(major: Int, minor: Int) : Version = Version(major, minor, None)
+
+	def apply(major: Int, minor: Int, build: Int) : Version = Version(major, minor, Some(build))
+}
+
+case class Version(major: Int, minor: Int, build: Option[Int]){
+	override def toString = "v" + major + "." + minor + (build match {
+		case None => ""
+		case Some(b) => "." + b
+	})
 }

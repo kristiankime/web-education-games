@@ -8,8 +8,9 @@ import play.api.test.Helpers._
 import org.specs2.mutable._
 import mathml.scalar._
 import mathml.scalar.apply._
-import mathml.scalar.apply.{ ApplyLn => ln }
-import mathml.scalar.apply.{ ApplyLog => log }
+import mathml.scalar.apply.{ ApplyLn => ln, ApplyLog => log }
+import mathml.scalar.apply.trig.{ ApplyTan => tan, ApplySec => sec }
+
 import mathml.Match._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
@@ -42,6 +43,13 @@ class MathMLCheckEqSpec extends Specification {
 			val f = ln(`1` / x + (x ^ `2`) - `9`)
 
 			val g = ((-(x ^ (`-2`))) + `2` * x) / (`1` / x + (x ^ `2`) - `9`)
+
+			((f dx) ?= g) must beEqualTo(Yes)
+		}
+
+		"confirm ((tan(x) / x^2) / 4^x)' = ((sec(x))^2*4^x*x^2 - tan(x)*(2*x*4^x+ln(4)*4^x*x^2))/(4^x*x^2)^2" in {
+			val f = (tan(x) / (x ^ `2`)) / (`4` ^ x)
+			val g = (((sec(x)) ^ `2`) * (`4` ^ x) * (x ^ `2`) - tan(x) * (`2` * x * (`4` ^ x) + ln(`4`) * (`4` ^ x) * (x ^ `2`))) / (((`4` ^ x) * (x ^ `2`)) ^ `2`)
 
 			((f dx) ?= g) must beEqualTo(Yes)
 		}

@@ -18,7 +18,7 @@ import Match._
 object MathMLEq {
 	private val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
 	private val vals = (Vector.fill(20)((ran.nextDouble * 2000d) - 1000d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
-	private val tooSmall = 1e-312
+	private val tooSmall = 1e-154 // LATER figure out how small is too small :( i.e. 1e-312 works for most tests... 
 	private val ε = .00001d
 
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = checkEval(variableName, eq1, eq2, vals)

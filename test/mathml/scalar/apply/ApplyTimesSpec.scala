@@ -20,6 +20,14 @@ class ApplyTimesSpec extends Specification {
 		"multiply many numbers" in {
 			ApplyTimes(`3`, `2`, `4`).eval(Map()).get must beEqualTo(24)
 		}
+		
+		"return 0 if any numbers are 0" in {
+			ApplyTimes(`.5`, `2`, `0`).eval(Map()).get must beEqualTo(0)
+		}
+		
+		"fail if non zero numbers produce a 0 output" in {
+			ApplyTimes(Cn(1E-300), Cn(1E-300)).eval(Map()) must beFailedTry
+		}
 	}
 
 	"variables" should {

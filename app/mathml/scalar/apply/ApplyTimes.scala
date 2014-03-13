@@ -10,7 +10,24 @@ import scala.annotation.tailrec
 case class ApplyTimes(val values: MathMLElem*)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Times) ++ values): _*) {
 
-	def eval(boundVariables: Map[String, Double]) = Try(values.map(_.eval(boundVariables).get).reduceLeft(_ * _))
+	def eval(boundVariables: Map[String, Double]): Try[Double] = {
+		val tryVals = values.map(_.eval(boundVariables))
+		tryVals.find(_.isFailure) match {
+			case Some(failure) => failure
+			case None => product(tryVals.map(_.get))
+		}
+	}
+
+	private def product(vals: Seq[Double]): Try[Double] = {
+		val product = vals.reduceLeft(_ * _)
+		val hasNoZeroes = vals.find(_ == 0d).isEmpty
+
+		if (product == 0d && hasNoZeroes) {
+			Failure(new IllegalStateException("times returned 0 when there were no 0 elements " + this))
+		} else {
+			Success(product)
+		}
+	}
 
 	def constant: Option[Constant] = if (values.forall(_.c.nonEmpty)) {
 		Some(values.map(_.c.get).reduce(_ * _))
@@ -20,7 +37,7 @@ case class ApplyTimes(val values: MathMLElem*)
 		None
 	}
 
-	def simplifyStep() = 
+	def simplifyStep() =
 		(cns, flattenedMathMLElems) match {
 			case (Seq(cns @ _*), Seq()) => cns.reduce(_ * _)
 			case (Seq(), Seq(elem)) => elem

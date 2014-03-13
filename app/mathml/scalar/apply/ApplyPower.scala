@@ -25,7 +25,7 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 		if (bv == 0d) { return Success(0d) }
 		else {
 			val ret = math.pow(bv, ev)
-			if (ret == 0d) { Failure(new IllegalArgumentException("power returned 0 for " + this)) }
+			if (ret == 0d) { Failure(new IllegalStateException("power returned 0 for " + this)) }
 			else { Success(ret) }
 		}
 	}

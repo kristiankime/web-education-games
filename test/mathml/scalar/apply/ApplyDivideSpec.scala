@@ -17,8 +17,16 @@ class ApplyDivideSpec extends Specification {
 		"do division" in {
 			ApplyDivide(`1`, `2`).eval(Map()).get must beEqualTo(.5)
 		}
+
+		"be zero if numerator is zero" in {
+			ApplyDivide(`0`, `2`).eval(Map()).get must beEqualTo(0)
+		}
+
+		"be failure double divisions evals to zero but numerator is not zero" in {
+			ApplyDivide(Cn(1E-300), Cn(1E+300)).eval(Map()) must beFailedTry
+		}
 	}
-	
+
 	"variables" should {
 		"be empty if elements are constant" in {
 			ApplyDivide(`1`, `2`).variables must beEmpty
@@ -71,11 +79,11 @@ class ApplyDivideSpec extends Specification {
 		"simplify if numerator is also a divide" in {
 			ApplyDivide(x / `2`, y).s must beEqualTo(x / (`2` * y))
 		}
-		
+
 		"simplify if denominator is also a divide" in {
-			ApplyDivide(x, y / `3`).s must beEqualTo( (`3` * x) / y)
+			ApplyDivide(x, y / `3`).s must beEqualTo((`3` * x) / y)
 		}
-		
+
 		"remain unchanged if nothing can be simplified" in {
 			ApplyDivide(x, `3`).s must beEqualTo(ApplyDivide(x, `3`))
 		}

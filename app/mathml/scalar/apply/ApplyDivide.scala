@@ -9,7 +9,16 @@ import mathml.scalar.concept.Constant
 case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Divide) ++ numerator ++ denominator): _*) {
 
-	def eval(vars: Map[String, Double]) = Try(numerator.eval(vars).get / denominator.eval(vars).get)
+	def eval(vars: Map[String, Double]): Try[Double] =
+		(numerator.eval(vars), denominator.eval(vars)) match {
+			case (f: Failure[Double], _) => f
+			case (_, f: Failure[Double]) => f
+			case (Success(n), Success(d)) => {
+				val divide = n / d
+				if (divide == 0d && n != 0d) { Failure(new IllegalStateException("")) }
+				else { Success(divide) }
+			}
+		}
 
 	def constant: Option[Constant] = (numerator.c, denominator.c) match {
 		case (Some(nu), Some(de)) => Some(nu / de)

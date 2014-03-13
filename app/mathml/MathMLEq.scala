@@ -40,9 +40,7 @@ object MathMLEq {
 	private def closeEnough(v1: Try[Double], v2: Try[Double]) =
 		(v1, v2) match {
 			case (Success(x), Success(y)) => doubleCloseEnough(x, y)
-			case (Failure(_), Failure(_)) => Inconclusive
-			case (Failure(_), Success(_)) => No
-			case (Success(_), Failure(_)) => No
+			case (_, _) => Inconclusive
 		}
 
 	private def doubleCloseEnough(x: Double, y: Double) = {

@@ -126,6 +126,8 @@ Javascript Origins = https://www.localhost.com
 oauth without registration
 http://googlecode.blogspot.com/2009/11/oauth-enhancements.html
 
+##### Backin up Postgress
+https://devcenter.heroku.com/articles/pgbackups
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

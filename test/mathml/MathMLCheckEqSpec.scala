@@ -54,6 +54,12 @@ class MathMLCheckEqSpec extends Specification {
 			((f dx) ?= g) must beEqualTo(Yes)
 		}
 
+		"confirm 1/5^x' = -5^(-x)*ln(5)" in {
+			val f = `1` / (`5` ^ x)
+			val g = -(`5`^(-x))*ln(`5`)
+			((f dx) ?= g) must beEqualTo(Yes)
+		}
+
 	}
 
 	"Check that multiplying top and bottom of a quotient by the same thing " should {

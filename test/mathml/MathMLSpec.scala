@@ -160,6 +160,14 @@ class MathMLSpec extends Specification {
 			MathML(<apply> <tan/> <pi/> </apply>).get must beEqualTo(ApplyTan(π))
 		}
 
+		"be able to parse root with a degree" in {
+			MathML(<apply> <root/> <degree> <cn>3</cn> </degree> <ci>x</ci> </apply>).get must beEqualTo(ApplyRoot(3, x))
+		}
+
+		"be able to parse root with no specified degree as sqrt" in {
+			MathML(<apply> <root/> <ci>x</ci> </apply>).get must beEqualTo(ApplySqrt(x))
+		}
+
 	}
 
 }

@@ -22,6 +22,7 @@ object MathML {
 			case "exponentiale" => Success(ExponentialE)
 			case "pi" => Success(mathml.scalar.Pi)
 			case "logbase" => Cn(xml.childElem(0)).map(Logbase(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
+			case "degree" => Cn(xml.childElem(0)).map(Degree(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))
 		}
 	}
@@ -59,6 +60,8 @@ object MathML {
 			case ("sec", Seq(v)) => Success(ApplySec(v))
 			case ("csc", Seq(v)) => Success(ApplyCsc(v))
 			case ("cot", Seq(v)) => Success(ApplyCot(v))
+			case ("root", Seq(value)) => Success(ApplySqrt(value))
+			case ("root", Seq(d: Degree, value)) => Success(ApplyRoot(d.v, value))
 			case (a, c) => Failure(new IllegalArgumentException(o + " was not recognized as an applyable MathML element (label [" + o.label + "] might not be recognized or wrong number of child elements [" + c.length + "])"))
 		}
 	}

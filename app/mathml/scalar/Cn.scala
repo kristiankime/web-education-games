@@ -31,13 +31,13 @@ object Cn {
 
 	def apply(value: BigInt) = CnInteger(value)
 
-	def float(value: Float) = CnReal(value)
+	def apply(value: Float): Constant = Cn.apply(BigDecimal(value))
 
-	def double(value: Double) = CnReal(value)
-
-	def bigDecimal(value: BigDecimal) = CnReal(value)
+	def apply(value: Double): Constant = Cn(BigDecimal(value))
 
 	def apply(value: BigDecimal): Constant = if (value.isWhole) Cn(value.toBigInt) else Cn.bigDecimal(value)
+
+	def bigDecimal(value: BigDecimal) = CnReal(value)
 
 	val realType = <cn type="real"></cn>.attributes
 

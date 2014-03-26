@@ -35,7 +35,7 @@ object Logbase {
 		case Success(a) => a match {
 			case c: CnInteger => Logbase(Cn(c.v))
 			case c: CnReal => Logbase(Cn(c.v))
-			case _ => Failure(new IllegalArgumentException(""))
+			case _ => Failure(new IllegalArgumentException("Could not create Logbase from " + e))
 		}
 	}
 }

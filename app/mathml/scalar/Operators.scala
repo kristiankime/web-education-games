@@ -19,6 +19,8 @@ object Log extends Operator("log")
 
 object Ln extends Operator("ln")
 
+object Root extends Operator("root")
+
 object Sin extends Operator("sin")
 
 object Cos extends Operator("cos")

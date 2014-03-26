@@ -1,6 +1,11 @@
 package mathml
 
+import mathml.scalar._
+import mathml.scalar.apply._
+import mathml.scalar.concept._
+
 package object scalar {
+	// Simple Constants
 	val `-1000` = Cn(-1000)
 	val `-12` = Cn(-12)
 	val `-11` = Cn(-11)
@@ -69,11 +74,34 @@ package object scalar {
 
 	val ln_10 = Cn(math.log(10))
 
-	val x = Ci("x")
-
-	val y = Ci("y")
-
+	// Important Constants
 	val e = ExponentialE
-
 	val π = Pi
+	
+	// Implicit number conversions
+	implicit def short2Cn(v: Short) : ConstantInteger = Cn(v)
+	implicit def int2Cn(v: Int): ConstantInteger = Cn(v)
+	implicit def long2Cn(v: Long) : ConstantInteger = Cn(v)
+	implicit def float2Cn(v: Float) : Constant = Cn(v)
+	implicit def double2Cn(v: Double) : Constant = Cn(v)
+	
+	// Variables
+	val x = Ci("x")
+	val y = Ci("y")
+	
+	// Nice function names
+	def √(e : MathMLElem) = ApplySqrt(e)
+	def ∛(e : MathMLElem) = ApplyRoot(3, e)
+	def ∜(e : MathMLElem) = ApplyRoot(4, e)
+	def `n√`(n: BigDecimal)(e : MathMLElem) = ApplyRoot(n, e)
+	
+	type ln = mathml.scalar.apply.ApplyLn
+	type log = mathml.scalar.apply.ApplyLog
+	
+	type cos = mathml.scalar.apply.trig.ApplyCos
+	type cot = mathml.scalar.apply.trig.ApplyCot
+	type csc = mathml.scalar.apply.trig.ApplyCsc
+	type sec = mathml.scalar.apply.trig.ApplySec
+	type sin = mathml.scalar.apply.trig.ApplySin
+	type tan = mathml.scalar.apply.trig.ApplyTan
 }

@@ -8,7 +8,7 @@ import models.organization.Courses
 import controllers.support.SecureSocialDB
 
 object Application extends Controller with SecureSocialDB {
-	val version = Version(0, 2, 8)
+	val version = Version(0, 2, 9)
 	
 	/**
 	 * Application does not use trailing slashes so indicate to browsers

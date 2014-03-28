@@ -19,8 +19,12 @@ trait Secured {
 	protected def linkAccess(implicit user: User, session: Session) : Access
 	
 	/**
-	 * Does the user have any kind of access to this object (owner or direct link).
+	 * Does the user have any kind of direct access to this object (owner or direct link).
 	 */
-	def directAccess(implicit user: User, session: Session) = Seq(ownerAccess, linkAccess).max
+	protected def directAccess(implicit user: User, session: Session) = Seq(ownerAccess, linkAccess).max
 	
+	/**
+	 * Does the user have any access, from any source, to this object
+	 */
+	def access(implicit user: User, session: Session) : Access 
 }

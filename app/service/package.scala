@@ -12,7 +12,7 @@ package object service {
 	}
 	
 	implicit class SecuredPimped(val v: Secured) {
-		def toAccess(implicit user: User, session :Session) = v.directAccess
+		def toAccess(implicit user: User, session :Session) = v.access
 	}
 	
 }

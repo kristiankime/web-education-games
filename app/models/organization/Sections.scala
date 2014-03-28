@@ -29,7 +29,7 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
 	def results(quiz: Quiz)(implicit session: Session) = students.map(s => quiz.results(s))
 
-	protected def linkAccess(implicit user: User, session: Session): Access = Sections.otherAccess(user, id)
+	protected def linkAccess(implicit user: User, session: Session): Access = Sections.linkAccess(user, id)
 
 	/**
 	 * In terms of access level Users can:
@@ -66,7 +66,7 @@ object Sections {
 		) yield u).sortBy(_.lastName).list
 
 	// ======= AUTHORIZATION ======
-	def otherAccess(user: User, sectionId: SectionId)(implicit session: Session) =
+	def linkAccess(user: User, sectionId: SectionId)(implicit session: Session) =
 		(Query(new UsersSectionsTable).where(us => us.userId === user.id && us.id === sectionId).firstOption.map(_.access)).toAccess
 
 	/**

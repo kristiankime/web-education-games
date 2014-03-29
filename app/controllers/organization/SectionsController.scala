@@ -13,20 +13,21 @@ import org.joda.time.DateTime
 import service._
 import scala.util.Random
 import controllers.support.SecureSocialDB
+import controllers.support.RequireAccess
 
 object SectionsController extends Controller with SecureSocialDB {
 	val randomEngine = new Random(DateTime.now.getMillis())
 
 	def list(courseId: CourseId) = TODO
 
-	def add(courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
 		Courses.find(courseId) match {
 			case Some(course) => Ok(views.html.organization.sectionAdd(course))
 			case None => BadRequest(views.html.index(Courses.listDetails))
 		}
 	}
 
-	def create(courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+	def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
 		SectionCreate.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
@@ -37,8 +38,7 @@ object SectionsController extends Controller with SecureSocialDB {
 			})
 	}
 
-	// TODO theoretically the wrong CourseId could be passed in here and this would still work
-	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
 		(Courses.find(courseId), Sections.findDetails(id)) match {
 			case (Some(course), Some(sectionDetails)) => Ok(views.html.organization.sectionView(course, sectionDetails, Quizzes.findByCourse(courseId)))
 			case _ => BadRequest(views.html.index(Courses.listDetails))

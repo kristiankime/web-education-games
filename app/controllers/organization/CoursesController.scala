@@ -4,15 +4,16 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
+import scala.slick.session.Session
+import scala.util.Random
 import securesocial.core.SecureSocial
-import service.User
+import service._
+import models.id._
 import models.organization._
 import models.question.derivative._
-import models.id._
-import org.joda.time.DateTime
-import scala.util.Random
-import service._
 import controllers.support.SecureSocialDB
+import controllers.support.RequireAccess
+import org.joda.time.DateTime
 
 object CoursesController extends Controller with SecureSocialDB {
 	val randomEngine = new Random(DateTime.now.getMillis())
@@ -36,7 +37,7 @@ object CoursesController extends Controller with SecureSocialDB {
 			})
 	}
 
-	def view(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+	def view(id: CourseId) = SecuredUserDBAction(RequireAccess(View, (s:Session) => Courses.find(id)(s))) { implicit request => implicit user => implicit session =>
 		Courses.findDetails(id) match {
 			case Some(courseDetails) => Ok(views.html.organization.courseView(courseDetails, Quizzes.findByCourse(id)))
 			case None => BadRequest(views.html.index(Courses.listDetails))
@@ -54,8 +55,7 @@ object CoursesController extends Controller with SecureSocialDB {
 						} else if (course.viewCode == form) {
 							Courses.grantAccess(course, View)
 						}
-						// TODO indicate failure in a better fashion
-						Redirect(routes.CoursesController.view(course.id))
+						Redirect(routes.CoursesController.view(course.id)) // TODO indicate failure in a better fashion
 					}
 					case None => BadRequest(views.html.index(Courses.listDetails))
 				}

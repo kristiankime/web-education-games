@@ -1,24 +1,28 @@
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-
 import play.api.test._
 import play.api.test.Helpers._
+import com.artclod.securesocial.TestUtils._
+import models.DBTest
+import service.UserTmpTest
+import securesocial.core.PasswordInfo
+import service.SlickUserService
+import securesocial.core.Identity
+import securesocial.core.IdGenerator
 
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends Specification {
 
-	// http://stackoverflow.com/questions/5762246/playframework-secure-module-how-do-you-log-in-to-test-a-secured-controller-in
 	"Application" should {
-
-		skipAll
 
 		"send 404 on a bad request" in new WithApplication {
 			route(FakeRequest(GET, "/boum")) must beNone
 		}
 
 		"render the index page" in new WithApplication {
-			val home = route(FakeRequest(GET, "/")).get
+			val user = DBTest.fakeUser(UserTmpTest())
+			val home = route(FakeRequest(GET, "/").withLoggedInUser(user)).get
 
 			status(home) must equalTo(OK)
 			contentType(home) must beSome.which(_ == "text/html")

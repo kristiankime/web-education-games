@@ -25,6 +25,7 @@ class SlickUserServiceSpec extends Specification {
 
 		"be able to find a user by IdentityId" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			val service = new SlickUserService
+
 			val identityId = IdentityId("userId", "providerId")
 			val user = service.save(UserTmpTest(identityId = identityId))
 

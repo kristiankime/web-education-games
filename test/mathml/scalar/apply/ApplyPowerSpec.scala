@@ -96,12 +96,10 @@ class ApplyPowerSpec extends Specification {
 		}
 
 		// (f^g)' = f^(g-1) * (g f'+f log(f) g')
-		"obey the generlized power rule: (f^g)' =  f^(g-1)    * (g * f'  + f * log(f)     * g')" in {
-			ApplyPower(F, G).dx must beEqualTo(   ((F^(G-`1`)) * (G * Fdx + F * ApplyLn(F) * Gdx))s )
+		"obey the generalized power rule: (f^g)' =  f^(g-1)    * (g * f'  + f * log(f)     * g')" in {
+      ApplyPower(F, G).dx must beEqualTo(   ((F^(G-`1`)) * (G * Fdx + F * ApplyLn(F) * Gdx))s )
 		}
-		
-		"handle negative bases" in {
-			ApplyPower(`-2`, x).dx must beEqualTo( `-2`^x * ApplyLn(`2`) )
-		}
+
 	}
+
 }

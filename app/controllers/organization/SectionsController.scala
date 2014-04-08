@@ -38,7 +38,7 @@ object SectionsController extends Controller with SecureSocialDB {
 			})
 	}
 
-	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
+	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		(Courses.find(courseId), Sections.findDetails(id)) match {
 			case (Some(course), Some(sectionDetails)) => Ok(views.html.organization.sectionView(course, sectionDetails, Quizzes.findByCourse(courseId)))
 			case _ => BadRequest(views.html.index(Courses.listDetails))

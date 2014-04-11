@@ -23,7 +23,7 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
 	def course(implicit session: Session) = Courses.find(courseId).get
 
-	def details(implicit user: User, session: Session) = SectionDetails(this, access)
+	def details(implicit user: User, session: Session) = SectionDetails(this, this.course, access)
 
 	def students(implicit session: Session) = Sections.students(id)
 
@@ -57,9 +57,12 @@ object Sections {
 
 	def findByCourse(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).list
 
-	def findDetails(sectionId: SectionId)(implicit user: User, session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
+  def findDetails(sectionId: SectionId, courseId: CourseId)(implicit user: User, session: Session) = {
+    val sectionDetails = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
+    sectionDetails.flatMap(d => if(d.course.id == courseId) {Some(d)} else {None})
+  }
 
-	def students(sectionId: SectionId)(implicit session: Session) =
+  def students(sectionId: SectionId)(implicit session: Session) =
 		(for (
 			u <- (new UserTable);
 			us <- (new UsersSectionsTable) if us.userId === u.id && us.id === sectionId && us.access === service.Access.view

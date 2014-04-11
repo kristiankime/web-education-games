@@ -90,6 +90,22 @@ class ApplicationSpec extends Specification {
           contentAsString(page) must contain(course.name)
       }
 
+      "respond with a BadRequest if the course doesn't match the section" in new WithApplication {
+        DB.withSession {
+          implicit session: Session =>
+            val user = fakeUser
+
+            val owner = fakeUser
+            val course = Courses.create(CourseTmpTest(owner = owner.id))
+            val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
+
+            val routeStr: String = "/courses/" + Long.MaxValue + "/sections/" + section.id.v
+            val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
+
+            status(page) must equalTo(BAD_REQUEST)
+        }
+      }
+
     }
 
   }

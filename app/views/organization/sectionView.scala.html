@@ -1,4 +1,4 @@
-@(course: Course, section: SectionDetails, quizzes: List[derivative.Quiz])(implicit user: service.User)
+@(section: SectionDetails, quizzes: List[derivative.Quiz])(implicit user: service.User)
 
 @import controllers.organization.routes._
 @import controllers.organization.CourseJoin
@@ -8,7 +8,7 @@
 
 @main(section.section.name) {
     
-    <header> <h2> Welcome to the information page for the section: @section.section.name of course: <a href=@CoursesController.view(course.id)>@course.name</a> </h2> </h2> </header>
+    <header> <h2> Welcome to the information page for the section: @section.section.name of course: <a href=@CoursesController.view(section.course.id)>@section.course.name</a> </h2> </h2> </header>
     
     @if(section.a > Non){
     	<section> <h5> You are assigned to this section as a(n): @AccessName(section.a) </h5> </section>
@@ -24,7 +24,7 @@
     @if(section.a == Non){
 		<section>
     	<h5> To join the section enter your access code here: </h5>
-    	 @form(action = SectionsController.join(course.id, section.section.id)) {
+    	 @form(action = SectionsController.join(section.course.id, section.section.id)) {
 			<input type="text" name="@CourseJoin.code" placeholder="code goes here"> <br>
 		    <input type="submit" value="Submit">
     	}
@@ -36,7 +36,7 @@
 	    <h5> The course has the following quiz(zes) which apply to this section </h5>
 		<ul>
 		@for(quiz <- quizzes){
-			<li> <a href=@QuizzesController.view(quiz.id, Some(course.id))>@quiz.name</a> </li>	
+			<li> <a href=@QuizzesController.view(quiz.id, Some(section.course.id))>@quiz.name</a> </li>
 		}
 		</ul>
 		</section>

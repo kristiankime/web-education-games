@@ -18,8 +18,6 @@ import controllers.support.RequireAccess
 object SectionsController extends Controller with SecureSocialDB {
 	val randomEngine = new Random(DateTime.now.getMillis())
 
-	def list(courseId: CourseId) = TODO
-
 	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
 		Courses.find(courseId) match {
 			case Some(course) => Ok(views.html.organization.sectionAdd(course))
@@ -39,10 +37,10 @@ object SectionsController extends Controller with SecureSocialDB {
 	}
 
 	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		(Courses.find(courseId), Sections.findDetails(id)) match {
-			case (Some(course), Some(sectionDetails)) => Ok(views.html.organization.sectionView(course, sectionDetails, Quizzes.findByCourse(courseId)))
-			case _ => BadRequest(views.html.index(Courses.listDetails))
-		}
+    Sections.findDetails(id, courseId) match {
+      case Some(sectionDetails) => Ok(views.html.organization.sectionView(sectionDetails, sectionDetails.course.quizzes))
+      case _ => BadRequest(views.html.index(Courses.listDetails))
+    }
 	}
 
 	def join(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>

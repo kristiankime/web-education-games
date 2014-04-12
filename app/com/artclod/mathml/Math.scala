@@ -1,10 +1,10 @@
-package mathml
+package com.artclod.mathml
 
 import scala.util._
 import scala.xml._
-import mathml.scalar.MathMLElem
-import mathml.scalar.Cn
-import mathml.scalar.concept.Constant
+import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar.Cn
+import com.artclod.mathml.scalar.concept.Constant
 
 case class Math(
 	override val prefix: String,

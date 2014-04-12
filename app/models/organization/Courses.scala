@@ -5,7 +5,7 @@ import scala.math.Ordering.Implicits._
 import org.joda.time.DateTime
 import models.support._
 import models.organization.table._
-import models.organization.view._
+import viewsupport.organization._
 import play.api.Play.current
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB

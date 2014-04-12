@@ -1,11 +1,11 @@
-package mathml.scalar.apply
+package com.artclod.mathml.scalar.apply
 
 import org.junit.runner.RunWith
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import math.E

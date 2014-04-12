@@ -1,4 +1,4 @@
-package mathml.scalar
+package com.artclod.mathml.scalar
 
 import scala.util._
 import org.junit.runner.RunWith
@@ -7,9 +7,9 @@ import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
 import scala.math.BigDecimal.double2bigDecimal
-import mathml._
-import mathml.scalar._
-import mathml.scalar.apply._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

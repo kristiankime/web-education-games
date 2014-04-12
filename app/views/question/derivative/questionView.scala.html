@@ -1,7 +1,7 @@
 @(access: service.Access, 
 	course: Option[Course], 
 	quiz: derivative.Quiz,
-	results : derivative.view.QuestionResults,
+	results : derivative.QuestionResults,
 	currentAnswer: Option[Either[derivative.AnswerTmp, derivative.Answer]], 
 	nextQuestion: Option[derivative.Question],
 	allAnswers: List[(derivative.Answer, service.User)])(implicit user: service.User)
@@ -12,7 +12,7 @@
  
 @main("Question Page") {
 
-	<h2>Welcome to a question page for quiz: @quiz.name </h1>
+	<h2>Welcome to a question page for quiz: @quiz.name </h2>
 
    @for(c <- course){ <h5> This is a question for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
     
@@ -41,7 +41,7 @@
     <div>
     	<p>
 		Type in your answer, and then hit the submit button <br> 
-		@math.mathmlEditor("ANSWER", models.organization.view.mathMLStr(currentAnswer)) <br>
+		@math.mathmlEditor("ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
 		</p>
 	</div>
 	

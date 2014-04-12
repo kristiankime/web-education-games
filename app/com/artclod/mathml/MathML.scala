@@ -1,12 +1,12 @@
-package mathml
+package com.artclod.mathml
 
 import scala.util._
 import scala.xml._
 import math._
-import mathml.scalar._
-import mathml.scalar.apply._
-import mathml.scalar.apply.trig._
-import mathml.scalar.concept.Constant
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
+import com.artclod.mathml.scalar.apply.trig._
+import com.artclod.mathml.scalar.concept.Constant
 
 object MathML {
 	val h = <hack/> // This is a hack so we can get default XML meta data for default MathML objects
@@ -20,7 +20,7 @@ object MathML {
 			case "cn" => constantElement(xml)
 			case "ci" => Success(Ci(xml.child(0).text)) // LATER child(0).text could be nonsense
 			case "exponentiale" => Success(ExponentialE)
-			case "pi" => Success(mathml.scalar.Pi)
+			case "pi" => Success(com.artclod.mathml.scalar.Pi)
 			case "logbase" => Cn(xml.childElem(0)).map(Logbase(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
 			case "degree" => Cn(xml.childElem(0)).map(Degree(_)) // LATER need to handle special Constants, xml.childElem(0) could fail
 			case _ => Failure(new IllegalArgumentException(xml + " was not recognized as a MathML element"))

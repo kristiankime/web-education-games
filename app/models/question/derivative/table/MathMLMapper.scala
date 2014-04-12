@@ -1,10 +1,10 @@
 package models.question.derivative.table
 
 import scala.slick.lifted.MappedTypeMapper
-import mathml.Math
-import mathml.MathML
-import mathml.scalar.MathMLElem
-import mathml.scalar.Cn
+import com.artclod.mathml.Math
+import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar.Cn
 
 object MathMLMapper {
 

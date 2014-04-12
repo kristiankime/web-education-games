@@ -9,7 +9,7 @@ import securesocial.core.SecureSocial
 import models.question.derivative._
 import service._
 import models.support._
-import mathml.MathML
+import com.artclod.mathml.MathML
 import org.joda.time.DateTime
 import models.organization.Courses
 import models.organization.Sections

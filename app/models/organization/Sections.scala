@@ -3,14 +3,14 @@ package models.organization
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.Play.current
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
 import models.question.derivative.table._
 import models.organization.table._
 import service._
 import models.support._
 import org.joda.time.DateTime
-import models.organization.view._
+import viewsupport.organization._
 import service.table._
 import service.Access._
 import models.question.derivative.Quiz

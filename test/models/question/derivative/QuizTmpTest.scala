@@ -5,7 +5,7 @@ import models.support.CourseId
 import models.support.UserId
 import org.joda.time.DateTime
 import models.support.QuestionId
-import mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar.MathMLElem
 
 object QuizTmpTest {
 	def apply(owner: UserId,

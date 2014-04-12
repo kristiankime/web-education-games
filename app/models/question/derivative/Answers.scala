@@ -1,7 +1,8 @@
 package models.question.derivative
 
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
@@ -24,7 +25,7 @@ case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: M
 
 object Answers {
 
-	def correct(question: Question, mathML: mathml.scalar.MathMLElem): mathml.Match.Match = MathMLEq.checkEq("x", question.mathML.d("x"), mathML)
+	def correct(question: Question, mathML: MathMLElem)= MathMLEq.checkEq("x", question.mathML.d("x"), mathML)
 
 	// ======= CREATE ======
 	def createAnswer(answerTmp: AnswerTmp)(implicit session: Session) = answerTmp((new AnswersTable).insert(answerTmp))

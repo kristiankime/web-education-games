@@ -1,8 +1,8 @@
-package mathml
+package com.artclod.mathml
 
-import mathml.scalar._
-import mathml.scalar.apply._
-import mathml.scalar.concept._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
+import com.artclod.mathml.scalar.concept._
 
 package object scalar {
 	// Simple Constants
@@ -95,13 +95,13 @@ package object scalar {
 	def ∜(e : MathMLElem) = ApplyRoot(4, e)
 	def `n√`(n: BigDecimal)(e : MathMLElem) = ApplyRoot(n, e)
 	
-	type ln = mathml.scalar.apply.ApplyLn
-	type log = mathml.scalar.apply.ApplyLog
+	type ln = ApplyLn
+	type log = ApplyLog
 	
-	type cos = mathml.scalar.apply.trig.ApplyCos
-	type cot = mathml.scalar.apply.trig.ApplyCot
-	type csc = mathml.scalar.apply.trig.ApplyCsc
-	type sec = mathml.scalar.apply.trig.ApplySec
-	type sin = mathml.scalar.apply.trig.ApplySin
-	type tan = mathml.scalar.apply.trig.ApplyTan
+	type cos = trig.ApplyCos
+	type cot = trig.ApplyCot
+	type csc = trig.ApplyCsc
+	type sec = trig.ApplySec
+	type sin = trig.ApplySin
+	type tan = trig.ApplyTan
 }

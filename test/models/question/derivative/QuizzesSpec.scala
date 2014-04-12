@@ -5,8 +5,8 @@ import org.specs2.runner._
 import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
-import mathml.scalar._
-import mathml.scalar.apply._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
 import service.table._
 import models.support._
 import models.DBTest
@@ -15,7 +15,7 @@ import service._
 import org.joda.time.DateTime
 import play.api.db.slick.DB
 import scala.slick.session.Session
-import models.question.derivative.view._
+import viewsupport.question.derivative._
 import models.organization.Courses
 import models.organization.CourseTmpTest
 

@@ -1,12 +1,12 @@
-package mathml
+package com.artclod.mathml
 
 import scala.util._
 import scala.xml._
 import math._
-import mathml.scalar._
-import mathml.scalar.apply._
-import mathml.scalar.apply.trig._
-import mathml.scalar.concept.Constant
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
+import com.artclod.mathml.scalar.apply.trig._
+import com.artclod.mathml.scalar.concept.Constant
 
 object Match extends Enumeration {
 	type Match = Value

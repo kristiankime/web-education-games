@@ -1,9 +1,9 @@
-package mathml.scalar.concept
+package com.artclod.mathml.scalar.concept
 
 import scala.util._
 import scala.xml._
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
 
 abstract class Operator(override val label: String)
 	extends MathMLElem(MathML.h.prefix, label, MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {

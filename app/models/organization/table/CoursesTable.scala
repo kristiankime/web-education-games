@@ -1,8 +1,8 @@
 package models.organization.table
 
 import play.api.db.slick.Config.driver.simple._
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
 import models._
 import models.question.derivative._
 import models.organization._

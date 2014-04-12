@@ -2,8 +2,8 @@ package models.question.derivative
 
 import scala.slick.session.Session
 import org.joda.time.DateTime
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
 import models.support._
 import models.organization.Course
 import models.question.AsciiMathML
@@ -11,7 +11,7 @@ import models.question.derivative.table._
 import play.api.db.slick.Config.driver.simple._
 import service._
 import service.table.UserTable
-import models.question.derivative.view.QuestionResults
+import viewsupport.question.derivative.QuestionResults
 
 case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
 	def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)

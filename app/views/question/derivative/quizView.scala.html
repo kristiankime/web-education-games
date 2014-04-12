@@ -1,6 +1,6 @@
 @(access: service.Access, 
 	course: Option[Course], 
-	quizResults: derivative.view.UserQuizResults,
+	quizResults: derivative.UserQuizResults,
 	sectionResultsOp: Option[List[SectionResults]])(implicit user: service.User)
 
 @import helper._
@@ -10,7 +10,7 @@
  
 @main("Quiz " + quizResults.quiz.name) {
     
-    <h2>Welcome to the page for quiz: @quizResults.quiz.name </h1>
+    <h2>Welcome to the page for quiz: @quizResults.quiz.name </h2>
     
     @for(c <- course){ <h5> This is a quiz for the course <a href=@CoursesController.view(c.id)>@c.name</a> </h5> }
     

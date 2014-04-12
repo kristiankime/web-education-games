@@ -1,6 +1,6 @@
-package mathml.scalar
+package com.artclod.mathml.scalar
 
-import mathml.MathML
-import mathml.scalar.concept.ConstantDecimal
+import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar.concept.ConstantDecimal
 
 object Pi extends ConstantDecimal("pi", MathML.h.attributes, true, BigDecimal(math.Pi), Seq(): _*)

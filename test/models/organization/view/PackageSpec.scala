@@ -18,9 +18,9 @@ import service._
 import service.table._
 import models.question.derivative.AnswerTmpTest
 import models.support._
-import mathml.Math
+import com.artclod.mathml.Math
 import models.question.derivative.Answer
-import mathml.scalar.Cn
+import com.artclod.mathml.scalar.Cn
 import org.joda.time.DateTime
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/

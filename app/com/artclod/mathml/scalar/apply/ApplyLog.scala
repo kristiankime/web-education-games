@@ -1,10 +1,10 @@
-package mathml.scalar.apply
+package com.artclod.mathml.scalar.apply
 
 import scala.util._
 import scala.xml._
-import mathml._
-import mathml.scalar._
-import mathml.scalar.concept._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.concept._
 
 case class ApplyLog(base: BigDecimal, value: MathMLElem) extends Logarithm(base, value, Seq(Log, Logbase(base)): _*) {
 

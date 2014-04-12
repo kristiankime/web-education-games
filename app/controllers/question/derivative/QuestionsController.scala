@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
 import scala.slick.session.Session
-import mathml.MathML
+import com.artclod.mathml.MathML
 import models.question._
 import play.api.data.Form
 import play.api.data.Forms._

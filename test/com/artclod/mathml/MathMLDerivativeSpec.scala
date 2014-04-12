@@ -1,4 +1,4 @@
-package mathml
+package com.artclod.mathml
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
@@ -6,10 +6,10 @@ import scala.xml._
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import mathml.scalar._
-import mathml.scalar.apply._
-import mathml.scalar.apply.{ ApplyLn => ln }
-import mathml.scalar.apply.{ ApplyLog => log }
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
+import com.artclod.mathml.scalar.apply.{ ApplyLn => ln }
+import com.artclod.mathml.scalar.apply.{ ApplyLog => log }
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

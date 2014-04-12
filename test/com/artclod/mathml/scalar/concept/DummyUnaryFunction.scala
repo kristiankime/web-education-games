@@ -1,8 +1,8 @@
-package mathml.scalar.concept
+package com.artclod.mathml.scalar.concept
 
-import mathml._
-import mathml.scalar._
-import mathml.scalar.concept._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.concept._
 import play.api.test.Helpers._
 
 object Dummy extends Operator("dummy")

@@ -1,10 +1,10 @@
-package mathml.scalar
+package com.artclod.mathml.scalar
 
 import scala.util._
 import scala.xml._
-import mathml._
-import mathml.scalar._
-import mathml.scalar.concept.Constant
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.concept.Constant
 import scala.util.Success
 
 case class Logbase(val value: Constant)

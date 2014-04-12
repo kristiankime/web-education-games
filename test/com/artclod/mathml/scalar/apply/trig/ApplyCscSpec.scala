@@ -1,13 +1,13 @@
-package mathml.scalar.apply.trig
+package com.artclod.mathml.scalar.apply.trig
 
 import org.specs2.runner.JUnitRunner
 import org.junit.runner.RunWith
 import play.api.test._
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import mathml._
-import mathml.scalar._
-import mathml.scalar.concept.Trigonometry
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.concept.Trigonometry
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])

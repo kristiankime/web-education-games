@@ -1,8 +1,8 @@
-package mathml.scalar.concept
+package com.artclod.mathml.scalar.concept
 
 
-import mathml.MathML
-import mathml.scalar._
+import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar._
 import scala.xml.MetaData
 import scala.util.Try
 import scala.xml.Node

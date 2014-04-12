@@ -20,7 +20,7 @@ import service.table._
 import models.support.UserId
 import models.question.derivative.Quizzes
 import models.question.derivative.QuizTmpTest
-import models.question.derivative.view.UserQuizResults
+import viewsupport.question.derivative.UserQuizResults
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])

@@ -1,6 +1,6 @@
-package mathml.scalar.concept
+package com.artclod.mathml.scalar.concept
 
-import mathml.scalar._
+import com.artclod.mathml.scalar._
 
 object Trigonometry {
 

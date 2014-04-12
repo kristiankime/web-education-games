@@ -1,11 +1,11 @@
-package mathml.scalar.apply
+package com.artclod.mathml.scalar.apply
 
 import scala.util._
 import scala.xml._
-import mathml._
-import mathml.scalar._
-import mathml.scalar.Root
-import mathml.scalar.concept._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.Root
+import com.artclod.mathml.scalar.concept._
 
 case class ApplySqrt(value: MathMLElem) extends NthRoot(2, value, Seq(Root): _*) {
 

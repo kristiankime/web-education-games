@@ -1,4 +1,4 @@
-package models.organization.view
+package viewsupport.organization
 
 import service._
 

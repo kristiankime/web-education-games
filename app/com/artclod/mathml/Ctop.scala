@@ -1,4 +1,4 @@
-package mathml
+package com.artclod.mathml
 
 import play.api.Play
 import play.api.Play.current

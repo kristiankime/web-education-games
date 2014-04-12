@@ -1,6 +1,6 @@
 package models.question
 
-import mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar.MathMLElem
 
 trait AsciiMathML {
 	val mathML: MathMLElem

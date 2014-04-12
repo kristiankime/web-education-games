@@ -5,8 +5,8 @@ import org.specs2.runner._
 import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
-import mathml.scalar._
-import mathml.scalar.apply._
+import com.artclod.mathml.scalar._
+import com.artclod.mathml.scalar.apply._
 import service.table._
 import models.support._
 import models.DBTest
@@ -15,8 +15,8 @@ import service._
 import org.joda.time.DateTime
 import play.api.db.slick.DB
 import scala.slick.session.Session
-import models.question.derivative.view.QuestionDetails
-import models.question.derivative.view.QuestionResults
+import viewsupport.question.derivative.QuestionDetails
+import viewsupport.question.derivative.QuestionResults
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {

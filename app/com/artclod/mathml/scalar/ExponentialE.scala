@@ -1,6 +1,6 @@
-package mathml.scalar
+package com.artclod.mathml.scalar
 
-import mathml.MathML
-import mathml.scalar.concept.ConstantDecimal
+import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar.concept.ConstantDecimal
 
 object ExponentialE extends ConstantDecimal("exponentiale", MathML.h.attributes, true, BigDecimal(math.E), Seq(): _*)

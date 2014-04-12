@@ -1,14 +1,14 @@
-package mathml.scalar.apply
+package com.artclod.mathml.scalar.apply
 
 import org.specs2.runner.JUnitRunner
 import org.specs2.mutable._
 import org.junit.runner.RunWith
 import play.api.test._
 import play.api.test.Helpers._
-import mathml._
-import mathml.scalar._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar._
 
-// LATER try out http://rlegendi.github.io/specs2-runner/ and remove import mathml.scalar.Fdx
+// LATER try out http://rlegendi.github.io/specs2-runner/ and remove import com.artclod.mathml.scalar.Fdx
 @RunWith(classOf[JUnitRunner])
 class ApplyTimesSpec extends Specification {
 

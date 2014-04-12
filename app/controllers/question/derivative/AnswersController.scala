@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
-import mathml.MathML
-import mathml.Match._
+import com.artclod.mathml.MathML
+import com.artclod.mathml.Match._
 import models.support._
 import models.question._
 import models.question.derivative._
@@ -18,7 +18,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTime.now
 import controllers.support.SecureSocialDB
 import scala.slick.session.Session
-import mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar.MathMLElem
 
 object AnswersController extends Controller with SecureSocialDB {
 

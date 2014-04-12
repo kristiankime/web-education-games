@@ -1,11 +1,11 @@
-package mathml.scalar
+package com.artclod.mathml.scalar
 
 import scala.util._
 import scala.xml._
 import scala.annotation.tailrec
-import mathml._
-import mathml.scalar.apply._
-import mathml.scalar.concept._
+import com.artclod.mathml._
+import com.artclod.mathml.scalar.apply._
+import com.artclod.mathml.scalar.concept._
 
 abstract class MathMLElem(
 	prefix: String,

@@ -8,7 +8,7 @@ import play.api.test.Helpers._
 import mathml.scalar._
 import mathml.scalar.apply._
 import service.table._
-import models.id._
+import models.support._
 import models.DBTest
 import models.DBTest.inMemH2
 import service._

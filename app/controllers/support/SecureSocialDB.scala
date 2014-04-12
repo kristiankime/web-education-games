@@ -9,7 +9,7 @@ import play.api.mvc.Result
 import securesocial.core.SecureSocial
 import securesocial.core.SecuredRequest
 import securesocial.core.Authorization
-import models.id.Secured
+import models.support.Secured
 import service.User
 
 trait SecureSocialDB extends SecureSocial {

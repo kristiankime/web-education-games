@@ -6,7 +6,7 @@ import scala.slick.lifted.ForeignKeyAction
 import service.table._
 import service._
 import models.question.derivative._
-import models.id._
+import models.support._
 
 case class User2Quiz(userId: UserId, quizId: QuizId, access: Access) extends UserLinkRow
 

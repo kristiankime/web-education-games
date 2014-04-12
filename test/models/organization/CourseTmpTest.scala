@@ -1,6 +1,6 @@
 package models.organization
 
-import models.id._
+import models.support._
 import org.joda.time.DateTime
 
 object CourseTmpTest {

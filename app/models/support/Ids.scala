@@ -1,4 +1,4 @@
-package models.id
+package models.support
 
 case class UserId(v: Long)
 

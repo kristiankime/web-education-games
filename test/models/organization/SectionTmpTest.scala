@@ -1,7 +1,7 @@
 package models.organization
 
 import org.joda.time.DateTime
-import models.id._
+import models.support._
 
 object SectionTmpTest {
 	def apply(name: String = "section",

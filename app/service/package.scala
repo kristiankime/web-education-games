@@ -1,4 +1,4 @@
-import models.id.Secured
+import models.support.Secured
 import scala.slick.session.Session
 
 package object service {

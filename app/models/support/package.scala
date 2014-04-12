@@ -4,14 +4,13 @@ import scala.slick.lifted.MappedTypeMapper
 import play.api.mvc._
 import service.Access
 
-// LATER rename this package, id is no longer accurate
 /**
  * This object contains all the mappers/binders for the DB (TypeMapper) and the urls (PathBindable and QueryStringBindable)
  * 
  * For a path binding example http://julien.richard-foy.fr/blog/2012/04/09/how-to-implement-a-custom-pathbindable-with-play-2/
  * For a query string binding check out https://gist.github.com/julienrf/2344517
  */
-package object id {
+package object support {
 
 	
 	// ==========================

@@ -6,7 +6,7 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
-import models.id._
+import models.support._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
 import service.table.UserTable

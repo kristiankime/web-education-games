@@ -3,7 +3,7 @@ package models.organization
 import scala.math.Ordering._
 import scala.math.Ordering.Implicits._
 import org.joda.time.DateTime
-import models.id._
+import models.support._
 import models.organization.table._
 import models.organization.view._
 import play.api.Play.current

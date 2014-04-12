@@ -8,7 +8,7 @@ import scala.slick.session.Session
 import scala.util.Random
 import securesocial.core.SecureSocial
 import service._
-import models.id._
+import models.support._
 import models.organization._
 import models.question.derivative._
 import controllers.support.SecureSocialDB

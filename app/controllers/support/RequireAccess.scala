@@ -8,8 +8,8 @@ import play.api.Play.current
 import service.Access
 import service.User
 import service.View
-import models.id.Secured
-import models.id.CourseId
+import models.support.Secured
+import models.support.CourseId
 import models.organization.Courses
 
 case class RequireAccess(level: Access, secured: Session => Option[Secured]) extends Authorization {

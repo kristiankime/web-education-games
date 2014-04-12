@@ -7,7 +7,7 @@ import service._
 import service.table._
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
-import models.id._
+import models.support._
 
 case class User2Answer(userId: UserId, answerId: AnswerId, access: Access)
 

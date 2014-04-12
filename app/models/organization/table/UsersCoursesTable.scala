@@ -7,7 +7,7 @@ import service.table._
 import service._
 import models.question.derivative._
 import models.question.derivative.table._
-import models.id._
+import models.support._
 
 case class User2Course(userId: UserId, courseId: CourseId, access: Access) extends UserLinkRow
 

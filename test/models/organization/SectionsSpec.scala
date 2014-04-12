@@ -17,7 +17,7 @@ import models.organization._
 import models.organization.table._
 import service._
 import service.table._
-import models.id.UserId
+import models.support.UserId
 import models.question.derivative.Quizzes
 import models.question.derivative.QuizTmpTest
 import models.question.derivative.view.UserQuizResults

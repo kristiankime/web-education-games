@@ -8,7 +8,7 @@ import securesocial.core.OAuth1Info
 import securesocial.core.SecuredRequest
 import play.api.mvc.AnyContent
 import play.api.mvc.Result
-import models.id.UserId
+import models.support.UserId
 import org.joda.time.DateTime
 
 case class User(id: UserId,

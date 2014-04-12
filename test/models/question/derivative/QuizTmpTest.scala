@@ -1,10 +1,10 @@
 package models.question.derivative
 
 import models.organization.SectionTmp
-import models.id.CourseId
-import models.id.UserId
+import models.support.CourseId
+import models.support.UserId
 import org.joda.time.DateTime
-import models.id.QuestionId
+import models.support.QuestionId
 import mathml.scalar.MathMLElem
 
 object QuizTmpTest {

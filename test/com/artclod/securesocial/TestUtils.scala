@@ -2,7 +2,7 @@ package com.artclod.securesocial
 
 import service.table.UserTable
 import scala.slick.lifted.Query
-import models.id.UserId
+import models.support.UserId
 import play.api.db.slick.DB
 import play.api.Play.current
 import play.api.db.slick.Config.driver.simple._

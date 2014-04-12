@@ -5,7 +5,7 @@ import play.api.db.slick.Config.driver.simple._
 import securesocial.core.IdentityId
 import service.table.SecurityMapper._
 import service._
-import models.id._
+import models.support._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
 

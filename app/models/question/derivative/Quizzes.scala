@@ -8,7 +8,7 @@ import play.api.db.slick.DB
 import play.api.Play.current
 import models.organization.table._
 import models.question.derivative.table._
-import models.id._
+import models.support._
 import org.joda.time.DateTime
 import service._
 import models.organization._

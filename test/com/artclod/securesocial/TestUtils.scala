@@ -19,7 +19,6 @@ object TestUtils {
 
 	final class LoggedInFakeRequest[T](val self: FakeRequest[T]) extends AnyVal {
 		def withLoggedInUser(identity: Identity) = {
-//			val userToLogInAs: Identity = getUser(id)
 			val cookie: Cookie = Authenticator.create(identity) match {
 				case Right(authenticator) => authenticator.toCookie
 				case _ => throw new IllegalStateException("Coding error this should never happen")

@@ -1,14 +1,8 @@
-package mathml
+package com.artclod.xml
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import scala.xml._
-import play.api.test._
-import play.api.test.Helpers._
 import org.specs2.mutable._
-import mathml.scalar._
-import mathml.scalar.apply._
-import mathml.scalar.apply.trig._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 // with thanks to http://www.ictforu.com/index.php/Core-Java/java-xslt.html

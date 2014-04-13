@@ -25,8 +25,9 @@ class SectionsTable extends Table[Section]("sections") with IdentifiedAndOwned[S
 	def * = id ~ name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate <> (Section, Section.unapply _)
 
 	def ownerFK = foreignKey("sections_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def courseFK = foreignKey("sections_courses_fk", courseId, new CoursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-	def autoInc = name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
+  def autoInc = name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
 
 	def insert(t: SectionTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.courseId, t.owner, t.editCode, t.viewCode, t.date, t.date)
 

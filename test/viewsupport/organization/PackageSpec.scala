@@ -1,24 +1,10 @@
-package models.organization.view
+package viewsupport.organization
 
-import play.api.db.slick.Config.driver.simple._
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-import play.api.test._
-import play.api.test.Helpers._
-import play.api.db.slick.DB
-import scala.slick.session.Session
-import models.DBTest.inMemH2
-import play.api.test.FakeApplication
-import models.DBTest
-import service.UserTmpTest
-import models.organization._
-import models.organization.table._
-import service._
-import service.table._
 import models.question.derivative.AnswerTmpTest
 import models.support._
-import com.artclod.mathml.Math
 import models.question.derivative.Answer
 import com.artclod.mathml.scalar.Cn
 import org.joda.time.DateTime

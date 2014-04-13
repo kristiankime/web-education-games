@@ -6,6 +6,7 @@ import service._
 
 trait Secured {
 
+  // LATER change this to ownerId?
 	val owner: UserId
 	
 	/**

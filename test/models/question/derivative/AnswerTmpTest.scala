@@ -5,12 +5,13 @@ import models.support.CourseId
 import models.support.UserId
 import org.joda.time.DateTime
 import models.support.QuestionId
-import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar._
+
 
 object AnswerTmpTest {
 	def apply(owner: UserId,
 		questionId: QuestionId,
-		mathML: MathMLElem = mathml.scalar.`7`,
+		mathML: MathMLElem = `7`,
 		rawStr: String = "7",
 		correct: Boolean = false,
 		creationDate: DateTime = DateTime.now) =

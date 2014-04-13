@@ -11,7 +11,7 @@ sealed abstract class Access extends Ordered[Access] {
 
 	def compare(that: Access): Int = this.v.compare(that.v)
 
-	def maxEdit = Seq(this, Edit).min
+	def ceilEdit = Seq(this, Edit).min
 
 	def read[T](block: () => T): Option[T] = if (read) { Some(block()) } else { None }
 	def write[T](block: () => T): Option[T] = if (write) { Some(block()) } else { None }
@@ -64,8 +64,6 @@ object Access {
 
 	def apply(user: User, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
-	//	def apply(hasOwner: Secured[_])(implicit user: User): Access = if (user.id == hasOwner.owner) { Own } else { Non }
-
 	def apply(user: User, owner: User, in: Option[Access]): Access =
 		if (user.id == owner.id) {
 			Own
@@ -73,5 +71,5 @@ object Access {
 			Access(in)
 		}
 
-	def accessMap[T](v: (T, User, Option[Access]))(implicit user: User) = (v._1, v._2, Access(user, v._2, v._3))
+//	def accessMap[T](v: (T, User, Option[Access]))(implicit user: User) = (v._1, v._2, Access(user, v._2, v._3))
 }

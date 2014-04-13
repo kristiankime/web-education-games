@@ -12,7 +12,6 @@ import service.Access
  */
 package object support {
 
-	
 	// ==========================
 	// Access
 	// ==========================
@@ -94,7 +93,14 @@ package object support {
 		def unbind(key: String, id: SectionId): String = longBinder.unbind(key, id.v)
 	}
 
-	// ==========================
+  // ==========================
+  // AssignmentId
+  // ==========================
+  implicit def long2assignmentId = MappedTypeMapper.base[AssignmentId, Long](
+    id => id.v,
+    long => AssignmentId(long))
+
+  // ==========================
 	// QuizId
 	// ==========================
 	implicit def long2quizId = MappedTypeMapper.base[QuizId, Long](

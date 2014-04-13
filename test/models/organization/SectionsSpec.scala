@@ -24,7 +24,7 @@ import viewsupport.question.derivative.UserQuizResults
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
-class SectionSpec extends Specification {
+class SectionsSpec extends Specification {
 
 	"results" should {
 		"return results for all the students associated with the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
@@ -70,7 +70,6 @@ class SectionSpec extends Specification {
 				val section = Sections.create(SectionTmpTest(owner = sectionOwner.id, courseId = course.id))
 
 				section.access(couseOwner, session) must beEqualTo(Edit)
-				course.access(couseOwner, session) must beEqualTo(Own)
 			}
 		}
 		

@@ -31,7 +31,7 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 	protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
 	
 	def access(implicit user: User, session: Session) = 
-		(Quizzes.findRelatedCourses(id).map(_.access.maxEdit) :+ directAccess) max
+		(Quizzes.findRelatedCourses(id).map(_.access.ceilEdit) :+ directAccess) max
 		
 }
 

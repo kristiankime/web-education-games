@@ -1,8 +1,5 @@
 package com.artclod.mathml.scalar
 
-import scala.util._
-import scala.xml._
-import com.artclod.mathml._
 import com.artclod.mathml.scalar.concept._
 
 object Plus extends Operator("plus")

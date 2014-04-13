@@ -1,18 +1,12 @@
 package models.organization
 
 import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
-import play.api.Play.current
-import com.artclod.mathml._
-import com.artclod.mathml.scalar._
-import models.question.derivative.table._
 import models.organization.table._
 import service._
 import models.support._
 import org.joda.time.DateTime
 import viewsupport.organization._
 import service.table._
-import service.Access._
 import models.question.derivative.Quiz
 
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {

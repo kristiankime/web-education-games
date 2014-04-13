@@ -1,9 +1,6 @@
 package models.question.derivative.table
 
-import com.artclod.mathml._
-import com.artclod.mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
-import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.support._
 import org.joda.time.DateTime

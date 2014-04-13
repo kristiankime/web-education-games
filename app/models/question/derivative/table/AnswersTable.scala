@@ -1,6 +1,5 @@
 package models.question.derivative.table
 
-import com.artclod.mathml._
 import com.artclod.mathml.scalar._
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction

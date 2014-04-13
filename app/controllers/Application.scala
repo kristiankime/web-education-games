@@ -2,8 +2,6 @@ package controllers
 
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import securesocial.core.SecureSocial
-import service.User
 import models.organization.Courses
 import controllers.support.SecureSocialDB
 

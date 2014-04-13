@@ -1,7 +1,6 @@
 package com.artclod.mathml.scalar.concept
 
 import scala.util._
-import scala.xml._
 import com.artclod.mathml._
 import com.artclod.mathml.scalar._
 

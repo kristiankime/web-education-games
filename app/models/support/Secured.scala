@@ -1,6 +1,5 @@
 package models.support
 
-import service.User
 import scala.slick.session.Session
 import service._
 

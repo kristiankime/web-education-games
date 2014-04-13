@@ -1,9 +1,7 @@
 package com.artclod.mathml
 
-import scala.util._
 import scala.xml._
 import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.mathml.scalar.Cn
 import com.artclod.mathml.scalar.concept.Constant
 
 case class Math(

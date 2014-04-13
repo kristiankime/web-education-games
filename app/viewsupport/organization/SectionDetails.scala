@@ -1,7 +1,5 @@
 package viewsupport.organization
 
-import models.organization._
-import service.User
 import service.Access
 import viewsupport.question.derivative.UserQuizResults
 

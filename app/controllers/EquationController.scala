@@ -1,14 +1,9 @@
 package controllers
 
-import scala.slick.session.Session
 import models.EquationsModel
-import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms.nonEmptyText
-import play.api.db.slick.DB
 import play.api.mvc.Controller
-import securesocial.core.SecureSocial
-import service.User
 import controllers.support.SecureSocialDB
 
 object EquationController extends Controller with SecureSocialDB {

@@ -1,6 +1,5 @@
 package com.artclod.mathml
 
-import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.concept._
 

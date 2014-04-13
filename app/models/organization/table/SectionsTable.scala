@@ -1,10 +1,6 @@
 package models.organization.table
 
 import play.api.db.slick.Config.driver.simple._
-import com.artclod.mathml._
-import com.artclod.mathml.scalar._
-import models._
-import models.question.derivative._
 import models.organization._
 import models.support._
 import org.joda.time.DateTime

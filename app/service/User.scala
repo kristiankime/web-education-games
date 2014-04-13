@@ -1,13 +1,10 @@
 package service
 
 import securesocial.core._
-import play.api.db.slick.Config.driver.simple._
 import securesocial.core.Identity
 import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
 import securesocial.core.SecuredRequest
-import play.api.mvc.AnyContent
-import play.api.mvc.Result
 import models.support.UserId
 import org.joda.time.DateTime
 

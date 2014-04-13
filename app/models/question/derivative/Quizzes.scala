@@ -1,11 +1,6 @@
 package models.question.derivative
 
-import com.artclod.mathml._
-import com.artclod.mathml.scalar._
-import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
-import play.api.Play.current
 import models.organization.table._
 import models.question.derivative.table._
 import models.support._
@@ -13,7 +8,6 @@ import org.joda.time.DateTime
 import service._
 import models.organization._
 import viewsupport.question.derivative._
-import service.table._
 
 case class QuizTmp(owner: UserId, name: String, date: DateTime) {
 	def apply(id: QuizId) = Quiz(id, owner, name, date, date)

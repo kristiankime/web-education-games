@@ -1,18 +1,13 @@
 package controllers.question.derivative
 
-import scala.slick.session.Session
-import models.question._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
-import securesocial.core.SecureSocial
 import models.question.derivative._
 import service._
 import models.support._
-import com.artclod.mathml.MathML
 import org.joda.time.DateTime
 import models.organization.Courses
-import models.organization.Sections
 import controllers.support.SecureSocialDB
 
 object QuizzesController extends Controller with SecureSocialDB {

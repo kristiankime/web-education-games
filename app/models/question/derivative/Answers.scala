@@ -1,13 +1,8 @@
 package models.question.derivative
 
 import com.artclod.mathml._
-import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.MathMLElem
-import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
-import play.api.Play.current
-import service._
 import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime

@@ -2,10 +2,7 @@ package com.artclod.mathml.scalar.concept
 
 import com.artclod.mathml.MathML
 import com.artclod.mathml.scalar._
-import scala.xml.MetaData
-import scala.util.{Try, Success, Failure}
-import scala.xml.Node
-import scala.math.BigDecimal.double2bigDecimal
+import scala.util.{Try, Success}
 import scala.xml._
 
 // LATER might be able to make Constant scala.math.Numeric 

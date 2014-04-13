@@ -2,7 +2,6 @@ package com.artclod.mathml
 
 import scala.util._
 import scala.xml._
-import math._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.apply.trig._

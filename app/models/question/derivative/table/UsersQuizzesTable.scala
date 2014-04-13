@@ -1,11 +1,9 @@
 package models.question.derivative.table
 
-import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import service.table._
 import service._
-import models.question.derivative._
 import models.support._
 
 case class User2Quiz(userId: UserId, quizId: QuizId, access: Access) extends UserLinkRow

@@ -4,12 +4,10 @@ import scala.slick.session.Session
 import play.api.Play.current
 import play.api.db.slick.DB
 import play.api.mvc.AnyContent
-import play.api.mvc.Controller
 import play.api.mvc.Result
 import securesocial.core.SecureSocial
 import securesocial.core.SecuredRequest
 import securesocial.core.Authorization
-import models.support.Secured
 import service.User
 
 trait SecureSocialDB extends SecureSocial {

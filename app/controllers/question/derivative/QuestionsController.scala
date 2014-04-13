@@ -1,21 +1,15 @@
 package controllers.question.derivative
 
-import scala.slick.session.Session
 import com.artclod.mathml.MathML
-import models.question._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
-import securesocial.core.SecureSocial
-import service.table._
-import service.User
 import models.question.derivative._
 import models.support._
 import models.organization.Courses
 import org.joda.time.DateTime
 import service._
 import controllers.support.SecureSocialDB
-import com.artclod.collection.PimpedSeq
 
 object QuestionsController extends Controller with SecureSocialDB {
 

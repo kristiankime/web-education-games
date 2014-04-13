@@ -1,8 +1,6 @@
 package service
 
 import models.support.UserId
-import models.support.Secured
-import models.support.Secured
 
 sealed abstract class Access extends Ordered[Access] {
 	val v: Short

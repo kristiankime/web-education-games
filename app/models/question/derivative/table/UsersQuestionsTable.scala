@@ -1,6 +1,5 @@
 package models.question.derivative.table
 
-import scala.slick.session.Session
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ForeignKeyAction
 import service.table._

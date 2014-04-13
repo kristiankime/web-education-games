@@ -1,18 +1,14 @@
 package controllers.organization
 
-import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
-import scala.slick.session.Session
 import scala.util.Random
-import securesocial.core.SecureSocial
 import service._
 import models.support._
 import models.organization._
 import models.question.derivative._
 import controllers.support.SecureSocialDB
-import controllers.support.RequireAccess
 import org.joda.time.DateTime
 
 object CoursesController extends Controller with SecureSocialDB {

@@ -1,48 +1,72 @@
-@(course: CourseDetails, quizzes: List[derivative.Quiz])(implicit user: service.User)
+@(course: viewsupport.organization.CourseDetails, assignments: List[models.organization.Assignment], quizzes: List[models.question.derivative.Quiz])(implicit user: service.User)
 
-@import controllers.organization.routes._
-@import controllers.organization.CourseJoin
-@import controllers.question.derivative.routes._
-@import service._
 @import helper._
+@import service._
+@import viewsupport.organization._
+@import controllers.organization.CourseJoin
+@import controllers.organization.routes._
+@import controllers.question.derivative.routes._
 
 @main(course.c.name) {
     
     <h2>Welcome to the information page for the course: @course.c.name</h2>
-    
+
+    @* ======= Role ======= *@
     @if(course.a > Non){
-    	<section> <h5> You are assigned to this course as a(n): @AccessName(course.a) </h5> </section>
+    <section>
+        <h5> You are assigned to this course as a(n): @AccessName(course.a) </h5>
+    </section>
     }
-    
-    @if(course.a == Own){
-    	<section> <h5> Teacher Access Code: @course.c.editCode </h5> </section>
+
+    @* ======= Access Codes ======= *@
+    @if(course.a >= Own){
+    <section>
+        <h5> Teacher Access Code: @course.c.editCode </h5>
+    </section>
     }
-    
+
+    @* ======= Sign up ======= *@
     @if(course.a == Non){
-		<section>
+	<section>
     	<h5> If you need to sign up as a teacher please input your code here: </h5>
     	 @form(action = CoursesController.join(course.c.id)) {
 			<input type="text" name="@CourseJoin.code" placeholder="code goes here"> <br>
 		    <input type="submit" value="Submit">
     	}
-    	</section>
-    }
-    
-    <section>
-    <h5> The course has the following section(s) </h5>
-	<ul>
-	@for(s <- course.sections){
-		<li> 
-			<a href=@SectionsController.view(s.section.courseId, s.section.id)>@s.section.name</a> 
-	        @if(s.a != Non){ Access: @AccessName(s.a) }
-		</li>	
-	}
-	</ul>
-	@if(course.a.write){ [ <a href=@SectionsController.add(course.c.id)>add a section</a> ] }
     </section>
-    
+    }
+
+    @* ======= Section List ======= *@
+    <section>
+        <h5> The course has the following section(s) </h5>
+        <ul>
+        @for(s <- course.sections){
+            <li>
+                <a href="@SectionsController.view(s.section.courseId, s.section.id)">@s.section.name</a>
+                @if(s.a != Non){ Access: @AccessName(s.a) }
+            </li>
+        }
+        </ul>
+        @if(course.a.write){ [ <a href="@SectionsController.add(course.c.id)">add a section</a> ] }
+    </section>
+
+    @* ======= Assignment List ======= *@
     @if(course.a > Non){
-	    <section>
+    <section>
+        <h5> The course has the following assignment(s) </h5>
+        <ul>
+        @for(assignment <- assignments){
+            <li> @assignment.name </li>
+            @* <li> <a href=@AssignmentsController.view(assignment.id, Some(course.c.id))>@assignment.name</a> </li> *@
+        }
+        </ul>
+        @if(course.a.write){ [ <a href="@AssignmentsController.add(course.c.id)">add an assignment</a> ] }
+    </section>
+    }
+
+    @* ======= Quiz List ======= *@
+    @if(course.a > Non){
+	<section>
 	    <h5> The course has the following quiz(zes) </h5>
 		<ul>
 		@for(quiz <- quizzes){
@@ -50,6 +74,7 @@
 		}
 		</ul>
 		@if(course.a.write){ [ <a href=@QuizzesController.add(Some(course.c.id))>add a quiz</a> ] }
-		</section>
+	</section>
 	}
+
 }

@@ -172,6 +172,8 @@ set the environment variables for heroku
 
 
 ##### Problems with Evolutions
+When the evolution file is generated for a string field it defaults to VARCHAR but TEXT is preferable
+    http://blog.jonanin.com/2013/11/20/postgresql-char-varchar/
 
 Failed evolutions "stick"
 https://groups.google.com/forum/#!topic/play-framework/ukwA8W9voXU

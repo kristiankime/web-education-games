@@ -55,9 +55,8 @@
     <section>
         <h5> The course has the following assignment(s) </h5>
         <ul>
-        @for(assignment <- assignments){
-            <li> @assignment.name </li>
-            @* <li> <a href=@AssignmentsController.view(assignment.id, Some(course.c.id))>@assignment.name</a> </li> *@
+        @for(assignment <- assignments) {
+            <li> <a href=@AssignmentsController.view(course.c.id, assignment.id)> @assignment.name </a> </li>
         }
         </ul>
         @if(course.a.write){ [ <a href="@AssignmentsController.add(course.c.id)">add an assignment</a> ] }

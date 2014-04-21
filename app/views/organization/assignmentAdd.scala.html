@@ -1,6 +1,7 @@
-@(course: models.organization.Course)(implicit user: service.User)
+@(course: models.organization.Course, errors: Form[controllers.organization.AssignmentData])(implicit user: service.User)
 
 @import helper._
+@import helper.twitterBootstrap._
 @import controllers.organization.AssignmentCreate
 @import controllers.organization.routes._
 
@@ -11,11 +12,9 @@
     <h5>Please enter the information for a new assignment:</h5>
 
     @form(action = AssignmentsController.create(course.id)) {
-
-        name: <input type="text" name="@AssignmentCreate.name" value="assignment name"> <br>
-        state date: <input type="date" name="@AssignmentCreate.start"> <br>
-        end date: <input type="date" name="@AssignmentCreate.end"> <br>
-
+        name: <input type="text" name="@AssignmentCreate.name" value="assignment name"> @tag.error(errors.errors(AssignmentCreate.name)) <br>
+        state date: <input type="date" name="@AssignmentCreate.start"> @tag.error(errors.errors(AssignmentCreate.start)) <br>
+        end date: <input type="date" name="@AssignmentCreate.end"> @tag.error(errors.errors(AssignmentCreate.end)) <br>
         <input type="submit" value="Submit">
     }
 }

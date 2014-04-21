@@ -30,19 +30,19 @@ class AssignmentsSpec extends Specification {
   "AssignmentAccess" should {
     "be Edit for the owner of the course that the Assignment is in" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val couseOwner = fakeUser
-        val course = Courses.create(CourseTmpTest(owner = couseOwner.id))
+        val courseOwner = fakeUser
+        val course = Courses.create(CourseTmpTest(owner = courseOwner.id))
         val assignmentOwner = fakeUser
         val assignment = Assignments.create(AssignmentTmpTest(owner = assignmentOwner.id, courseId = course.id))
 
-        assignment.access(couseOwner, session) must beEqualTo(Edit)
+        assignment.access(courseOwner, session) must beEqualTo(Edit)
       }
     }
 
     "be Own for the owner of the Assignment" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val couseOwner = fakeUser
-        val course = Courses.create(CourseTmpTest(owner = couseOwner.id))
+        val courseOwner = fakeUser
+        val course = Courses.create(CourseTmpTest(owner = courseOwner.id))
         val assignmentOwner = fakeUser
         val assignment = Assignments.create(AssignmentTmpTest(owner = assignmentOwner.id, courseId = course.id))
 

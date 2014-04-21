@@ -28,3 +28,5 @@ resolvers ++= Seq(
 templatesImport ++= Seq("models._", "viewsupport.organization._", "viewsupport.question._")
 
 routesImport += "models.support._"
+
+// TODO check this out http://stackoverflow.com/questions/10436815/how-to-use-twitter-bootstrap-2-with-play-framework-2-x

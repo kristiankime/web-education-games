@@ -14,13 +14,13 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-	def sections(implicit session: Session) = Sections.findByCourse(id)
+	def sections(implicit session: Session) = Sections.find(id)
 	
 	def results(quiz: Quiz)(implicit session: Session) = sections.map(_.results(quiz))
 	
 	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))
 	
-	def details(implicit user: User, session: Session) = CourseDetails(this, access, Sections.findByCourse(id).map(_.details))
+	def details(implicit user: User, session: Session) = CourseDetails(this, access, Sections.find(id).map(_.details))
 
   def quizzes(implicit session: Session) = Quizzes.findByCourse(id)
 
@@ -46,7 +46,7 @@ object Courses {
 	// ======= FIND ======
 	def find(id: CourseId)(implicit session: Session) = Query(new CoursesTable).where(_.id === id).firstOption
 
-	def findByUser(userId: UserId)(implicit session: Session) = {
+	def find(userId: UserId)(implicit session: Session) = {
 		(for (
 			uc <- (new UsersCoursesTable) if uc.userId === userId;
 			c <- (new CoursesTable) if uc.id === c.id
@@ -55,9 +55,9 @@ object Courses {
 				(Query(new CoursesTable).where(_.owner === userId))).list
 	}
 
-	def findDetails(courseId: CourseId)(implicit user: User, session: Session) = find(courseId).map(_.details)
+  def list(implicit user: User, session: Session) = Query(new CoursesTable).list
 
-	def listDetails(implicit user: User, session: Session) = Query(new CoursesTable).list.map(_.details)
+  def listDetails(implicit user: User, session: Session) = list.map(_.details)
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =

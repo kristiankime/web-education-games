@@ -11,4 +11,9 @@ package object collection {
 		}
 	}
 
+  def takeTuple2[E](s : TraversableOnce[E]) : (E, E) = s match {
+    case Seq(e1, e2, xs@_* ) => (e1, e2)
+    case _ => throw new IllegalArgumentException("There were not enough elements in " + s)
+  }
+
 }

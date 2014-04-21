@@ -29,9 +29,11 @@ object AssignmentsController extends Controller with SecureSocialDB {
   }
 
   def view(courseId: CourseId, id: AssignmentId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    Assignments.find(id, courseId) match {
-      case Some(assignment) => Ok(views.html.organization.assignmentView(assignment.details))
-      case _ => BadRequest(views.html.index(Courses.listDetails))
+    Assignments.find(id) match {
+      case None => BadRequest(views.html.index(Courses.listDetails))
+      case Some(assignment) =>
+        if (assignment.courseId != courseId) Redirect(routes.AssignmentsController.view(assignment.courseId, id))
+        else Ok(views.html.organization.assignmentView(assignment.details))
     }
   }
 

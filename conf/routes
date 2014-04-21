@@ -24,7 +24,7 @@ POST        /courses/:cid/sections/:id/join                  controllers.organiz
 # Assignments
 GET         /courses/:cid/assignments/add                    controllers.organization.AssignmentsController.add(cid: CourseId)
 POST        /courses/:cid/assignments                        controllers.organization.AssignmentsController.create(cid: CourseId)
-#GET         /courses/:cid/assignments/:id                    controllers.organization.AssignmentsController.view(cid: CourseId, id: AssignmentId)
+GET         /courses/:cid/assignments/:id                    controllers.organization.AssignmentsController.view(cid: CourseId, id: AssignmentId)
 
 # Questions pages
 # Quizzes

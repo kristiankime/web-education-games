@@ -100,6 +100,28 @@ package object support {
     id => id.v,
     long => AssignmentId(long))
 
+  implicit def assignmentIdPathBindable(implicit longBinder: PathBindable[Long]) = new PathBindable[AssignmentId] {
+    def bind(key: String, value: String): Either[String, AssignmentId] = {
+      try { Right(AssignmentId(value.toLong)) }
+      catch { case e: NumberFormatException => Left("Could not parse " + value + " as a AssignmentId => " + e.getMessage) }
+    }
+
+    def unbind(key: String, id: AssignmentId): String = longBinder.unbind(key, id.v)
+  }
+
+  implicit def assignmentIdQueryStringBindable(implicit longBinder: QueryStringBindable[Long]) = new QueryStringBindable[AssignmentId] {
+    def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, AssignmentId]] = {
+      for { either <- longBinder.bind(key, params) } yield {
+        either match {
+          case Right(long) => Right(AssignmentId(long))
+          case _ => Left("Unable to bind a AssignmentId for key " + key)
+        }
+      }
+    }
+
+    def unbind(key: String, id: AssignmentId): String = longBinder.unbind(key, id.v)
+  }
+
   // ==========================
 	// QuizId
 	// ==========================

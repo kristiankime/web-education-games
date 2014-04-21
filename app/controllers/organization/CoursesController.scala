@@ -10,9 +10,11 @@ import models.organization._
 import models.question.derivative._
 import controllers.support.SecureSocialDB
 import org.joda.time.DateTime
+import com.artclod.random._
 
 object CoursesController extends Controller with SecureSocialDB {
-	val randomEngine = new Random(DateTime.now.getMillis())
+	implicit val randomEngine = new Random(DateTime.now.getMillis())
+  val codeRange = (0 to 100000).toVector
 
 	def list = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.organization.courseList(Courses.listDetails))
@@ -26,37 +28,30 @@ object CoursesController extends Controller with SecureSocialDB {
 		CourseCreate.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
-				val editCode = "CO-E-" + randomEngine.nextInt(100000)
-				val viewCode = "CO-V-" + randomEngine.nextInt(100000)
-				val course = Courses.create(CourseTmp(form, user.id, editCode, viewCode, DateTime.now))
+        val (editNum, viewNum) = codeRange.pick2From
+				val course = Courses.create(CourseTmp(form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, DateTime.now))
 				Redirect(routes.CoursesController.view(course.id))
 			})
 	}
 
 	def view(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Courses.findDetails(id) match {
-			case Some(courseDetails) => Ok(views.html.organization.courseView(courseDetails, Assignments.find(id), Quizzes.findByCourse(id)))
-			case None => BadRequest(views.html.index(Courses.listDetails))
+		Courses.find(id) match {
+			case Some(course) => Ok(views.html.organization.courseView(course.details, Assignments.find(id), Quizzes.findByCourse(id)))
+			case None => NotFound(views.html.index(Courses.listDetails))
 		}
 	}
 
 	def join(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseJoin.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
-			form => {
-				Courses.find(id) match {
-					case Some(course) => {
-						if (course.editCode == form) {
-							Courses.grantAccess(course, Edit)
-						} else if (course.viewCode == form) {
-							Courses.grantAccess(course, View)
-						}
-						Redirect(routes.CoursesController.view(course.id)) // TODO indicate failure in a better fashion
-					}
-					case None => BadRequest(views.html.index(Courses.listDetails))
-				}
-
-			})
+			form => Courses.find(id) match {
+                case Some(course) => {
+                  if (course.viewCode == form) Courses.grantAccess(course, View)
+                  if (course.editCode == form) Courses.grantAccess(course, Edit)
+                  Redirect(routes.CoursesController.view(course.id)) // TODO indicate acesss was not granted in a better fashion
+                }
+                case None => NotFound(views.html.index(Courses.listDetails))
+              })
 	}
 
 }

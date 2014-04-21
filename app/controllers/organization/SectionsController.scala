@@ -10,14 +10,16 @@ import service._
 import scala.util.Random
 import controllers.support.SecureSocialDB
 import controllers.support.RequireAccess
+import com.artclod.random._
 
 object SectionsController extends Controller with SecureSocialDB {
-	val randomEngine = new Random(DateTime.now.getMillis())
+	implicit val randomEngine = new Random(DateTime.now.getMillis())
+  val codeRange = (0 to 100000).toVector
 
 	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
 		Courses.find(courseId) match {
 			case Some(course) => Ok(views.html.organization.sectionAdd(course))
-			case None => BadRequest(views.html.index(Courses.listDetails))
+			case None => NotFound(views.html.index(Courses.listDetails))
 		}
 	}
 
@@ -25,37 +27,34 @@ object SectionsController extends Controller with SecureSocialDB {
 		SectionCreate.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
-				val editCode = "SE-E-" + randomEngine.nextInt(100000)
-				val viewCode = "SE-V-" + randomEngine.nextInt(100000)
+        val (editNum, viewNum) = codeRange.pick2From
+        val editCode = "SE-E-" + editNum
+				val viewCode = "SE-V-" + viewNum
 				Sections.create(SectionTmp(form, courseId, user.id, editCode, viewCode, DateTime.now))
 				Redirect(routes.CoursesController.view(courseId))
 			})
 	}
 
 	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    Sections.findDetails(id, courseId) match {
-      case Some(sectionDetails) => Ok(views.html.organization.sectionView(sectionDetails, sectionDetails.course.quizzes))
-      case _ => BadRequest(views.html.index(Courses.listDetails))
+    Sections.find(id) match {
+      case None => NotFound(views.html.index(Courses.listDetails))
+      case Some(section) =>
+        if (section.courseId != courseId) Redirect(routes.SectionsController.view(section.courseId, id))
+        else Ok(views.html.organization.sectionView(section.details, section.quizzes))
     }
 	}
 
 	def join(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		SectionJoin.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
-			form => {
-				Sections.find(id) match {
-					case Some(section) => {
-						if (section.editCode == form) {
-							Sections.grantAccess(section, Edit)
-						} else if (section.viewCode == form) {
-							Sections.grantAccess(section, View)
-						}
-
-						Redirect(routes.SectionsController.view(section.courseId, id))
-					}
-					case None => BadRequest(views.html.index(Courses.listDetails))
-				}
-			})
+			form => Sections.find(id) match {
+					    case Some(section) => {
+                if (section.viewCode == form)	Sections.grantAccess(section, View)
+                if (section.editCode == form) Sections.grantAccess(section, Edit)
+                Redirect(routes.SectionsController.view(section.courseId, id)) // TODO indicate acesss was not granted in a better fashion
+              }
+              case None => BadRequest(views.html.index(Courses.listDetails))
+          })
 	}
 
 }

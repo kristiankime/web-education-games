@@ -34,7 +34,6 @@ object Quizzes {
 	// ======= CREATE ======
 	def create(info: QuizTmp, courseId: Option[CourseId])(implicit session: Session) = {
 		val quizId = (new QuizzesTable).insert(info)
-//		(new UsersQuizzesTable).insert(User2Quiz(info.owner, quizId, Own))
 		courseId.foreach(c => { (new CoursesQuizzesTable).insert(Course2Quiz(c, quizId)) })
 		info(quizId)
 	}

@@ -11,6 +11,7 @@ import models.question.derivative._
 import controllers.support.SecureSocialDB
 import org.joda.time.DateTime
 import com.artclod.random._
+import models.organization.assignment.Assignments
 
 object CoursesController extends Controller with SecureSocialDB {
 	implicit val randomEngine = new Random(DateTime.now.getMillis())

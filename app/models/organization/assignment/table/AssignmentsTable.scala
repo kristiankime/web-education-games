@@ -1,12 +1,13 @@
-package models.organization.table
+package models.organization.assignment.table
 
 import play.api.db.slick.Config.driver.simple._
-import models.organization._
 import models.support._
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
 import service.table.UserTable
 import scala.slick.lifted.ForeignKeyAction
+import models.organization.assignment.{Assignment, AssignmentTmp}
+import models.organization.table.CoursesTable
 
 class AssignmentsTable extends Table[Assignment]("assignments") with IdentifiedAndOwned[Assignment, AssignmentId] {
   def id = column[AssignmentId]("id", O.PrimaryKey, O.AutoInc)

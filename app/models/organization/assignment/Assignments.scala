@@ -1,11 +1,13 @@
-package models.organization
+package models.organization.assignment
 
 import play.api.db.slick.Config.driver.simple._
 import models.organization.table._
 import service._
 import models.support._
 import org.joda.time.DateTime
-import viewsupport.organization.AssignmentDetails
+import viewsupport.organization._
+import models.organization._
+import models.organization.assignment.table._
 
 case class AssignmentTmp(name: String, courseId: CourseId, owner: UserId, date: DateTime, startDate: Option[DateTime], endDate: Option[DateTime]) {
   def apply(id: AssignmentId) = Assignment(id, name, courseId, owner, date, date, startDate, endDate)

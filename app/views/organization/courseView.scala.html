@@ -1,4 +1,5 @@
-@(course: viewsupport.organization.CourseDetails, assignments: List[models.organization.Assignment], quizzes: List[models.question.derivative.Quiz])(implicit user: service.User)
+@(course: viewsupport.organization.CourseDetails, assignments: List[Assignment], quizzes: List[models.question.derivative.Quiz])(implicit user: service.User)
+@import models.organization.assignment.Assignment
 
 @import helper._
 @import service._

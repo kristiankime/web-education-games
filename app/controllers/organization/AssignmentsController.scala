@@ -9,6 +9,7 @@ import models.organization._
 import service.Edit
 import org.joda.time.DateTime
 import com.artclod.time._
+import models.organization.assignment.{Assignments, AssignmentTmp}
 
 object AssignmentsController extends Controller with SecureSocialDB {
 

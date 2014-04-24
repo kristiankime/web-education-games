@@ -5,7 +5,12 @@
 # --- !Ups
 
 create table "equations" ("id" SERIAL NOT NULL PRIMARY KEY,"equation" TEXT NOT NULL);
+create table "assignment_groups" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"assignmentId" BIGINT NOT NULL,"creationDate" TIMESTAMP NOT NULL,"updateDate" TIMESTAMP NOT NULL);
+create table "derivative_assignments_quizzes" ("course_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL);
+alter table "derivative_assignments_quizzes" add constraint "derivative_assignments_quizzes_pk" primary key("course_id","quiz_id");
 create table "assignments" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"courseId" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"creationDate" TIMESTAMP NOT NULL,"updateDate" TIMESTAMP NOT NULL,"startDate" TIMESTAMP,"endDate" TIMESTAMP);
+create table "users_assignment_groups" ("user_id" BIGINT NOT NULL,"assignment_group_id" BIGINT NOT NULL);
+alter table "users_assignment_groups" add constraint "users_assignment_groups_pk" primary key("user_id","assignment_group_id");
 create table "derivative_courses_quizzes" ("course_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL);
 alter table "derivative_courses_quizzes" add constraint "derivative_courses_quizzes_pk" primary key("course_id","quiz_id");
 create table "courses" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"owner" BIGINT NOT NULL,"editCode" TEXT NOT NULL,"viewCode" TEXT NOT NULL,"creationDate" TIMESTAMP NOT NULL,"updateDate" TIMESTAMP NOT NULL);
@@ -29,8 +34,13 @@ create table "derivative_users_quizzes" ("user_id" BIGINT NOT NULL,"quiz_id" BIG
 alter table "derivative_users_quizzes" add constraint "derivative_users_quiz_pk" primary key("user_id","quiz_id");
 create table "token" ("uuid" TEXT NOT NULL PRIMARY KEY,"email" TEXT NOT NULL,"creationTime" TIMESTAMP NOT NULL,"expirationTime" TIMESTAMP NOT NULL,"isSignUp" BOOLEAN NOT NULL);
 create table "user" ("id" SERIAL NOT NULL PRIMARY KEY,"userId" TEXT NOT NULL,"providerId" TEXT NOT NULL,"firstName" TEXT NOT NULL,"lastName" TEXT NOT NULL,"fullName" TEXT NOT NULL,"email" TEXT,"avatarUrl" TEXT,"authMethod" TEXT NOT NULL,"token" TEXT,"secret" TEXT,"accessToken" TEXT,"tokenType" TEXT,"expiresIn" INTEGER,"refreshToken" TEXT,"hasher" TEXT,"password" TEXT,"salt" TEXT,"creationDate" TIMESTAMP NOT NULL,"updateDate" TIMESTAMP NOT NULL);
+alter table "assignment_groups" add constraint "assignment_groups_assignment_fk" foreign key("assignmentId") references "assignments"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_assignments_quizzes" add constraint "derivative_assignments_quizzes_course_fk" foreign key("course_id") references "assignments"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_assignments_quizzes" add constraint "derivative_assignments_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "assignments" add constraint "assignments_owner_fk" foreign key("owner") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "assignments" add constraint "assignments_courses_fk" foreign key("courseId") references "courses"("id") on update NO ACTION on delete CASCADE;
+alter table "users_assignment_groups" add constraint "users_assignment_groups_assignment_group_fk" foreign key("assignment_group_id") references "assignment_groups"("id") on update NO ACTION on delete CASCADE;
+alter table "users_assignment_groups" add constraint "users_assignment_groups_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_courses_quizzes" add constraint "derivative_courses_quizzes_course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_courses_quizzes" add constraint "derivative_courses_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "courses" add constraint "courses_owner_fk" foreign key("owner") references "user"("id") on update NO ACTION on delete CASCADE;
@@ -42,14 +52,14 @@ alter table "users_courses" add constraint "users_courses_course_fk" foreign key
 alter table "users_courses" add constraint "users_courses_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "users_sections" add constraint "users_sections_section_fk" foreign key("section_id") references "sections"("id") on update NO ACTION on delete CASCADE;
 alter table "users_sections" add constraint "users_sections_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_answers" add constraint "derivative_answers_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_answers" add constraint "derivative_answers_owner_fk" foreign key("owner") references "user"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_answers" add constraint "derivative_answers_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_questions" add constraint "derivative_questions_owner_fk" foreign key("owner") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes_questions" add constraint "derivative_quizzes_question_question_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes_questions" add constraint "derivative_quizzes_question_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes" add constraint "derivative_quizzes_owner_fk" foreign key("owner") references "user"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_users_answers" add constraint "derivative_users_answers_question_fk" foreign key("answer_id") references "derivative_answers"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_answers" add constraint "derivative_users_answers_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_users_answers" add constraint "derivative_users_answers_question_fk" foreign key("answer_id") references "derivative_answers"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_questions" add constraint "derivative_users_questions_question_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_questions" add constraint "derivative_users_questions_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_users_quizzes" add constraint "derivative_users_quizzes_user_fk" foreign key("user_id") references "user"("id") on update NO ACTION on delete CASCADE;
@@ -57,8 +67,13 @@ alter table "derivative_users_quizzes" add constraint "derivative_users_quizzes_
 
 # --- !Downs
 
+alter table "assignment_groups" drop constraint "assignment_groups_assignment_fk";
+alter table "derivative_assignments_quizzes" drop constraint "derivative_assignments_quizzes_course_fk";
+alter table "derivative_assignments_quizzes" drop constraint "derivative_assignments_quizzes_quiz_fk";
 alter table "assignments" drop constraint "assignments_owner_fk";
 alter table "assignments" drop constraint "assignments_courses_fk";
+alter table "users_assignment_groups" drop constraint "users_assignment_groups_assignment_group_fk";
+alter table "users_assignment_groups" drop constraint "users_assignment_groups_user_fk";
 alter table "derivative_courses_quizzes" drop constraint "derivative_courses_quizzes_course_fk";
 alter table "derivative_courses_quizzes" drop constraint "derivative_courses_quizzes_quiz_fk";
 alter table "courses" drop constraint "courses_owner_fk";
@@ -70,20 +85,25 @@ alter table "users_courses" drop constraint "users_courses_course_fk";
 alter table "users_courses" drop constraint "users_courses_user_fk";
 alter table "users_sections" drop constraint "users_sections_section_fk";
 alter table "users_sections" drop constraint "users_sections_user_fk";
-alter table "derivative_answers" drop constraint "derivative_answers_fk";
 alter table "derivative_answers" drop constraint "derivative_answers_owner_fk";
+alter table "derivative_answers" drop constraint "derivative_answers_fk";
 alter table "derivative_questions" drop constraint "derivative_questions_owner_fk";
 alter table "derivative_quizzes_questions" drop constraint "derivative_quizzes_question_question_fk";
 alter table "derivative_quizzes_questions" drop constraint "derivative_quizzes_question_quiz_fk";
 alter table "derivative_quizzes" drop constraint "derivative_quizzes_owner_fk";
-alter table "derivative_users_answers" drop constraint "derivative_users_answers_question_fk";
 alter table "derivative_users_answers" drop constraint "derivative_users_answers_user_fk";
+alter table "derivative_users_answers" drop constraint "derivative_users_answers_question_fk";
 alter table "derivative_users_questions" drop constraint "derivative_users_questions_question_fk";
 alter table "derivative_users_questions" drop constraint "derivative_users_questions_user_fk";
 alter table "derivative_users_quizzes" drop constraint "derivative_users_quizzes_user_fk";
 alter table "derivative_users_quizzes" drop constraint "derivative_users_quizzes_quiz_fk";
 drop table "equations";
+drop table "assignment_groups";
+alter table "derivative_assignments_quizzes" drop constraint "derivative_assignments_quizzes_pk";
+drop table "derivative_assignments_quizzes";
 drop table "assignments";
+alter table "users_assignment_groups" drop constraint "users_assignment_groups_pk";
+drop table "users_assignment_groups";
 alter table "derivative_courses_quizzes" drop constraint "derivative_courses_quizzes_pk";
 drop table "derivative_courses_quizzes";
 drop table "courses";

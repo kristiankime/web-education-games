@@ -10,12 +10,13 @@ import service.Edit
 import org.joda.time.DateTime
 import com.artclod.time._
 import models.organization.assignment.{Assignments, AssignmentTmp}
+import views.html.organization.assignment._
 
 object AssignmentsController extends Controller with SecureSocialDB {
 
   def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
     Courses.find(courseId) match {
-      case Some(course) => Ok(views.html.organization.assignmentAdd(course, AssignmentCreate.form.fill(AssignmentData())))
+      case Some(course) => Ok(assignmentAdd(course, AssignmentCreate.form.fill(AssignmentData())))
       case None => NotFound(views.html.index(Courses.listDetails))
     }
   }
@@ -25,7 +26,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
       case None => NotFound(views.html.index(Courses.listDetails))
       case Some(course) =>
         AssignmentCreate.form.bindFromRequest.fold(
-          errors => BadRequest(views.html.organization.assignmentAdd(course, errors)),
+          errors => BadRequest(assignmentAdd(course, errors)),
           form => {
             Assignments.create(AssignmentTmp(form.name, courseId, user.id, DateTime.now, form.start, form.end))
             Redirect(routes.CoursesController.view(courseId))
@@ -38,7 +39,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
       case None => BadRequest(views.html.index(Courses.listDetails))
       case Some(assignment) =>
         if (assignment.courseId != courseId) Redirect(routes.AssignmentsController.view(assignment.courseId, id))
-        else Ok(views.html.organization.assignmentView(assignment.details))
+        else Ok(assignmentView(assignment.details))
     }
   }
 

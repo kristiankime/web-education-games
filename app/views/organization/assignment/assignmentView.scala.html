@@ -8,7 +8,7 @@
 
 @main(details.assignment.name) {
     
-    <header> <h2> Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a> </h2> </header>
+    <h2> Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a> </h2>
 
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
@@ -18,4 +18,10 @@
         case (None, None) => { }
     }
 
+    @* ===== Groups ===== *@
+    <ul>
+    @for(group <- details.groups){
+        <li> group.name </li>
+    }
+    </ul>
 }

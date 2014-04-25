@@ -17,9 +17,11 @@ case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner:
 
   def startAndEnd = (startDate, endDate)
 
-  def details(implicit user: User, session: Session) = AssignmentDetails(this, course, access)
+  def details(implicit user: User, session: Session) = AssignmentDetails(this, course, access, groups)
 
   def course(implicit session: Session) = Courses.find(courseId).get
+
+  def groups(implicit session: Session) = AssignmentGroups.find(id)
 
   protected def linkAccess(implicit user: User, session: Session): Access = Non
 

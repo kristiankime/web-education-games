@@ -8,11 +8,13 @@ import play.api.db.slick.Config.driver.simple._
 import models.organization.assignment.table._
 import service.table.UserTable
 
-case class AssignmentGroupTmp(name: String, assignmentId: AssignmentId, date: DateTime) {
-  def apply(id: AssignmentGroupId) = AssignmentGroup(id, name, assignmentId, date, date)
+
+
+case class AssignmentGroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
+  def apply(id: AssignmentGroupId) = AssignmentGroup(id, name, sectionId, assignmentId, creationDate, updateDate)
 }
 
-case class AssignmentGroup(id: AssignmentGroupId, name: String, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
+case class AssignmentGroup(id: AssignmentGroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
 
   def assignment(implicit session: Session) = Assignments.find(assignmentId).get
 
@@ -42,4 +44,5 @@ object AssignmentGroups {
 
   // ======= Update ======
   def join(userId: UserId, assignmentGroupId: AssignmentGroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))
+
 }

@@ -6,10 +6,10 @@ import play.api.data.Forms._
 import controllers.support._
 import models.support._
 import models.organization._
+import models.organization.assignment._
 import service.Edit
 import org.joda.time.DateTime
 import com.artclod.time._
-import models.organization.assignment.{Assignments, AssignmentTmp}
 import views.html.organization.assignment._
 
 object AssignmentsController extends Controller with SecureSocialDB {
@@ -39,7 +39,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
       case None => BadRequest(views.html.index(Courses.listDetails))
       case Some(assignment) =>
         if (assignment.courseId != courseId) Redirect(routes.AssignmentsController.view(assignment.courseId, id))
-        else Ok(assignmentView(assignment.details))
+        else Ok(assignmentView(assignment.details, assignment.sectionDetails))
     }
   }
 

@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 import viewsupport.organization._
 import service.table._
 import models.question.derivative.{Quizzes, Quiz}
+import models.organization.assignment.AssignmentGroups
 
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
@@ -18,6 +19,10 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 	def course(implicit session: Session) = Courses.find(courseId).get
 
   def quizzes(implicit session: Session) = Quizzes.findByCourse(courseId)
+
+  def groups(assignmentId: AssignmentId)(implicit session: Session) = AssignmentGroups.find(id, assignmentId)
+
+  def groupDetails(assignmentId: AssignmentId)(implicit session: Session) = SectionGroupDetails(this, groups(assignmentId))
 
 	def details(implicit user: User, session: Session) = SectionDetails(this, this.course, access)
 
@@ -48,7 +53,7 @@ object Sections {
 	// ======= FIND ======
 	def find(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
 
-	def find(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).list
+	def find(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).sortBy(_.name).list
 
   def findDetails(sectionId: SectionId, courseId: CourseId)(implicit user: User, session: Session) = {
     val sectionDetails = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)

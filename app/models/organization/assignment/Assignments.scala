@@ -17,7 +17,9 @@ case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner:
 
   def startAndEnd = (startDate, endDate)
 
-  def details(implicit user: User, session: Session) = AssignmentDetails(this, course, access, groups)
+  def details(implicit user: User, session: Session) = AssignmentDetails(this, course, access)
+
+  def sectionDetails(implicit session: Session) = course.sections.map(_.groupDetails(id))
 
   def course(implicit session: Session) = Courses.find(courseId).get
 

@@ -5,12 +5,9 @@ import securesocial.core.Authorization
 import securesocial.core.Identity
 import play.api.db.slick.DB
 import play.api.Play.current
-import service.Access
-import service.User
-import service.View
-import models.support.Secured
-import models.support.CourseId
-import models.organization.Courses
+import service._
+import models.support._
+import models.organization._
 
 case class RequireAccess(level: Access, secured: Session => Option[Secured]) extends Authorization {
 
@@ -29,6 +26,10 @@ object RequireAccess {
 	def apply(courseId: CourseId) = new RequireAccess(View, (s:Session) => Courses.find(courseId)(s))
 
 	def apply(level: Access, courseId: CourseId) = new RequireAccess(level, (s:Session) => Courses.find(courseId)(s))
+
+  def apply(sectionId: SectionId) = new RequireAccess(View, (s:Session) => Sections.find(sectionId)(s))
+
+  def apply(level: Access, sectionId: SectionId) = new RequireAccess(level, (s:Session) => Sections.find(sectionId)(s))
 
 }
 

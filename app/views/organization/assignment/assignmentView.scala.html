@@ -1,4 +1,4 @@
-@(details: viewsupport.organization.AssignmentDetails)(implicit user: service.User)
+@(details: viewsupport.organization.AssignmentDetails, sectionGroups: List[viewsupport.organization.SectionGroupDetails])(implicit user: service.User)
 
 @import controllers.organization.routes._
 @import controllers.organization.CourseJoin
@@ -20,8 +20,13 @@
 
     @* ===== Groups ===== *@
     <ul>
-    @for(group <- details.groups){
-        <li> group.name </li>
-    }
+        @for(sectionGroupDetails <- sectionGroups){
+        <li> Section: @sectionGroupDetails.section.name </li>
+        <li>
+            <ul>
+                @for(group <- sectionGroupDetails.groups){<li> @group.name </li>}
+            </ul>
+        </li>
+        }
     </ul>
 }

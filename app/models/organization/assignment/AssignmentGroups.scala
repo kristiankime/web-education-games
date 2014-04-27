@@ -36,11 +36,18 @@ object AssignmentGroups {
 
   def find(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.assignmentId === assignmentId).sortBy(_.name).list
 
+  def find(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
+
   def students(assignmentGroupId: AssignmentGroupId)(implicit session: Session) =
     (for (
       u <- (new UserTable);
       ug <- (new UsersAssignmentGroupsTable) if ug.userId === u.id && ug.id === assignmentGroupId
     ) yield u).sortBy(_.lastName).list
+
+  def details(courseId: CourseId, id: AssignmentId)(implicit session: Session) ={
+
+    ???
+  }
 
   // ======= Update ======
   def join(userId: UserId, assignmentGroupId: AssignmentGroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))

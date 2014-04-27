@@ -1,0 +1,20 @@
+@(course: models.organization.Course,
+  section: models.organization.Section,
+  assignment: models.organization.assignment.Assignment)(implicit user: service.User)
+
+@import helper._
+@import helper.twitterBootstrap._
+@import controllers.organization.GroupCreate
+@import controllers.organization.routes._
+
+@main("Add an assignment to " + course.name) {
+
+    <h2>Welcome to the add a assignment page for the Course: @course.name</h2>
+
+    <h5>Please enter the information for a new assignment:</h5>
+
+    @form(action = AssignmentGroupsController.create(course.id, section.id, assignment.id)) {
+        name: <input type="text" name="@GroupCreate.name" value="group name"> <br>
+        <input type="submit" value="Submit">
+    }
+}

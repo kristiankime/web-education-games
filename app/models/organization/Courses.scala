@@ -7,6 +7,7 @@ import viewsupport.organization._
 import play.api.db.slick.Config.driver.simple._
 import service._
 import models.question.derivative.{Quizzes, Quiz}
+import models.organization.assignment.Assignments
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
@@ -15,7 +16,9 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
 	def sections(implicit session: Session) = Sections.find(id)
-	
+
+  def assignments(implicit session: Session) = Assignments.find(id)
+
 	def results(quiz: Quiz)(implicit session: Session) = sections.map(_.results(quiz))
 	
 	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))

@@ -40,7 +40,7 @@ object SectionsController extends Controller with SecureSocialDB {
       case None => NotFound(views.html.index(Courses.listDetails))
       case Some(section) =>
         if (section.courseId != courseId) Redirect(routes.SectionsController.view(section.courseId, id))
-        else Ok(views.html.organization.sectionView(section.details, section.quizzes))
+        else Ok(views.html.organization.sectionView(section.details, section.quizzes, section.assignments))
     }
 	}
 

@@ -1,44 +1,58 @@
-@(section: SectionDetails, quizzes: List[derivative.Quiz])(implicit user: service.User)
+@(details: viewsupport.organization.SectionDetails,
+  quizzes: List[models.question.derivative.Quiz],
+  assignments: List[models.organization.assignment.Assignment])(implicit user: service.User)
 
 @import controllers.organization.routes._
 @import controllers.organization.CourseJoin
 @import controllers.question.derivative.routes._
+@import viewsupport.organization.AccessName
 @import service._
 @import helper._
 
-@main(section.section.name) {
+@main(details.section.name) {
     
-    <header> <h2> Welcome to the information page for the section: @section.section.name of course: <a href=@CoursesController.view(section.course.id)>@section.course.name</a> </h2> </h2> </header>
+    <header> <h2> Welcome to the information page for the section: @details.section.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a> </h2> </h2> </header>
     
-    @if(section.a > Non){
-    	<section> <h5> You are assigned to this section as a(n): @AccessName(section.a) </h5> </section>
+    @if(details.a > Non){
+    	<section> <h5> You are assigned to this section as a(n): @AccessName(details.a) </h5> </section>
     }
     
-    @if(section.a == Own){
+    @if(details.a == Own){
     	<section> 
-    	<h5> Teacher Access Code: @section.section.editCode </h5>
-    	<h5> Student Access Code: @section.section.viewCode </h5> 
+    	<h5> Teacher Access Code: @details.section.editCode </h5>
+    	<h5> Student Access Code: @details.section.viewCode </h5>
     	</section>
     }
     
-    @if(section.a == Non){
+    @if(details.a == Non){
 		<section>
     	<h5> To join the section enter your access code here: </h5>
-    	 @form(action = SectionsController.join(section.course.id, section.section.id)) {
+    	 @form(action = SectionsController.join(details.course.id, details.section.id)) {
 			<input type="text" name="@CourseJoin.code" placeholder="code goes here"> <br>
 		    <input type="submit" value="Submit">
     	}
     	</section>
     }
     
-    @if(section.a > Non){
+    @if(details.a > Non){
 	    <section>
 	    <h5> The course has the following quiz(zes) which apply to this section </h5>
 		<ul>
 		@for(quiz <- quizzes){
-			<li> <a href=@QuizzesController.view(quiz.id, Some(section.course.id))>@quiz.name</a> </li>
+			<li> <a href=@QuizzesController.view(quiz.id, Some(details.course.id))>@quiz.name</a> </li>
 		}
 		</ul>
 		</section>
 	}
+
+    @if(details.a > Non){
+        <section>
+            <h5> The course has the following assignment(s) which apply to this section </h5>
+            <ul>
+            @for(assignment <- assignments){
+                <li> <a href=@AssignmentsController.view(details.course.id, assignment.id)>@assignment.name</a> </li>
+            }
+            </ul>
+        </section>
+    }
 }

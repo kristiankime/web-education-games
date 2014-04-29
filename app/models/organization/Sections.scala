@@ -7,8 +7,8 @@ import models.support._
 import org.joda.time.DateTime
 import viewsupport.organization._
 import service.table._
-import models.question.derivative.{Quizzes, Quiz}
-import models.organization.assignment.AssignmentGroups
+import models.question.derivative._
+import models.organization.assignment._
 
 case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
 	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
@@ -19,6 +19,8 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 	def course(implicit session: Session) = Courses.find(courseId).get
 
   def quizzes(implicit session: Session) = Quizzes.findByCourse(courseId)
+
+  def assignments(implicit session: Session) = Assignments.find(courseId)
 
   def groups(assignmentId: AssignmentId)(implicit session: Session) = AssignmentGroups.find(id, assignmentId)
 

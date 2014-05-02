@@ -1,4 +1,4 @@
-package controllers.organization
+package controllers.organization.assignment
 
 import play.api.mvc.Controller
 import play.api.data.Form
@@ -8,9 +8,7 @@ import models.organization.assignment._
 import models.organization._
 import models.support._
 import controllers.support._
-import service._
 import views.html.organization.assignment._
-import com.artclod.scala._
 
 object AssignmentGroupsController extends Controller with SecureSocialDB {
 

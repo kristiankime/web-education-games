@@ -1,5 +1,7 @@
-package controllers.organization
+package controllers.organization.assignment
 
+import org.joda.time.DateTime
+import com.artclod.time._
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
@@ -8,8 +10,6 @@ import models.support._
 import models.organization._
 import models.organization.assignment._
 import service.Edit
-import org.joda.time.DateTime
-import com.artclod.time._
 import views.html.organization.assignment._
 
 object AssignmentsController extends Controller with SecureSocialDB {
@@ -29,7 +29,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
           errors => BadRequest(assignmentAdd(course, errors)),
           form => {
             Assignments.create(AssignmentTmp(form.name, courseId, user.id, DateTime.now, form.start, form.end))
-            Redirect(routes.CoursesController.view(courseId))
+            Redirect(controllers.organization.routes.CoursesController.view(courseId))
           })
     }
   }
@@ -42,6 +42,8 @@ object AssignmentsController extends Controller with SecureSocialDB {
         else Ok(assignmentView(assignment.details, assignment.sectionDetails))
     }
   }
+
+
 
 }
 

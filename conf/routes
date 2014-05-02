@@ -22,13 +22,13 @@ POST        /courses/:cid/sections                                        contro
 GET         /courses/:cid/sections/:id                                    controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
 POST        /courses/:cid/sections/:id/join                               controllers.organization.SectionsController.join(cid: CourseId, id: SectionId)
 # Assignments
-GET         /courses/:cid/assignments/add                                 controllers.organization.AssignmentsController.add(cid: CourseId)
-POST        /courses/:cid/assignments                                     controllers.organization.AssignmentsController.create(cid: CourseId)
-GET         /courses/:cid/assignments/:id                                 controllers.organization.AssignmentsController.view(cid: CourseId, id: AssignmentId)
+GET         /courses/:cid/assignments/add                                 controllers.organization.assignment.AssignmentsController.add(cid: CourseId)
+POST        /courses/:cid/assignments                                     controllers.organization.assignment.AssignmentsController.create(cid: CourseId)
+GET         /courses/:cid/assignments/:id                                 controllers.organization.assignment.AssignmentsController.view(cid: CourseId, id: AssignmentId)
 # Assignment Groups
-GET         /courses/:cid/sections/:sid/assignments/:aid/group/add        controllers.organization.AssignmentGroupsController.add(cid: CourseId, sid: SectionId, aid: AssignmentId)
-POST        /courses/:cid/sections/:sid/assignments/:aid/group            controllers.organization.AssignmentGroupsController.create(cid: CourseId, sid: SectionId, aid: AssignmentId)
-GET         /courses/:cid/sections/:sid/assignments/:aid/group/:id        controllers.organization.AssignmentGroupsController.view(cid: CourseId, sid: SectionId, aid: AssignmentId, id: AssignmentGroupId)
+GET         /courses/:cid/sections/:sid/assignments/:aid/group/add        controllers.organization.assignment.AssignmentGroupsController.add(cid: CourseId, sid: SectionId, aid: AssignmentId)
+POST        /courses/:cid/sections/:sid/assignments/:aid/group            controllers.organization.assignment.AssignmentGroupsController.create(cid: CourseId, sid: SectionId, aid: AssignmentId)
+GET         /courses/:cid/sections/:sid/assignments/:aid/group/:id        controllers.organization.assignment.AssignmentGroupsController.view(cid: CourseId, sid: SectionId, aid: AssignmentId, id: AssignmentGroupId)
 
 # Questions pages
 # Quizzes

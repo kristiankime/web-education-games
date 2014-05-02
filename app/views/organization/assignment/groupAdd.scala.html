@@ -2,10 +2,9 @@
   section: models.organization.Section,
   assignment: models.organization.assignment.Assignment)(implicit user: service.User)
 
+@import controllers.organization.assignment.GroupCreate
 @import helper._
-@import helper.twitterBootstrap._
-@import controllers.organization.GroupCreate
-@import controllers.organization.routes._
+@import controllers.organization.assignment.routes._
 
 @main("Add a Group for " + section.name + " for the assignment " + assignment.name) {
 

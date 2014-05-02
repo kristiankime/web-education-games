@@ -3,6 +3,7 @@
   assignments: List[models.organization.assignment.Assignment])(implicit user: service.User)
 
 @import controllers.organization.routes._
+@import controllers.organization.assignment.routes._
 @import controllers.organization.CourseJoin
 @import controllers.question.derivative.routes._
 @import viewsupport.organization.AccessName
@@ -10,20 +11,20 @@
 @import helper._
 
 @main(details.section.name) {
-    
+
     <header> <h2> Welcome to the information page for the section: @details.section.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a> </h2> </h2> </header>
-    
+
     @if(details.a > Non){
     	<section> <h5> You are assigned to this section as a(n): @AccessName(details.a) </h5> </section>
     }
-    
+
     @if(details.a == Own){
-    	<section> 
+    	<section>
     	<h5> Teacher Access Code: @details.section.editCode </h5>
     	<h5> Student Access Code: @details.section.viewCode </h5>
     	</section>
     }
-    
+
     @if(details.a == Non){
 		<section>
     	<h5> To join the section enter your access code here: </h5>
@@ -33,7 +34,7 @@
     	}
     	</section>
     }
-    
+
     @if(details.a > Non){
 	    <section>
 	    <h5> The course has the following quiz(zes) which apply to this section </h5>

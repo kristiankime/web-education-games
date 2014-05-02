@@ -1,4 +1,4 @@
-package viewsupport.organization
+package viewsupport.organization.assignment
 
 import models.organization.assignment.AssignmentGroup
 import service.User

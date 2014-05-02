@@ -7,7 +7,7 @@ import models.organization.table._
 import play.api.db.slick.Config.driver.simple._
 import models.organization.assignment.table._
 import service.table.UserTable
-import viewsupport.organization.GroupDetails
+import viewsupport.organization.assignment.GroupDetails
 
 
 case class AssignmentGroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {

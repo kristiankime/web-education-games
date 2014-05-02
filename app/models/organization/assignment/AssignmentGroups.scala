@@ -8,7 +8,9 @@ import play.api.db.slick.Config.driver.simple._
 import models.organization.assignment.table._
 import service.table.UserTable
 import viewsupport.organization.assignment.GroupDetails
-
+import viewsupport.organization.SectionGroupDetails
+import models.organization.Sections
+import viewsupport.organization.assignment.SectionAssignmentDetails
 
 case class AssignmentGroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
   def apply(id: AssignmentGroupId) = AssignmentGroup(id, name, sectionId, assignmentId, creationDate, updateDate)
@@ -46,10 +48,17 @@ object AssignmentGroups {
       ug <- (new UsersAssignmentGroupsTable) if ug.userId === u.id && ug.id === assignmentGroupId
     ) yield u).sortBy(_.lastName).list
 
-//  def details(courseId: CourseId, id: AssignmentId)(implicit session: Session) ={
-//
-//    ???
-//  }
+  def details(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) =
+    (Sections.find(sectionId), Assignments.find(assignmentId)) match {
+      case (Some(section), Some(assignment)) => {
+        if (section.courseId != assignment.courseId) None
+        else {
+          val groups = Query(new AssignmentGroupsTable).where(r => r.sectionId === sectionId && r.assignmentId === assignmentId).list
+          Some(SectionAssignmentDetails(section.course, section, assignment, groups))
+        }
+      }
+      case _ => None
+    }
 
   // ======= Update ======
   def join(userId: UserId, assignmentGroupId: AssignmentGroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))

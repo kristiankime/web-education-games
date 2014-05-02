@@ -25,6 +25,7 @@ POST        /courses/:cid/sections/:id/join                               contro
 GET         /courses/:cid/assignments/add                                 controllers.organization.assignment.AssignmentsController.add(cid: CourseId)
 POST        /courses/:cid/assignments                                     controllers.organization.assignment.AssignmentsController.create(cid: CourseId)
 GET         /courses/:cid/assignments/:id                                 controllers.organization.assignment.AssignmentsController.view(cid: CourseId, id: AssignmentId)
+GET         /courses/:cid/sections/:sid/assignments/:aid                  controllers.organization.assignment.AssignmentsController.viewSection(cid: CourseId, sid: SectionId, aid: AssignmentId)
 # Assignment Groups
 GET         /courses/:cid/sections/:sid/assignments/:aid/group/add        controllers.organization.assignment.GroupsController.add(cid: CourseId, sid: SectionId, aid: AssignmentId)
 POST        /courses/:cid/sections/:sid/assignments/:aid/group            controllers.organization.assignment.GroupsController.create(cid: CourseId, sid: SectionId, aid: AssignmentId)

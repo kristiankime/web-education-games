@@ -1,8 +1,9 @@
-@(courses: List[CourseDetails])(implicit user: service.User)
+@(courses: List[viewsupport.organization.CourseDetails])(implicit user: service.User)
 
 @import controllers.organization.routes._
 @import service._
- 
+@import viewsupport.organization.AccessName
+
 @main("EdTech Welcome Page") {
     
     <h1>Welcome to the EdTech server</h1>

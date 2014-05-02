@@ -7,7 +7,7 @@ import models.organization.table._
 import play.api.db.slick.Config.driver.simple._
 import models.organization.assignment.table._
 import service.table.UserTable
-
+import viewsupport.organization.GroupDetails
 
 
 case class AssignmentGroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
@@ -19,6 +19,8 @@ case class AssignmentGroup(id: AssignmentGroupId, name: String, sectionId: Secti
   def assignment(implicit session: Session) = Assignments.find(assignmentId).get
 
   def course(implicit session: Session) = assignment.course
+
+  def details(implicit session: Session) = GroupDetails(this, students)
 
   def students(implicit session: Session) = AssignmentGroups.students(id)
 
@@ -44,10 +46,10 @@ object AssignmentGroups {
       ug <- (new UsersAssignmentGroupsTable) if ug.userId === u.id && ug.id === assignmentGroupId
     ) yield u).sortBy(_.lastName).list
 
-  def details(courseId: CourseId, id: AssignmentId)(implicit session: Session) ={
-
-    ???
-  }
+//  def details(courseId: CourseId, id: AssignmentId)(implicit session: Session) ={
+//
+//    ???
+//  }
 
   // ======= Update ======
   def join(userId: UserId, assignmentGroupId: AssignmentGroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))

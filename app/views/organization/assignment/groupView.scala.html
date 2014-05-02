@@ -1,5 +1,6 @@
 @(details: viewsupport.organization.AssignmentDetails,
-        sectionGroups: List[viewsupport.organization.SectionGroupDetails])(implicit user: service.User)
+        section: models.organization.Section,
+        group: viewsupport.organization.GroupDetails)(implicit user: service.User)
 
 @import controllers.organization.routes._
 @import controllers.organization.CourseJoin
@@ -12,7 +13,6 @@
     <h2>
         Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a>
     </h2>
-
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
         case (Some(start), Some(end)) => { This assignment starts on @start and ends on @end}
@@ -20,21 +20,17 @@
         case (None, Some(end)) => { This assignment ends on @end}
         case (None, None) => {}
     }
+    @* ===== Group Info ===== *@
+    Section: @section.name
 
-    @* ===== Groups ===== *@
-    <ul>
-    @for(sectionGroupDetails <- sectionGroups) {
-        <li> Section: @sectionGroupDetails.section.name @if(sectionGroupDetails.groups.isEmpty) {has no groups} else {has the following groups} </li>
-
-        @if(sectionGroupDetails.groups.nonEmpty) {
-            <li>
-                <ul>
-                @for(group <- sectionGroupDetails.groups) {
-                    <li> @group.name </li>
-                }
-                </ul>
-            </li>
-        }
+    @if(group.students.nonEmpty) {
+        <li>
+            <ul>
+            @for(student <- group.students) {
+                <li> @student.email </li>
+            }
+            </ul>
+        </li>
     }
-    </ul>
+
 }

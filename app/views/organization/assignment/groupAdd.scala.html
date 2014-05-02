@@ -12,7 +12,7 @@
 
     <h5>Please enter the information for a new Group:</h5>
 
-    @form(action = AssignmentGroupsController.create(course.id, section.id, assignment.id)) {
+    @form(action = GroupsController.create(course.id, section.id, assignment.id)) {
         name: <input type="text" name="@GroupCreate.name" value="group name"> <br>
         <input type="submit" value="Submit">
     }

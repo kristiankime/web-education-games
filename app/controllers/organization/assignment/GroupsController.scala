@@ -10,7 +10,7 @@ import models.support._
 import controllers.support._
 import views.html.organization.assignment._
 
-object AssignmentGroupsController extends Controller with SecureSocialDB {
+object GroupsController extends Controller with SecureSocialDB {
 
   def add(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId) = SecuredUserDBAction(RequireAccess(sectionId)) { implicit request => implicit user => implicit session =>
       (Sections.find(sectionId), Assignments.find(assignmentId)) match {

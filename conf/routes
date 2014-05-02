@@ -26,9 +26,9 @@ GET         /courses/:cid/assignments/add                                 contro
 POST        /courses/:cid/assignments                                     controllers.organization.assignment.AssignmentsController.create(cid: CourseId)
 GET         /courses/:cid/assignments/:id                                 controllers.organization.assignment.AssignmentsController.view(cid: CourseId, id: AssignmentId)
 # Assignment Groups
-GET         /courses/:cid/sections/:sid/assignments/:aid/group/add        controllers.organization.assignment.AssignmentGroupsController.add(cid: CourseId, sid: SectionId, aid: AssignmentId)
-POST        /courses/:cid/sections/:sid/assignments/:aid/group            controllers.organization.assignment.AssignmentGroupsController.create(cid: CourseId, sid: SectionId, aid: AssignmentId)
-GET         /courses/:cid/sections/:sid/assignments/:aid/group/:id        controllers.organization.assignment.AssignmentGroupsController.view(cid: CourseId, sid: SectionId, aid: AssignmentId, id: AssignmentGroupId)
+GET         /courses/:cid/sections/:sid/assignments/:aid/group/add        controllers.organization.assignment.GroupsController.add(cid: CourseId, sid: SectionId, aid: AssignmentId)
+POST        /courses/:cid/sections/:sid/assignments/:aid/group            controllers.organization.assignment.GroupsController.create(cid: CourseId, sid: SectionId, aid: AssignmentId)
+GET         /courses/:cid/sections/:sid/assignments/:aid/group/:id        controllers.organization.assignment.GroupsController.view(cid: CourseId, sid: SectionId, aid: AssignmentId, id: AssignmentGroupId)
 
 # Questions pages
 # Quizzes

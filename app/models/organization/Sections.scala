@@ -26,7 +26,7 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
   def groupDetails(assignmentId: AssignmentId)(implicit session: Session) = SectionGroupDetails(this, groups(assignmentId))
 
-	def details(implicit user: User, session: Session) = SectionDetails(this, this.course, access)
+	def details(implicit user: User, session: Session) = SectionDetail(this, this.course, access)
 
 	def students(implicit session: Session) = Sections.students(id)
 

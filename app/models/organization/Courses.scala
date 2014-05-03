@@ -23,7 +23,7 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 	
 	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))
 	
-	def details(implicit user: User, session: Session) = CourseDetails(this, access, Sections.find(id).map(_.details))
+	def details(implicit user: User, session: Session) = CourseDetail(this, access, Sections.find(id).map(_.details))
 
   def quizzes(implicit session: Session) = Quizzes.findByCourse(id)
 

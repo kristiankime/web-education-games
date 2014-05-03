@@ -1,33 +1,24 @@
-@(courses: List[viewsupport.organization.CourseDetails])(implicit user: service.User)
+@(courseDetails: List[viewsupport.organization.CourseDetail])(implicit user: service.User)
 
-@import viewsupport.organization.AccessName
-@import controllers.organization.routes._
-@import service._
+@import views.html.tag._
 
 @main("Course Catalog") {
 
-    <h2> Welcome to the EdTech Course Catalog </h2>
+    <h1> Welcome to the EdTech Course Catalog </h1>
 
-    <h5> Here are the list of couses and sections </h5>
+    <h5> Here are the list of courses and sections </h5>
     click on a course or section for more info (or to join it)
 
     <ul>
-    @for(course <- courses) {
-        <li>
-            <a href=@CoursesController.view(course.c.id)> @course.c.name </a>
-            @if(course.a != Non) { Access: @AccessName(course.a)}
-        </li>
+    @for(courseDetail <- courseDetails) {
+        <li> @courseLink(courseDetail.c) @accessName(courseDetail.a) </li>
 
-        @if(course.sections.nonEmpty) {
-            <li> <ul>
-            @for(s <- course.sections) {
-                <li>
-                    <a href=@SectionsController.view(s.section.courseId, s.section.id)> @s.section.name </a>
-                    @if(s.a != Non) {
-                        <Access: @AccessName(s.a) > }
-                </li>
-            }
-            </ul> </li>
+        @if(courseDetail.sections.nonEmpty) {
+        <ul>
+        @for(sectionDetail <- courseDetail.sections) {
+            <li> @sectionLink(sectionDetail.section) @accessName(courseDetail.a) </li>
+        }
+        </ul>
         }
     }
     </ul>

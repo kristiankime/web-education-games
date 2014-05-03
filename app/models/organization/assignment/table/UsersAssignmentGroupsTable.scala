@@ -7,12 +7,12 @@ import service._
 import models.support._
 import models.organization.table._
 
-case class User2AssignmentGroup(userId: UserId, assignmentGroupId: AssignmentGroupId)
+case class User2AssignmentGroup(userId: UserId, assignmentGroupId: GroupId)
 
 
 class UsersAssignmentGroupsTable extends Table[User2AssignmentGroup]("users_assignment_groups") {
   def userId = column[UserId]("user_id", O.NotNull)
-  def id = column[AssignmentGroupId]("assignment_group_id", O.NotNull)
+  def id = column[GroupId]("assignment_group_id", O.NotNull)
 
   def * = userId ~ id <> (User2AssignmentGroup, User2AssignmentGroup.unapply _)
 

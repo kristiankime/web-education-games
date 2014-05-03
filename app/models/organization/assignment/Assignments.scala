@@ -24,7 +24,7 @@ case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner:
 
   def course(implicit session: Session) = Courses.find(courseId).get
 
-  def groups(implicit session: Session) = AssignmentGroups.find(id)
+  def groups(implicit session: Session) = Groups.find(id)
 
   protected def linkAccess(implicit user: User, session: Session): Access = Non
 

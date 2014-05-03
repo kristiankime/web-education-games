@@ -29,7 +29,7 @@ object GroupsController extends Controller with SecureSocialDB {
             errors => BadRequest(views.html.index(Courses.listDetails)),
             form => {
               val now = DateTime.now
-              AssignmentGroups.create(AssignmentGroupTmp(form.name, section.id, assignment.id, now, now))
+              Groups.create(GroupTmp(form.name, section.id, assignment.id, now, now))
               Redirect(routes.AssignmentsController.view(assignment.courseId, assignment.id))
             })
         else NotFound(views.html.index(Courses.listDetails))
@@ -37,8 +37,8 @@ object GroupsController extends Controller with SecureSocialDB {
     }
   }
 
-  def view(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId : AssignmentGroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    (Sections.find(sectionId), Assignments.find(assignmentId), AssignmentGroups.find(assignmentGroupId)) match {
+  def view(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId : GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    (Sections.find(sectionId), Assignments.find(assignmentId), Groups.find(assignmentGroupId)) match {
       case (Some(section), Some(assignment), Some(group)) =>
         if(section.courseId == assignment.courseId) Ok(groupView(assignment.details, section, group.details))
         else NotFound(views.html.index(Courses.listDetails))

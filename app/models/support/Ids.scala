@@ -8,7 +8,7 @@ case class SectionId(v: Long)
 
 case class AssignmentId(v: Long)
 
-case class AssignmentGroupId(v: Long)
+case class GroupId(v: Long)
 
 case class QuizId(v: Long)
 

@@ -1,12 +1,14 @@
 @(details: viewsupport.organization.assignment.SectionAssignmentDetails)(implicit user: service.User)
 
 @import controllers.organization.routes._
+@import controllers.organization.assignment.routes._
 
 @main(details.assignment.name) {
 
     <h2>
         Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a>
     </h2>
+
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
         case (Some(start), Some(end)) => {This assignment starts on @start and ends on @end}
@@ -14,19 +16,18 @@
         case (None, Some(end)) => {This assignment ends on @end}
         case (None, None) => {}
     }
-    @* ===== Groups ===== *@
 
-    Section: @details.section.name @if(details.groups.isEmpty) {has no groups} else {has the following groups} </li>
+    @* ===== Groups ===== *@
+    Section: @details.section.name @if(details.groups.isEmpty) {has no groups} else {has the following groups:}
 
     @if(details.groups.nonEmpty) {
-        <li>
-            <ul>
-            @for(group <- details.groups) {
-                <li> @group.name </li>
-            }
-            </ul>
-        </li>
+        <ul>
+        @for(group <- details.groups) {
+            <li> @group.name </li>
+        }
+        </ul>
     }
- 
-    
+
+    [ <a href="@GroupsController.add(details.course.id, details.section.id, details.assignment.id)">add a group</a> ]
+
 }

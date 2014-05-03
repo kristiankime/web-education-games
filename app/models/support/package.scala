@@ -125,30 +125,30 @@ package object support {
   // ==========================
   // AssignmentGroupId
   // ==========================
-  implicit def long2assignmentGroupId = MappedTypeMapper.base[AssignmentGroupId, Long](
+  implicit def long2assignmentGroupId = MappedTypeMapper.base[GroupId, Long](
     id => id.v,
-    long => AssignmentGroupId(long))
+    long => GroupId(long))
 
-  implicit def assignmentGroupIdPathBindable(implicit longBinder: PathBindable[Long]) = new PathBindable[AssignmentGroupId] {
-    def bind(key: String, value: String): Either[String, AssignmentGroupId] = {
-      try { Right(AssignmentGroupId(value.toLong)) }
+  implicit def assignmentGroupIdPathBindable(implicit longBinder: PathBindable[Long]) = new PathBindable[GroupId] {
+    def bind(key: String, value: String): Either[String, GroupId] = {
+      try { Right(GroupId(value.toLong)) }
       catch { case e: NumberFormatException => Left("Could not parse " + value + " as a AssignmentGroupId => " + e.getMessage) }
     }
 
-    def unbind(key: String, id: AssignmentGroupId): String = longBinder.unbind(key, id.v)
+    def unbind(key: String, id: GroupId): String = longBinder.unbind(key, id.v)
   }
 
-  implicit def assignmentGroupIdQueryStringBindable(implicit longBinder: QueryStringBindable[Long]) = new QueryStringBindable[AssignmentGroupId] {
-    def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, AssignmentGroupId]] = {
+  implicit def assignmentGroupIdQueryStringBindable(implicit longBinder: QueryStringBindable[Long]) = new QueryStringBindable[GroupId] {
+    def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, GroupId]] = {
       for { either <- longBinder.bind(key, params) } yield {
         either match {
-          case Right(long) => Right(AssignmentGroupId(long))
+          case Right(long) => Right(GroupId(long))
           case _ => Left("Unable to bind a AssignmentGroupId for key " + key)
         }
       }
     }
 
-    def unbind(key: String, id: AssignmentGroupId): String = longBinder.unbind(key, id.v)
+    def unbind(key: String, id: GroupId): String = longBinder.unbind(key, id.v)
   }
 
   // ==========================

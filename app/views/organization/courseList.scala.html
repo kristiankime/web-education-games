@@ -11,12 +11,12 @@
 
     <ul>
     @for(courseDetail <- courseDetails) {
-        <li> @courseLink(courseDetail.c) @accessName(courseDetail.a) </li>
+        <li> [ @courseLink(courseDetail.c) ] @accessName(courseDetail.a) </li>
 
         @if(courseDetail.sections.nonEmpty) {
         <ul>
         @for(sectionDetail <- courseDetail.sections) {
-            <li> @sectionLink(sectionDetail.section) @accessName(courseDetail.a) </li>
+            <li> [ @sectionLink(sectionDetail.section) ] @accessName(courseDetail.a) </li>
         }
         </ul>
         }

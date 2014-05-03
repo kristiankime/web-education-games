@@ -30,7 +30,7 @@ object GroupsController extends Controller with SecureSocialDB {
             form => {
               val now = DateTime.now
               Groups.create(GroupTmp(form.name, section.id, assignment.id, now, now))
-              Redirect(routes.AssignmentsController.view(assignment.courseId, assignment.id))
+              Redirect(routes.AssignmentsController.viewSection(assignment.courseId, section.id, assignment.id))
             })
         else NotFound(views.html.index(Courses.listDetails))
       case _ => NotFound(views.html.index(Courses.listDetails))

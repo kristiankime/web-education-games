@@ -1,13 +1,16 @@
 @(details: viewsupport.organization.assignment.SectionAssignmentDetails)(implicit user: service.User)
 
-@import controllers.organization.routes._
+@import views.html.tag._
 @import controllers.organization.assignment.routes._
 
 @main(details.assignment.name) {
 
-    <h2>
-        Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a>
-    </h2>
+    <h1>
+        Welcome to the information page for the assignment: @details.assignment.name
+    </h1>
+
+    This assignment is for the Course: @courseLink(details.course)
+    And Section: @sectionLink(details.section)
 
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
@@ -18,7 +21,7 @@
     }
 
     @* ===== Groups ===== *@
-    Section: @details.section.name @if(details.groups.isEmpty) {has no groups} else {has the following groups:}
+    This section @if(details.groups.isEmpty) {has no groups} else {has the following groups:}
 
     @if(details.groups.nonEmpty) {
         <ul>

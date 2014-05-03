@@ -1,13 +1,17 @@
 @(details: viewsupport.organization.assignment.AssignmentDetails,
         sectionGroups: List[viewsupport.organization.SectionGroupDetails])(implicit user: service.User)
 
+@import views.html.tag._
 @import controllers.organization.routes._
 
 @main(details.assignment.name) {
 
-    <h2>
-        Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a>
-    </h2>
+    <h1>
+        Welcome to the information page for the assignment: @details.assignment.name
+    </h1>
+
+    This assignment is for the Course: @courseLink(details.course)
+
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
         case (Some(start), Some(end)) => {This assignment starts on @start and ends on @end}
@@ -16,19 +20,15 @@
         case (None, None) => {}
     }
     @* ===== Groups ===== *@
-    @if(sectionGroups.isEmpty) {there are no groups for this section} else {
+    @if(sectionGroups.isEmpty) {there are no groups for this assignment} else {
         <ul>
         @for(sectionGroupDetails <- sectionGroups) {
-            <li> Section: @sectionGroupDetails.section.name @if(sectionGroupDetails.groups.isEmpty) {has no groups} else {has the following groups} </li>
+            <li> Section [@sectionLink(sectionGroupDetails.section)] @if(sectionGroupDetails.groups.isEmpty) {has no groups} else {has the following groups} </li>
 
             @if(sectionGroupDetails.groups.nonEmpty) {
-                <li>
-                    <ul>
-                    @for(group <- sectionGroupDetails.groups) {
-                        <li> @group.name </li>
-                    }
-                    </ul>
-                </li>
+            <ul>
+                @for(group <- sectionGroupDetails.groups) {<li> @group.name </li>}
+            </ul>
             }
         }
         </ul>

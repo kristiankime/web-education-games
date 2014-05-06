@@ -3,16 +3,20 @@
         group: viewsupport.organization.assignment.GroupDetails)(implicit user: service.User)
 
 @import controllers.organization.routes._
-@import controllers.organization.CourseJoin
-@import controllers.question.derivative.routes._
+@import controllers.organization.assignment.routes._
 @import service._
-@import helper._
+@import views.html.tag._
 
 @main(details.assignment.name) {
 
     <h2>
-        Welcome to the information page for the assignment: @details.assignment.name of course: <a href=@CoursesController.view(details.course.id)>@details.course.name</a>
+        Welcome to the information page for the group: @details.assignment.name
     </h2>
+
+    for course [ @courseLink(details.course) ] <br>
+    and section [ @sectionLink(section) ] <br>
+    and assignment [ <a href="@AssignmentsController.viewSection(details.course.id, section.id, details.assignment.id)"> @details.assignment.name </a> ] <br>
+
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
         case (Some(start), Some(end)) => { This assignment starts on @start and ends on @end}
@@ -20,17 +24,18 @@
         case (None, Some(end)) => { This assignment ends on @end}
         case (None, None) => {}
     }
-    @* ===== Group Info ===== *@
-    Section: @section.name
 
-    @if(group.students.nonEmpty) {
-        <li>
-            <ul>
-            @for(student <- group.students) {
-                <li> @student.email </li>
-            }
-            </ul>
-        </li>
+    @* ===== Group Info ===== *@
+    @if(details.access > Non) {
+        @if(group.students.isEmpty) {Currently there are no students in this group} else { the following students are in this group:
+            <li>
+                <ul>
+                @for(student <- group.students) {
+                    <li> @student.email </li>
+                }
+                </ul>
+            </li>
+        }
     }
 
 }

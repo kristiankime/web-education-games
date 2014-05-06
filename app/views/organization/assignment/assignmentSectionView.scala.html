@@ -9,8 +9,8 @@
         Welcome to the information page for the assignment: @details.assignment.name
     </h1>
 
-    This assignment is for the Course: @courseLink(details.course)
-    And Section: @sectionLink(details.section)
+    This assignment is for the Course: @courseLink(details.course) <br>
+    And Section: @sectionLink(details.section) <br>
 
     @* ===== Start and end dates ===== *@
     @details.assignment.startAndEnd match {
@@ -26,7 +26,7 @@
     @if(details.groups.nonEmpty) {
         <ul>
         @for(group <- details.groups) {
-            <li> @group.name </li>
+            <li> [ <a href="@GroupsController.view(details.course.id, details.section.id, details.assignment.id, group.id)">@group.name</a> ] </li>
         }
         </ul>
     }

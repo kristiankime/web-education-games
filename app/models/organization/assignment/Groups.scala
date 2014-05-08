@@ -1,15 +1,13 @@
 package models.organization.assignment
 
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
 import service._
 import models.support._
-import models.organization.table._
-import play.api.db.slick.Config.driver.simple._
 import models.organization.assignment.table._
+import models.organization.Sections
 import service.table.UserTable
 import viewsupport.organization.assignment.GroupDetails
-import viewsupport.organization.SectionGroupDetails
-import models.organization.Sections
 import viewsupport.organization.assignment.SectionAssignmentDetails
 
 case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
@@ -33,7 +31,7 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
 object Groups {
 
   // ======= CREATE ======
-  def create(assignmentGroupTmp: GroupTmp)(implicit session: Session) = ((new AssignmentGroupsTable).insert(assignmentGroupTmp))
+  def create(assignmentGroupTmp: GroupTmp)(implicit session: Session) = assignmentGroupTmp((new AssignmentGroupsTable).insert(assignmentGroupTmp))
 
   // ======= FIND ======
   def find(assignmentGroupId: GroupId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.id === assignmentGroupId).firstOption
@@ -60,7 +58,14 @@ object Groups {
       case _ => None
     }
 
-  // ======= Update ======
+  // ======= ENROLLMENT ======
+  def enrolled(userId: UserId, assignmentId: AssignmentId)(implicit session: Session): Option[Group] =
+    (for (
+      g <- (new AssignmentGroupsTable) if g.assignmentId === assignmentId;
+      ug <- (new UsersAssignmentGroupsTable) if ug.id === g.id && ug.userId === userId
+    ) yield g).firstOption
+
   def join(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))
 
+  def leave(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).where(r => r.userId === userId && r.id === assignmentGroupId).delete
 }

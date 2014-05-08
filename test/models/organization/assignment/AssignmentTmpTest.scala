@@ -1,8 +1,7 @@
-package models.organization
+package models.organization.assignment
 
-import org.joda.time.DateTime
 import models.support.{UserId, CourseId}
-import models.organization.assignment.AssignmentTmp
+import org.joda.time.DateTime
 
 object AssignmentTmpTest {
   def apply(name: String = "section",

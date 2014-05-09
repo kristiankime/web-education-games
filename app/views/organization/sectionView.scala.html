@@ -51,7 +51,7 @@
             <h5> The course has the following assignment(s) which apply to this section </h5>
             <ul>
             @for(assignment <- assignments){
-                <li> <a href=@AssignmentsController.viewSection(details.course.id, details.section.id, assignment.id)>@assignment.name</a> </li>
+                <li> <a href="@AssignmentsController.viewSection(details.course.id, details.section.id, assignment.id)">@assignment.name</a> </li>
             }
             </ul>
         </section>

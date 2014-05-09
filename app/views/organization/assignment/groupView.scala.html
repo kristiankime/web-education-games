@@ -6,11 +6,13 @@
 @import controllers.organization.assignment.routes._
 @import service._
 @import views.html.tag._
+@import helper._
+@import controllers.organization.assignment.routes._
 
 @main(details.assignment.name) {
 
     <h2>
-        Welcome to the information page for the group: @details.assignment.name
+        Welcome to the information page for the group: @group.group.name
     </h2>
 
     for course [ @courseLink(details.course) ] <br>
@@ -28,13 +30,17 @@
     @* ===== Group Info ===== *@
     @if(details.access > Non) {
         @if(group.students.isEmpty) {Currently there are no students in this group} else { the following students are in this group:
-            <li>
-                <ul>
-                @for(student <- group.students) {
-                    <li> @student.email </li>
-                }
-                </ul>
-            </li>
+            <ul>
+            @for(student <- group.students) {
+                <li> @student.email </li>
+            }
+            </ul>
+        }
+    }
+
+    @if(details.access > Non){
+        @form(action = GroupsController.join(section.courseId, section.id, details.assignment.id, group.group.id)) {
+            Join this group: <input type="submit" value="Join">
         }
     }
 

@@ -26,6 +26,8 @@ case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner:
 
   def groups(implicit session: Session) = Groups.find(id)
 
+  def enrolled(implicit user: User, session: Session) = Groups.enrolled(user.id, id)
+
   protected def linkAccess(implicit user: User, session: Session): Access = Non
 
   /**

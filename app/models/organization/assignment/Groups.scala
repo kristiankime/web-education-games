@@ -26,6 +26,10 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
 
   def access(implicit user: User, session: Session): Access = assignment.access
 
+  def join(implicit user: User, session: Session) = Groups.join(user.id, id)
+
+  def leave(implicit user: User, session: Session) = Groups.leave(user.id, id)
+
 }
 
 object Groups {

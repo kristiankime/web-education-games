@@ -5,10 +5,13 @@
 @import controllers.organization.assignment.GroupCreate
 @import helper._
 @import controllers.organization.assignment.routes._
+@import views.html.tag._
 
 @main("Add a Group for " + section.name + " for the assignment " + assignment.name) {
 
-    <h2>Welcome to the add a group page for the Section: section.name + " and Assignment: " + assignment.name</h2>
+    <h2>Welcome to the add a group page </h2>
+    for Section: [ @sectionLink(section) ] <br>
+    and Assignment: [ <a href="@AssignmentsController.viewSection(course.id, section.id, assignment.id)">@assignment.name</a> ] <br>
 
     <h5>Please enter the information for a new Group:</h5>
 

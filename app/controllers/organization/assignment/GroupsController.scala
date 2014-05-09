@@ -51,23 +51,21 @@ object GroupsController extends Controller with SecureSocialDB {
 
   def join(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId: GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     (Sections.find(sectionId), Assignments.find(assignmentId), Groups.find(assignmentGroupId)) match {
-      case (Some(section), Some(assignment), Some(group)) => {
+      case (Some(section), Some(assignment), Some(group)) =>
         if (section.courseId == assignment.courseId && assignment.id == group.assignmentId) {
           joinGroup(group)
           Redirect(routes.GroupsController.view(section.courseId, section.id, assignment.id, group.id))
         }
         else NotFound(views.html.index(Courses.listDetails))
-      }
       case _ => NotFound(views.html.index(Courses.listDetails))
     }
   }
 
   private def joinGroup(group: Group)(implicit user: User, session: Session) =  {
     val assignment = group.assignment
-    // leave a group if they are currently in one
-    for(currentGroup <- Groups.enrolled(user.id, assignment.id)){ Groups.leave(user.id, currentGroup.id) }
-    // TODO move quiz to new group
-    Groups.join(user.id, group.id)
+    for(currentGroup <- assignment.enrolled){ currentGroup.leave } // leave a group if they are currently in one
+    // TODO move quizzes to new group or disable quiz
+    group.join
   }
 
 }

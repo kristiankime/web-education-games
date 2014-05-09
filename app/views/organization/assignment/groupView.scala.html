@@ -38,7 +38,8 @@
         }
     }
 
-    @if(details.access > Non){
+    @* ===== Joining the Group ===== *@
+    @if(details.access > Non && !group.enrolled){
         @form(action = GroupsController.join(section.courseId, section.id, details.assignment.id, group.group.id)) {
             Join this group: <input type="submit" value="Join">
         }

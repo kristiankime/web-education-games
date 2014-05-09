@@ -2,7 +2,7 @@
         sectionGroups: List[viewsupport.organization.SectionGroupDetails])(implicit user: service.User)
 
 @import views.html.tag._
-@import controllers.organization.routes._
+@import controllers.organization.assignment.routes._
 
 @main(details.assignment.name) {
 
@@ -23,11 +23,10 @@
     @if(sectionGroups.isEmpty) {there are no groups for this assignment} else {
         <ul>
         @for(sectionGroupDetails <- sectionGroups) {
-            <li> Section [@sectionLink(sectionGroupDetails.section)] @if(sectionGroupDetails.groups.isEmpty) {has no groups} else {has the following groups} </li>
-
+            <li> Section [ <a href="@AssignmentsController.viewSection(details.course.id, sectionGroupDetails.section.id, details.assignment.id)">@details.assignment.name</a> ] @if(sectionGroupDetails.groups.isEmpty) {has no groups} else {has the following groups} </li>
             @if(sectionGroupDetails.groups.nonEmpty) {
             <ul>
-                @for(group <- sectionGroupDetails.groups) {<li> @group.name </li>}
+                @for(group <- sectionGroupDetails.groups) {<li> [ <a href="@GroupsController.view(details.course.id, sectionGroupDetails.section.id, details.assignment.id, group.id)">@group.name</a> ]</li>}
             </ul>
             }
         }

@@ -24,7 +24,7 @@ case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner:
 
   def course(implicit session: Session) = Courses(courseId).get
 
-  def groups(implicit session: Session) = Groups.find(id)
+  def groups(implicit session: Session) = Groups(id)
 
   def enrolled(implicit user: User, session: Session) = Groups.enrolled(user.id, id)
 
@@ -44,6 +44,7 @@ object Assignments {
   def create(assignmentTmp: AssignmentTmp)(implicit session: Session) = assignmentTmp((new AssignmentsTable).insert(assignmentTmp))
 
   // ======= FIND ======
+//  def find(assignmentId: AssignmentId, courseId: CourseId)(implicit session: Session) = Query(new AssignmentsTable).where(a => a.id === assignmentId && a.courseId === courseId).firstOption
   def apply(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentsTable).where(a => a.id === assignmentId).firstOption
 
   def apply(courseId: CourseId)(implicit session: Session) = Query(new AssignmentsTable).where(_.courseId === courseId).list

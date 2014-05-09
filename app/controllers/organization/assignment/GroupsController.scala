@@ -41,7 +41,7 @@ object GroupsController extends Controller with SecureSocialDB {
   }
 
   def view(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId: GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    (Sections(sectionId), Assignments(assignmentId), Groups.find(assignmentGroupId)) match {
+    (Sections(sectionId), Assignments(assignmentId), Groups(assignmentGroupId)) match {
       case (Some(section), Some(assignment), Some(group)) =>
         if (section.courseId == assignment.courseId) Ok(groupView(assignment.details, section, group.details))
         else NotFound(views.html.index(Courses.listDetails))
@@ -50,7 +50,7 @@ object GroupsController extends Controller with SecureSocialDB {
   }
 
   def join(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId: GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    (Sections(sectionId), Assignments(assignmentId), Groups.find(assignmentGroupId)) match {
+    (Sections(sectionId), Assignments(assignmentId), Groups(assignmentGroupId)) match {
       case (Some(section), Some(assignment), Some(group)) =>
         if (section.courseId == assignment.courseId && assignment.id == group.assignmentId) {
           joinGroup(group)

@@ -22,7 +22,7 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
   def assignments(implicit session: Session) = Assignments(courseId)
 
-  def groups(assignmentId: AssignmentId)(implicit session: Session) = Groups.find(id, assignmentId)
+  def groups(assignmentId: AssignmentId)(implicit session: Session) = Groups(id, assignmentId)
 
   def groupDetails(assignmentId: AssignmentId)(implicit session: Session) = SectionGroupDetails(this, groups(assignmentId))
 

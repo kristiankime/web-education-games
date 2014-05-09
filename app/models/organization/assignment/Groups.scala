@@ -38,11 +38,11 @@ object Groups {
   def create(assignmentGroupTmp: GroupTmp)(implicit session: Session) = assignmentGroupTmp((new AssignmentGroupsTable).insert(assignmentGroupTmp))
 
   // ======= FIND ======
-  def find(assignmentGroupId: GroupId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.id === assignmentGroupId).firstOption
+  def apply(assignmentGroupId: GroupId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.id === assignmentGroupId).firstOption
 
-  def find(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.assignmentId === assignmentId).sortBy(_.name).list
+  def apply(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.assignmentId === assignmentId).sortBy(_.name).list
 
-  def find(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
+  def apply(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
 
   def students(assignmentGroupId: GroupId)(implicit session: Session) =
     (for (

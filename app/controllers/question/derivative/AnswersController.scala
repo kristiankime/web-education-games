@@ -22,7 +22,7 @@ object AnswersController extends Controller with SecureSocialDB {
 		val courseOp = courseId.flatMap(Courses(_))
 		val quizOp = Quizzes(quizId)
 		val questionOp = Questions(questionId)
-		val answerOp = Answers.find(answerId)
+		val answerOp = Answers(answerId)
 
 		(quizOp, questionOp, answerOp) match {
 			case (Some(qz), Some(qu), Some(a)) => questionView(access(qu, courseOp), courseOp, qz, qu, Some(Right(a)))

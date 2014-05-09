@@ -26,11 +26,11 @@ object Answers {
 	def createAnswer(answerTmp: AnswerTmp)(implicit session: Session) = answerTmp((new AnswersTable).insert(answerTmp))
 
 	// ======= FIND ======
-	def find(aid: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(_.id === aid).firstOption
+	def apply(aid: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(_.id === aid).firstOption
 
-	def findAnswers(qid: QuestionId)(implicit session: Session) = Query(new AnswersTable).where(_.questionId === qid).list
+	def apply(qid: QuestionId)(implicit session: Session) = Query(new AnswersTable).where(_.questionId === qid).list
 
-	def findAnswer(qid: QuestionId, aid: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
+	def apply(qid: QuestionId, aid: AnswerId)(implicit session: Session) = Query(new AnswersTable).where(v => v.questionId === qid && v.id === aid).firstOption
 
 }
 

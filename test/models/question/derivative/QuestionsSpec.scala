@@ -119,7 +119,7 @@ class QuestionsSpec extends Specification {
 				Questions.create(QuestionTmp(user.id, x + `1`, "x + 2", DateTime.now), quiz.id)
 				Questions.create(QuestionTmp(user.id, x + `2`, "x + 2", DateTime.now), quiz.id)
 
-				val eqs = Questions.allQuestions.map(_.mathML)
+				val eqs = Questions.list.map(_.mathML)
 				eqs must beEqualTo(List(x + `1`, x + `2`))
 			}
 		}

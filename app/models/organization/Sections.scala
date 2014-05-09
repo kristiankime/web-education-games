@@ -53,9 +53,9 @@ object Sections {
 	def create(sectionTmp: SectionTmp)(implicit session: Session) = sectionTmp((new SectionsTable).insert(sectionTmp))
 
 	// ======= FIND ======
-	def find(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
+	def apply(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
 
-	def find(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).sortBy(_.name).list
+	def apply(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).sortBy(_.name).list
 
   def findDetails(sectionId: SectionId, courseId: CourseId)(implicit user: User, session: Session) = {
     val sectionDetails = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)

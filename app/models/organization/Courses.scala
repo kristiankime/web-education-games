@@ -15,7 +15,7 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-	def sections(implicit session: Session) = Sections.find(id)
+	def sections(implicit session: Session) = Sections(id)
 
   def assignments(implicit session: Session) = Assignments.find(id)
 
@@ -23,7 +23,7 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 	
 	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))
 	
-	def details(implicit user: User, session: Session) = CourseDetail(this, access, Sections.find(id).map(_.details))
+	def details(implicit user: User, session: Session) = CourseDetail(this, access, Sections(id).map(_.details))
 
   def quizzes(implicit session: Session) = Quizzes.findByCourse(id)
 

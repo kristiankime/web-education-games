@@ -36,7 +36,7 @@ object SectionsController extends Controller with SecureSocialDB {
 	}
 
 	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    Sections.find(id) match {
+    Sections(id) match {
       case None => NotFound(views.html.index(Courses.listDetails))
       case Some(section) =>
         if (section.courseId != courseId) Redirect(routes.SectionsController.view(section.courseId, id))
@@ -47,7 +47,7 @@ object SectionsController extends Controller with SecureSocialDB {
 	def join(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		SectionJoin.form.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
-			form => Sections.find(id) match {
+			form => Sections(id) match {
 					    case Some(section) => {
                 if (section.viewCode == form)	Sections.grantAccess(section, View)
                 if (section.editCode == form) Sections.grantAccess(section, Edit)

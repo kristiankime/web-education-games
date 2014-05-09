@@ -51,7 +51,7 @@ object Groups {
     ) yield u).sortBy(_.lastName).list
 
   def details(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) =
-    (Sections.find(sectionId), Assignments.find(assignmentId)) match {
+    (Sections(sectionId), Assignments.find(assignmentId)) match {
       case (Some(section), Some(assignment)) => {
         if (section.courseId != assignment.courseId) None
         else {

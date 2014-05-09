@@ -17,7 +17,7 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 
 	def sections(implicit session: Session) = Sections(id)
 
-  def assignments(implicit session: Session) = Assignments.find(id)
+  def assignments(implicit session: Session) = Assignments(id)
 
 	def results(quiz: Quiz)(implicit session: Session) = sections.map(_.results(quiz))
 	

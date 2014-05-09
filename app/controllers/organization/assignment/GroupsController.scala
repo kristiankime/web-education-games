@@ -16,7 +16,7 @@ import service._
 object GroupsController extends Controller with SecureSocialDB {
 
   def add(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId) = SecuredUserDBAction(RequireAccess(sectionId)) { implicit request => implicit user => implicit session =>
-    (Sections(sectionId), Assignments.find(assignmentId)) match {
+    (Sections(sectionId), Assignments(assignmentId)) match {
       case (Some(section), Some(assignment)) =>
         if (section.courseId == assignment.courseId) Ok(groupAdd(section.course, section, assignment))
         else NotFound(views.html.index(Courses.listDetails))
@@ -25,7 +25,7 @@ object GroupsController extends Controller with SecureSocialDB {
   }
 
   def create(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId) = SecuredUserDBAction(RequireAccess(sectionId)) { implicit request => implicit user => implicit session =>
-    (Sections(sectionId), Assignments.find(assignmentId)) match {
+    (Sections(sectionId), Assignments(assignmentId)) match {
       case (Some(section), Some(assignment)) =>
         if (section.courseId == assignment.courseId)
           AssignmentCreate.form.bindFromRequest.fold(
@@ -41,7 +41,7 @@ object GroupsController extends Controller with SecureSocialDB {
   }
 
   def view(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId: GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    (Sections(sectionId), Assignments.find(assignmentId), Groups.find(assignmentGroupId)) match {
+    (Sections(sectionId), Assignments(assignmentId), Groups.find(assignmentGroupId)) match {
       case (Some(section), Some(assignment), Some(group)) =>
         if (section.courseId == assignment.courseId) Ok(groupView(assignment.details, section, group.details))
         else NotFound(views.html.index(Courses.listDetails))
@@ -50,7 +50,7 @@ object GroupsController extends Controller with SecureSocialDB {
   }
 
   def join(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, assignmentGroupId: GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    (Sections(sectionId), Assignments.find(assignmentId), Groups.find(assignmentGroupId)) match {
+    (Sections(sectionId), Assignments(assignmentId), Groups.find(assignmentGroupId)) match {
       case (Some(section), Some(assignment), Some(group)) =>
         if (section.courseId == assignment.courseId && assignment.id == group.assignmentId) {
           joinGroup(group)

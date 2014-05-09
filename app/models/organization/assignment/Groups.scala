@@ -16,7 +16,7 @@ case class GroupTmp(name: String, sectionId: SectionId, assignmentId: Assignment
 
 case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
 
-  def assignment(implicit session: Session) = Assignments.find(assignmentId).get
+  def assignment(implicit session: Session) = Assignments(assignmentId).get
 
   def course(implicit session: Session) = assignment.course
 
@@ -51,7 +51,7 @@ object Groups {
     ) yield u).sortBy(_.lastName).list
 
   def details(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) =
-    (Sections(sectionId), Assignments.find(assignmentId)) match {
+    (Sections(sectionId), Assignments(assignmentId)) match {
       case (Some(section), Some(assignment)) => {
         if (section.courseId != assignment.courseId) None
         else {

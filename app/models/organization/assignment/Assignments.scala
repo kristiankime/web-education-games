@@ -44,9 +44,8 @@ object Assignments {
   def create(assignmentTmp: AssignmentTmp)(implicit session: Session) = assignmentTmp((new AssignmentsTable).insert(assignmentTmp))
 
   // ======= FIND ======
-//  def find(assignmentId: AssignmentId, courseId: CourseId)(implicit session: Session) = Query(new AssignmentsTable).where(a => a.id === assignmentId && a.courseId === courseId).firstOption
-  def find(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentsTable).where(a => a.id === assignmentId).firstOption
+  def apply(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentsTable).where(a => a.id === assignmentId).firstOption
 
-  def find(courseId: CourseId)(implicit session: Session) = Query(new AssignmentsTable).where(_.courseId === courseId).list
+  def apply(courseId: CourseId)(implicit session: Session) = Query(new AssignmentsTable).where(_.courseId === courseId).list
 
 }

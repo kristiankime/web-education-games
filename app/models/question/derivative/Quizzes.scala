@@ -18,14 +18,14 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 	def results(student: User)(implicit session: Session) = 
 		UserQuizResults(student, this, questions.map(v => v.results(student)))
 	
-	def questions(implicit session: Session) = Quizzes.findQuestions(id)
+	def questions(implicit session: Session) = Quizzes.questions(id)
 		
 	def results(section: Section)(implicit session: Session) : QuizResults = QuizResults(this, section.results(this))
 	
 	protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
 	
 	def access(implicit user: User, session: Session) = 
-		(Quizzes.findRelatedCourses(id).map(_.access.ceilEdit) :+ directAccess) max
+		(Quizzes.courses(id).map(_.access.ceilEdit) :+ directAccess) max
 		
 }
 
@@ -39,23 +39,22 @@ object Quizzes {
 	}
 
 	// ======= FIND ======
-	def find(quizId: QuizId)(implicit session: Session) =
+	def apply(quizId: QuizId)(implicit session: Session) =
 		Query(new QuizzesTable).where(_.id === quizId).firstOption
 
-	def findQuestions(quizId: QuizId)(implicit session: Session) = 
+  def apply(courseId: CourseId)(implicit session: Session) =
+    (for (
+      q <- (new QuizzesTable);
+      cq <- (new CoursesQuizzesTable) if cq.quizId === q.id && cq.courseId === courseId
+    ) yield q).list
+
+	def questions(quizId: QuizId)(implicit session: Session) = 
 		(for {
 			l <- (new QuizzesQuestionsTable) if l.quizId === quizId
 			q <- (new QuestionsTable) if l.questionId === q.id
 		} yield q).list
-	
 
-	def findByCourse(courseId: CourseId)(implicit session: Session) = 
-		(for (
-			q <- (new QuizzesTable);
-			cq <- (new CoursesQuizzesTable) if cq.quizId === q.id && cq.courseId === courseId
-		) yield q).list
-
-	def findRelatedCourses(quizId: QuizId)(implicit session: Session) = 
+	def courses(quizId: QuizId)(implicit session: Session) =
 		(for (
 			c <- (new CoursesTable);
 			cq <- (new CoursesQuizzesTable) if cq.courseId === c.id && cq.quizId === quizId

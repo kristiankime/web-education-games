@@ -18,7 +18,7 @@ case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserI
 
 	def course(implicit session: Session) = Courses(courseId).get
 
-  def quizzes(implicit session: Session) = Quizzes.findByCourse(courseId)
+  def quizzes(implicit session: Session) = Quizzes(courseId)
 
   def assignments(implicit session: Session) = Assignments(courseId)
 

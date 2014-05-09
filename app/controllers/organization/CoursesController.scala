@@ -37,7 +37,7 @@ object CoursesController extends Controller with SecureSocialDB {
 
 	def view(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Courses(id) match {
-			case Some(course) => Ok(views.html.organization.courseView(course.details, Assignments(id), Quizzes.findByCourse(id)))
+			case Some(course) => Ok(views.html.organization.courseView(course.details, Assignments(id), Quizzes(id)))
 			case None => NotFound(views.html.index(Courses.listDetails))
 		}
 	}

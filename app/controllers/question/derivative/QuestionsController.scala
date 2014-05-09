@@ -15,7 +15,7 @@ object QuestionsController extends Controller with SecureSocialDB {
 
 	def view(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		val courseOp = courseId.flatMap(Courses(_))
-		val quizOp = Quizzes.find(quizId)
+		val quizOp = Quizzes(quizId)
 		val questionOp = Questions.find(questionId)
 
 		(courseOp, quizOp, questionOp) match {
@@ -46,7 +46,7 @@ object QuestionsController extends Controller with SecureSocialDB {
 	}
 
 	def remove(quizId: QuizId, questionId: QuestionId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		(Quizzes.find(quizId), Questions.find(questionId)) match {
+		(Quizzes(quizId), Questions.find(questionId)) match {
 			case (Some(quiz), Some(question)) => {
 				Questions.remove(quiz, question)
 				Redirect(routes.QuizzesController.view(quizId, courseId))

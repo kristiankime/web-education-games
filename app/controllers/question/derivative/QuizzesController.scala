@@ -27,7 +27,7 @@ object QuizzesController extends Controller with SecureSocialDB {
 
 	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 			val courseOp = courseId.flatMap(Courses(_))
-			val quizOp = Quizzes.find(quizId)
+			val quizOp = Quizzes(quizId)
 			val access = courseOp.map(_.access).getOrElse(Own) // TODO get access right
 
 			(quizOp, courseOp) match {

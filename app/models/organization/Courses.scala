@@ -25,7 +25,7 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 	
 	def details(implicit user: User, session: Session) = CourseDetail(this, access, Sections(id).map(_.details))
 
-  def quizzes(implicit session: Session) = Quizzes.findByCourse(id)
+  def quizzes(implicit session: Session) = Quizzes(id)
 
 	protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
 

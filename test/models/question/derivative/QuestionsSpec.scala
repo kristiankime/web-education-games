@@ -105,7 +105,7 @@ class QuestionsSpec extends Specification {
 				val quiz = Quizzes.create(QuizTmp(user.id, "test", DateTime.now), None)
 				val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", DateTime.now)
 				val question = Questions.create(qTmp, quiz.id)
-				val eq = Questions.find(question.id)
+				val eq = Questions(question.id)
 
 				eq.get must beEqualTo(question)
 			}
@@ -126,7 +126,7 @@ class QuestionsSpec extends Specification {
 
 		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val eq = Questions.find(QuestionId(Int.MaxValue))
+				val eq = Questions(QuestionId(Int.MaxValue))
 
 				eq must beNone
 			}

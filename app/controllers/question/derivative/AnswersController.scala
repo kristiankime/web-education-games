@@ -21,7 +21,7 @@ object AnswersController extends Controller with SecureSocialDB {
 	def view(quizId: QuizId, questionId: QuestionId, answerId: AnswerId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		val courseOp = courseId.flatMap(Courses(_))
 		val quizOp = Quizzes(quizId)
-		val questionOp = Questions.find(questionId)
+		val questionOp = Questions(questionId)
 		val answerOp = Answers.find(answerId)
 
 		(quizOp, questionOp, answerOp) match {
@@ -34,7 +34,7 @@ object AnswersController extends Controller with SecureSocialDB {
 		AnswerForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index(Courses.listDetails)),
 			form => {
-				val questionOp : Option[Question] = Questions.find(quId)
+				val questionOp : Option[Question] = Questions(quId)
 				val mathOp : Try[MathMLElem] = MathML(form._1)
 				val rawStr = form._2
 				val quizOp : Option[Quiz] = Quizzes(qzId)
@@ -55,7 +55,7 @@ object AnswersController extends Controller with SecureSocialDB {
 	}
 
 	private def questionView(access: Access, course: Option[Course], quiz: Quiz, question: Question, answer: Option[Either[AnswerTmp, Answer]])(implicit user: User, session: Session) = {
-		val allAnswers = Questions.findAnswersAndOwners(question.id)
+		val allAnswers = Questions.answersAndOwners(question.id)
 		val nextQuestion = quiz.results(user).nextQuestion(question)
 		Ok(views.html.question.derivative.questionView(access, course, quiz, question.results(user), answer, nextQuestion, allAnswers))
 	}

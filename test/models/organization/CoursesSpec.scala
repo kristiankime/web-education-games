@@ -163,7 +163,7 @@ class CoursesSpec extends Specification {
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				val section = Sections.create(SectionTmpTest(courseId = course.id, owner = owner.id))
 
-				val sectionDetails = Courses.find(course.id)(session).get.details(accessor, session).sections(0)
+				val sectionDetails = Courses(course.id)(session).get.details(accessor, session).sections(0)
 
 				sectionDetails.a must beEqualTo(Non)
 			}

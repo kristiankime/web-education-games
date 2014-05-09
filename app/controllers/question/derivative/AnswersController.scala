@@ -19,7 +19,7 @@ import com.artclod.mathml.scalar.MathMLElem
 object AnswersController extends Controller with SecureSocialDB {
 
 	def view(quizId: QuizId, questionId: QuestionId, answerId: AnswerId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		val courseOp = courseId.flatMap(Courses.find(_))
+		val courseOp = courseId.flatMap(Courses(_))
 		val quizOp = Quizzes.find(quizId)
 		val questionOp = Questions.find(questionId)
 		val answerOp = Answers.find(answerId)
@@ -38,7 +38,7 @@ object AnswersController extends Controller with SecureSocialDB {
 				val mathOp : Try[MathMLElem] = MathML(form._1)
 				val rawStr = form._2
 				val quizOp : Option[Quiz] = Quizzes.find(qzId)
-				val courseOp  = cId.flatMap(Courses.find(_))
+				val courseOp  = cId.flatMap(Courses(_))
 
 				(questionOp, mathOp, quizOp) match {
 					case (Some(qu), Success(m), Some(qz)) => {

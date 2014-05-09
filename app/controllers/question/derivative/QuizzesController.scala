@@ -13,7 +13,7 @@ import controllers.support.SecureSocialDB
 object QuizzesController extends Controller with SecureSocialDB {
 
 	def add(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-			Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses.find(_))))
+			Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses(_))))
 	}
 
 	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
@@ -26,7 +26,7 @@ object QuizzesController extends Controller with SecureSocialDB {
 	}
 
 	def view(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-			val courseOp = courseId.flatMap(Courses.find(_))
+			val courseOp = courseId.flatMap(Courses(_))
 			val quizOp = Quizzes.find(quizId)
 			val access = courseOp.map(_.access).getOrElse(Own) // TODO get access right
 

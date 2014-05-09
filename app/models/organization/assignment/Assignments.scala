@@ -22,7 +22,7 @@ case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner:
 
   def sectionDetails(implicit session: Session) = course.sections.map(_.groupDetails(id))
 
-  def course(implicit session: Session) = Courses.find(courseId).get
+  def course(implicit session: Session) = Courses(courseId).get
 
   def groups(implicit session: Session) = Groups.find(id)
 

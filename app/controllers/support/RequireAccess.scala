@@ -23,9 +23,9 @@ case class RequireAccess(level: Access, secured: Session => Option[Secured]) ext
 
 object RequireAccess {
 	
-	def apply(courseId: CourseId) = new RequireAccess(View, (s:Session) => Courses.find(courseId)(s))
+	def apply(courseId: CourseId) = new RequireAccess(View, (s:Session) => Courses(courseId)(s))
 
-	def apply(level: Access, courseId: CourseId) = new RequireAccess(level, (s:Session) => Courses.find(courseId)(s))
+	def apply(level: Access, courseId: CourseId) = new RequireAccess(level, (s:Session) => Courses(courseId)(s))
 
   def apply(sectionId: SectionId) = new RequireAccess(View, (s:Session) => Sections.find(sectionId)(s))
 

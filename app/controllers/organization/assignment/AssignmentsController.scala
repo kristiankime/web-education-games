@@ -15,14 +15,14 @@ import views.html.organization.assignment._
 object AssignmentsController extends Controller with SecureSocialDB {
 
   def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
-    Courses.find(courseId) match {
+    Courses(courseId) match {
       case Some(course) => Ok(assignmentAdd(course, AssignmentCreate.form.fill(AssignmentData())))
       case None => NotFound(views.html.index(Courses.listDetails))
     }
   }
 
   def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
-    Courses.find(courseId) match {
+    Courses(courseId) match {
       case None => NotFound(views.html.index(Courses.listDetails))
       case Some(course) =>
         AssignmentCreate.form.bindFromRequest.fold(

@@ -47,9 +47,9 @@ object Courses {
 	def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
 
 	// ======= FIND ======
-	def find(id: CourseId)(implicit session: Session) = Query(new CoursesTable).where(_.id === id).firstOption
+	def apply(id: CourseId)(implicit session: Session) = Query(new CoursesTable).where(_.id === id).firstOption
 
-	def find(userId: UserId)(implicit session: Session) = {
+	def apply(userId: UserId)(implicit session: Session) = {
 		(for (
 			uc <- (new UsersCoursesTable) if uc.userId === userId;
 			c <- (new CoursesTable) if uc.id === c.id

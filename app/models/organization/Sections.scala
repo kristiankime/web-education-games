@@ -16,7 +16,7 @@ case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode:
 
 case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-	def course(implicit session: Session) = Courses.find(courseId).get
+	def course(implicit session: Session) = Courses(courseId).get
 
   def quizzes(implicit session: Session) = Quizzes.findByCourse(courseId)
 

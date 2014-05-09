@@ -17,7 +17,7 @@ object SectionsController extends Controller with SecureSocialDB {
   val codeRange = (0 to 100000).toVector
 
 	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
-		Courses.find(courseId) match {
+		Courses(courseId) match {
 			case Some(course) => Ok(views.html.organization.sectionAdd(course))
 			case None => NotFound(views.html.index(Courses.listDetails))
 		}

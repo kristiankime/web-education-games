@@ -70,7 +70,7 @@
         @if(course.access.write) { [ <a href="@AssignmentsController.add(course.id)">add an assignment</a> ] }
         </section>
     }
-    @* ======= Quiz List ======= *@
+    @* ======= Quizzes ======= *@
     @if(course.access > Non) {
         <section>
         @defining(course.quizzes) { quizzes =>

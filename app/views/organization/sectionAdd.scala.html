@@ -1,4 +1,4 @@
-@(course: models.organization.Course)(implicit user: service.User)
+@(course: models.organization.Course)(implicit user: service.User, session: scala.slick.session.Session)
 
 @import helper._
 @import controllers.organization.SectionCreate

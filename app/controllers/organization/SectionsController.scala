@@ -40,7 +40,7 @@ object SectionsController extends Controller with SecureSocialDB {
       case None => NotFound(views.html.index())
       case Some(section) =>
         if (section.courseId != courseId) Redirect(routes.SectionsController.view(section.courseId, id))
-        else Ok(views.html.organization.sectionView(section.details, section.quizzes, section.assignments))
+        else Ok(views.html.organization.sectionView(section))
     }
 	}
 
@@ -51,7 +51,7 @@ object SectionsController extends Controller with SecureSocialDB {
 					    case Some(section) => {
                 if (section.viewCode == form)	Sections.grantAccess(section, View)
                 if (section.editCode == form) Sections.grantAccess(section, Edit)
-                Redirect(routes.SectionsController.view(section.courseId, id)) // TODO indicate acesss was not granted in a better fashion
+                Redirect(routes.SectionsController.view(section.courseId, id)) // TODO indicate access was not granted in a better fashion
               }
               case None => BadRequest(views.html.index())
           })

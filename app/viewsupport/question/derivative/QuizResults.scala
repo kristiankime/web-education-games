@@ -10,9 +10,9 @@ case class UserQuizResults(user: User, quiz: Quiz, results: List[QuestionResults
 
 	def numQuestions = results.size
 
-	val numCorrect = results.map(s => if (s.correct) { 1 } else { 0 }).foldLeft(0)(_ + _)
+	val numCorrect = results.map(s => if (s.correct) { 1 } else { 0 }).sum
 
-	val numAttempted = results.map(s => if (s.attempted) { 1 } else { 0 }).foldLeft(0)(_ + _)
+	val numAttempted = results.map(s => if (s.attempted) { 1 } else { 0 }).sum
 
 	val questions = results.toVector.map(_.question)
 

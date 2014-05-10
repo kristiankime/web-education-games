@@ -1,5 +1,6 @@
 package com.artclod
 
+
 package object collection {
 
 	implicit class PimpedSeq[E](seq: Seq[E]) {

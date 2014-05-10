@@ -1,4 +1,4 @@
-@(courses: List[viewsupport.organization.Course])(implicit user: service.User, session: scala.slick.session.Session)
+@(courses: List[models.organization.Course])(implicit user: service.User, session: scala.slick.session.Session)
 
 @import views.html.tag._
 
@@ -9,18 +9,22 @@
     <h5> Here are the list of courses and sections </h5>
     click on a course or section for more info (or to join it)
 
-    <ul>
-    @for(course <- courses) {
-        <li> [ @courseLink(course) ] @accessName(course.access) </li>
-
-        @if(course.sections.nonEmpty) {
+    <section>
+    @if(courses.isEmpty) {
+        There are currently no available courses
+    } else {
         <ul>
-        @for(section <- course.sections) {
-            <li> [ @sectionLink(section) ] @accessName(section.access) </li>
+        @for(course <- courses) {
+            <li> [ @courseLink(course) ] @accessName(course.access) </li>
+            @if(course.sections.nonEmpty) {
+                <ul>
+                @for(section <- course.sections) {
+                    <li> [ @sectionLink(section) ] @accessName(section.access) </li>
+                }
+                </ul>
+            }
         }
         </ul>
-        }
     }
-    </ul>
-
+    </section>
 }

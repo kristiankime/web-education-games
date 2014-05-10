@@ -26,13 +26,13 @@ object AnswersController extends Controller with SecureSocialDB {
 
 		(quizOp, questionOp, answerOp) match {
 			case (Some(qz), Some(qu), Some(a)) => questionView(access(qu, courseOp), courseOp, qz, qu, Some(Right(a)))
-			case _ => BadRequest(views.html.index(Courses.listDetails))
+			case _ => BadRequest(views.html.index())
 		}
 	}
 
 	def create(qzId: QuizId, quId: QuestionId, cId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		AnswerForm.values.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
+			errors => BadRequest(views.html.index()),
 			form => {
 				val questionOp : Option[Question] = Questions(quId)
 				val mathOp : Try[MathMLElem] = MathML(form._1)
@@ -49,7 +49,7 @@ object AnswersController extends Controller with SecureSocialDB {
 							case Inconclusive => questionView(access(qu, courseOp), courseOp, qz, qu, Some(Left(aTmp(false))))
 						}
 					}
-					case _ => BadRequest(views.html.index(Courses.listDetails))
+					case _ => BadRequest(views.html.index())
 				}
 			})
 	}

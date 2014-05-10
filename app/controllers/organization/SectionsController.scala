@@ -19,13 +19,13 @@ object SectionsController extends Controller with SecureSocialDB {
 	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
 		Courses(courseId) match {
 			case Some(course) => Ok(views.html.organization.sectionAdd(course))
-			case None => NotFound(views.html.index(Courses.listDetails))
+			case None => NotFound(views.html.index())
 		}
 	}
 
 	def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
 		SectionCreate.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
+			errors => BadRequest(views.html.index()),
 			form => {
         val (editNum, viewNum) = codeRange.pick2From
         val editCode = "SE-E-" + editNum
@@ -37,7 +37,7 @@ object SectionsController extends Controller with SecureSocialDB {
 
 	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     Sections(id) match {
-      case None => NotFound(views.html.index(Courses.listDetails))
+      case None => NotFound(views.html.index())
       case Some(section) =>
         if (section.courseId != courseId) Redirect(routes.SectionsController.view(section.courseId, id))
         else Ok(views.html.organization.sectionView(section.details, section.quizzes, section.assignments))
@@ -46,14 +46,14 @@ object SectionsController extends Controller with SecureSocialDB {
 
 	def join(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		SectionJoin.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
+			errors => BadRequest(views.html.index()),
 			form => Sections(id) match {
 					    case Some(section) => {
                 if (section.viewCode == form)	Sections.grantAccess(section, View)
                 if (section.editCode == form) Sections.grantAccess(section, Edit)
                 Redirect(routes.SectionsController.view(section.courseId, id)) // TODO indicate acesss was not granted in a better fashion
               }
-              case None => BadRequest(views.html.index(Courses.listDetails))
+              case None => BadRequest(views.html.index())
           })
 	}
 

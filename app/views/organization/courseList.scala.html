@@ -1,4 +1,4 @@
-@(courseDetails: List[viewsupport.organization.CourseDetail])(implicit user: service.User)
+@(courses: List[viewsupport.organization.Course])(implicit user: service.User, session: scala.slick.session.Session)
 
 @import views.html.tag._
 
@@ -10,13 +10,13 @@
     click on a course or section for more info (or to join it)
 
     <ul>
-    @for(courseDetail <- courseDetails) {
-        <li> [ @courseLink(courseDetail.c) ] @accessName(courseDetail.a) </li>
+    @for(course <- courses) {
+        <li> [ @courseLink(course) ] @accessName(course.access) </li>
 
-        @if(courseDetail.sections.nonEmpty) {
+        @if(course.sections.nonEmpty) {
         <ul>
-        @for(sectionDetail <- courseDetail.sections) {
-            <li> [ @sectionLink(sectionDetail.section) ] @accessName(courseDetail.a) </li>
+        @for(section <- course.sections) {
+            <li> [ @sectionLink(section) ] @accessName(section.access) </li>
         }
         </ul>
         }

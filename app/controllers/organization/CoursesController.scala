@@ -18,7 +18,7 @@ object CoursesController extends Controller with SecureSocialDB {
   val codeRange = (0 to 100000).toVector
 
 	def list = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.organization.courseList(Courses.listDetails))
+		Ok(views.html.organization.courseList(Courses.list))
 	}
 
 	def add = SecuredUserDBAction { implicit request => implicit user => implicit session =>
@@ -27,7 +27,7 @@ object CoursesController extends Controller with SecureSocialDB {
 
 	def create = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseCreate.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
+			errors => BadRequest(views.html.index()),
 			form => {
         val (editNum, viewNum) = codeRange.pick2From
 				val course = Courses.create(CourseTmp(form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, DateTime.now))
@@ -38,20 +38,20 @@ object CoursesController extends Controller with SecureSocialDB {
 	def view(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Courses(id) match {
 			case Some(course) => Ok(views.html.organization.courseView(course.details, Assignments(id), Quizzes(id)))
-			case None => NotFound(views.html.index(Courses.listDetails))
+			case None => NotFound(views.html.index())
 		}
 	}
 
 	def join(id: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		CourseJoin.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index(Courses.listDetails)),
+			errors => BadRequest(views.html.index()),
 			form => Courses(id) match {
                 case Some(course) => {
                   if (course.viewCode == form) Courses.grantAccess(course, View)
                   if (course.editCode == form) Courses.grantAccess(course, Edit)
                   Redirect(routes.CoursesController.view(course.id)) // TODO indicate acesss was not granted in a better fashion
                 }
-                case None => NotFound(views.html.index(Courses.listDetails))
+                case None => NotFound(views.html.index())
               })
 	}
 

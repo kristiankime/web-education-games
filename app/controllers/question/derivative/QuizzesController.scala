@@ -18,7 +18,7 @@ object QuizzesController extends Controller with SecureSocialDB {
 
 	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 			QuizForm.values.bindFromRequest.fold(
-				errors => BadRequest(views.html.index(Courses.listDetails)),
+				errors => BadRequest(views.html.index()),
 				form => {
 					val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
 					Redirect(routes.QuizzesController.view(quiz.id, courseId))
@@ -36,13 +36,13 @@ object QuizzesController extends Controller with SecureSocialDB {
 					Ok(views.html.question.derivative.quizView(access, Some(course), quiz.results(user), results))
 				}
 				case (Some(quiz), None) => Ok(views.html.question.derivative.quizView(access, None, quiz.results(user), None))
-				case _ => BadRequest(views.html.index(Courses.listDetails))
+				case _ => BadRequest(views.html.index())
 			}
 	}
 
 	def rename(quizId: QuizId, courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 			QuizForm.values.bindFromRequest.fold(
-				errors => BadRequest(views.html.index(Courses.listDetails)),
+				errors => BadRequest(views.html.index()),
 				form => {
 					Quizzes.rename(quizId, form)
 					Redirect(routes.QuizzesController.view(quizId, courseId))

@@ -16,7 +16,7 @@ object Application extends Controller with SecureSocialDB {
 	}
 
 	def index = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.index(Courses.listDetails))
+		Ok(views.html.index())
 	}
 
 	def userInfo = SecuredUserDBAction { implicit request => implicit user => implicit session =>

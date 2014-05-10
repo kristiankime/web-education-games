@@ -17,13 +17,13 @@ object AssignmentsController extends Controller with SecureSocialDB {
   def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
     Courses(courseId) match {
       case Some(course) => Ok(assignmentAdd(course, AssignmentCreate.form.fill(AssignmentData())))
-      case None => NotFound(views.html.index(Courses.listDetails))
+      case None => NotFound(views.html.index())
     }
   }
 
   def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
     Courses(courseId) match {
-      case None => NotFound(views.html.index(Courses.listDetails))
+      case None => NotFound(views.html.index())
       case Some(course) =>
         AssignmentCreate.form.bindFromRequest.fold(
           errors => BadRequest(assignmentAdd(course, errors)),
@@ -36,7 +36,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
 
   def view(courseId: CourseId, id: AssignmentId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     Assignments(id) match {
-      case None => BadRequest(views.html.index(Courses.listDetails))
+      case None => BadRequest(views.html.index())
       case Some(assignment) =>
         if (assignment.courseId != courseId) Redirect(routes.AssignmentsController.view(assignment.courseId, id))
         else Ok(assignmentView(assignment.details, assignment.sectionDetails))
@@ -45,7 +45,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
 
   def viewSection(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
      Groups.details(sectionId, assignmentId) match {
-      case None => BadRequest(views.html.index(Courses.listDetails))
+      case None => BadRequest(views.html.index())
       case Some(details) =>
         if (details.section.courseId != courseId) Redirect(routes.AssignmentsController.viewSection(details.section.courseId, sectionId, assignmentId))
         else Ok(assignmentSectionView(details))

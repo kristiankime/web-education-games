@@ -19,8 +19,8 @@ object GroupsController extends Controller with SecureSocialDB {
     (Sections(sectionId), Assignments(assignmentId)) match {
       case (Some(section), Some(assignment)) =>
         if (section.courseId == assignment.courseId) Ok(groupAdd(section.course, section, assignment))
-        else NotFound(views.html.index(Courses.listDetails))
-      case _ => NotFound(views.html.index(Courses.listDetails))
+        else NotFound(views.html.index())
+      case _ => NotFound(views.html.index())
     }
   }
 
@@ -29,14 +29,14 @@ object GroupsController extends Controller with SecureSocialDB {
       case (Some(section), Some(assignment)) =>
         if (section.courseId == assignment.courseId)
           AssignmentCreate.form.bindFromRequest.fold(
-            errors => BadRequest(views.html.index(Courses.listDetails)),
+            errors => BadRequest(views.html.index()),
             form => {
               val now = DateTime.now
               Groups.create(GroupTmp(form.name, section.id, assignment.id, now, now))
               Redirect(routes.AssignmentsController.viewSection(assignment.courseId, section.id, assignment.id))
             })
-        else NotFound(views.html.index(Courses.listDetails))
-      case _ => NotFound(views.html.index(Courses.listDetails))
+        else NotFound(views.html.index())
+      case _ => NotFound(views.html.index())
     }
   }
 
@@ -44,8 +44,8 @@ object GroupsController extends Controller with SecureSocialDB {
     (Sections(sectionId), Assignments(assignmentId), Groups(assignmentGroupId)) match {
       case (Some(section), Some(assignment), Some(group)) =>
         if (section.courseId == assignment.courseId) Ok(groupView(assignment.details, section, group.details))
-        else NotFound(views.html.index(Courses.listDetails))
-      case _ => NotFound(views.html.index(Courses.listDetails))
+        else NotFound(views.html.index())
+      case _ => NotFound(views.html.index())
     }
   }
 
@@ -56,8 +56,8 @@ object GroupsController extends Controller with SecureSocialDB {
           joinGroup(group)
           Redirect(routes.GroupsController.view(section.courseId, section.id, assignment.id, group.id))
         }
-        else NotFound(views.html.index(Courses.listDetails))
-      case _ => NotFound(views.html.index(Courses.listDetails))
+        else NotFound(views.html.index())
+      case _ => NotFound(views.html.index())
     }
   }
 

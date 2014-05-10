@@ -26,4 +26,18 @@ class CollectionPackageSpec extends Specification {
 		}
 	}
 
+  "elementBefore" should {
+    "should return previous element" in {
+      List("A", "B", "C").elementBefore("B") must beEqualTo(Some("A"))
+    }
+
+    "should return None if element is the first element" in {
+      List("A", "B", "C").elementBefore("A") must beEqualTo(None)
+    }
+
+    "should return None if element is not in the list" in {
+      List("A", "B", "C").elementBefore("Not in the list") must beEqualTo(None)
+    }
+  }
+
 }

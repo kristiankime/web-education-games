@@ -10,6 +10,13 @@ package object collection {
 			else if (index == (seq.size - 1)) { None }
 			else { Some(seq(index + 1)) }
 		}
+
+    def elementBefore(e: E) = {
+      val index = seq.indexOf(e)
+      if (index == -1) { None }
+      else if (index == 0) { None }
+      else { Some(seq(index - 1)) }
+    }
 	}
 
   def takeTuple2[E](s : TraversableOnce[E]) : (E, E) = s match {

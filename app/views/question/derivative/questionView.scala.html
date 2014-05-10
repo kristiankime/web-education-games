@@ -1,5 +1,5 @@
 @(access: service.Access,
-        course: Option[models.organization.Course],
+        courseOp: Option[models.organization.Course],
         quiz: models.question.derivative.Quiz,
         results: viewsupport.question.derivative.QuestionResults,
         currentAnswer: Option[Either[models.question.derivative.AnswerTmp, models.question.derivative.Answer]],
@@ -17,11 +17,11 @@
 
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
-    @for(c <- course) {
-        This is a question for the course [ <a href="@CoursesController.view(c.id)">@c.name</a> ] <br>
+    @for(course <- courseOp) {
+        This is a question for the course [ <a href="@CoursesController.view(course.id)">@course.name</a> ] <br>
     }
 
-    Back to the quiz [ <a href="@QuizzesController.view(quiz.id, course.map(_.id))">@quiz.name</a> ] <br>
+    Back to the quiz [ <a href="@QuizzesController.view(quiz.id, courseOp.map(_.id))">@quiz.name</a> ] <br>
 
     <h2>What is the Derivative of</h2> @math.mathmlContent(results.question)
 
@@ -44,7 +44,7 @@
     </section>
 
     <section>
-    @form(AnswersController.create(quiz.id, results.question.id, course.map(_.id)), 'id -> "answerForm") {
+    @form(AnswersController.create(quiz.id, results.question.id, courseOp.map(_.id)), 'id -> "answerForm") {
         <input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
         <input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">
@@ -64,7 +64,7 @@
     </script>
 
     @for(next <- nextQuestion) {
-        Go to the [<a href="@QuestionsController.view(quiz.id, next.id, course.map(_.id))">next question</a>] <br>
+        Go to the [<a href="@QuestionsController.view(quiz.id, next.id, courseOp.map(_.id))">next question</a>] <br>
     }
 
     @if(results.answers.nonEmpty) {

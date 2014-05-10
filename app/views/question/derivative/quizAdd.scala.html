@@ -7,13 +7,15 @@
 
 @main("Create a Quiz") {
 
-	<h2>Please enter the information about your quiz:</h2>
+    <h2>Please enter the information about your quiz:</h2>
 
-    @for(course <- courseOp){<h5> <a href="@CoursesController.view(course.id)">@course.name</a> </h5>}
+    @for(course <- courseOp) {
+        <h5> <a href="@CoursesController.view(course.id)">@course.name</a> </h5>
+    }
 
-    @form(action = QuizzesController.create( courseOp.map(_.id) ) ) {
-		Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
-	    <input type="submit" value="Submit">
+    @form(action = QuizzesController.create(courseOp.map(_.id))) {
+        Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
+        <input type="submit" value="Submit">
     }
 
 }

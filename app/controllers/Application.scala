@@ -20,8 +20,7 @@ object Application extends Controller with SecureSocialDB {
 	}
 
 	def userInfo = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		val courses = Courses(user.id)
-		Ok(views.html.user.userInfo(courses))
+		Ok(views.html.user.userInfo())
 	}
 }
 

@@ -1,20 +1,29 @@
-@(courses: List[Course])(implicit user: service.User)
+@()(implicit user: service.User, session: scala.slick.session.Session)
 
 @import controllers.organization.routes._
- 
+@import models.organization.Courses
+@import com.artclod.play.s
+@import views.html.tag._
+
 @main("User Information") {
-    
+
     <h1>Welcome to the EdTech Math Games Server</h1>
-    
+
     <p>
-    	You are logged in as: @user.fullName <br>
-    	You email is: @user.email
+        You are logged in as: @user.fullName <br>
+        You email is: @user.email
     </p>
 
-    <h4> Your are associated with the following course(s)</h4>
-    <ul>
-    @for(course <- courses){
-    	<li> <a href=@CoursesController.view(course.id)> @course.name </a> </li>
+    @defining(Courses(user.id)) { courses =>
+        @if(courses.isEmpty){
+            <h5> You are not signed up for any courses </h5>
+        } else {
+            <h5> Your are associated with the following course@s(courses)</h5>
+            <ul>
+            @for(course <- courses) {
+                <li> [ @courseLink(course) ] </li>
+            }
+            </ul>
+        }
     }
-    <ul>
 }

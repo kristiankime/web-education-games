@@ -1,10 +1,9 @@
 @(course: models.organization.Course,
-        errors: Form[controllers.organization.assignment.AssignmentData])(implicit user: service.User)
+        errors: Form[controllers.organization.assignment.AssignmentData])(implicit user: service.User, session: scala.slick.session.Session)
 
 @import controllers.organization.assignment.AssignmentCreate
-
-@import helper._
 @import controllers.organization.assignment.routes._
+@import helper._
 
 @main("Add an assignment to " + course.name) {
 

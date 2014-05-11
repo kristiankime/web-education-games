@@ -39,7 +39,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
       case None => BadRequest(views.html.index())
       case Some(assignment) =>
         if (assignment.courseId != courseId) Redirect(routes.AssignmentsController.view(assignment.courseId, id))
-        else Ok(assignmentView(assignment.details, assignment.sectionDetails))
+        else Ok(assignmentView(assignment))
     }
   }
 

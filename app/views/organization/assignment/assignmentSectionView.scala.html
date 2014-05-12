@@ -1,36 +1,38 @@
-@(details: viewsupport.organization.assignment.SectionAssignmentDetails)(implicit user: service.User)
+@(assignment: models.organization.assignment.Assignment, section: models.organization.Section)(implicit user: service.User, session: scala.slick.session.Session)
 
 @import views.html.tag._
 @import controllers.organization.assignment.routes._
 
-@main(details.assignment.name) {
+@main(assignment.name) {
+    @defining(assignment.course) { course =>
 
-    <h1>
-        Welcome to the information page for the assignment: @details.assignment.name
-    </h1>
+        <h1>
+            Welcome to the information page for the assignment: @assignment.name
+        </h1>
 
-    This assignment is for the Course: @courseLink(details.course) <br>
-    And Section: @sectionLink(details.section) <br>
+        This assignment is for the Course: @courseLink(course) <br>
+        And Section: @sectionLink(section) <br>
 
-    @* ===== Start and end dates ===== *@
-    @details.assignment.startAndEnd match {
-        case (Some(start), Some(end)) => {This assignment starts on @start and ends on @end}
-        case (Some(start), None) => {This assignment starts on @start}
-        case (None, Some(end)) => {This assignment ends on @end}
-        case (None, None) => {}
-    }
-
-    @* ===== Groups ===== *@
-    This section @if(details.groups.isEmpty) {has no groups} else {has the following groups:}
-
-    @if(details.groups.nonEmpty) {
-        <ul>
-        @for(group <- details.groups) {
-            <li> [ <a href="@GroupsController.view(details.course.id, details.section.id, details.assignment.id, group.id)">@group.name</a> ] </li>
+        @* ===== Start and end dates ===== *@
+        @assignment.startAndEnd match {
+            case (Some(start), Some(end)) => {This assignment starts on @start and ends on @end}
+            case (Some(start), None) => {This assignment starts on @start}
+            case (None, Some(end)) => {This assignment ends on @end}
+            case (None, None) => {}
         }
-        </ul>
+
+        @* ===== Groups ===== *@
+        @defining(section.groups(assignment.id)) { groups =>
+
+            This section @if(groups.isEmpty) {has no groups} else {has the following groups:
+                <ul>
+                @for(group <- groups) {
+                    <li> [ <a href="@GroupsController.view(course.id, section.id, assignment.id, group.id)">@group.name</a> ] </li>
+                }
+                </ul>
+            }
+
+            [ <a href="@GroupsController.add(course.id, section.id, assignment.id)">add a group</a> ]
+        }
     }
-
-    [ <a href="@GroupsController.add(details.course.id, details.section.id, details.assignment.id)">add a group</a> ]
-
 }

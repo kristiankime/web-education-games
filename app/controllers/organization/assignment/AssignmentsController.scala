@@ -44,11 +44,11 @@ object AssignmentsController extends Controller with SecureSocialDB {
   }
 
   def viewSection(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-     Groups.details(sectionId, assignmentId) match {
-      case None => BadRequest(views.html.index())
-      case Some(details) =>
-        if (details.section.courseId != courseId) Redirect(routes.AssignmentsController.viewSection(details.section.courseId, sectionId, assignmentId))
-        else Ok(assignmentSectionView(details))
+    (Sections(sectionId), Assignments(assignmentId)) match {
+      case (Some(section), Some(assignment)) =>
+        if (section.courseId != courseId || assignment.courseId != courseId) BadRequest(views.html.index())
+        else Ok(assignmentSectionView(assignment, section))
+      case _ => BadRequest(views.html.index())
     }
   }
 

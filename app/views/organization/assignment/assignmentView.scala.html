@@ -20,13 +20,12 @@
         }
         @* ===== Groups ===== *@
         @defining(course.sections) { sections =>
-            @if(sections.isEmpty) {There are no sections for this course} else {
+            This course for this assignment @if(sections.isEmpty) {has no sections} else {has the following sections:
                 <ul>
                 @for(section <- sections) {
-                    <li>Section [ <a href="@AssignmentsController.viewSection(course.id, section.id, assignment.id)">@assignment.name</a> ]</li>
+                    <li> [ <a href="@AssignmentsController.viewSection(course.id, section.id, assignment.id)">@assignment.name</a> ]</li>
                     @defining(section.groups(assignment.id)) { groups =>
-                        @if(groups.isEmpty) {There are no groups for this section} else {
-                        has the following assignments
+                        This section @if(groups.isEmpty) {has no groups} else {has the following groups:
                         <ul>
                             @for(group <- groups){
                                 <li> [ <a href="@GroupsController.view(course.id, section.id, assignment.id, group.id)">@group.name</a> ]</li>

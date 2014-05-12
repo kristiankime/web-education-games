@@ -6,7 +6,7 @@ import models.organization.table._
 import viewsupport.organization._
 import play.api.db.slick.Config.driver.simple._
 import service._
-import models.question.derivative.{Quizzes, Quiz}
+import models.question.derivative._
 import models.organization.assignment.Assignments
 
 case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
@@ -22,8 +22,6 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 	def results(quiz: Quiz)(implicit session: Session) = sections.map(_.results(quiz))
 	
 	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))
-	
-	def details(implicit user: User, session: Session) = CourseDetail(this, access, Sections(id).map(_.details))
 
   def quizzes(implicit session: Session) = Quizzes(id)
 
@@ -59,8 +57,6 @@ object Courses {
 	}
 
   def list(implicit user: User, session: Session) = Query(new CoursesTable).list
-
-  def listDetails(implicit user: User, session: Session) = list.map(_.details)
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =

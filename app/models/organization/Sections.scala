@@ -25,10 +25,6 @@ Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode
 
   def groups(assignmentId: AssignmentId)(implicit session: Session) = Groups(id, assignmentId)
 
-  def groupDetails(assignmentId: AssignmentId)(implicit session: Session) = SectionGroupDetails(this, groups(assignmentId))
-
-	def details(implicit user: User, session: Session) = SectionDetail(this, this.course, access)
-
 	def students(implicit session: Session) = Sections.students(id)
 
 	def results(quiz: Quiz)(implicit session: Session) = students.map(s => quiz.results(s))
@@ -57,11 +53,6 @@ object Sections {
 	def apply(sectionId: SectionId)(implicit session: Session) = Query(new SectionsTable).where(_.id === sectionId).firstOption
 
 	def apply(courseId: CourseId)(implicit session: Session) = Query(new SectionsTable).where(_.courseId === courseId).sortBy(_.name).list
-
-  def findDetails(sectionId: SectionId, courseId: CourseId)(implicit user: User, session: Session) = {
-    val sectionDetails = Query(new SectionsTable).where(_.id === sectionId).firstOption.map(_.details)
-    sectionDetails.flatMap(d => if(d.course.id == courseId) {Some(d)} else {None})
-  }
 
   def students(sectionId: SectionId)(implicit session: Session) =
 		(for (

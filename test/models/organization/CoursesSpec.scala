@@ -63,7 +63,7 @@ class CoursesSpec extends Specification {
 			}
 		}
 		
-		"only grant the spcified user access to the requested course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+		"only grant the specified user access to the requested course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val course = Courses.create(CourseTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
 				val userWithAccess = DBTest.fakeUser(UserTmpTest())
@@ -77,16 +77,16 @@ class CoursesSpec extends Specification {
 		}
 	}
 	
-	"listDetails: access to course" should {
+	"list: access to course" should {
 
 		"be Non when a user has no connection to the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.fakeUser(UserTmpTest())
 				val accessor = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
-				val courseDetails = Courses.listDetails(accessor, session)(0)
+				val courses0 = Courses.list(accessor, session)(0)
 
-				courseDetails.a must beEqualTo(Non)
+				courses0.access(accessor, session) must beEqualTo(Non)
 			}
 		}
 
@@ -94,9 +94,9 @@ class CoursesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
-				val courseDetails = Courses.listDetails(owner, session)(0)
+				val courses0 = Courses.list(owner, session)(0)
 
-				courseDetails.a must beEqualTo(Own)
+				courses0.access(owner, session) must beEqualTo(Own)
 			}
 		}
 
@@ -106,9 +106,9 @@ class CoursesSpec extends Specification {
 				val accessor = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				Courses.grantAccess(course, Edit)(accessor, session)
-				val courseDetails = Courses.listDetails(accessor, session)(0)
+				val courses0 = Courses.list(accessor, session)(0)
 
-				courseDetails.a must beEqualTo(Edit)
+				courses0.access(accessor, session) must beEqualTo(Edit)
 			}
 		}
 
@@ -118,9 +118,9 @@ class CoursesSpec extends Specification {
 				val accessor = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				Courses.grantAccess(course, Edit)(accessor, session)
-				val courseDetails = Courses.listDetails(accessor, session)(0)
+				val courses0 = Courses.list(accessor, session)(0)
 
-				courseDetails.a must beEqualTo(Edit)
+				courses0.access(accessor, session) must beEqualTo(Edit)
 			}
 		}
 
@@ -129,9 +129,9 @@ class CoursesSpec extends Specification {
 				val owner = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				Courses.grantAccess(course, Edit)(owner, session)
-				val courseDetails = Courses.listDetails(owner, session)(0)
+				val course0 = Courses.list(owner, session)(0)
 
-				courseDetails.a must beEqualTo(Own)
+				course0.access(owner, session) must beEqualTo(Own)
 			}
 		}
 
@@ -147,9 +147,9 @@ class CoursesSpec extends Specification {
 				val student = DBTest.fakeUser(UserTmpTest())
 				Sections.grantAccess(section, View)(student, session)
 				
-				Courses.listDetails(owner, session)(0).a must beEqualTo(Own)
-				Courses.listDetails(teacher, session)(0).a must beEqualTo(Edit)
-				Courses.listDetails(student, session)(0).a must beEqualTo(View)
+				Courses.list(owner, session)(0).access(owner, session) must beEqualTo(Own)
+				Courses.list(teacher, session)(0).access(teacher, session) must beEqualTo(Edit)
+				Courses.list(student, session)(0).access(student, session) must beEqualTo(View)
 			}
 		}
 	}
@@ -163,9 +163,9 @@ class CoursesSpec extends Specification {
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				val section = Sections.create(SectionTmpTest(courseId = course.id, owner = owner.id))
 
-				val sectionDetails = Courses(course.id)(session).get.details(accessor, session).sections(0)
+				val section0 = Courses(course.id)(session).get.sections(session)(0)
 
-				sectionDetails.a must beEqualTo(Non)
+				section0.access(accessor, session) must beEqualTo(Non)
 			}
 		}
 	}

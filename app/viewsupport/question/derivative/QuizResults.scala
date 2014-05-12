@@ -3,6 +3,7 @@ package viewsupport.question.derivative
 import service.User
 import com.artclod.collection.PimpedSeq
 import models.question.Status
+import models.question.derivative._
 
 case class QuizResults(quiz: Quiz, results: List[UserQuizResults])
 

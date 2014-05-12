@@ -1,14 +1,11 @@
 package models.organization.assignment
 
 import play.api.db.slick.Config.driver.simple._
-import models.organization.table._
 import service._
 import models.support._
 import org.joda.time.DateTime
-import viewsupport.organization._
 import models.organization._
 import models.organization.assignment.table._
-import viewsupport.organization.assignment.AssignmentDetails
 
 case class AssignmentTmp(name: String, courseId: CourseId, owner: UserId, date: DateTime, startDate: Option[DateTime], endDate: Option[DateTime]) {
   def apply(id: AssignmentId) = Assignment(id, name, courseId, owner, date, date, startDate, endDate)
@@ -17,10 +14,6 @@ case class AssignmentTmp(name: String, courseId: CourseId, owner: UserId, date: 
 case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner: UserId, creationDate: DateTime, updateDate: DateTime, startDate: Option[DateTime], endDate: Option[DateTime]) extends Secured {
 
   def startAndEnd = (startDate, endDate)
-
-  def details(implicit user: User, session: Session) = AssignmentDetails(this, course, access)
-
-//  def sectionDetails(implicit session: Session) = course.sections.map(_.groupDetails(id))
 
   def course(implicit session: Session) = Courses(courseId).get
 

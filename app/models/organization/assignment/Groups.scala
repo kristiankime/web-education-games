@@ -7,8 +7,6 @@ import models.support._
 import models.organization.assignment.table._
 import models.organization.Sections
 import service.table.UserTable
-import viewsupport.organization.assignment.GroupDetails
-import viewsupport.organization.assignment.SectionAssignmentDetails
 
 case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
   def apply(id: GroupId) = Group(id, name, sectionId, assignmentId, creationDate, updateDate)
@@ -19,8 +17,6 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
   def assignment(implicit session: Session) = Assignments(assignmentId).get
 
   def course(implicit session: Session) = assignment.course
-
-  def details(implicit session: Session) = GroupDetails(this, students)
 
   def students(implicit session: Session) = Groups.students(id)
 
@@ -50,18 +46,6 @@ object Groups {
       u <- (new UserTable);
       ug <- (new UsersAssignmentGroupsTable) if ug.userId === u.id && ug.id === assignmentGroupId
     ) yield u).sortBy(_.lastName).list
-
-  def details(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) =
-    (Sections(sectionId), Assignments(assignmentId)) match {
-      case (Some(section), Some(assignment)) => {
-        if (section.courseId != assignment.courseId) None
-        else {
-          val groups = Query(new AssignmentGroupsTable).where(r => r.sectionId === sectionId && r.assignmentId === assignmentId).list
-          Some(SectionAssignmentDetails(section.course, section, assignment, groups))
-        }
-      }
-      case _ => None
-    }
 
   // ======= ENROLLMENT ======
   def enrolled(userId: UserId, assignmentId: AssignmentId)(implicit session: Session): Option[Group] =

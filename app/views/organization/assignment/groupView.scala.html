@@ -1,6 +1,6 @@
-@(details: viewsupport.organization.assignment.AssignmentDetails,
+@(assignment: models.organization.assignment.Assignment,
         section: models.organization.Section,
-        group: viewsupport.organization.assignment.GroupDetails)(implicit user: service.User)
+        group: models.organization.assignment.Group)(implicit user: service.User, session: scala.slick.session.Session)
 
 @import controllers.organization.routes._
 @import controllers.organization.assignment.routes._
@@ -9,40 +9,43 @@
 @import helper._
 @import controllers.organization.assignment.routes._
 
-@main(details.assignment.name) {
+@main(assignment.name) {
+    @defining(assignment.course) { course =>
 
     <h2>
-        Welcome to the information page for the group: @group.group.name
+        Welcome to the information page for the group: @group.name
     </h2>
 
-    for course [ @courseLink(details.course) ] <br>
+    for course [ @courseLink(course) ] <br>
     and section [ @sectionLink(section) ] <br>
-    and assignment [ <a href="@AssignmentsController.viewSection(details.course.id, section.id, details.assignment.id)"> @details.assignment.name </a> ] <br>
+    and assignment [ <a href="@AssignmentsController.viewSection(course.id, section.id, assignment.id)"> @assignment.name </a> ] <br>
 
     @* ===== Start and end dates ===== *@
-    @details.assignment.startAndEnd match {
+    @assignment.startAndEnd match {
         case (Some(start), Some(end)) => { This assignment starts on @start and ends on @end}
         case (Some(start), None) => { This assignment starts on @start}
         case (None, Some(end)) => { This assignment ends on @end}
         case (None, None) => {}
     }
 
+    @defining(section.access){ access =>
     @* ===== Group Info ===== *@
-    @if(details.access > Non) {
-        @if(group.students.isEmpty) {Currently there are no students in this group} else { the following students are in this group:
-            <ul>
-            @for(student <- group.students) {
-                <li> @student.email </li>
+        @if(access > Non) {
+            @if(group.students.isEmpty) {Currently there are no students in this group} else { the following students are in this group:
+                <ul>
+                @for(student <- group.students) {
+                    <li> @student.email </li>
+                }
+                </ul>
             }
-            </ul>
+        }
+        @* ===== Joining the Group ===== *@
+        @if(access > Non && !group.enrolled){
+            @form(action = GroupsController.join(course.id, section.id, assignment.id, group.id)) {
+                Join this group: <input type="submit" value="Join">
+            }
         }
     }
 
-    @* ===== Joining the Group ===== *@
-    @if(details.access > Non && !group.enrolled){
-        @form(action = GroupsController.join(section.courseId, section.id, details.assignment.id, group.group.id)) {
-            Join this group: <input type="submit" value="Join">
-        }
     }
-
 }

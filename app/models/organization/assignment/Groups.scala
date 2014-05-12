@@ -30,6 +30,7 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
 
   def leave(implicit user: User, session: Session) = Groups.leave(user.id, id)
 
+  def enrolled(implicit user: User, session: Session) = students.contains(user)
 }
 
 object Groups {

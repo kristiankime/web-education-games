@@ -6,7 +6,7 @@ This project is intended to be a working play web application that demonstrates 
 
 ##### Note to the reader
 
-This readme is intended as documentation for all the steps that were taking in setting up this project. The idea being that, if the reader has the apporiate background in software development, they could they could replicate the steps just reading the document. And even find links to learn about the technologies as they go. As such the readme seem a little overly detail. I will, for example, cover he fact that this project is using Git and Github, which may seem a bit obvious. As a heads up I use a Mac so some of the "nice to have" things on this page will be Mac only. But the majority will be multi platform and free.
+This readme is intended as documentation for all the steps that were taking in setting up this project. The idea being that, if the reader has the appropriate background in software development, they could they could replicate the steps just reading the document. And even find links to learn about the technologies as they go. As such the readme seem a little overly detail. I will, for example, cover he fact that this project is using Git and Github, which may seem a bit obvious. As a heads up I use a Mac so some of the "nice to have" things on this page will be Mac only. But the majority will be multi platform and free.
 
 ## Tools and Tutorials
 

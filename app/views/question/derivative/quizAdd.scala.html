@@ -1,16 +1,21 @@
-@(courseOp: Option[models.organization.Course])(implicit user: service.User, session: scala.slick.session.Session)
+@(courseOp: Option[models.organization.Course], groupOp: Option[models.organization.assignment.Group])(implicit user: service.User, session: scala.slick.session.Session)
 
 @import helper._
 @import controllers.question.derivative.QuizForm
 @import controllers.question.derivative.routes.QuizzesController
 @import controllers.organization.routes._
+@import controllers.organization.assignment.routes.GroupsController
 
 @main("Create a Quiz") {
 
     <h2>Please enter the information about your quiz:</h2>
 
     @for(course <- courseOp) {
-        <h5> <a href="@CoursesController.view(course.id)">@course.name</a> </h5>
+        This quiz is for the course [ <a href="@CoursesController.view(course.id)">@course.name</a> ] <br>
+    }
+
+    @for(group <- groupOp) {
+        And the group [ <a href="@GroupsController.view(group.course.id, group.sectionId, group.assignmentId, group.id)">@group.name</a> ] <br>
     }
 
     @form(action = QuizzesController.create(courseOp.map(_.id))) {

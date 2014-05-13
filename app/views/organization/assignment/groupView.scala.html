@@ -2,12 +2,11 @@
         section: models.organization.Section,
         group: models.organization.assignment.Group)(implicit user: service.User, session: scala.slick.session.Session)
 
-@import controllers.organization.routes._
-@import controllers.organization.assignment.routes._
 @import service._
 @import views.html.tag._
 @import helper._
 @import controllers.organization.assignment.routes._
+@import controllers.question.derivative.routes._
 
 @main(assignment.name) {
     @defining(assignment.course) { course =>
@@ -39,10 +38,18 @@
                 </ul>
             }
         }
-        @* ===== Joining the Group ===== *@
-        @if(access > Non && !group.enrolled){
-            @form(action = GroupsController.join(course.id, section.id, assignment.id, group.id)) {
-                Join this group: <input type="submit" value="Join">
+
+        @defining(group.enrolled){ enrolled =>
+            @* ===== Joining the Group ===== *@
+            @if(access > Non && !enrolled){
+                @form(action = GroupsController.join(course.id, section.id, assignment.id, group.id)) {
+                    Join this group: <input type="submit" value="Join">
+                }
+            }
+
+            @* ===== Creating a Quiz for the group ===== *@
+            @if(access > Non && enrolled){
+                [ <a href="@QuizzesController.add(Some(course.id), Some(group.id))"> Create a Quiz ] <br>
             }
         }
     }

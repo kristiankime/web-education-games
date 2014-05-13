@@ -56,7 +56,7 @@ object Courses {
 				(Query(new CoursesTable).where(_.owner === userId))).list
 	}
 
-  def list(implicit user: User, session: Session) = Query(new CoursesTable).list
+  def list(implicit session: Session) = Query(new CoursesTable).list
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =

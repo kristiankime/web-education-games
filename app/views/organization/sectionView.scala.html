@@ -69,7 +69,7 @@
                     </ul>
                 }
             }
-            @if(access.write) { [ <a href="@QuizzesController.add(Some(course.id))">add a quiz</a> ] }
+            @if(access.write) { [ <a href="@QuizzesController.add(Some(course.id), None)">add a quiz</a> ] }
         </section>
     }
 

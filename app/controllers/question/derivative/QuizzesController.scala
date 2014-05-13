@@ -9,11 +9,12 @@ import models.support._
 import org.joda.time.DateTime
 import models.organization.Courses
 import controllers.support.SecureSocialDB
+import models.organization.assignment.Groups
 
 object QuizzesController extends Controller with SecureSocialDB {
 
-	def add(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-			Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses(_))))
+	def add(courseId: Option[CourseId], groupId: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+			Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses(_)), groupId.flatMap(Groups(_))))
 	}
 
 	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>

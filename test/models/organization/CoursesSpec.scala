@@ -84,7 +84,7 @@ class CoursesSpec extends Specification {
 				val owner = DBTest.fakeUser(UserTmpTest())
 				val accessor = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
-				val courses0 = Courses.list(accessor, session)(0)
+				val courses0 = Courses.list(session)(0)
 
 				courses0.access(accessor, session) must beEqualTo(Non)
 			}
@@ -94,7 +94,7 @@ class CoursesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
-				val courses0 = Courses.list(owner, session)(0)
+				val courses0 = Courses.list(session)(0)
 
 				courses0.access(owner, session) must beEqualTo(Own)
 			}
@@ -106,7 +106,7 @@ class CoursesSpec extends Specification {
 				val accessor = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				Courses.grantAccess(course, Edit)(accessor, session)
-				val courses0 = Courses.list(accessor, session)(0)
+				val courses0 = Courses.list(session)(0)
 
 				courses0.access(accessor, session) must beEqualTo(Edit)
 			}
@@ -118,7 +118,7 @@ class CoursesSpec extends Specification {
 				val accessor = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				Courses.grantAccess(course, Edit)(accessor, session)
-				val courses0 = Courses.list(accessor, session)(0)
+				val courses0 = Courses.list(session)(0)
 
 				courses0.access(accessor, session) must beEqualTo(Edit)
 			}
@@ -129,7 +129,7 @@ class CoursesSpec extends Specification {
 				val owner = DBTest.fakeUser(UserTmpTest())
 				val course = Courses.create(CourseTmpTest(owner = owner.id))
 				Courses.grantAccess(course, Edit)(owner, session)
-				val course0 = Courses.list(owner, session)(0)
+				val course0 = Courses.list(session)(0)
 
 				course0.access(owner, session) must beEqualTo(Own)
 			}
@@ -147,9 +147,9 @@ class CoursesSpec extends Specification {
 				val student = DBTest.fakeUser(UserTmpTest())
 				Sections.grantAccess(section, View)(student, session)
 				
-				Courses.list(owner, session)(0).access(owner, session) must beEqualTo(Own)
-				Courses.list(teacher, session)(0).access(teacher, session) must beEqualTo(Edit)
-				Courses.list(student, session)(0).access(student, session) must beEqualTo(View)
+				Courses.list(session)(0).access(owner, session) must beEqualTo(Own)
+				Courses.list(session)(0).access(teacher, session) must beEqualTo(Edit)
+				Courses.list(session)(0).access(student, session) must beEqualTo(View)
 			}
 		}
 	}

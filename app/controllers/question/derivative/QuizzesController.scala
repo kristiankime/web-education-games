@@ -13,16 +13,25 @@ import models.organization.assignment.Groups
 
 object QuizzesController extends Controller with SecureSocialDB {
 
-	def add(courseId: Option[CourseId], groupId: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-			Ok(views.html.question.derivative.quizAdd(courseId.flatMap(Courses(_)), groupId.flatMap(Groups(_))))
+	def add(courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+			Ok(views.html.question.derivative.quizAdd(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_))))
 	}
 
-	def create(courseId: Option[CourseId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+	def create(courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 			QuizForm.values.bindFromRequest.fold(
 				errors => BadRequest(views.html.index()),
 				form => {
-					val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
-					Redirect(routes.QuizzesController.view(quiz.id, courseId))
+          (courseIdOp, groupIdOp) match {
+            case (_, Some(groupId)) => {
+              val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), groupId)
+              Redirect(routes.QuizzesController.view(quiz.id, courseIdOp))
+            }
+            case (Some(courseId), _) => {
+              val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
+              Redirect(routes.QuizzesController.view(quiz.id, courseIdOp))
+            }
+            case _ => BadRequest(views.html.index())
+          }
 				})
 	}
 

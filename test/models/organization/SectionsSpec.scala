@@ -31,7 +31,7 @@ class SectionsSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val course = Courses.create(CourseTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
 				val section = Sections.create(SectionTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id, courseId = course.id))
-				val quiz = Quizzes.create(QuizTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id), Some(course.id))
+				val quiz = Quizzes.create(QuizTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id), course.id)
 				
 				val student1 = DBTest.fakeUser(UserTmpTest())
 				section.grantAccess(View)(student1, session)

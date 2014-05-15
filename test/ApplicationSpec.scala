@@ -118,7 +118,7 @@ class ApplicationSpec extends Specification {
           val user = fakeUser
 
           val owner = fakeUser
-          val quiz = Quizzes.create(QuizTmpTest(owner = owner.id), None)
+          val quiz = Quizzes.create(QuizTmpTest(owner = owner.id))
           val question = Questions.create(QuestionTmpTest(owner = owner.id), quiz.id)
 
           val routeStr: String = "/quizzes/" + quiz.id.v + "/questions/" + question.id.v

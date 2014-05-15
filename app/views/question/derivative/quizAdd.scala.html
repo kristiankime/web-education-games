@@ -18,7 +18,7 @@
         And the group [ <a href="@GroupsController.view(group.course.id, group.sectionId, group.assignmentId, group.id)">@group.name</a> ] <br>
     }
 
-    @form(action = QuizzesController.create(courseOp.map(_.id))) {
+    @form(action = QuizzesController.create(courseOp.map(_.id), groupOp.map(_.id))) {
         Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
         <input type="submit" value="Submit">
     }

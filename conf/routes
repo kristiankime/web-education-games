@@ -35,7 +35,7 @@ POST        /courses/:cid/sections/:sid/assignments/:aid/group/:id/join   contro
 # Questions pages
 # Quizzes
 GET         /quizzes/add                                                  controllers.question.derivative.QuizzesController.add(cid: Option[CourseId], gid: Option[GroupId])
-POST        /quizzes                                                      controllers.question.derivative.QuizzesController.create(cid: Option[CourseId])
+POST        /quizzes                                                      controllers.question.derivative.QuizzesController.create(cid: Option[CourseId], gid: Option[GroupId])
 GET         /quizzes/:id                                                  controllers.question.derivative.QuizzesController.view(id: QuizId, cid: Option[CourseId])
 POST        /quizzes/:id/rename                                           controllers.question.derivative.QuizzesController.rename(id: QuizId, cid: Option[CourseId])
 # Questions

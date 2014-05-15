@@ -80,7 +80,7 @@
                 <h5> The course has the following quiz@plural(quizzes){zes}: </h5>
                 <ul>
                 @for(quiz <- quizzes) {
-                    <li> [ <a href="@QuizzesController.view(quiz.id, Some(course.id))">@quiz.name</a> ] </li>
+                    <li> [ <a href="@QuizzesController.view(quiz.id, Some(course.id), None)">@quiz.name</a> ] </li>
                 }
                 </ul>
             }

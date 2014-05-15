@@ -12,6 +12,10 @@ import service.Access
  */
 package object support {
 
+  trait HasId[I]{
+    def id : I
+  }
+
 	// ==========================
 	// Access
 	// ==========================

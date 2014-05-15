@@ -1,23 +1,31 @@
 @(access: service.Access, 
-	course: Option[models.organization.Course],
+	where: Either[models.organization.Course, models.organization.assignment.Group],
 	quizResults: viewsupport.question.derivative.UserQuizResults,
-	sectionResultsOp: Option[List[viewsupport.organization.SectionResults]])(implicit user: service.User)
+	sectionResultsOp: Option[List[viewsupport.organization.SectionResults]])(implicit user: service.User, session: scala.slick.session.Session)
 
+@import com.artclod.util._
 @import helper._
+@import views.html.tag._
+@import models.support._
 @import controllers.organization.routes.CoursesController
+@import controllers.organization.assignment.routes.GroupsController
 @import controllers.question.derivative.routes.QuestionsController
 @import controllers.question.derivative.routes.QuizzesController
 @import controllers.question.derivative.QuizForm
 @import controllers.question.derivative.QuestionForm
 
+@defining(models.organization.courseFrom(where)){ course =>
+
 @main("Quiz " + quizResults.quiz.name) {
-    
+
     <h2>Welcome to the page for quiz: @quizResults.quiz.name </h2>
     
-    @for(c <- course){ <h5> This is a quiz for the course <a href="@CoursesController.view(c.id)">@c.name</a> </h5> }
-    
+    This is a quiz for the course [ @courseLink(course) ] <br>
+
+    @for(group <- where.rightOp){ And the group [ <a href="@GroupsController.view(course.id, group.sectionId, group.assignmentId, group.id)"> @group.name </a> ] <br> }
+
     @if(access.write){
-    	@form(QuizzesController.rename(quizResults.quiz.id, course.map(_.id)), 'class -> "inline-block") {
+    	@form(QuizzesController.rename(quizResults.quiz.id, where.leftOp(_.id), where.rightOp(_.id)), 'class -> "inline-block") {
      		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quizResults.quiz.name"> 
     		and click <input type="submit" value="rename" > 
     	} 
@@ -30,9 +38,9 @@
         @for(result <- quizResults.results){
             <tr>
             	<td> @math.mathmlContent(result.question) </td>
-            	<td> <a href="@QuestionsController.view(quizResults.quiz.id, result.question.id, course.map(_.id))">view</a> </td>
+            	<td> <a href="@QuestionsController.view(quizResults.quiz.id, result.question.id, where.leftOp(_.id), where.rightOp(_.id))">view</a> </td>
                 <td> @views.html.question.status(result.status) </td>
-                @if(access.write){ <td> @form(QuestionsController.remove(quizResults.quiz.id, result.question.id, course.map(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
+                @if(access.write){ <td> @form(QuestionsController.remove(quizResults.quiz.id, result.question.id, where.leftOp(_.id), where.rightOp(_.id)), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
             </tr>
         }
     </table>
@@ -46,7 +54,7 @@
 			@math.mathmlEditor(editorName="QUESTION")
 		</p>
 	
-	    @form(QuestionsController.create(quizResults.quiz.id, course.map(_.id)), 'id -> "derivativeqForm" ) {
+	    @form(QuestionsController.create(quizResults.quiz.id, where.leftOp(_.id), where.rightOp(_.id)), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
 	    	<input type="button" value="Save Question" onclick="formSubmit()">
@@ -85,4 +93,7 @@
 		}
     	
     }
+
+}
+
 }

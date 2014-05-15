@@ -13,7 +13,7 @@ case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: St
 	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
 }
 
-case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
+case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
 	def sections(implicit session: Session) = Sections(id)
 

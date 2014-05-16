@@ -21,6 +21,8 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 
+  def remove(question: Question)(implicit session: Session) = Questions.remove(this, question)
+
   def results(section: Section)(implicit session: Session): QuizResults = QuizResults(this, section.results(this))
 
   protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)

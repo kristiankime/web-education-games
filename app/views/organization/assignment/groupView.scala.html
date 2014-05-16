@@ -51,7 +51,7 @@
             @if(access > Non && enrolled){
 
                 @defining(group.quizzes) { quizzes =>
-                    @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {There are the following quizzes for this class:<br>
+                    @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {There are the following quizzes for this group:<br>
                         <ul>
                         @for(quiz <- group.quizzes) {
                             <li>[ <a href="@QuizzesController.view(quiz.id, None, Some(group.id))">@quiz.name</a> ]</li>

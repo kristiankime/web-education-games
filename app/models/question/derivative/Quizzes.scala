@@ -45,6 +45,7 @@ object Quizzes {
     quiz
   }
 
+  // TODO ensure that users only have one quiz per group
   def create(info: QuizTmp, groupId :GroupId)(implicit session: Session) : Quiz = {
     val quiz = create(info)
     (new AssignmentGroupsQuizzesTable).insert(AssignmentGroup2Quiz(groupId, quiz.id))

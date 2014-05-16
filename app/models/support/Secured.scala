@@ -3,7 +3,7 @@ package models.support
 import scala.slick.session.Session
 import service._
 
-trait Secured {
+trait Secured extends HasAccess{
 
   // LATER change this to ownerId?
 	val owner: UserId
@@ -23,8 +23,5 @@ trait Secured {
 	 */
 	protected def directAccess(implicit user: User, session: Session) = Seq(ownerAccess, linkAccess).max
 	
-	/**
-	 * Does the user have any access, from any source, to this object
-	 */
-	def access(implicit user: User, session: Session) : Access 
+
 }

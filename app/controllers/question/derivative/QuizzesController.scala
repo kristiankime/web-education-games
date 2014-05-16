@@ -12,6 +12,8 @@ import models.organization.Courses
 import models.organization.assignment.Groups
 import controllers.support.SecureSocialDB
 
+import play.api.Logger
+
 object QuizzesController extends Controller with SecureSocialDB {
 
   def add(courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
@@ -24,33 +26,32 @@ object QuizzesController extends Controller with SecureSocialDB {
     val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
 
     QuizForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.index()),
-      form => {
-        (courseIdOp, groupIdOp) match {
-          case (_, Some(groupId)) => {
-            val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), groupId)
+      errors => {
+        Logger("create").info("error" + errors)
+        BadRequest(views.html.errors.formErrorPage(errors))
+      },
+      form => where match {
+          case Right(group) => {
+            val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), group.id)
             Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
           }
-          case (Some(courseId), _) => {
-            val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), courseId)
+          case Left(course) => {
+            val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), course.id)
             Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
           }
-          case _ => BadRequest(views.html.index())
-        }
-      })
+        })
   }
 
-  def view(quizId: QuizId, courseId: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val courseOp = courseId.flatMap(Courses(_))
-    val quizOp = Quizzes(quizId)
-    val access = courseOp.map(_.access).getOrElse(Own) // TODO get access right
+  def view(quizId: QuizId, courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
+    val course = models.organization.courseFrom(where)
+    val access = where.access
 
-    (quizOp, courseOp) match {
-      case (Some(quiz), Some(course)) => {
+    Quizzes(quizId) match {
+      case Some(quiz) => {
         val results = access.write(() => course.sectionResults(quiz))
-        Ok(views.html.question.derivative.quizView(access, Left(course), quiz.results(user), results))
+        Ok(views.html.question.derivative.quizView(access, where, quiz.results(user), results))
       }
-      //				case (Some(quiz), None) => Ok(views.html.question.derivative.quizView(access, None, quiz.results(user), None))
       case _ => BadRequest(views.html.index())
     }
   }

@@ -2,7 +2,7 @@ package models
 
 import scala.slick.lifted.MappedTypeMapper
 import play.api.mvc._
-import service.Access
+import service._
 
 /**
  * This object contains all the mappers/binders for the DB (TypeMapper) and the urls (PathBindable and QueryStringBindable)

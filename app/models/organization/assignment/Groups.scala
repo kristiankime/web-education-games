@@ -3,17 +3,16 @@ package models.organization.assignment
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
-import models.support._
-import models.organization.assignment.table._
-import models.organization.HasCourse
-import models.organization.Sections
 import service.table.UserTable
+import models.support._
+import models.organization._
+import models.organization.assignment.table._
 
 case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
   def apply(id: GroupId) = Group(id, name, sectionId, assignmentId, creationDate, updateDate)
 }
 
-case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) extends HasId[GroupId] with HasCourse {
+case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) extends HasAccess with HasId[GroupId] with HasCourse {
 
   def assignment(implicit session: Session) = Assignments(assignmentId).get
 

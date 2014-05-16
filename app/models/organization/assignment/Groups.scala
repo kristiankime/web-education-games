@@ -7,6 +7,7 @@ import service.table.UserTable
 import models.support._
 import models.organization._
 import models.organization.assignment.table._
+import models.question.derivative.table.QuizzesTable
 
 case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
   def apply(id: GroupId) = Group(id, name, sectionId, assignmentId, creationDate, updateDate)
@@ -19,6 +20,8 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
   def course(implicit session: Session) = assignment.course
 
   def students(implicit session: Session) = Groups.students(id)
+
+  def quizzes(implicit session: Session) = Groups.quizzes(id)
 
   def access(implicit user: User, session: Session): Access = assignment.access
 
@@ -57,4 +60,11 @@ object Groups {
   def join(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))
 
   def leave(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).where(r => r.userId === userId && r.id === assignmentGroupId).delete
+
+  // ======= QUIZZES ======
+  def quizzes(assignmentGroupId: GroupId)(implicit session: Session) =
+    (for (
+      ag2q <- (new AssignmentGroupsQuizzesTable) if ag2q.groupId === assignmentGroupId;
+      q <- (new QuizzesTable) if ag2q.quizId === q.id
+    ) yield q).sortBy(_.name).list
 }

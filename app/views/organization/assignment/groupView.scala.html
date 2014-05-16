@@ -47,8 +47,18 @@
                 }
             }
 
-            @* ===== Creating a Quiz for the group ===== *@
+            @* ===== Quizzes for the group ===== *@
             @if(access > Non && enrolled){
+
+                @defining(group.quizzes) { quizzes =>
+                    @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {There are the following quizzes for this class:<br>
+                        <ul>
+                        @for(quiz <- group.quizzes) {
+                            <li>[ <a href="@QuizzesController.view(quiz.id, None, Some(group.id))">@quiz.name</a> ]</li>
+                        }
+                        </ul>
+                    }
+                }
                 [ <a href="@QuizzesController.add(Some(course.id), Some(group.id))"> Create a Quiz ] <br>
             }
         }

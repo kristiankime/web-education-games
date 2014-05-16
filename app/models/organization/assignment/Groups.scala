@@ -23,6 +23,8 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
 
   def quizzes(implicit session: Session) = Groups.quizzes(id)
 
+  def quizFor(user: User)(implicit session: Session) = Groups.quizFor(user.id, id)
+
   def access(implicit user: User, session: Session): Access = assignment.access
 
   def join(implicit user: User, session: Session) = Groups.join(user.id, id)
@@ -67,4 +69,11 @@ object Groups {
       ag2q <- (new AssignmentGroupsQuizzesTable) if ag2q.groupId === assignmentGroupId;
       q <- (new QuizzesTable) if ag2q.quizId === q.id
     ) yield q).sortBy(_.name).list
+
+  def quizFor(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) =
+    (for (
+      ag2q <- (new AssignmentGroupsQuizzesTable) if ag2q.groupId === assignmentGroupId;
+      q <- (new QuizzesTable) if ag2q.quizId === q.id && q.owner === userId
+    ) yield q).firstOption
+
 }

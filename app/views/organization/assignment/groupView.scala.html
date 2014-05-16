@@ -11,15 +11,14 @@
 @main(assignment.name) {
     @defining(assignment.course) { course =>
 
-    <h2>
-        Welcome to the information page for the group: @group.name
-    </h2>
+        <h2>
+            Welcome to the information page for the group: @group.name
+        </h2>
 
     for course [ @courseLink(course) ] <br>
     and section [ @sectionLink(section) ] <br>
     and assignment [ <a href="@AssignmentsController.viewSection(course.id, section.id, assignment.id)"> @assignment.name </a> ] <br>
-
-    @* ===== Start and end dates ===== *@
+        @* ===== Start and end dates ===== *@
     @assignment.startAndEnd match {
         case (Some(start), Some(end)) => { This assignment starts on @start and ends on @end}
         case (Some(start), None) => { This assignment starts on @start}
@@ -27,8 +26,8 @@
         case (None, None) => {}
     }
 
-    @defining(section.access){ access =>
-    @* ===== Group Info ===== *@
+    @defining(section.access) { access =>
+        @* ===== Group Info ===== *@
         @if(access > Non) {
             @if(group.students.isEmpty) {Currently there are no students in this group} else { the following students are in this group:
                 <ul>
@@ -39,19 +38,18 @@
             }
         }
 
-        @defining(group.enrolled){ enrolled =>
+        @defining(group.enrolled) { enrolled =>
             @* ===== Joining the Group ===== *@
-            @if(access > Non && !enrolled){
+            @if(access > Non && !enrolled) {
                 @form(action = GroupsController.join(course.id, section.id, assignment.id, group.id)) {
                     Join this group: <input type="submit" value="Join">
                 }
             }
-
             @* ===== Quizzes for the group ===== *@
-            @if(access > Non && enrolled){
+            @if(access > Non && enrolled) {
 
                 @defining(group.quizzes) { quizzes =>
-                    @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {There are the following quizzes for this group:<br>
+                    @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {The following quizzes are in this group:<br>
                         <ul>
                         @for(quiz <- group.quizzes) {
                             <li>[ <a href="@QuizzesController.view(quiz.id, None, Some(group.id))">@quiz.name</a> ]</li>
@@ -59,7 +57,14 @@
                         </ul>
                     }
                 }
-                [ <a href="@QuizzesController.add(Some(course.id), Some(group.id))"> Create a Quiz ] <br>
+
+                @defining(group.quizFor(user)) { quizOp =>
+                    @for(quiz <- quizOp) {
+                        You created the quiz [ <a href="@QuizzesController.view(quiz.id, None, Some(group.id))">@quiz.name</a> ] <br>
+                    } @if(quizOp.isEmpty) {
+                        [ <a href="@QuizzesController.add(Some(course.id), Some(group.id))"> Create your Quiz for this group ] <br>
+                    }
+                }
             }
         }
     }

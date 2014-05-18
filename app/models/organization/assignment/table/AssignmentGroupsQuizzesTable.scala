@@ -10,7 +10,7 @@ import models.question.derivative.table._
 
 case class AssignmentGroup2Quiz(groupId: GroupId, quizId: QuizId)
 
-class AssignmentGroupsQuizzesTable extends Table[AssignmentGroup2Quiz]("derivative_assignment_groups_quizzes") {
+class AssignmentGroupsQuizzesTable extends Table[AssignmentGroup2Quiz]("derivative_assignment_groups_2_quizzes") {
   def groupId = column[GroupId]("group_id", O.NotNull)
   def quizId = column[QuizId]("quiz_id", O.NotNull)
   def * = groupId ~ quizId <> (AssignmentGroup2Quiz, AssignmentGroup2Quiz.unapply _)

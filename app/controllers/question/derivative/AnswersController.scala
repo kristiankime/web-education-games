@@ -2,7 +2,7 @@ package controllers.question.derivative
 
 import scala.util._
 import scala.slick.session.Session
-import org.joda.time.DateTime.now
+import org.joda.time.DateTime
 import com.artclod.mathml.MathML
 import com.artclod.mathml.Match._
 import com.artclod.mathml.scalar.MathMLElem
@@ -16,7 +16,7 @@ import models.organization._
 import models.organization.assignment._
 import models.question.derivative._
 import service._
-
+import models.question.derivative.table.AnswerTimesTable
 
 
 object AnswersController extends Controller with SecureSocialDB {
@@ -29,30 +29,32 @@ object AnswersController extends Controller with SecureSocialDB {
 		val answerOp = Answers(answerId)
 
 		(quizOp, questionOp, answerOp) match {
-			case (Some(qz), Some(qu), Some(a)) => questionView(access(qu, courseOp), where, qz, qu, Some(Right(a)))
+			case (Some(quiz), Some(question), Some(answer)) => {
+        questionView(access(question, courseOp), where, quiz, question, Some(Right(answer)))
+      }
 			case _ => BadRequest(views.html.index())
 		}
 	}
 
-	def create(qzId: QuizId, quId: QuestionId, cId: Option[CourseId], gId: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val where = eitherOp(cId.flatMap(Courses(_)), gId.flatMap(Groups(_)))
+	def create(quizId: QuizId, quetionId: QuestionId, courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
 
 		AnswerForm.values.bindFromRequest.fold(
 			errors => BadRequest(views.html.index()),
 			form => {
-				val questionOp : Option[Question] = Questions(quId)
+				val questionOp : Option[Question] = Questions(quetionId)
 				val mathOp : Try[MathMLElem] = MathML(form._1)
 				val rawStr = form._2
-				val quizOp : Option[Quiz] = Quizzes(qzId)
-				val courseOp  = cId.flatMap(Courses(_))
+				val quizOp : Option[Quiz] = Quizzes(quizId)
+				val courseOp  = courseIdOp.flatMap(Courses(_))
 
 				(questionOp, mathOp, quizOp) match {
-					case (Some(qu), Success(m), Some(qz)) => {
-						val aTmp = AnswerTmp(user.id, qu.id, m, rawStr, now)_
-						Answers.correct(qu, m) match {
-							case Yes => Redirect(routes.AnswersController.view(qz.id, qu.id, Answers.createAnswer(aTmp(true)).id, cId, gId))
-							case No => Redirect(routes.AnswersController.view(qz.id, qu.id, Answers.createAnswer(aTmp(false)).id, cId, gId))
-							case Inconclusive => questionView(access(qu, courseOp), where, qz, qu, Some(Left(aTmp(false))))
+					case (Some(question), Success(math), Some(quiz)) => {
+            val aTmp = AnswerTmp(user.id, question.id, math, rawStr, DateTime.now)_
+						Answers.correct(question, math) match {
+							case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(aTmp(true)).id, courseIdOp, groupIdOp))
+							case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(aTmp(false)).id, courseIdOp, groupIdOp))
+							case Inconclusive => questionView(access(question, courseOp), where, quiz, question, Some(Left(aTmp(false))))
 						}
 					}
 					case _ => BadRequest(views.html.index())
@@ -71,6 +73,7 @@ object AnswersController extends Controller with SecureSocialDB {
 		val qAccess = Access(user, qu.owner)
 		Seq(cAccess, qAccess).max
 	}
+
 }
 
 object AnswerForm {

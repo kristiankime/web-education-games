@@ -22,7 +22,8 @@ object QuestionsController extends Controller with SecureSocialDB {
         val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
 				val nextQuestion = quiz.results(user).nextQuestion(question)
 				val allAnswers = Questions.answersAndOwners(questionId)
-				Ok(views.html.question.derivative.questionView(quiz.access, where, quiz, question.results(user), None, nextQuestion, allAnswers))
+        Answers.startWorkingOn(question.id)
+        Ok(views.html.question.derivative.questionView(quiz.access, where, quiz, question.results(user), None, nextQuestion, allAnswers))
 			}
 			case _ => BadRequest(views.html.index())
 		}

@@ -1,14 +1,12 @@
 package models.organization.assignment.table
 
 import play.api.db.slick.Config.driver.simple._
-import models.support._
+import scala.slick.lifted.ForeignKeyAction
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
-import service.table.UserTable
-import scala.slick.lifted.ForeignKeyAction
+import models.support._
 import models.organization.assignment._
 import models.organization.table._
-import com.artclod.slick._
 
 class AssignmentGroupsTable extends Table[Group]("assignment_groups") {
   def id = column[GroupId]("id", O.PrimaryKey, O.AutoInc)
@@ -19,12 +17,11 @@ class AssignmentGroupsTable extends Table[Group]("assignment_groups") {
   def updateDate = column[DateTime]("updateDate", O.NotNull)
 
   private def columnsNoId = name ~ sectionId ~ assignmentId ~ creationDate ~ updateDate
-  private def columns = id ~: columnsNoId
-  def * = columns <> (Group, Group.unapply _)
+  def * = id ~: columnsNoId <> (Group, Group.unapply _)
 
   def sectionFK = foreignKey("assignment_groups_section_fk", sectionId, new SectionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def assignmentFK = foreignKey("assignment_groups_assignment_fk", assignmentId, new AssignmentsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
   private def autoInc = columnsNoId returning id
-  def insert(t: GroupTmp)(implicit s: Session) = this.autoInc.insert(GroupTmp.unapply(t).get)
+  def insert(t: GroupTmp)(implicit s: Session) = autoInc.insert(GroupTmp.unapply(t).get)
 }

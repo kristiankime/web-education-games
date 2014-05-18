@@ -9,5 +9,5 @@ object AssignmentTmpTest {
             owner: UserId,
             date: DateTime = new DateTime(0L),
             startDate : Option[DateTime] = None,
-            endDate : Option[DateTime] = None) = AssignmentTmp(name, courseId, owner, date, startDate, endDate)
+            endDate : Option[DateTime] = None) = AssignmentTmp(name, courseId, owner, date, date, startDate, endDate)
 }

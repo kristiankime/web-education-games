@@ -19,13 +19,13 @@ class AssignmentsTable extends Table[Assignment]("assignments") with IdentifiedA
   def startDate = column[DateTime]("startDate", O.Nullable)
   def endDate = column[DateTime]("endDate", O.Nullable)
 
-  def * = id ~ name ~ courseId ~ owner ~ creationDate ~ updateDate ~ startDate.? ~ endDate.? <> (Assignment, Assignment.unapply _)
+  private def columnsNoId = name ~ courseId ~ owner ~ creationDate ~ updateDate ~ startDate.? ~ endDate.?
+  def * = id ~: columnsNoId <> (Assignment, Assignment.unapply _)
 
   def ownerFK = foreignKey("assignments_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def courseFK = foreignKey("assignments_courses_fk", courseId, new CoursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-  def autoInc = name ~ courseId ~ owner ~ creationDate ~ updateDate ~ startDate.? ~ endDate.? returning id
-
-  def insert(t: AssignmentTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.courseId, t.owner, t.date, t.date, t.startDate, t.endDate)
+  private def autoInc = columnsNoId returning id
+  def insert(t: AssignmentTmp)(implicit s: Session) = autoInc.insert(AssignmentTmp.unapply(t).get) // this.autoInc.insert(t.name, t.courseId, t.owner, t.date, t.date, t.startDate, t.endDate)
 
 }

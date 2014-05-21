@@ -63,11 +63,7 @@ object Access {
 	def apply(user: User, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
 	def apply(user: User, owner: User, in: Option[Access]): Access =
-		if (user.id == owner.id) {
-			Own
-		} else {
-			Access(in)
-		}
+		if (user.id == owner.id) Own
+    else Access(in)
 
-//	def accessMap[T](v: (T, User, Option[Access]))(implicit user: User) = (v._1, v._2, Access(user, v._2, v._3))
 }

@@ -30,7 +30,8 @@ object SectionsController extends Controller with SecureSocialDB {
         val (editNum, viewNum) = codeRange.pick2From
         val editCode = "SE-E-" + editNum
 				val viewCode = "SE-V-" + viewNum
-				Sections.create(SectionTmp(form, courseId, user.id, editCode, viewCode, DateTime.now))
+        val now = DateTime.now
+				Sections.create(Section(null, form, courseId, user.id, editCode, viewCode, now, now))
 				Redirect(routes.CoursesController.view(courseId))
 			})
 	}

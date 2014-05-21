@@ -6,7 +6,7 @@ import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
 import play.api.db.slick.DB
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
 import models.DBTest.inMemH2
 import play.api.test.FakeApplication
 import models.EquationsModel

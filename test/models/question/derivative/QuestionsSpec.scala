@@ -11,7 +11,7 @@ import models.DBTest.inMemH2
 import service._
 import org.joda.time.DateTime
 import play.api.db.slick.DB
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
 import viewsupport.question.derivative.QuestionResults
 
 @RunWith(classOf[JUnitRunner])
@@ -49,8 +49,8 @@ class QuestionsSpec extends Specification {
 		"find all the answers by the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmp(user.id, "test", DateTime.now))
-				val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
 				val question = Questions.create(qTmp, quiz.id)
 
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
@@ -63,8 +63,8 @@ class QuestionsSpec extends Specification {
 		"not find answers by other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmp(user.id, "test", DateTime.now))
-				val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
 				val question = Questions.create(qTmp, quiz.id)
 
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
@@ -79,8 +79,8 @@ class QuestionsSpec extends Specification {
 		"not find answers to other questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmp(user.id, "test", DateTime.now))
-				val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
 				val question = Questions.create(qTmp, quiz.id)
 				val otherQuestion = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 
@@ -98,8 +98,8 @@ class QuestionsSpec extends Specification {
 		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmp(user.id, "test", DateTime.now))
-				val qTmp = QuestionTmp(user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
 				val question = Questions.create(qTmp, quiz.id)
 				val eq = Questions(question.id)
 
@@ -110,10 +110,10 @@ class QuestionsSpec extends Specification {
 		"return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmp(user.id, "test", DateTime.now))
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
 
-				Questions.create(QuestionTmp(user.id, x + `1`, "x + 2", DateTime.now), quiz.id)
-				Questions.create(QuestionTmp(user.id, x + `2`, "x + 2", DateTime.now), quiz.id)
+				Questions.create(Question(null, user.id, x + `1`, "x + 2", DateTime.now), quiz.id)
+				Questions.create(Question(null, user.id, x + `2`, "x + 2", DateTime.now), quiz.id)
 
 				val eqs = Questions.list.map(_.mathML)
 				eqs must beEqualTo(List(x + `1`, x + `2`))

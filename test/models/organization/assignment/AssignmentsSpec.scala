@@ -5,7 +5,7 @@ import org.specs2.runner._
 import org.junit.runner._
 import play.api.test._
 import play.api.db.slick.DB
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
 import models.DBTest.inMemH2
 import models.DBTest.fakeUser
 import models.organization._

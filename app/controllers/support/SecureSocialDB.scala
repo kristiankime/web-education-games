@@ -1,6 +1,7 @@
 package controllers.support
 
-import scala.slick.session.Session
+
+import play.api.db.slick.Config.driver.simple.Session
 import play.api.Play.current
 import play.api.db.slick.DB
 import play.api.mvc.AnyContent

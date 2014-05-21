@@ -1,6 +1,6 @@
 package models
 
-import scala.slick.lifted.MappedTypeMapper
+import play.api.db.slick.Config.driver.simple._
 import play.api.mvc._
 import service._
 
@@ -19,14 +19,14 @@ package object support {
 	// ==========================
 	// Access
 	// ==========================
-	implicit def short2access = MappedTypeMapper.base[Access, Short](
+	implicit def short2access = MappedColumnType.base[Access, Short](
 		access => Access.toNum(access),
 		short => Access.fromNum(short))
 
 	// ==========================
 	// UserId
 	// ==========================
-	implicit def long2userId = MappedTypeMapper.base[UserId, Long](
+	implicit def long2userId = MappedColumnType.base[UserId, Long](
 		id => id.v,
 		long => UserId(long))
 
@@ -42,7 +42,7 @@ package object support {
 	// ==========================
 	// CourseId
 	// ==========================
-	implicit def long2courseId = MappedTypeMapper.base[CourseId, Long](
+	implicit def long2courseId = MappedColumnType.base[CourseId, Long](
 		id => id.v,
 		long => CourseId(long))
 
@@ -71,7 +71,7 @@ package object support {
 	// ==========================
 	// SectionId
 	// ==========================
-	implicit def long2sectionId = MappedTypeMapper.base[SectionId, Long](
+	implicit def long2sectionId = MappedColumnType.base[SectionId, Long](
 		id => id.v,
 		long => SectionId(long))
 
@@ -100,7 +100,7 @@ package object support {
   // ==========================
   // AssignmentId
   // ==========================
-  implicit def long2assignmentId = MappedTypeMapper.base[AssignmentId, Long](
+  implicit def long2assignmentId = MappedColumnType.base[AssignmentId, Long](
     id => id.v,
     long => AssignmentId(long))
 
@@ -129,7 +129,7 @@ package object support {
   // ==========================
   // AssignmentGroupId
   // ==========================
-  implicit def long2assignmentGroupId = MappedTypeMapper.base[GroupId, Long](
+  implicit def long2assignmentGroupId = MappedColumnType.base[GroupId, Long](
     id => id.v,
     long => GroupId(long))
 
@@ -158,7 +158,7 @@ package object support {
   // ==========================
 	// QuizId
 	// ==========================
-	implicit def long2quizId = MappedTypeMapper.base[QuizId, Long](
+	implicit def long2quizId = MappedColumnType.base[QuizId, Long](
 		id => id.v,
 		long => QuizId(long))
 
@@ -187,7 +187,7 @@ package object support {
 	// ==========================
 	// QuestionId
 	// ==========================
-	implicit def long2questionId = MappedTypeMapper.base[QuestionId, Long](
+	implicit def long2questionId = MappedColumnType.base[QuestionId, Long](
 		id => id.v,
 		long => QuestionId(long))
 
@@ -203,7 +203,7 @@ package object support {
 	// ==========================
 	// AnswerId
 	// ==========================
-	implicit def long2answerId = MappedTypeMapper.base[AnswerId, Long](
+	implicit def long2answerId = MappedColumnType.base[AnswerId, Long](
 		id => id.v,
 		long => AnswerId(long))
 

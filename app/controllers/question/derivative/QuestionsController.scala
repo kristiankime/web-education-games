@@ -12,7 +12,6 @@ import models.question.derivative._
 import models.support._
 import models.organization.Courses
 import models.organization.assignment.Groups
-import models.question.derivative.QuestionTmp
 
 object QuestionsController extends Controller with SecureSocialDB {
 
@@ -34,7 +33,7 @@ object QuestionsController extends Controller with SecureSocialDB {
 			errors => BadRequest(views.html.errors.formErrorPage(errors)),
 			form => {
 				val mathML = MathML(form._1).get // TODO better handle on error
-				Questions.create(QuestionTmp(user.id, mathML, form._2, DateTime.now), quizId)
+				Questions.create(Question(null, user.id, mathML, form._2, DateTime.now), quizId)
 				Redirect(routes.QuizzesController.view(quizId, courseIdOp, groupIdOp))
 			})
 	}

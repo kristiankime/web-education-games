@@ -2,9 +2,9 @@
         where: Either[models.organization.Course, models.organization.assignment.Group],
         quiz: models.question.derivative.Quiz,
         results: viewsupport.question.derivative.QuestionResults,
-        currentAnswer: Option[Either[models.question.derivative.AnswerTmp, models.question.derivative.Answer]],
+        currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]],
         nextQuestion: Option[models.question.derivative.Question],
-        allAnswers: List[(models.question.derivative.Answer, service.User)])(implicit user: service.User, session: scala.slick.session.Session)
+        allAnswers: List[(models.question.derivative.Answer, service.User)])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import com.artclod.util._
 @import helper._

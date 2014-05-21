@@ -1,7 +1,7 @@
 @(access: service.Access, 
 	where: Either[models.organization.Course, models.organization.assignment.Group],
 	quizResults: viewsupport.question.derivative.UserQuizResults,
-	sectionResultsOp: Option[List[viewsupport.organization.SectionResults]])(implicit user: service.User, session: scala.slick.session.Session)
+	sectionResultsOp: Option[List[viewsupport.organization.SectionResults]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import com.artclod.util._
 @import helper._

@@ -1,6 +1,5 @@
 package models.question.derivative
 
-import models.organization.SectionTmp
 import models.support.CourseId
 import models.support.UserId
 import org.joda.time.DateTime
@@ -12,5 +11,5 @@ object QuestionTmpTest {
 		mathML: MathMLElem = `6`,
 		rawStr: String = "6",
 		creationDate: DateTime = DateTime.now) =
-		QuestionTmp(owner, mathML, rawStr, creationDate)
+		Question(null, owner, mathML, rawStr, creationDate)
 }

@@ -1,17 +1,17 @@
 package models.organization
 
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
 import models.support._
 import models.organization.table._
-import viewsupport.organization._
-import play.api.db.slick.Config.driver.simple._
-import service._
 import models.question.derivative._
 import models.organization.assignment.Assignments
+import viewsupport.organization._
+import service._
 
-case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
-	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
-}
+//case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
+//	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
+//}
 
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
@@ -40,33 +40,36 @@ case class Course(id: CourseId, name: String, owner: UserId, editCode: String, v
 }
 
 object Courses {
-
 	// ======= CREATE ======
-	def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
+	def create(course: Course)(implicit session: Session) = {
+    val courseId = (coursesTable returning coursesTable.map(_.id)) += course
+    course.copy(id = courseId)
+  } //courseTmp((new CoursesTable).insert(courseTmp))
+//  def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
 
 	// ======= FIND ======
-	def apply(id: CourseId)(implicit session: Session) = Query(new CoursesTable).where(_.id === id).firstOption
+	def apply(id: CourseId)(implicit session: Session) = coursesTable.where(_.id === id).firstOption
 
 	def apply(userId: UserId)(implicit session: Session) = {
 		(for (
-			uc <- (new UsersCoursesTable) if uc.userId === userId;
-			c <- (new CoursesTable) if uc.id === c.id
+			uc <- UsersCoursesTable.usersCoursesTable if uc.userId === userId;
+			c <- coursesTable if uc.id === c.id
 		) yield c)
 			.union(
-				(Query(new CoursesTable).where(_.owner === userId))).list
+				coursesTable.where(_.owner === userId)).list
 	}
 
-  def list(implicit session: Session) = Query(new CoursesTable).list
+  def list(implicit session: Session) = coursesTable.list
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =
-		Query(new UsersCoursesTable).where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
+    UsersCoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 
 	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) {
 		if (course.access < access) {
-			Query(new UsersCoursesTable).where(r => r.userId === user.id && r.id === course.id).firstOption match {
-				case Some(u2c) if u2c.access < access => Query(new UsersCoursesTable).where(_.id === course.id).update(User2Course(user.id, course.id, access))
-				case None => (new UsersCoursesTable).insert(User2Course(user.id, course.id, access))
+      UsersCoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
+				case Some(u2c) if u2c.access < access => UsersCoursesTable.usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access))
+				case None => UsersCoursesTable.usersCoursesTable.insert(User2Course(user.id, course.id, access))
 				case _ => {}
 			}
 		}

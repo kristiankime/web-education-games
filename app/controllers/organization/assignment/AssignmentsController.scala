@@ -29,7 +29,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
           errors => BadRequest(assignmentAdd(course, errors)),
           form => {
             val now = DateTime.now
-            Assignments.create(AssignmentTmp(form.name, courseId, user.id, now, now, form.start, form.end))
+            Assignments.create(Assignment(null, form.name, courseId, user.id, now, now, form.start, form.end))
             Redirect(controllers.organization.routes.CoursesController.view(courseId))
           })
     }

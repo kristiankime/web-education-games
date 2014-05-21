@@ -1,6 +1,6 @@
 package models.organization.assignment
 
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
 import play.api.test._
 import play.api.db.slick.DB
 import play.api.test.FakeApplication

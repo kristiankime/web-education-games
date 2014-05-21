@@ -14,5 +14,19 @@ object UserTmpTest {
 		oAuth1Info: Option[OAuth1Info] = None,
 		oAuth2Info: Option[OAuth2Info] = None,
 		passwordInfo: Option[PasswordInfo] = None,
-		date: DateTime = new DateTime(0L)) = new UserTmp(identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, date) with Identity
+		date: DateTime = new DateTime(0L)) =
+
+    new User(null,
+      identityId,
+      firstName,
+      lastName,
+      fullName,
+      email,
+      avatarUrl,
+      authMethod,
+      oAuth1Info,
+      oAuth2Info,
+      passwordInfo,
+      date,
+      date) with Identity
 }

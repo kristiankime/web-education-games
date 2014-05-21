@@ -32,11 +32,13 @@ object QuizzesController extends Controller with SecureSocialDB {
       },
       form => where match {
           case Right(group) => {
-            val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), group.id)
+            val now = DateTime.now
+            val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), group.id)
             Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
           }
           case Left(course) => {
-            val quiz = Quizzes.create(QuizTmp(user.id, form, DateTime.now), course.id)
+            val now = DateTime.now
+            val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
             Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
           }
         })

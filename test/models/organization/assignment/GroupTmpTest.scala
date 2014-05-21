@@ -7,5 +7,5 @@ object GroupTmpTest {
   def apply(name: String = "group",
             sectionId: SectionId,
             assignmentId: AssignmentId,
-            date: DateTime = new DateTime(0L)) = GroupTmp(name, sectionId, assignmentId, date, date)
+            date: DateTime = new DateTime(0L)) = Group(null, name, sectionId, assignmentId, date, date)
 }

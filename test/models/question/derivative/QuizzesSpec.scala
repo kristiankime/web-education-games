@@ -14,7 +14,7 @@ import models.DBTest.inMemH2
 import service._
 import org.joda.time.DateTime
 import play.api.db.slick.DB
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
 import viewsupport.question.derivative._
 import models.organization.Courses
 import models.organization.CourseTmpTest

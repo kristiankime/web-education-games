@@ -1,10 +1,7 @@
 package models.question.derivative
 
-import models.organization.SectionTmp
-import models.support.CourseId
-import models.support.UserId
+import models.support._
 import org.joda.time.DateTime
-import models.support.QuestionId
 import com.artclod.mathml.scalar._
 
 
@@ -15,5 +12,5 @@ object AnswerTmpTest {
 		rawStr: String = "7",
 		correct: Boolean = false,
 		creationDate: DateTime = DateTime.now) =
-		AnswerTmp(owner, questionId, mathML, rawStr, correct, creationDate)
+		Answer(null, owner, questionId, mathML, rawStr, correct, creationDate)
 }

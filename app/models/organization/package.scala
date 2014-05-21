@@ -1,7 +1,6 @@
 package models
 
-import models.support.CourseId
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple._
 
 package object organization {
 

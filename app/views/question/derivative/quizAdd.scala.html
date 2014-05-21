@@ -1,4 +1,4 @@
-@(where: Either[models.organization.Course, models.organization.assignment.Group])(implicit user: service.User, session: scala.slick.session.Session)
+@(where: Either[models.organization.Course, models.organization.assignment.Group])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import com.artclod.util._
 @import models.support._

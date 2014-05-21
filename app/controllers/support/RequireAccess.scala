@@ -1,6 +1,6 @@
 package controllers.support
 
-import scala.slick.session.Session
+import play.api.db.slick.Config.driver.simple.Session
 import securesocial.core.Authorization
 import securesocial.core.Identity
 import play.api.db.slick.DB

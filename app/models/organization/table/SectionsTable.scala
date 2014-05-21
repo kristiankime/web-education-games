@@ -1,14 +1,14 @@
 package models.organization.table
 
 import play.api.db.slick.Config.driver.simple._
+import com.artclod.slick.Joda._
+import org.joda.time.DateTime
 import models.organization._
 import models.support._
-import org.joda.time.DateTime
-import com.github.tototoshi.slick.JodaSupport._
 import service.table.UserTable
-import scala.slick.lifted.ForeignKeyAction
+import scala.slick.model.ForeignKeyAction
 
-class SectionsTable extends Table[Section]("sections") with IdentifiedAndOwned[Section, SectionId] {
+class SectionsTable(tag: Tag) extends Table[Section](tag, "sections") with IdentifiedAndOwned[Section, SectionId] {
 	def id = column[SectionId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def courseId = column[CourseId]("courseId", O.NotNull)
@@ -18,13 +18,13 @@ class SectionsTable extends Table[Section]("sections") with IdentifiedAndOwned[S
 	def creationDate = column[DateTime]("creationDate", O.NotNull)
 	def updateDate = column[DateTime]("updateDate", O.NotNull)
 
-	def * = id ~ name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate <> (Section, Section.unapply _)
+	def * = (id, name, courseId, owner, editCode, viewCode, creationDate, updateDate) <> (Section.tupled, Section.unapply _)
 
-	def ownerFK = foreignKey("sections_owner_fk", owner, new UserTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-  def courseFK = foreignKey("sections_courses_fk", courseId, new CoursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("sections_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def courseFK = foreignKey("sections_courses_fk", courseId, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-  def autoInc = name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
+//  def autoInc = name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
 
-	def insert(t: SectionTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.courseId, t.owner, t.editCode, t.viewCode, t.date, t.date)
+//	def insert(t: SectionTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.courseId, t.owner, t.editCode, t.viewCode, t.date, t.date)
 
 }

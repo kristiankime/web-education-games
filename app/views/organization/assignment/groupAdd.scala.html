@@ -1,6 +1,6 @@
 @(course: models.organization.Course,
   section: models.organization.Section,
-  assignment: models.organization.assignment.Assignment)(implicit user: service.User, session: scala.slick.session.Session)
+  assignment: models.organization.assignment.Assignment)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.organization.assignment.GroupCreate
 @import helper._

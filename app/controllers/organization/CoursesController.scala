@@ -30,7 +30,8 @@ object CoursesController extends Controller with SecureSocialDB {
 			errors => BadRequest(views.html.index()),
 			form => {
         val (editNum, viewNum) = codeRange.pick2From
-				val course = Courses.create(CourseTmp(form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, DateTime.now))
+        val now = DateTime.now
+				val course = Courses.create(Course(null, form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, now, now))
 				Redirect(routes.CoursesController.view(course.id))
 			})
 	}

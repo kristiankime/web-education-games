@@ -8,6 +8,6 @@ object CourseTmpTest {
 		owner: UserId, 
 		editCode: String = "editCode", 
 		viewCode: String = "viewCode", 
-		date: DateTime = new DateTime(0L)) = CourseTmp(name, owner, editCode, viewCode, date)
+		date: DateTime = new DateTime(0L)) = Course(null, name, owner, editCode, viewCode, date, date)
 
 }

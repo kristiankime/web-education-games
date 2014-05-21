@@ -10,45 +10,42 @@ import service._
 import service.table.UserTable
 import viewsupport.question.derivative.QuestionResults
 
-case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
-  def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)
-}
+//case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
+//  def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)
+//}
 
 case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML {
 
-  def answers(user: User)(implicit session: Session) =
-    Query(new AnswersTable).where(a => a.questionId === id && a.owner === user.id).list
+  def answers(user: User)(implicit session: Session) = answersTable.where(a => a.questionId === id && a.owner === user.id).list
 
-  def results(user: User)(implicit session: Session) =
-    QuestionResults(this, answers(user))
+  def results(user: User)(implicit session: Session) = QuestionResults(this, answers(user))
 
 }
 
 object Questions {
 
   // ======= CREATE ======
-  def create(info: QuestionTmp, quiz: QuizId)(implicit session: Session) = {
-    val questionId = (new QuestionsTable).insert(info)
-    (new QuizzesQuestionsTable).insert(Quiz2Question(quiz, questionId))
-    info(questionId)
+  def create(info: Question, quiz: QuizId)(implicit session: Session) = {
+    val questionId = (questionsTable returning questionsTable.map(_.id)) += info
+    info.copy(id = questionId)
   }
 
   // ======= FIND ======
-  def list()(implicit session: Session) = Query(new QuestionsTable).list
+  def list()(implicit session: Session) = questionsTable.list
 
-  def apply(questionId: QuestionId)(implicit session: Session) = Query(new QuestionsTable).where(_.id === questionId).firstOption
+  def apply(questionId: QuestionId)(implicit session: Session) = questionsTable.where(_.id === questionId).firstOption
 
-  def apply(qid: QuestionId, owner: User)(implicit session: Session) = Query(new AnswersTable).where(r => r.questionId === qid && r.owner === owner.id).list
+  def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(r => r.questionId === qid && r.owner === owner.id).list
 
-  def answers(qid: QuestionId)(implicit session: Session) = Query(new AnswersTable).where(_.questionId === qid).list
+  def answers(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).list
 
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
-      a <- (new AnswersTable) if a.questionId === qid;
-      u <- (new UserTable) if u.id === a.owner
+      a <- answersTable if a.questionId === qid;
+      u <- UserTable.userTable if u.id === a.owner
     ) yield (a, u)).sortBy(_._2.lastName).list
 
   // ======= REMOVE ======
-  def remove(quiz: Quiz, question: Question)(implicit session: Session) = (new QuizzesQuestionsTable).where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+  def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
 
 }

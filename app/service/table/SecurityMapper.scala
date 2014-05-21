@@ -1,7 +1,6 @@
 package service.table
 
-import scala.slick.lifted.MappedTypeMapper
-import scala.slick.lifted.TypeMapper
+import play.api.db.slick.Config.driver.simple._
 import securesocial.core.AuthenticationMethod
 import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
@@ -10,7 +9,7 @@ import securesocial.core.PasswordInfo
 
 object SecurityMapper {
 
-	implicit def string2AuthenticationMethod: TypeMapper[AuthenticationMethod] = MappedTypeMapper.base[AuthenticationMethod, String](
+	implicit def string2AuthenticationMethod = MappedColumnType.base[AuthenticationMethod, String](
 		authenticationMethod => authenticationMethod.method,
 		string => AuthenticationMethod(string))
 

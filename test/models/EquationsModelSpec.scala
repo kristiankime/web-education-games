@@ -4,12 +4,10 @@ import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 import play.api.test._
-import play.api.test.Helpers._
-import play.api.db.slick.DB
-import scala.slick.session.Session
-import models.DBTest.inMemH2
 import play.api.test.FakeApplication
-import play.api.test.Helpers.inMemoryDatabase
+import play.api.db.slick.DB
+import play.api.db.slick.Config.driver.simple._
+import models.DBTest.inMemH2
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])

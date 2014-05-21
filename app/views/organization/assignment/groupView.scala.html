@@ -1,6 +1,6 @@
 @(assignment: models.organization.assignment.Assignment,
         section: models.organization.Section,
-        group: models.organization.assignment.Group)(implicit user: service.User, session: scala.slick.session.Session)
+        group: models.organization.assignment.Group)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import service._
 @import views.html.tag._

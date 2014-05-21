@@ -1,4 +1,4 @@
-@(courses: List[models.organization.Course])(implicit user: service.User, session: scala.slick.session.Session)
+@(courses: List[models.organization.Course])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import views.html.tag._
 

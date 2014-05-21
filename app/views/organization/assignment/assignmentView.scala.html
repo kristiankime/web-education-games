@@ -1,4 +1,4 @@
-@(assignment: models.organization.assignment.Assignment)(implicit user: service.User, session: scala.slick.session.Session)
+@(assignment: models.organization.assignment.Assignment)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import views.html.tag._
 @import controllers.organization.assignment.routes._

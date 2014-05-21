@@ -15,8 +15,9 @@ import service.SlickUserService
 import securesocial.core.Identity
 import securesocial.core.IdGenerator
 import play.api.db.slick.DB
-import scala.slick.session.Session
 import scala.concurrent.Future
+import play.api.db.slick.Config.driver.simple._
+
 
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends Specification {

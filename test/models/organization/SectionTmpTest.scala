@@ -9,5 +9,5 @@ object SectionTmpTest {
 		owner: UserId,
 		editCode: String = "editCode",
 		viewCode: String = "viewCode",
-		date: DateTime = new DateTime(0L)) = SectionTmp(name, courseId, owner, editCode, viewCode, date)
+		date: DateTime = new DateTime(0L)) = Section(null, name, courseId, owner, editCode, viewCode, date, date)
 }

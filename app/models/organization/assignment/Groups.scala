@@ -7,11 +7,11 @@ import service.table.UserTable
 import models.support._
 import models.organization._
 import models.organization.assignment.table._
-import models.question.derivative.table.QuizzesTable
+import models.question.derivative.table._
 
-case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
-  def apply(id: GroupId) = Group(id, name, sectionId, assignmentId, creationDate, updateDate)
-}
+//case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
+//  def apply(id: GroupId) = Group(id, name, sectionId, assignmentId, creationDate, updateDate)
+//}
 
 case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) extends HasAccess with HasId[GroupId] with HasCourse {
 
@@ -37,43 +37,46 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
 object Groups {
 
   // ======= CREATE ======
-  def create(assignmentGroupTmp: GroupTmp)(implicit session: Session) = assignmentGroupTmp((new AssignmentGroupsTable).insert(assignmentGroupTmp))
+  def create(group: Group)(implicit session: Session) = {
+    val groupId = (assignmentGroupsTable returning assignmentGroupsTable.map(_.id)) += group
+    group.copy(id = groupId)
+  }
 
   // ======= FIND ======
-  def apply(assignmentGroupId: GroupId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.id === assignmentGroupId).firstOption
+  def apply(assignmentGroupId: GroupId)(implicit session: Session) = assignmentGroupsTable.where(a => a.id === assignmentGroupId).firstOption
 
-  def apply(assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.assignmentId === assignmentId).sortBy(_.name).list
+  def apply(assignmentId: AssignmentId)(implicit session: Session) = assignmentGroupsTable.where(a => a.assignmentId === assignmentId).sortBy(_.name).list
 
-  def apply(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = Query(new AssignmentGroupsTable).where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
+  def apply(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = assignmentGroupsTable.where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
 
   def students(assignmentGroupId: GroupId)(implicit session: Session) =
     (for (
-      u <- (new UserTable);
-      ug <- (new UsersAssignmentGroupsTable) if ug.userId === u.id && ug.id === assignmentGroupId
+      u <- UserTable.userTable;
+      ug <- usersAssignmentGroupsTable if ug.userId === u.id && ug.id === assignmentGroupId
     ) yield u).sortBy(_.lastName).list
 
   // ======= ENROLLMENT ======
   def enrolled(userId: UserId, assignmentId: AssignmentId)(implicit session: Session): Option[Group] =
     (for (
-      g <- (new AssignmentGroupsTable) if g.assignmentId === assignmentId;
-      ug <- (new UsersAssignmentGroupsTable) if ug.id === g.id && ug.userId === userId
+      g <- assignmentGroupsTable if g.assignmentId === assignmentId;
+      ug <- usersAssignmentGroupsTable if ug.id === g.id && ug.userId === userId
     ) yield g).firstOption
 
-  def join(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).insert(User2AssignmentGroup(userId, assignmentGroupId))
+  def join(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = usersAssignmentGroupsTable += User2AssignmentGroup(userId, assignmentGroupId)
 
-  def leave(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = (new UsersAssignmentGroupsTable).where(r => r.userId === userId && r.id === assignmentGroupId).delete
+  def leave(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) = usersAssignmentGroupsTable.where(r => r.userId === userId && r.id === assignmentGroupId).delete
 
   // ======= QUIZZES ======
   def quizzes(assignmentGroupId: GroupId)(implicit session: Session) =
     (for (
-      ag2q <- (new AssignmentGroupsQuizzesTable) if ag2q.groupId === assignmentGroupId;
-      q <- (new QuizzesTable) if ag2q.quizId === q.id
+      ag2q <- assignmentGroupsQuizzesTable if ag2q.groupId === assignmentGroupId;
+      q <- quizzesTable if ag2q.quizId === q.id
     ) yield q).sortBy(_.name).list
 
   def quizFor(userId: UserId, assignmentGroupId: GroupId)(implicit session: Session) =
     (for (
-      ag2q <- (new AssignmentGroupsQuizzesTable) if ag2q.groupId === assignmentGroupId;
-      q <- (new QuizzesTable) if ag2q.quizId === q.id && q.owner === userId
+      ag2q <- assignmentGroupsQuizzesTable if ag2q.groupId === assignmentGroupId;
+      q <- quizzesTable if ag2q.quizId === q.id && q.owner === userId
     ) yield q).firstOption
 
 }

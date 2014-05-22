@@ -1,24 +1,27 @@
-@(assignment: models.organization.assignment.Assignment,
-        section: models.organization.Section,
-        group: models.organization.assignment.Group)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(group: models.organization.assignment.Group)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import service._
 @import views.html.tag._
 @import helper._
 @import controllers.organization.assignment.routes._
+@import controllers.organization.assignment.quiz.routes._
 @import controllers.question.derivative.routes._
 
-@main(assignment.name) {
-    @defining(assignment.course) { course =>
+@defining(group.course){ course =>
+@defining(group.section){ section =>
+@defining(group.assignment){ assignment =>
 
-        <h2>
-            Welcome to the information page for the group: @group.name
-        </h2>
+@main(assignment.name) {
+
+    <h2>
+        Welcome to the information page for the group: @group.name
+    </h2>
 
     for course [ @courseLink(course) ] <br>
     and section [ @sectionLink(section) ] <br>
-    and assignment [ <a href="@AssignmentsController.viewSection(course.id, section.id, assignment.id)"> @assignment.name </a> ] <br>
-        @* ===== Start and end dates ===== *@
+    and assignment [ @assignmentLink(assignment) ] <br>
+
+    @* ===== Start and end dates ===== *@
     @assignment.startAndEnd match {
         case (Some(start), Some(end)) => { This assignment starts on @start and ends on @end}
         case (Some(start), None) => { This assignment starts on @start}
@@ -52,7 +55,7 @@
                     @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {The following quizzes are in this group:<br>
                         <ul>
                         @for(quiz <- group.quizzes) {
-                            <li>[ <a href="@QuizzesController.view(quiz.id, None, Some(group.id))">@quiz.name</a> ]</li>
+                            <li>[ @groupQuizLink(group, quiz) ]</li>
                         }
                         </ul>
                     }
@@ -60,14 +63,17 @@
 
                 @defining(group.quizFor(user)) { quizOp =>
                     @for(quiz <- quizOp) {
-                        You created the quiz [ <a href="@QuizzesController.view(quiz.id, None, Some(group.id))">@quiz.name</a> ] <br>
+                        You created the quiz [ @groupQuizLink(group, quiz) ] <br>
                     } @if(quizOp.isEmpty) {
-                        [ <a href="@QuizzesController.add(Some(course.id), Some(group.id))"> Create your Quiz for this group ] <br>
+                        [ <a href="@GroupQuizzesController.add(course.id, section.id, assignment.id, group.id)"> Create your Quiz for this group ] <br>
                     }
                 }
             }
         }
     }
 
-    }
+}
+
+}
+}
 }

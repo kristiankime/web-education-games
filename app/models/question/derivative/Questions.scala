@@ -10,10 +10,6 @@ import service._
 import service.table.UserTable
 import viewsupport.question.derivative.QuestionResults
 
-//case class QuestionTmp(owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) {
-//  def apply(id: QuestionId) = Question(id, owner, mathML, rawStr, creationDate)
-//}
-
 case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML {
 
   def answers(user: User)(implicit session: Session) = answersTable.where(a => a.questionId === id && a.owner === user.id).list

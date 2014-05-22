@@ -11,10 +11,6 @@ import models.question.derivative.table._
 import viewsupport.question.derivative._
 import com.google.common.annotations.VisibleForTesting
 
-//case class QuizTmp(owner: UserId, name: String, date: DateTime) {
-//  def apply(id: QuizId) = Quiz(id, owner, name, date, date)
-//}
-
 case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
   def results(student: User)(implicit session: Session) = UserQuizResults(student, this, questions.map(v => v.results(student)))

@@ -9,14 +9,6 @@ import models.support._
 import models.question.AsciiMathML
 import service.User
 
-//case class AnswerTmp(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML {
-//  def apply(id: AnswerId) = Answer(id, owner, questionId, mathML, rawStr, correct, creationDate)
-//}
-//
-//object AnswerTmp {
-//  def apply(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime )(correct: Boolean): AnswerTmp = AnswerTmp(owner, questionId, mathML, rawStr, correct, creationDate)
-//}
-
 case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML
 
 object AnswerLater {

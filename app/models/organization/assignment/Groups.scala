@@ -9,15 +9,15 @@ import models.organization._
 import models.organization.assignment.table._
 import models.question.derivative.table._
 
-//case class GroupTmp(name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) {
-//  def apply(id: GroupId) = Group(id, name, sectionId, assignmentId, creationDate, updateDate)
-//}
-
 case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) extends HasAccess with HasId[GroupId] with HasCourse {
 
-  def assignment(implicit session: Session) = Assignments(assignmentId).get
-
   def course(implicit session: Session) = assignment.course
+
+  def courseId(implicit session: Session) = course.id
+
+  def section(implicit session: Session) = Sections(sectionId).get
+
+  def assignment(implicit session: Session) = Assignments(assignmentId).get
 
   def students(implicit session: Session) = Groups.students(id)
 
@@ -32,6 +32,10 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
   def leave(implicit user: User, session: Session) = Groups.leave(user.id, id)
 
   def enrolled(implicit user: User, session: Session) = students.contains(user)
+
+  def idsMatch(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = {
+    assignmentId == this.assignmentId && sectionId == this.sectionId && courseId == this.courseId
+  }
 }
 
 object Groups {

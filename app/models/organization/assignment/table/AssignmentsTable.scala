@@ -24,8 +24,4 @@ class AssignmentsTable(tag: Tag) extends Table[Assignment](tag, "assignments") w
 
   def ownerFK = foreignKey("assignments_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def courseFK = foreignKey("assignments_courses_fk", courseId, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-
-//  private def autoInc = columnsNoId returning id
-//  def insert(t: AssignmentTmp)(implicit s: Session) = autoInc.insert(AssignmentTmp.unapply(t).get) // this.autoInc.insert(t.name, t.courseId, t.owner, t.date, t.date, t.startDate, t.endDate)
-
 }

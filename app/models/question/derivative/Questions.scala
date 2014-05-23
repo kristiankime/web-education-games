@@ -16,6 +16,8 @@ case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: S
 
   def results(user: User)(implicit session: Session) = QuestionResults(this, answers(user))
 
+  def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
+
 }
 
 object Questions {

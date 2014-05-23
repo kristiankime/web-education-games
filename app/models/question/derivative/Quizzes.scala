@@ -1,5 +1,6 @@
 package models.question.derivative
 
+import com.artclod.collection._
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
 import service._
@@ -18,6 +19,10 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 
+  def nextQuestion(question: Question)(implicit session: Session) = {
+    questions.elementAfter(question)
+  }
+
   def group(implicit session: Session) = Quizzes.groupFor(id)
 
   def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
@@ -28,7 +33,11 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 
   protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
 
-  def access(implicit user: User, session: Session) = (Quizzes.courses(id).map(_.access.ceilEdit) :+ directAccess) max
+  def access(implicit user: User, session: Session) = {
+    val groupAccess = Access(group.map(_.access)).ceilEdit
+    val courseAccess = Quizzes.courses(id).map(_.access.ceilEdit)
+    (courseAccess :+ groupAccess :+ directAccess) max
+  }
 
 }
 

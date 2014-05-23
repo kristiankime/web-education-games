@@ -1,23 +1,17 @@
-@(access: service.Access,
-        group: models.organization.assignment.Group,
-        quiz: models.question.derivative.Quiz,
-        results: viewsupport.question.derivative.QuestionResults,
-        currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]],
-        nextQuestion: Option[models.question.derivative.Question],
-        allAnswers: List[(models.question.derivative.Answer, service.User)])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(group: models.organization.assignment.Group,
+  quiz: models.question.derivative.Quiz,
+  question: models.question.derivative.Question,
+  currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import com.artclod.util._
 @import helper._
-@import controllers.organization.routes._
 @import controllers.organization.assignment.quiz.routes.GroupQuizzesController
 @import controllers.organization.assignment.quiz.routes.GroupQuestionsController
 @import controllers.organization.assignment.quiz.routes.GroupAnswersController
 @import controllers.question.derivative.AnswerForm
-@import controllers.question.derivative.routes._
 @import com.artclod.play.s
 @import views.html.tag._
-@import models.support._
 
+@defining(quiz.access){ access =>
 @defining(group.course){ course =>
 @defining(group.section){ section =>
 @defining(group.assignment){ assignment =>
@@ -33,7 +27,7 @@
 
     Back to the quiz [ <a href="@GroupQuizzesController.view(course.id, section.id, assignment.id, group.id, quiz.id)">@quiz.name</a> ] <br>
 
-    <h2>What is the Derivative of</h2> @math.mathmlContent(results.question)
+    <h2>What is the Derivative of</h2> @math.mathmlContent(question)
 
     @for(answerEither <- currentAnswer) {
         <section align="center">
@@ -54,7 +48,7 @@
     </section>
 
     <section>
-    @form(GroupAnswersController.create(course.id, section.id, assignment.id, group.id, quiz.id, results.question.id), 'id -> "answerForm") {
+    @form(GroupAnswersController.create(course.id, section.id, assignment.id, group.id, quiz.id, question.id), 'id -> "answerForm") {
         <input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
         <input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">
@@ -73,10 +67,11 @@
     }
     </script>
 
-    @for(next <- nextQuestion) {
+    @for(next <- quiz.nextQuestion(question)) {
         Go to the [<a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, next.id)">next question</a>] <br>
     }
 
+    @defining(question.results(user)) { results =>
     @if(results.answers.nonEmpty) {
         <section>
             <h4>You have answered this questions @results.answers.size time@s(results.answers)</h4>
@@ -87,8 +82,10 @@
             </ul>
         </section>
     }
+    }
 
     @if(access.write) {
+    @defining(question.answersAndOwners) { allAnswers =>
         <section>
             <h4>There have been @allAnswers.size Answer@s(allAnswers) to this question</h4>
             <table>
@@ -107,8 +104,10 @@
             </table>
         </section>
     }
+    }
 }
 
+}
 }
 }
 }

@@ -9,6 +9,7 @@ import models.organization._
 import models.organization.assignment.table._
 import models.question.derivative.table._
 import models.question.derivative.Quiz
+import controllers.support.PathException
 
 case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) extends HasAccess with HasId[GroupId] with HasCourse {
 
@@ -50,11 +51,23 @@ object Groups {
   }
 
   // ======= FIND ======
-  def apply(groupId: GroupId)(implicit session: Session) = assignmentGroupsTable.where(a => a.id === groupId).firstOption
+  def apply(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId)(implicit session: Session) : Group = {
+    Groups(groupId) match {
+      case None => throw new PathException("There was no group for id=["+groupId+"]")
+      case Some(group) => {
+        if(courseId != group.courseId) throw new PathException("couseId=[" + courseId +"] was not for groupId=["+groupId+"]")
+        if(sectionId != group.sectionId) throw new PathException("sectionId=[" + sectionId +"] was not for groupId=["+groupId+"]")
+        if(assignmentId != group.assignmentId) throw new PathException("assignmentId=[" + assignmentId +"] was not for groupId=["+groupId+"]")
+        group
+      }
+    }
+  }
 
-  def apply(assignmentId: AssignmentId)(implicit session: Session) = assignmentGroupsTable.where(a => a.assignmentId === assignmentId).sortBy(_.name).list
+  def apply(groupId: GroupId)(implicit session: Session) : Option[Group]  = assignmentGroupsTable.where(a => a.id === groupId).firstOption
 
-  def apply(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = assignmentGroupsTable.where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
+  def apply(assignmentId: AssignmentId)(implicit session: Session) : List[Group] = assignmentGroupsTable.where(a => a.assignmentId === assignmentId).sortBy(_.name).list
+
+  def apply(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) : List[Group] = assignmentGroupsTable.where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
 
   def students(groupId: GroupId)(implicit session: Session) =
     (for (

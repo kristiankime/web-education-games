@@ -10,12 +10,15 @@ import models.organization.assignment.table._
 import models.question.derivative.table._
 import viewsupport.question.derivative._
 import com.google.common.annotations.VisibleForTesting
+import controllers.support.PathException
 
 case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
   def results(student: User)(implicit session: Session) = UserQuizResults(student, this, questions.map(v => v.results(student)))
 
   def questions(implicit session: Session) = Quizzes.questions(id)
+
+  def group(implicit session: Session) = Quizzes.groupFor(id)
 
   def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
 
@@ -51,9 +54,20 @@ object Quizzes {
   }
 
   // ======= FIND ======
-  def apply(quizId: QuizId)(implicit session: Session) = quizzesTable.where(_.id === quizId).firstOption
+  def apply(groupId: GroupId, quizId: QuizId)(implicit session: Session) : Quiz = {
+    (apply(quizId), groupFor(quizId)) match {
+      case (None, _) => throw new PathException("There was no quiz for id=[" + quizId + "]")
+      case (Some(quiz), None) => throw new PathException("There was no group for quiz with id=[" + quizId + "]")
+      case (Some(quiz), Some(group)) => {
+        if(group.id != groupId) throw new PathException("quizId=[" + quizId +"] was not for groupId=[" + groupId + "]")
+        quiz
+      }
+    }
+  }
 
-  def apply(courseId: CourseId)(implicit session: Session) =
+  def apply(quizId: QuizId)(implicit session: Session) : Option[Quiz] = quizzesTable.where(_.id === quizId).firstOption
+
+  def apply(courseId: CourseId)(implicit session: Session) : List[Quiz]  =
     (for (
       q <- quizzesTable;
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
@@ -70,6 +84,12 @@ object Quizzes {
       c <- coursesTable;
       cq <- coursesQuizzesTable if cq.courseId === c.id && cq.quizId === quizId
     ) yield c).list
+
+  def groupFor(quizId: QuizId)(implicit session: Session) =
+    (for (
+      ag2q <- assignmentGroupsQuizzesTable if ag2q.quizId === quizId;
+      g <- assignmentGroupsTable if g.id === ag2q.groupId
+    ) yield g).firstOption
 
   // ======= UPDATE ======
   def rename(quizId: QuizId, name: String)(implicit session: Session) =

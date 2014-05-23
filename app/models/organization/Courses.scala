@@ -9,10 +9,6 @@ import models.organization.assignment.Assignments
 import viewsupport.organization._
 import service._
 
-//case class CourseTmp(name: String, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
-//	def apply(id: CourseId) = Course(id, name, owner, editCode, viewCode, date, date)
-//}
-
 case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
 	def sections(implicit session: Session) = Sections(id)
@@ -44,8 +40,7 @@ object Courses {
 	def create(course: Course)(implicit session: Session) = {
     val courseId = (coursesTable returning coursesTable.map(_.id)) += course
     course.copy(id = courseId)
-  } //courseTmp((new CoursesTable).insert(courseTmp))
-//  def create(courseTmp: CourseTmp)(implicit session: Session) = courseTmp((new CoursesTable).insert(courseTmp))
+  }
 
 	// ======= FIND ======
 	def apply(id: CourseId)(implicit session: Session) = coursesTable.where(_.id === id).firstOption

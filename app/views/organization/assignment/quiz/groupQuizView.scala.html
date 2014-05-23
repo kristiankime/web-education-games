@@ -28,18 +28,18 @@
     	} 
     }
 
-    @defining(quiz.results(user)){ quizResults =>
+    @defining(quiz.results(user)){ quizResults : viewsupport.question.derivative.UserQuizResults =>
 
     <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
     
     <table>
-    	<th>Question</th> <th>Details</th> <th>Status</th> @if(access.write){ <th> Remove </th> }
-        @for(result <- quizResults.results){
+        <th>Question #</th> @if(access.write){ <th> Equation </th> } <th>Status</th> @if(access.write){ <th> Remove </th> }
+        @for(result <- quizResults.results.zipWithIndex){
             <tr>
-            	<td> @math.mathmlContent(result.question) </td>
-            	<td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quizResults.quiz.id, result.question.id)">view</a> </td>
-                <td> @views.html.question.status(result.status) </td>
-                @if(access.write){ <td> @form(GroupQuestionsController.remove(course.id, section.id, assignment.id, group.id, quizResults.quiz.id, result.question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
+            	<td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quizResults.quiz.id, result._1.question.id)">view question @result._2 </a> </td>
+                @if(access.write){ <td> @math.mathmlContent(result._1.question) </td> }
+                <td> @views.html.question.status(result._1.status) </td>
+                @if(access.write){ <td> @form(GroupQuestionsController.remove(course.id, section.id, assignment.id, group.id, quizResults.quiz.id, result._1.question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
             </tr>
         }
     </table>

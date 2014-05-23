@@ -24,8 +24,9 @@ case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: S
 object Questions {
 
   // ======= CREATE ======
-  def create(info: Question, quiz: QuizId)(implicit session: Session) = {
+  def create(info: Question, quizId: QuizId)(implicit session: Session) = {
     val questionId = (questionsTable returning questionsTable.map(_.id)) += info
+    quizzesQuestionsTable += Quiz2Question(quizId, questionId)
     info.copy(id = questionId)
   }
 

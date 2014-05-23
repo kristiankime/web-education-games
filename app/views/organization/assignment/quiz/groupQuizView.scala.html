@@ -1,6 +1,4 @@
-@(access: service.Access, 
-	group: models.organization.assignment.Group,
-	quizResults: viewsupport.question.derivative.UserQuizResults)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(group: models.organization.assignment.Group, quiz: models.question.derivative.Quiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import views.html.tag._
@@ -9,13 +7,14 @@
 @import controllers.organization.assignment.quiz.routes.GroupQuestionsController
 @import controllers.organization.assignment.quiz.QuestionForm
 
+@defining(group.access){ access =>
 @defining(group.course){ course =>
 @defining(group.section){ section =>
 @defining(group.assignment){ assignment =>
 
-@main("Quiz " + quizResults.quiz.name) {
+@main("Quiz " + quiz.name) {
 
-    <h2>Welcome to the page for quiz: @quizResults.quiz.name </h2>
+    <h2>Welcome to the page for quiz: @quiz.name </h2>
 
     This quiz will be for the course [ @courseLink(course) ] <br>
     in the section [ @sectionLink(section) ] <br>
@@ -23,12 +22,14 @@
     and the group [ @groupLink(group) ] <br>
 
     @if(access.write){
-    	@form(GroupQuizzesController.rename(course.id, section.id, assignment.id, group.id, quizResults.quiz.id), 'class -> "inline-block") {
-     		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quizResults.quiz.name"> 
+    	@form(GroupQuizzesController.rename(course.id, section.id, assignment.id, group.id, quiz.id), 'class -> "inline-block") {
+     		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quiz.name">
     		and click <input type="submit" value="rename" > 
     	} 
     }
-    
+
+    @defining(quiz.results(user)){ quizResults =>
+
     <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
     
     <table>
@@ -42,6 +43,8 @@
             </tr>
         }
     </table>
+
+    }
     
     @if(access.write){
 	    <h4>Add a new Question</h4>
@@ -52,7 +55,7 @@
 			@math.mathmlEditor(editorName="QUESTION")
 		</p>
 	
-	    @form(GroupQuestionsController.create(course.id, section.id, assignment.id, group.id, quizResults.quiz.id), 'id -> "derivativeqForm" ) {
+	    @form(GroupQuestionsController.create(course.id, section.id, assignment.id, group.id, quiz.id), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
 	    	<input type="button" value="Save Question" onclick="formSubmit()">
@@ -72,6 +75,7 @@
 
 }
 
+}
 }
 }
 }

@@ -31,7 +31,7 @@ object GroupQuizzesController extends Controller with SecureSocialDB {
   def view(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId, quizId: QuizId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     val group = Groups(courseId, sectionId, assignmentId, groupId)
     val quiz = Quizzes(groupId, quizId)
-    Ok(views.html.organization.assignment.quiz.groupQuizView(group.access, group, quiz.results(user)))
+    Ok(views.html.organization.assignment.quiz.groupQuizView(group, quiz))
   }
 
   def rename(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId, quizId: QuizId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>

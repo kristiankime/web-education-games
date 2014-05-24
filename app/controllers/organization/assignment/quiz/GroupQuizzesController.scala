@@ -1,6 +1,6 @@
 package controllers.organization.assignment.quiz
 
-import org.joda.time.DateTime
+import com.artclod.slick.Joda
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
@@ -22,7 +22,7 @@ object GroupQuizzesController extends Controller with SecureSocialDB {
     QuizForm.values.bindFromRequest.fold(
       errors => { BadRequest(views.html.errors.formErrorPage(errors)) },
       form => {
-        val now = DateTime.now
+        val now = Joda.now
         val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), group.id)
         Redirect(routes.GroupQuizzesController.view(group.course.id, group.section.id, group.assignment.id, group.id, quiz.id))
       })

@@ -1,6 +1,6 @@
 package controllers.organization.assignment
 
-import org.joda.time.DateTime
+import com.artclod.slick.Joda
 import com.artclod.time._
 import play.api.mvc.Controller
 import play.api.data.Form
@@ -28,7 +28,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
         AssignmentCreate.form.bindFromRequest.fold(
           errors => BadRequest(assignmentAdd(course, errors)),
           form => {
-            val now = DateTime.now
+            val now = Joda.now
             Assignments.create(Assignment(null, form.name, courseId, user.id, now, now, form.start, form.end))
             Redirect(controllers.organization.routes.CoursesController.view(courseId))
           })

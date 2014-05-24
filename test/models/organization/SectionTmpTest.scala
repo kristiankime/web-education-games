@@ -1,6 +1,6 @@
 package models.organization
 
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
 import models.support._
 
 object SectionTmpTest {
@@ -9,5 +9,5 @@ object SectionTmpTest {
 		owner: UserId,
 		editCode: String = "editCode",
 		viewCode: String = "viewCode",
-		date: DateTime = new DateTime(0L)) = Section(null, name, courseId, owner, editCode, viewCode, date, date)
+		date: DateTime = new DateTime(0L, DateTimeZone.UTC)) = Section(null, name, courseId, owner, editCode, viewCode, date, date)
 }

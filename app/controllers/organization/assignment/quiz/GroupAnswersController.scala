@@ -1,5 +1,6 @@
 package controllers.organization.assignment.quiz
 
+import com.artclod.slick.Joda
 import scala.util._
 import org.joda.time.DateTime
 import com.artclod.mathml.MathML
@@ -37,7 +38,7 @@ object GroupAnswersController extends Controller with SecureSocialDB {
       form => {
         val math = MathML(form._1).get // TODO better error here
         val rawStr = form._2
-        val aTmp = AnswerLater(user.id, question.id, math, rawStr, DateTime.now)_
+        val aTmp = AnswerLater(user.id, question.id, math, rawStr, Joda.now)_
 
         Answers.correct(question, math) match {
           case Yes => Redirect(routes.GroupAnswersController.view(c, s, a, g, quiz.id, question.id, Answers.createAnswer(aTmp(true)).id))

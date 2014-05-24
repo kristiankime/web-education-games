@@ -1,6 +1,6 @@
 package controllers.organization.assignment.quiz
 
-import org.joda.time.DateTime
+import com.artclod.slick.Joda
 import com.artclod.mathml.MathML
 import play.api.data.Form
 import play.api.data.Forms._
@@ -27,7 +27,7 @@ object GroupQuestionsController extends Controller with SecureSocialDB {
 			errors => BadRequest(views.html.errors.formErrorPage(errors)),
 			form => {
 				val mathML = MathML(form._1).get // TODO better handle on error
-				Questions.create(Question(null, user.id, mathML, form._2, DateTime.now), quiz.id)
+				Questions.create(Question(null, user.id, mathML, form._2, Joda.now), quiz.id)
 				Redirect(routes.GroupQuizzesController.view(group.courseId, group.sectionId, group.assignmentId, group.id, quiz.id))
 			})
 	}

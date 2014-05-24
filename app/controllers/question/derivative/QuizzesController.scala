@@ -1,6 +1,7 @@
 package controllers.question.derivative
 
 import com.artclod.util._
+import com.artclod.slick.Joda
 import org.joda.time.DateTime
 import play.api.data.Form
 import play.api.data.Forms._
@@ -32,12 +33,12 @@ object QuizzesController extends Controller with SecureSocialDB {
       },
       form => where match {
           case Right(group) => {
-            val now = DateTime.now
+            val now = Joda.now
             val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), group.id)
             Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
           }
           case Left(course) => {
-            val now = DateTime.now
+            val now = Joda.now
             val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
             Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
           }

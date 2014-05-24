@@ -1,5 +1,7 @@
 package models.question.derivative
 
+import com.artclod.slick.Joda
+import org.joda.time.{DateTimeZone, DateTime}
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
@@ -9,7 +11,6 @@ import models.support._
 import models.DBTest
 import models.DBTest.inMemH2
 import service._
-import org.joda.time.DateTime
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import viewsupport.question.derivative.QuestionResults
@@ -49,8 +50,8 @@ class QuestionsSpec extends Specification {
 		"find all the answers by the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
 				val question = Questions.create(qTmp, quiz.id)
 
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
@@ -63,8 +64,8 @@ class QuestionsSpec extends Specification {
 		"not find answers by other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
 				val question = Questions.create(qTmp, quiz.id)
 
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
@@ -79,8 +80,8 @@ class QuestionsSpec extends Specification {
 		"not find answers to other questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
 				val question = Questions.create(qTmp, quiz.id)
 				val otherQuestion = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 
@@ -98,8 +99,8 @@ class QuestionsSpec extends Specification {
 		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", DateTime.now)
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
 				val question = Questions.create(qTmp, quiz.id)
 				val eq = Questions(question.id)
 
@@ -110,10 +111,10 @@ class QuestionsSpec extends Specification {
 		"return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L), new DateTime(0L)))
+				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
 
-				Questions.create(Question(null, user.id, x + `1`, "x + 2", DateTime.now), quiz.id)
-				Questions.create(Question(null, user.id, x + `2`, "x + 2", DateTime.now), quiz.id)
+				Questions.create(Question(null, user.id, x + `1`, "x + 2", Joda.now), quiz.id)
+				Questions.create(Question(null, user.id, x + `2`, "x + 2", Joda.now), quiz.id)
 
 				val eqs = Questions.list.map(_.mathML)
 				eqs must beEqualTo(List(x + `1`, x + `2`))

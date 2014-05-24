@@ -1,5 +1,6 @@
 package controllers.organization
 
+import com.artclod.slick.Joda
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
@@ -14,7 +15,7 @@ import com.artclod.random._
 import models.organization.assignment.Assignments
 
 object CoursesController extends Controller with SecureSocialDB {
-	implicit val randomEngine = new Random(DateTime.now.getMillis())
+	implicit val randomEngine = new Random(Joda.now.getMillis())
   val codeRange = (0 to 100000).toVector
 
 	def list = SecuredUserDBAction { implicit request => implicit user => implicit session =>
@@ -30,7 +31,7 @@ object CoursesController extends Controller with SecureSocialDB {
 			errors => BadRequest(views.html.index()),
 			form => {
         val (editNum, viewNum) = codeRange.pick2From
-        val now = DateTime.now
+        val now = Joda.now
 				val course = Courses.create(Course(null, form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, now, now))
 				Redirect(routes.CoursesController.view(course.id))
 			})

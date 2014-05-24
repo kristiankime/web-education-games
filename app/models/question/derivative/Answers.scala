@@ -1,6 +1,7 @@
 package models.question.derivative
 
-import org.joda.time.{Duration, DateTime}
+import org.joda.time.DateTime
+import com.artclod.slick.Joda
 import com.artclod.mathml._
 import com.artclod.mathml.scalar.MathMLElem
 import play.api.db.slick.Config.driver.simple._
@@ -35,7 +36,7 @@ object Answers {
 
   // ======== TIME ======
   def startWorkingOn(questionId: QuestionId)(implicit user: User, session: Session) =
-    if(startWorkTime(questionId).isEmpty) { answerTimesTable += AnswerTime(user.id, questionId, DateTime.now) }
+    if(startWorkTime(questionId).isEmpty) { answerTimesTable += AnswerTime(user.id, questionId, Joda.now) }
 
   def startWorkTime(questionId: QuestionId)(implicit user: User, session: Session) =
     answerTimesTable.where(r => r.userId === user.id && r.questionId === questionId).firstOption

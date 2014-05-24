@@ -12,7 +12,7 @@ import com.artclod.slick.Joda
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 	// =========== Identity Methods ===========
 	def save(identity: Identity) = DB.withSession { implicit s: Session =>
-    val user = User(identity, DateTime.now)
+    val user = User(identity, Joda.now)
 		UserTable.save(user)
 	}
 

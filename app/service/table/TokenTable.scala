@@ -1,5 +1,6 @@
 package service.table
 
+import com.artclod.slick.Joda
 import com.artclod.slick.Joda._
 import play.api.db.slick.Config.driver.simple._
 import securesocial.core.providers.Token
@@ -26,5 +27,5 @@ object TokenTable {
 
   def deleteTokens()(implicit s: Session) = tokenTable.delete
 
-  def deleteExpiredTokens()(implicit s: Session) = tokenTable.where(_.expirationTime <= DateTime.now).delete
+  def deleteExpiredTokens()(implicit s: Session) = tokenTable.where(_.expirationTime <= Joda.now).delete
 }

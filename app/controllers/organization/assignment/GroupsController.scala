@@ -1,10 +1,10 @@
 package controllers.organization.assignment
 
+import com.artclod.slick.Joda
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc.Controller
-import org.joda.time.DateTime
 import models.organization.assignment._
 import models.organization._
 import models.support._
@@ -31,7 +31,7 @@ object GroupsController extends Controller with SecureSocialDB {
           AssignmentCreate.form.bindFromRequest.fold(
             errors => BadRequest(views.html.index()),
             form => {
-              val now = DateTime.now
+              val now = Joda.now
               Groups.create(Group(null, form.name, section.id, assignment.id, now, now))
               Redirect(routes.AssignmentsController.viewSection(assignment.courseId, section.id, assignment.id))
             })

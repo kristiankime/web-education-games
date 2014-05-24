@@ -1,5 +1,6 @@
 package controllers.organization
 
+import com.artclod.slick.Joda
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
@@ -13,7 +14,7 @@ import controllers.support.RequireAccess
 import com.artclod.random._
 
 object SectionsController extends Controller with SecureSocialDB {
-	implicit val randomEngine = new Random(DateTime.now.getMillis())
+	implicit val randomEngine = new Random(Joda.now.getMillis())
   val codeRange = (0 to 100000).toVector
 
 	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
@@ -30,7 +31,7 @@ object SectionsController extends Controller with SecureSocialDB {
         val (editNum, viewNum) = codeRange.pick2From
         val editCode = "SE-E-" + editNum
 				val viewCode = "SE-V-" + viewNum
-        val now = DateTime.now
+        val now = Joda.now
 				Sections.create(Section(null, form, courseId, user.id, editCode, viewCode, now, now))
 				Redirect(routes.CoursesController.view(courseId))
 			})

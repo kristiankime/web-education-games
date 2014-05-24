@@ -13,7 +13,7 @@ import models.EquationsModel
 import securesocial.core.Identity
 import securesocial.core.IdentityId
 import java.util.UUID
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
 import securesocial.core.providers.Token
 import service.table._
 
@@ -78,7 +78,7 @@ class SlickUserServiceSpec extends Specification {
 object TestToken {
 	def apply(uuid: String = UUID.randomUUID.toString,
 		email: String = "email",
-		creationTime: DateTime = new DateTime(0L),
+		creationTime: DateTime = new DateTime(0L, DateTimeZone.UTC),
 		expirationTime: DateTime = new DateTime(100L),
 		isSignUp: Boolean = false) = Token(uuid, email, creationTime, expirationTime, isSignUp)
 }

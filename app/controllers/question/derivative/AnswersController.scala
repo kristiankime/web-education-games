@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
 import scala.util._
-import org.joda.time.DateTime
+import com.artclod.slick.Joda
 import com.artclod.mathml.MathML
 import com.artclod.mathml.Match._
 import com.artclod.mathml.scalar.MathMLElem
@@ -50,7 +50,7 @@ object AnswersController extends Controller with SecureSocialDB {
 
 				(questionOp, mathOp, quizOp) match {
 					case (Some(question), Success(math), Some(quiz)) => {
-            val aTmp = AnswerLater(user.id, question.id, math, rawStr, DateTime.now)_
+            val aTmp = AnswerLater(user.id, question.id, math, rawStr, Joda.now)_
 						Answers.correct(question, math) match {
 							case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(aTmp(true)).id, courseIdOp, groupIdOp))
 							case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(aTmp(false)).id, courseIdOp, groupIdOp))

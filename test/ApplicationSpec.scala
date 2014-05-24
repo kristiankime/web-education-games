@@ -119,10 +119,12 @@ class ApplicationSpec extends Specification {
           val user = fakeUser
 
           val owner = fakeUser
-          val quiz = Quizzes.create(QuizTmpTest(owner = owner.id))
+          val course = Courses.create(CourseTmpTest(owner = owner.id))
+          val quiz = Quizzes.create(QuizTmpTest(owner = owner.id), course.id)
           val question = Questions.create(QuestionTmpTest(owner = owner.id), quiz.id)
 
-          val routeStr: String = "/quizzes/" + quiz.id.v + "/questions/" + question.id.v
+          val routeStr: String = "/quizzes/" + quiz.id.v + "/questions/" + question.id.v + "?cid=" + course.id.v
+
           val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
 
           status(page) must equalTo(OK)

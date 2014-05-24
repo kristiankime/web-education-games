@@ -17,6 +17,8 @@ case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: S
 
   def results(user: User)(implicit session: Session) = QuestionResults(this, answers(user))
 
+  def forWho(implicit session: Session) = Questions.forWho(id)
+
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
 
 }
@@ -66,6 +68,13 @@ object Questions {
       q2q <- quizzesQuestionsTable if q2q.questionId === questionId;
         q <- quizzesTable if q.id === q2q.quizId
     ) yield q).firstOption
+  }
+
+  def forWho(questionId: QuestionId)(implicit session: Session) = {
+    (for(
+      q4 <- questionsForTable if q4.questionId === questionId;
+      u <- UserTable.userTable if u.id === q4.userId
+    ) yield u).firstOption
   }
 
   // ======= REMOVE ======

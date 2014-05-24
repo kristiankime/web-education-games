@@ -16,7 +16,7 @@
 
     <h2>Welcome to the page for quiz: @quiz.name </h2>
 
-    This quiz will be for the course [ @courseLink(course) ] <br>
+    This quiz is for the course [ @courseLink(course) ] <br>
     in the section [ @sectionLink(section) ] <br>
     for the assignment [ @assignmentLink(assignment) ] <br>
     and the group [ @groupLink(group) ] <br>
@@ -28,25 +28,41 @@
     	} 
     }
 
-    @defining(quiz.results(user)){ quizResults : viewsupport.question.derivative.UserQuizResults =>
+    @defining(quiz.questions){ questions =>
+    <h4>There are @questions.size Question(s) in the quiz</h4>
 
-    <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
-    
+    @if(access.write){
     <table>
-        <th>Question #</th> @if(access.write){ <th> Equation </th> } <th>Status</th> @if(access.write){ <th> Remove </th> }
-        @for(result <- quizResults.results.zipWithIndex){
+        <th> Question </th> <th> details </th> <th> Question For </th> <th> Remove </th>
+        @for(question <- questions){
             <tr>
-            	<td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quizResults.quiz.id, result._1.question.id)">view question @result._2 </a> </td>
-                @if(access.write){ <td> @math.mathmlContent(result._1.question) </td> }
-                <td> @views.html.question.status(result._1.status) </td>
-                @if(access.write){ <td> @form(GroupQuestionsController.remove(course.id, section.id, assignment.id, group.id, quizResults.quiz.id, result._1.question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
+                <td> @math.mathmlContent(question) </td>
+            	<td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, question.id)">view question </a> </td>
+                <td> @question.forWho.map(_.fullName) </td>
+                <td> @form(GroupQuestionsController.remove(course.id, section.id, assignment.id, group.id, quiz.id, question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td>
             </tr>
         }
     </table>
-
+    } else {
+    <table>
+        <th>Question #</th> <th>Status</th>
+        @for(questionAndIndex <- questions.zipWithIndex){
+            <tr>
+                <td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, questionAndIndex._1.id)">view question @questionAndIndex._2 </a> </td>
+                <td> @views.html.question.status(questionAndIndex._1.results(user).status) </td>
+            </tr>
+        }
+    </table>
     }
+    }
+
+    TODO Create one question per person in the group
     
     @if(access.write){
+        <h4>Add a new Question</h4>
+
+
+
 	    <h4>Add a new Question</h4>
 	    
 	    <p>

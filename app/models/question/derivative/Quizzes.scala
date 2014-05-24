@@ -23,6 +23,23 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
     questions.elementAfter(question)
   }
 
+//  def groupQuestionsStudents(implicit session: Session) = {
+//
+//
+//    group match {
+//      case None => None
+//      case Some(group) => {
+//        (for(
+////          g <- assignmentGroupsTable if g.id === group.id;
+////          ug <- usersAssignmentGroupsTable if ug.id === group.id;
+//          q4 <- questionsForTable if q4.groupId === group.id;
+//        ) yield g)
+//      }
+//    }
+//    Quizzes.groupFor(id)
+//    ???
+//  }
+
   def group(implicit session: Session) = Quizzes.groupFor(id)
 
   def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)

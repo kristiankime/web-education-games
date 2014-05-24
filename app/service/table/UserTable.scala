@@ -47,8 +47,8 @@ object UserTable {
   val userTable = TableQuery[UserTable]
 
   def insert(u: User)(implicit s: Session) = {
-    userTable += u
-    u
+    val userId = (userTable returning userTable.map(_.id)) += u
+    u.copy(id = userId)
   }
 
   def findById(id: UserId)(implicit s: Session) = userTable.where(_.id is id).firstOption

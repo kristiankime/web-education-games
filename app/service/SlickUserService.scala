@@ -7,6 +7,7 @@ import play.api.db.slick.Config.driver.simple._
 import securesocial.core.{ IdentityId, Identity, UserServicePlugin }
 import securesocial.core.providers.Token
 import service.table._
+import com.artclod.slick.Joda
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 	// =========== Identity Methods ===========

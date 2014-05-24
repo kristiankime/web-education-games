@@ -27,6 +27,7 @@ import viewsupport.question.derivative.UserQuizResults
 class SectionsSpec extends Specification {
 
 	"results" should {
+
 		"return results for all the students associated with the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val course = Courses.create(CourseTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id))
@@ -43,6 +44,7 @@ class SectionsSpec extends Specification {
 				section.results(quiz) must beEqualTo(List(student1Results, student2Results))
 			}
 		}
+
 	}
 	
 	"students" should {

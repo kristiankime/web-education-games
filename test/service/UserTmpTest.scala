@@ -1,9 +1,13 @@
 package service
 
+import _root_.java.util.concurrent.atomic.AtomicLong
 import securesocial.core._
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
+import models.support.UserId
 
 object UserTmpTest {
+  private val id = new AtomicLong(-1000L)
+
 	def apply(identityId: IdentityId = IdentityId("userId", "providerId"),
 		firstName: String = "first",
 		lastName: String = "last",
@@ -14,9 +18,9 @@ object UserTmpTest {
 		oAuth1Info: Option[OAuth1Info] = None,
 		oAuth2Info: Option[OAuth2Info] = None,
 		passwordInfo: Option[PasswordInfo] = None,
-		date: DateTime = new DateTime(0L)) =
+		date: DateTime = new DateTime(0L, DateTimeZone.UTC)) =
 
-    new User(null,
+    new User(UserId(id.getAndDecrement),
       identityId,
       firstName,
       lastName,

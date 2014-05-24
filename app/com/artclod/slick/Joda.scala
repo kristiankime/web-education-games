@@ -2,7 +2,6 @@ package com.artclod.slick
 
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.{DateTimeZone, DateTime, Duration}
-import java.sql.Date
 
 object Joda {
 
@@ -10,8 +9,10 @@ object Joda {
     duration => duration.getMillis,
     long => Duration.millis(long))
 
-  implicit def long2DateTime = MappedColumnType.base[DateTime, Date](
-    dateTime => new java.sql.Date(dateTime.getMillis()),
-//    date => new DateTime(date, DateTimeZone.UTC))
-    date => new DateTime(date))
+  implicit def timestamp2DateTime = MappedColumnType.base[DateTime, java.sql.Timestamp](
+    dateTime => if(dateTime == null) null else new java.sql.Timestamp(dateTime.getMillis()),
+    date => if(date == null) null else new DateTime(date, DateTimeZone.UTC))
+
+  def now = DateTime.now(DateTimeZone.UTC)
+
 }

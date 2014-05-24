@@ -21,9 +21,9 @@ object TokenTable {
 
   def save(token: Token)(implicit s: Session) = tokenTable.insert(token)
 
-  def findToken(uuid: String)(implicit s: Session): Option[Token] = tokenTable.where(_.uuid is uuid).firstOption
+  def findToken(uuid: String)(implicit s: Session): Option[Token] = tokenTable.where(_.uuid === uuid).firstOption
 
-  def deleteToken(uuid: String)(implicit s: Session) = tokenTable.where(_.uuid is uuid).delete
+  def deleteToken(uuid: String)(implicit s: Session) = tokenTable.where(_.uuid === uuid).delete
 
   def deleteTokens()(implicit s: Session) = tokenTable.delete
 

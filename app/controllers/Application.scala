@@ -15,6 +15,10 @@ object Application extends Controller with SecureSocialDB {
 		MovedPermanently("/" + path)
 	}
 
+  def backTrack(path: String) = Action {
+    Redirect("/" + path.substring(0, path.lastIndexOf("/")))
+  }
+
 	def index = SecuredUserDBAction { implicit request => implicit user => implicit session =>
 		Ok(views.html.index())
 	}

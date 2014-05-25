@@ -58,9 +58,7 @@ object GroupsController extends Controller with SecureSocialDB {
   }
 
   def join(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    SectionsController(courseId, sectionId) +
-    AssignmentsController(courseId, assignmentId) +
-    GroupsController(courseId, sectionId, assignmentId, groupId) match {
+    SectionsController(courseId, sectionId) + AssignmentsController(courseId, assignmentId) + GroupsController(courseId, sectionId, assignmentId, groupId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((section, assignment, group)) =>  {
         joinGroup(group)

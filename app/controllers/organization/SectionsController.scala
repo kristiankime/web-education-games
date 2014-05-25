@@ -21,7 +21,7 @@ object SectionsController extends Controller with SecureSocialDB {
   Sections(sectionId) match {
     case None => Left(NotFound(views.html.errors.notFoundPage("There was no section for id=["+sectionId+"]")))
     case Some(section) => {
-      if(section.id != courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for sectionId=["+sectionId+"]")))
+      if(section.courseId != courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for sectionId=["+sectionId+"]")))
       else Right(section)
     }
   }

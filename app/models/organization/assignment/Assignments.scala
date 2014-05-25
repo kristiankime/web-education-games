@@ -7,10 +7,6 @@ import org.joda.time.DateTime
 import models.organization._
 import models.organization.assignment.table._
 
-//case class AssignmentTmp(name: String, courseId: CourseId, owner: UserId, creationDate: DateTime, updateDate: DateTime, startDate: Option[DateTime], endDate: Option[DateTime]) {
-//  def apply(id: AssignmentId) = Assignment(id, name, courseId, owner, creationDate, updateDate, startDate, endDate)
-//}
-
 case class Assignment(id: AssignmentId, name: String, courseId: CourseId, owner: UserId, creationDate: DateTime, updateDate: DateTime, startDate: Option[DateTime], endDate: Option[DateTime]) extends Secured {
 
   def startAndEnd = (startDate, endDate)

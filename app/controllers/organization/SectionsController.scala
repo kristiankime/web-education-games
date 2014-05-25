@@ -1,62 +1,74 @@
 package controllers.organization
 
+import play.api.db.slick.Config.driver.simple.Session
+import scala.util.Random
 import com.artclod.slick.Joda
-import play.api.mvc.Controller
+import com.artclod.random._
+import play.api.mvc.{Result, Controller}
 import play.api.data.Form
 import play.api.data.Forms._
 import models.organization._
 import models.support._
-import org.joda.time.DateTime
 import service._
-import scala.util.Random
 import controllers.support.SecureSocialDB
 import controllers.support.RequireAccess
-import com.artclod.random._
 
 object SectionsController extends Controller with SecureSocialDB {
 	implicit val randomEngine = new Random(Joda.now.getMillis())
   val codeRange = (0 to 100000).toVector
 
+  def apply(courseId: CourseId, sectionId: SectionId)(implicit session: Session) : Either[Result, Section] =
+  Sections(sectionId) match {
+    case None => Left(NotFound(views.html.errors.notFoundPage("There was no section for id=["+sectionId+"]")))
+    case Some(section) => {
+      if(section.id != courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for sectionId=["+sectionId+"]")))
+      else Right(section)
+    }
+  }
+  
 	def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId))  { implicit request => implicit user => implicit session =>
-		Courses(courseId) match {
-			case Some(course) => Ok(views.html.organization.sectionAdd(course))
-			case None => NotFound(views.html.index())
-		}
-	}
-
-	def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
-		SectionCreate.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index()),
-			form => {
-        val (editNum, viewNum) = codeRange.pick2From
-        val editCode = "SE-E-" + editNum
-				val viewCode = "SE-V-" + viewNum
-        val now = Joda.now
-				Sections.create(Section(null, form, courseId, user.id, editCode, viewCode, now, now))
-				Redirect(routes.CoursesController.view(courseId))
-			})
-	}
-
-	def view(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    Sections(id) match {
-      case None => NotFound(views.html.index())
-      case Some(section) =>
-        if (section.courseId != courseId) Redirect(routes.SectionsController.view(section.courseId, id))
-        else Ok(views.html.organization.sectionView(section))
+    CoursesController(courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(course) => Ok(views.html.organization.sectionAdd(course))
     }
 	}
 
-	def join(courseId: CourseId, id: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		SectionJoin.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index()),
-			form => Sections(id) match {
-					    case Some(section) => {
-                if (section.viewCode == form)	Sections.grantAccess(section, View)
-                if (section.editCode == form) Sections.grantAccess(section, Edit)
-                Redirect(routes.SectionsController.view(section.courseId, id)) // TODO indicate access was not granted in a better fashion
-              }
-              case None => BadRequest(views.html.index())
+	def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(course) =>
+        SectionCreate.form.bindFromRequest.fold(
+          errors => BadRequest(views.html.index()),
+          form => {
+            val (editNum, viewNum) = codeRange.pick2From
+            val editCode = "SE-E-" + editNum
+            val viewCode = "SE-V-" + viewNum
+            val now = Joda.now
+            Sections.create(Section(null, form, courseId, user.id, editCode, viewCode, now, now))
+            Redirect(routes.CoursesController.view(courseId))
           })
+    }
+	}
+
+	def view(courseId: CourseId, sectionId: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    SectionsController(courseId, sectionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(section) => Ok(views.html.organization.sectionView(section))
+    }
+	}
+
+	def join(courseId: CourseId, sectionId: SectionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    SectionsController(courseId, sectionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(section) =>
+        SectionJoin.form.bindFromRequest.fold(
+          errors => BadRequest(views.html.index()),
+          form => {
+              if (section.viewCode == form)	Sections.grantAccess(section, View)
+              if (section.editCode == form) Sections.grantAccess(section, Edit)
+              Redirect(routes.SectionsController.view(section.courseId, sectionId)) // TODO indicate access was not granted in a better fashion
+          })
+    }
 	}
 
 }

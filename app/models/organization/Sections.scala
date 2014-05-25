@@ -11,10 +11,6 @@ import models.organization.assignment._
 import models.organization.table.User2Section
 import models.question.derivative.Quiz
 
-//case class SectionTmp(name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, date: DateTime) {
-//	def apply(id: SectionId) = { Section(id, name, courseId, owner, editCode, viewCode, date, date) }
-//}
-
 case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
 	def course(implicit session: Session) = Courses(courseId).get
@@ -54,7 +50,7 @@ object Sections {
   }
 
 	// ======= FIND ======
-	def apply(sectionId: SectionId)(implicit session: Session) = sectionsTable.where(_.id === sectionId).firstOption
+	def apply(sectionId: SectionId)(implicit session: Session) : Option[Section] = sectionsTable.where(_.id === sectionId).firstOption
 
 	def apply(courseId: CourseId)(implicit session: Session) = sectionsTable.where(_.courseId === courseId).sortBy(_.name).list
 

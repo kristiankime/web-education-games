@@ -11,7 +11,6 @@ import models.organization.assignment.table._
 import models.question.derivative.table._
 import viewsupport.question.derivative._
 import com.google.common.annotations.VisibleForTesting
-import controllers.support.PathException
 
 case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
@@ -80,17 +79,6 @@ object Quizzes {
   }
 
   // ======= FIND ======
-  def apply(groupId: GroupId, quizId: QuizId)(implicit session: Session) : Quiz = {
-    (apply(quizId), groupFor(quizId)) match {
-      case (None, _) => throw new PathException("There was no quiz for id=[" + quizId + "]")
-      case (Some(quiz), None) => throw new PathException("There was no group for quiz with id=[" + quizId + "]")
-      case (Some(quiz), Some(group)) => {
-        if(group.id != groupId) throw new PathException("quizId=[" + quizId +"] was not for groupId=[" + groupId + "]")
-        quiz
-      }
-    }
-  }
-
   def apply(quizId: QuizId)(implicit session: Session) : Option[Quiz] = quizzesTable.where(_.id === quizId).firstOption
 
   def apply(courseId: CourseId)(implicit session: Session) : List[Quiz]  =

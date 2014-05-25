@@ -4,7 +4,7 @@ import com.artclod.slick.Joda
 import com.artclod.util._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.Controller
 import models.organization.assignment._
 import models.organization._
@@ -18,7 +18,7 @@ import controllers.organization.SectionsController
 
 object GroupsController extends Controller with SecureSocialDB {
 
-  def apply(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId)(implicit session: Session) : Either[Result, Group] = {
+  def apply(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId)(implicit session: Session) : Either[Result, Group] =
     Groups(groupId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no group for id=["+groupId+"]")))
       case Some(group) => {
@@ -28,7 +28,6 @@ object GroupsController extends Controller with SecureSocialDB {
         Right(group)
       }
     }
-  }
 
   def add(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId) = SecuredUserDBAction(RequireAccess(sectionId)) { implicit request => implicit user => implicit session =>
     SectionsController(courseId, sectionId) + AssignmentsController(courseId, assignmentId) match {

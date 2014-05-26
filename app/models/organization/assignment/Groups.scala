@@ -12,6 +12,7 @@ import models.question.derivative.Quiz
 
 case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: AssignmentId, creationDate: DateTime, updateDate: DateTime) extends HasAccess with HasId[GroupId] with HasCourse {
 
+  // Organization
   def course(implicit session: Session) = assignment.course
 
   def courseId(implicit session: Session) = course.id
@@ -22,12 +23,14 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
 
   def students(implicit session: Session) = Groups.students(id)
 
+  // Quizzes
   def quizzes(implicit session: Session) = Groups.quizzes(id)
 
   def quizFor(user: User)(implicit session: Session) = Groups.quizFor(user.id, id)
 
-  def has(quiz: Quiz)(implicit session: Session) = Groups.has(id, quiz.id)
+  def has(quiz: Quiz)(implicit session: Session) = Groups.hasQuiz(id, quiz.id)
 
+  // Access
   def access(implicit user: User, session: Session): Access = assignment.access
 
   def join(implicit user: User, session: Session) = Groups.join(user.id, id)
@@ -35,10 +38,7 @@ case class Group(id: GroupId, name: String, sectionId: SectionId, assignmentId: 
   def leave(implicit user: User, session: Session) = Groups.leave(user.id, id)
 
   def enrolled(implicit user: User, session: Session) = students.contains(user)
-
-  def idsMatch(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) = {
-    assignmentId == this.assignmentId && sectionId == this.sectionId && courseId == this.courseId
-  }
+  
 }
 
 object Groups {
@@ -86,6 +86,6 @@ object Groups {
       q <- quizzesTable if ag2q.quizId === q.id && q.owner === userId
     ) yield q).firstOption
 
-  def has(groupId: GroupId, quizId: QuizId)(implicit session: Session) =
+  def hasQuiz(groupId: GroupId, quizId: QuizId)(implicit session: Session) =
     assignmentGroupsQuizzesTable.where(r => r.groupId === groupId && r.quizId === quizId).firstOption.nonEmpty
 }

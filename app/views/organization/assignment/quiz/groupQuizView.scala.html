@@ -55,16 +55,15 @@
     </table>
     }
     }
-
-    TODO Create one question per person in the group
     
     @if(access.write){
+    @defining(quiz.needQuestionsFor) { needQuestionsFor =>
+
         <h4>Add a new Question</h4>
 
-
-
-	    <h4>Add a new Question</h4>
-	    
+        @if(needQuestionsFor.isEmpty){
+            You have already created a Questions for all of the students in this group<br>
+        } else {
 	    <p>
 			Type in an equation and press "Save Question": <br> 
 			Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow) or log_base(pow), ln, sin, cos, tan) <br> 
@@ -74,6 +73,10 @@
 	    @form(GroupQuestionsController.create(course.id, section.id, assignment.id, group.id, quiz.id), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
+            <select name="@QuestionForm.targetUser">
+                <option value="@needQuestionsFor.head.id.v" selected>@needQuestionsFor.head.fullName</option>
+                @for(needQuestionFor <- needQuestionsFor.tail) {<option value="@needQuestionFor.id.v">@needQuestionFor.fullName</option>}
+            </select>
 	    	<input type="button" value="Save Question" onclick="formSubmit()">
 	    }
 	    
@@ -83,10 +86,13 @@
 				$("#derivativeQuestionMathML").val(QUESTION.mathML);
 				$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
 				$("#derivativeqForm").submit();
-			}
-			// TODO indicated that the form did not submit
+			} else {
+                alert("The system was unable to parse your question")
+            }
 	    }
 	    </script>
+        }
+    }
     }
 
 }

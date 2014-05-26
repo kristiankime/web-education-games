@@ -43,7 +43,7 @@ object GroupQuestionsController extends Controller with SecureSocialDB {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
-            Questions.create(Question(null, user.id, mathML, form._2, Joda.now), quiz.id)
+            Questions.create(Question(null, user.id, mathML, form._2, Joda.now), groupId, quiz.id, UserId(form._3))
             Redirect(routes.GroupQuizzesController.view(group.courseId, group.sectionId, group.assignmentId, group.id, quiz.id))
           })
     }
@@ -64,5 +64,7 @@ object GroupQuestionsController extends Controller with SecureSocialDB {
 object QuestionForm {
 	val mathML = "mathML"
 	val rawStr = "rawStr"
-	val values = Form(tuple(mathML -> text, rawStr -> text))
+  val targetUser = "targetUser"
+
+	val values = Form(tuple(mathML -> text, rawStr -> text, targetUser -> longNumber))
 }

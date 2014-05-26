@@ -18,28 +18,7 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 
-  def nextQuestion(question: Question)(implicit session: Session) = {
-    questions.elementAfter(question)
-  }
-
-//  def groupQuestionsStudents(implicit session: Session) = {
-//
-//
-//    group match {
-//      case None => None
-//      case Some(group) => {
-//        (for(
-////          g <- assignmentGroupsTable if g.id === group.id;
-////          ug <- usersAssignmentGroupsTable if ug.id === group.id;
-//          q4 <- questionsForTable if q4.groupId === group.id;
-//        ) yield g)
-//      }
-//    }
-//    Quizzes.groupFor(id)
-//    ???
-//  }
-
-  def group(implicit session: Session) = Quizzes.groupFor(id)
+  def nextQuestion(question: Question)(implicit session: Session) = questions.elementAfter(question)
 
   def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
 
@@ -54,6 +33,20 @@ case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime,
     val courseAccess = Quizzes.courses(id).map(_.access.ceilEdit)
     (courseAccess :+ groupAccess :+ directAccess) max
   }
+
+  // ==== If associated with a Group ====
+  def group(implicit session: Session) = Quizzes.groupFor(id)
+
+  def groupStudents(implicit session: Session) : List[User] = group match {
+    case None => List()
+    case Some(group) => group.students
+  }
+
+  def questionsAndWho(implicit session: Session) = questions.map(r => (r, r.forWho))
+
+  def hasQuestionsFor(implicit session: Session) = questions.map(_.forWho).flatten
+
+  def needQuestionsFor(implicit user: User, session: Session) : List[User] =  (groupStudents.toSet - user -- hasQuestionsFor).toList
 
 }
 

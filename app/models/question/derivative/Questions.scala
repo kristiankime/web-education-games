@@ -27,10 +27,16 @@ case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: S
 object Questions {
 
   // ======= CREATE ======
-  def create(info: Question, quizId: QuizId)(implicit session: Session) = {
+  def create(info: Question, quizId: QuizId)(implicit session: Session) : Question = {
     val questionId = (questionsTable returning questionsTable.map(_.id)) += info
     quizzesQuestionsTable += Quiz2Question(quizId, questionId)
     info.copy(id = questionId)
+  }
+
+  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session) : Question = {
+    val question = create(info, quizId)
+    questionsForTable += QuestionFor(groupId, question.id, userId)
+    question
   }
 
   // ======= FIND ======

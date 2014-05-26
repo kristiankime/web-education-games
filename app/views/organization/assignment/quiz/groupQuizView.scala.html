@@ -64,6 +64,8 @@
         @if(needQuestionsFor.isEmpty){
             You have already created a Questions for all of the students in this group<br>
         } else {
+
+        <h5>Please add a questions for </h5>
 	    <p>
 			Type in an equation and press "Save Question": <br> 
 			Currently equations can only contain numbers, the variable X, parentheses, and basic functions (+, -, *, /, ^, exp(base,pow), log(base,pow) or log_base(pow), ln, sin, cos, tan) <br> 
@@ -87,7 +89,7 @@
 				$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
 				$("#derivativeqForm").submit();
 			} else {
-                alert("The system was unable to parse your question")
+                alert("The answer is not in a valid format so it cannot be submitted")
             }
 	    }
 	    </script>

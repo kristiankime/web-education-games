@@ -1,41 +1,41 @@
-@(editorName: String, initialAnswerOp : Option[String] = None)
+@(editorName: String, initialAnswerOption: Option[String] = None)
 
-	<span id="@(editorName)">
-		@*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
-		<input id="mathMLInput" size="80" onkeyup="@(editorName).updateAnswer(this.value)" onpaste="@(editorName).updateAnswer(this.value)" oninput="@(editorName).updateAnswer(this.value)"/>
-		<font style:visibility="hidden" id="@(editorName+"Indicator")" color="red"> * </font>
-		<span id="@(editorName+"View")"> `` </script> </span>
-	</span>
+    <span id="@editorName">
+        @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
+        <input id="mathMLInput" size="80" onkeyup="@{editorName + ".updateAnswer(this.value)"}" onpaste="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
+        <font style:visibility="hidden" id="@{editorName+"Indicator"}" color="red"> * </font>
+        <span id="@{editorName+"View"}"> `` </span>
+    </span>
 
-	<script>
-	var @(editorName) = (function() {
-	    var result = {
-	    	 	mathML : "",
-	    	 	rawStr : "", 
-	    	 	valid : false
-	    	 };
-	
-	    result.updateAnswer = function(mathMLStr) {
-	    	result.rawStr = mathMLStr;
-	    	var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
-	    	if (mathMLStatus.success) {
-	    		
-	    		result.mathML = mathMLStatus.value;	
-			    result.valid = true;
-			    $("#@(editorName+"Indicator")").hide();
-			    ARTC.updateInnerAsciiMath("@(editorName+"View")", result.rawStr);
+    <script>
+    var @editorName = (function() {
+        var result = {
+                mathML : "",
+                rawStr : "",
+                valid : false
+             };
 
-	    	} else {
-	    		result.valid = false;
-	    		$("#@(editorName+"Indicator")").show();
-			}
-	    };
-	
-		@for(initialAnswer <- initialAnswerOp){
-		$("#@(editorName) #mathMLInput").val("@initialAnswer")
-		result.updateAnswer("@initialAnswer")
-		}
-	
-	    return result;
-	})();
-	</script>
+        result.updateAnswer = function(mathMLStr) {
+            result.rawStr = mathMLStr;
+            var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
+            if (mathMLStatus.success) {
+
+                result.mathML = mathMLStatus.value;
+                result.valid = true;
+                $("#@{editorName+"Indicator"}").hide();
+                ARTC.updateInnerAsciiMath("@{editorName+"View"}", result.rawStr);
+
+            } else {
+                result.valid = false;
+                $("#@{editorName+"Indicator"}").show();
+            }
+        };
+
+        @for(initialAnswer <- initialAnswerOption){
+        $("#@{editorName} #mathMLInput").val("@initialAnswer")
+        result.updateAnswer("@initialAnswer")
+        }
+
+        return result;
+    })();
+    </script>

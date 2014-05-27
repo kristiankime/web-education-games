@@ -3,15 +3,12 @@ package models.support
 import play.api.db.slick.Config.driver.simple._
 import service._
 
-trait Secured extends HasAccess{
+trait Secured extends HasAccess with Owned {
 
-  // LATER change this to ownerId?
-	val owner: UserId
-	
 	/**
 	 * Is the user the owner of this object.
 	 */
-	private def ownerAccess(implicit user: User) = if (user.id == owner) Own else Non
+	private def ownerAccess(implicit user: User) = if (user.id == ownerId) Own else Non
 	
 	/**
 	 * Does the user have access to the object other then as an owner via a direct link table.

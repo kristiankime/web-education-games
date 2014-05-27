@@ -11,7 +11,7 @@ import models.organization.assignment._
 import models.organization.table.User2Section
 import models.question.derivative.Quiz
 
-case class Section(id: SectionId, name: String, courseId: CourseId, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
+case class Section(id: SectionId, name: String, courseId: CourseId, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
 	def course(implicit session: Session) = Courses(courseId).get
 

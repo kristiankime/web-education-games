@@ -8,6 +8,7 @@ import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 import models.organization.assignment.Assignment
 import models.organization.table._
+import models.support.table.IdentifiedAndOwned
 
 
 class AssignmentsTable(tag: Tag) extends Table[Assignment](tag, "assignments") with IdentifiedAndOwned[Assignment, AssignmentId] {

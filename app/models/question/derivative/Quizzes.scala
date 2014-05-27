@@ -12,7 +12,7 @@ import models.question.derivative.table._
 import viewsupport.question.derivative._
 import com.google.common.annotations.VisibleForTesting
 
-case class Quiz(id: QuizId, owner: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
+case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
   def results(student: User)(implicit session: Session) = UserQuizResults(student, this, questions.map(v => v.results(student)))
 
@@ -110,6 +110,6 @@ object Quizzes {
 
   // ======= AUTHORIZATION ======
   def linkAccess(quiz: Quiz)(implicit user: User, session: Session) =
-    usersQuizzesTable.where(uq => uq.userId === user.id && uq.id === quiz.id).firstOption.map(_.access).toAccess
+    usersQuizzesTable.where(uq => uq.userId === user.id && uq.quizId === quiz.id).firstOption.map(_.access).toAccess
 
 }

@@ -7,6 +7,7 @@ import service._
 import models.organization.Sections
 import models.support._
 import scala.slick.model.ForeignKeyAction
+import models.support.table.{UserLinkRow, UserLink}
 
 case class User2Section(userId: UserId, sectionId: SectionId, access: Access) extends UserLinkRow
 

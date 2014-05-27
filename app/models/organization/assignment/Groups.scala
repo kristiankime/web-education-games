@@ -83,7 +83,7 @@ object Groups {
   def quizFor(userId: UserId, groupId: GroupId)(implicit session: Session) =
     (for (
       ag2q <- assignmentGroupsQuizzesTable if ag2q.groupId === groupId;
-      q <- quizzesTable if ag2q.quizId === q.id && q.owner === userId
+      q <- quizzesTable if ag2q.quizId === q.id && q.ownerId === userId
     ) yield q).firstOption
 
   def hasQuiz(groupId: GroupId, quizId: QuizId)(implicit session: Session) =

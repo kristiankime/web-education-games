@@ -9,7 +9,7 @@ import models.organization.assignment.Assignments
 import viewsupport.organization._
 import service._
 
-case class Course(id: CourseId, name: String, owner: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
+case class Course(id: CourseId, name: String, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
 	def sections(implicit session: Session) = Sections(id)
 

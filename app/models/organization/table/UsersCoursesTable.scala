@@ -6,6 +6,7 @@ import service.table._
 import service._
 import models.support._
 import models.organization.Courses
+import models.support.table.{UserLinkRow, UserLink}
 
 case class User2Course(userId: UserId, courseId: CourseId, access: Access) extends UserLinkRow
 

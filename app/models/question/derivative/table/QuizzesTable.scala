@@ -10,15 +10,11 @@ import scala.slick.model.ForeignKeyAction
 
 class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "derivative_quizzes") {
 	def id = column[QuizId]("id", O.PrimaryKey, O.AutoInc)
-	def owner = column[UserId]("owner", O.NotNull)
+	def ownerId = column[UserId]("owner", O.NotNull)
 	def name = column[String]("name", O.NotNull)
-	def creationDate = column[DateTime]("creationDate")
-	def updateDate = column[DateTime]("upadateDate")
-	def * = (id, owner, name, creationDate, updateDate) <> (Quiz.tupled, Quiz.unapply _)
+	def creationDate = column[DateTime]("creation_date")
+	def updateDate = column[DateTime]("update_date")
+	def * = (id, ownerId, name, creationDate, updateDate) <> (Quiz.tupled, Quiz.unapply _)
 
-	def ownerFK = foreignKey("derivative_quizzes_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	
-//	def autoInc = owner ~ name ~ creationDate ~ updateDate returning id
-//
-//	def insert(t: QuizTmp)(implicit s: Session) = this.autoInc.insert(t.owner, t.name, t.date, t.date)
+	def ownerFK = foreignKey("derivative_quizzes_owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

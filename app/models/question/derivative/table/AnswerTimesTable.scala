@@ -10,7 +10,7 @@ import service.table.UsersTable
 case class AnswerTime(userId: UserId, questionId: QuestionId, time: DateTime)
 
 /**
- * Indicates when a user first started working on a question.
+ * Indicates when a user was working on a question.
  */
 class AnswerTimesTable(tag: Tag) extends Table[AnswerTime](tag, "derivative_answer_times") {
   def userId = column[UserId]("user_id", O.NotNull)

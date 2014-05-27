@@ -10,9 +10,9 @@ import service._
 import service.table.UsersTable
 import viewsupport.question.derivative.QuestionResults
 
-case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML {
+case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Owned {
 
-  def answers(user: User)(implicit session: Session) = answersTable.where(a => a.questionId === id && a.owner === user.id).list
+  def answers(user: User)(implicit session: Session) = answersTable.where(a => a.questionId === id && a.ownerId === user.id).list
 
   def results(user: User)(implicit session: Session) = QuestionResults(this, answers(user))
 
@@ -35,7 +35,7 @@ object Questions {
 
   def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session) : Question = {
     val question = create(info, quizId)
-    questionsForTable += QuestionFor(groupId, question.id, userId)
+    questionsForTable += GroupQuestion2User(groupId, question.id, userId)
     question
   }
 
@@ -44,14 +44,14 @@ object Questions {
 
   def apply(questionId: QuestionId)(implicit session: Session) = questionsTable.where(_.id === questionId).firstOption
 
-  def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(r => r.questionId === qid && r.owner === owner.id).list
+  def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(r => r.questionId === qid && r.ownerId === owner.id).list
 
   def answers(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).list
 
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- answersTable if a.questionId === qid;
-      u <- UsersTable.userTable if u.id === a.owner
+      u <- UsersTable.userTable if u.id === a.ownerId
     ) yield (a, u)).sortBy(_._2.lastName).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) = {

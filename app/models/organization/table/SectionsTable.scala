@@ -7,6 +7,7 @@ import models.organization._
 import models.support._
 import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
+import models.support.table.IdentifiedAndOwned
 
 class SectionsTable(tag: Tag) extends Table[Section](tag, "sections") with IdentifiedAndOwned[Section, SectionId] {
 	def id = column[SectionId]("id", O.PrimaryKey, O.AutoInc)

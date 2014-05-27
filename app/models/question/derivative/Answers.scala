@@ -10,11 +10,11 @@ import models.support._
 import models.question.AsciiMathML
 import service.User
 
-case class Answer(id: AnswerId, owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML
+case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML with Owned
 
 object AnswerLater {
-  def apply(owner: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean): Answer =
-    Answer(null, owner, questionId, mathML, rawStr, correct, creationDate)
+  def apply(ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean): Answer =
+    Answer(null, ownerId, questionId, mathML, rawStr, correct, creationDate)
 }
 
 object Answers {

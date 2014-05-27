@@ -5,7 +5,7 @@ import com.artclod.slick.Joda._
 import org.joda.time.DateTime
 import models.organization._
 import models.support._
-import service.table.UserTable
+import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 
 class SectionsTable(tag: Tag) extends Table[Section](tag, "sections") with IdentifiedAndOwned[Section, SectionId] {
@@ -20,7 +20,7 @@ class SectionsTable(tag: Tag) extends Table[Section](tag, "sections") with Ident
 
 	def * = (id, name, courseId, owner, editCode, viewCode, creationDate, updateDate) <> (Section.tupled, Section.unapply _)
 
-	def ownerFK = foreignKey("sections_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("sections_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def courseFK = foreignKey("sections_courses_fk", courseId, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 //  def autoInc = name ~ courseId ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id

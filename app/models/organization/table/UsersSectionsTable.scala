@@ -18,6 +18,6 @@ class UsersSectionsTable(tag: Tag) extends Table[User2Section](tag, "users_secti
 
 	def pk = primaryKey("users_sections_pk", (userId, id))
 
-	def userIdFK = foreignKey("users_sections_user_fk", userId, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def userIdFK = foreignKey("users_sections_user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionIdFK = foreignKey("users_sections_section_fk", id, sectionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

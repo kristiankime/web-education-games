@@ -3,7 +3,7 @@ package models.organization.assignment
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
-import service.table.UserTable
+import service.table.UsersTable
 import models.support._
 import models.organization._
 import models.organization.assignment.table._
@@ -58,7 +58,7 @@ object Groups {
 
   def students(groupId: GroupId)(implicit session: Session) =
     (for (
-      u <- UserTable.userTable;
+      u <- UsersTable.userTable;
       ug <- usersAssignmentGroupsTable if ug.userId === u.id && ug.id === groupId
     ) yield u).sortBy(_.lastName).list
 

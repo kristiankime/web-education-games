@@ -17,7 +17,7 @@ class UsersCoursesTable(tag: Tag) extends Table[User2Course](tag, "users_courses
 
 	def pk = primaryKey("users_courses_pk", (userId, id))
 
-	def userIdFK = foreignKey("users_courses_user_fk", userId, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def userIdFK = foreignKey("users_courses_user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionIdFK = foreignKey("users_courses_course_fk", id, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }
 

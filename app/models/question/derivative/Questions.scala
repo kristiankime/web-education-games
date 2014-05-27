@@ -7,7 +7,7 @@ import models.question.AsciiMathML
 import models.question.derivative.table._
 import play.api.db.slick.Config.driver.simple._
 import service._
-import service.table.UserTable
+import service.table.UsersTable
 import viewsupport.question.derivative.QuestionResults
 
 case class Question(id: QuestionId, owner: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML {
@@ -51,7 +51,7 @@ object Questions {
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- answersTable if a.questionId === qid;
-      u <- UserTable.userTable if u.id === a.owner
+      u <- UsersTable.userTable if u.id === a.owner
     ) yield (a, u)).sortBy(_._2.lastName).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) = {
@@ -64,7 +64,7 @@ object Questions {
   def forWho(questionId: QuestionId)(implicit session: Session) = {
     (for(
       q4 <- questionsForTable if q4.questionId === questionId;
-      u <- UserTable.userTable if u.id === q4.userId
+      u <- UsersTable.userTable if u.id === q4.userId
     ) yield u).firstOption
   }
 

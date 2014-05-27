@@ -4,7 +4,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.support._
 import org.joda.time.DateTime
 import com.artclod.slick.Joda._
-import service.table.UserTable
+import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 import models.organization.assignment.Assignment
 import models.organization.table._
@@ -22,6 +22,6 @@ class AssignmentsTable(tag: Tag) extends Table[Assignment](tag, "assignments") w
 
   def * = (id, name , courseId , owner , creationDate , updateDate , startDate.? , endDate.?) <> (Assignment.tupled, Assignment.unapply _)
 
-  def ownerFK = foreignKey("assignments_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def ownerFK = foreignKey("assignments_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def courseFK = foreignKey("assignments_courses_fk", courseId, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

@@ -56,7 +56,7 @@ object Sections {
 
   def students(sectionId: SectionId)(implicit session: Session) =
 		(for (
-			u <- UserTable.userTable;
+			u <- UsersTable.userTable;
 			us <- usersSectionsTable if us.userId === u.id && us.id === sectionId && us.access === service.Access.view
 		) yield u).sortBy(_.lastName).list
 

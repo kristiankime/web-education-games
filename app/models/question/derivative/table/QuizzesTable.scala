@@ -4,7 +4,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.question.derivative._
 import models.support._
 import org.joda.time.DateTime
-import service.table.UserTable
+import service.table.UsersTable
 import com.artclod.slick.Joda._
 import scala.slick.model.ForeignKeyAction
 
@@ -16,7 +16,7 @@ class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "derivative_quizzes") {
 	def updateDate = column[DateTime]("upadateDate")
 	def * = (id, owner, name, creationDate, updateDate) <> (Quiz.tupled, Quiz.unapply _)
 
-	def ownerFK = foreignKey("derivative_quizzes_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_quizzes_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	
 //	def autoInc = owner ~ name ~ creationDate ~ updateDate returning id
 //

@@ -32,25 +32,3 @@ object User {
 
   def apply(i: Identity, date: DateTime): User = User(null, i.identityId, i.firstName, i.lastName, i.fullName, i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info, i.passwordInfo, date, date)
 }
-
-//// A helper class that is "the same" but missing the id, to be used when the object has not yet been persisted and thus has no id
-//case class UserTmp(identityId: IdentityId,
-//	firstName: String,
-//	lastName: String,
-//	fullName: String,
-//	email: Option[String],
-//	avatarUrl: Option[String],
-//	authMethod: AuthenticationMethod,
-//	oAuth1Info: Option[OAuth1Info],
-//	oAuth2Info: Option[OAuth2Info],
-//	passwordInfo: Option[PasswordInfo],
-//	date: DateTime) {
-//
-//	def apply(id: UserId) = User(id, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, date, date)
-//
-//	def apply(user: User) = User(user.id, identityId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo, user.creationDate, date)
-//}
-//
-//object UserTmp {
-//	def apply(i: Identity, date: DateTime): UserTmp = UserTmp(i.identityId, i.firstName, i.lastName, i.fullName, i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info, i.passwordInfo, date)
-//}

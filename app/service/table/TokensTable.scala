@@ -6,18 +6,18 @@ import play.api.db.slick.Config.driver.simple._
 import securesocial.core.providers.Token
 import org.joda.time.DateTime
 
-class TokenTable(tag: Tag) extends Table[Token](tag, "token") {
+class TokensTable(tag: Tag) extends Table[Token](tag, "secure_social_tokens") {
   def uuid = column[String]("uuid", O.PrimaryKey)
   def email = column[String]("email")
-  def creationTime = column[DateTime]("creationTime")
-  def expirationTime = column[DateTime]("expirationTime")
-  def isSignUp = column[Boolean]("isSignUp")
+  def creationTime = column[DateTime]("creation_time")
+  def expirationTime = column[DateTime]("expiration_time")
+  def isSignUp = column[Boolean]("is_sign_up")
 
   def * = (uuid, email, creationTime, expirationTime, isSignUp) <> (Token.tupled, Token.unapply _)
 }
 
-object TokenTable {
-  val tokenTable = TableQuery[TokenTable]
+object TokensTable {
+  val tokenTable = TableQuery[TokensTable]
 
   def save(token: Token)(implicit s: Session) = tokenTable.insert(token)
 

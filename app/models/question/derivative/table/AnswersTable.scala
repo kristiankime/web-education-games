@@ -8,7 +8,7 @@ import scala.slick.model.ForeignKeyAction
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.support._
-import service.table.UserTable
+import service.table.UsersTable
 
 class AnswersTable(tag: Tag) extends Table[Answer](tag, "derivative_answers") {
 	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)
@@ -22,7 +22,7 @@ class AnswersTable(tag: Tag) extends Table[Answer](tag, "derivative_answers") {
 //  def columnsNoId = owner ~ questionId ~ mathML ~ rawStr ~ correct ~ creationDate
 	def * = (id, owner, questionId, mathML, rawStr, correct, creationDate) <> (Answer.tupled, Answer.unapply _)
 
-	def ownerFK = foreignKey("derivative_answers_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_answers_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionFK = foreignKey("derivative_answers_fk", questionId, questionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 //	def autoInc = columnsNoId returning id

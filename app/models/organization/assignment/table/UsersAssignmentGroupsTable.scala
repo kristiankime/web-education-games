@@ -18,6 +18,6 @@ class UsersAssignmentGroupsTable(tag: Tag) extends Table[User2AssignmentGroup](t
 
   def pk = primaryKey("users_assignment_groups_pk", (userId, id))
 
-  def userIdFK = foreignKey("users_assignment_groups_user_fk", userId, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def userIdFK = foreignKey("users_assignment_groups_user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def assignmentGroupIdFK = foreignKey("users_assignment_groups_assignment_group_fk", id, assignmentGroupsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

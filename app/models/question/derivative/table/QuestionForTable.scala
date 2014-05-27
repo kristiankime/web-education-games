@@ -18,6 +18,6 @@ class QuestionForTable(tag: Tag) extends Table[QuestionFor](tag, "derivative_que
 	def pk = primaryKey("derivative_question_for_pk", (groupId, questionId, userId))
 
   def groupIdFK = foreignKey("derivative_question_for_group_fk", groupId, assignmentGroupsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def userIdFK = foreignKey("derivative_question_for_user_fk", userId, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def userIdFK = foreignKey("derivative_question_for_user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionIdFK = foreignKey("derivative_question_for_question_fk", questionId, questionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

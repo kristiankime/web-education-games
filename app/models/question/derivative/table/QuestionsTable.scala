@@ -7,7 +7,7 @@ import models.question.derivative._
 import models.support._
 import org.joda.time.DateTime
 import com.artclod.slick.Joda._
-import service.table.UserTable
+import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 
 class QuestionsTable(tag: Tag) extends Table[Question](tag, "derivative_questions") {
@@ -19,7 +19,7 @@ class QuestionsTable(tag: Tag) extends Table[Question](tag, "derivative_question
 
 	def * = (id, owner, mathML, rawStr, creationDate) <> (Question.tupled, Question.unapply _)
 
-	def ownerFK = foreignKey("derivative_questions_owner_fk", owner, UserTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_questions_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	
 //	def autoInc = owner ~ mathML ~ rawStr ~ creationDate returning id
 //

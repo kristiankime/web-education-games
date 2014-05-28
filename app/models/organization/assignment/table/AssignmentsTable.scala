@@ -14,12 +14,12 @@ import models.support.table.IdentifiedAndOwned
 class AssignmentsTable(tag: Tag) extends Table[Assignment](tag, "assignments") with IdentifiedAndOwned[Assignment, AssignmentId] {
   def id = column[AssignmentId]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name", O.NotNull)
-  def courseId = column[CourseId]("courseId", O.NotNull)
+  def courseId = column[CourseId]("course_id", O.NotNull)
   def owner = column[UserId]("owner", O.NotNull)
-  def creationDate = column[DateTime]("creationDate", O.NotNull)
-  def updateDate = column[DateTime]("updateDate", O.NotNull)
-  def startDate = column[DateTime]("startDate", O.Nullable)
-  def endDate = column[DateTime]("endDate", O.Nullable)
+  def creationDate = column[DateTime]("creation_date", O.NotNull)
+  def updateDate = column[DateTime]("update_date", O.NotNull)
+  def startDate = column[DateTime]("start_date", O.Nullable)
+  def endDate = column[DateTime]("end_date", O.Nullable)
 
   def * = (id, name , courseId , owner , creationDate , updateDate , startDate.? , endDate.?) <> (Assignment.tupled, Assignment.unapply _)
 

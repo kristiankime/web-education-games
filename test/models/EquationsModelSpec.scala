@@ -17,8 +17,8 @@ class EquationsModelSpec extends Specification {
 
 		"create a new equation when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val id = EquationsModel.create("an equation")
-				val eq = EquationsModel.read(id)
+				val id = Equations.create("an equation")
+				val eq = Equations.read(id)
 
 				eq.get.equation must beEqualTo("an equation")
 			}
@@ -26,17 +26,17 @@ class EquationsModelSpec extends Specification {
 
 		"return all the equations that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				EquationsModel.create("equation1")
-				EquationsModel.create("equation2")
+				Equations.create("equation1")
+				Equations.create("equation2")
 
-				val eqs = EquationsModel.all.map(_.equation)
+				val eqs = Equations.all.map(_.equation)
 				eqs must beEqualTo(List("equation1", "equation2"))
 			}
 		}
 
 		"return None when the request equation does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val eq = EquationsModel.read(Long.MaxValue)
+				val eq = Equations.read(Long.MaxValue)
 
 				eq must beNone
 			}
@@ -44,9 +44,9 @@ class EquationsModelSpec extends Specification {
 
 		"delete an equation when requested" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val id = EquationsModel.create("an equation")
-				EquationsModel.delete(id)
-				val eq = EquationsModel.read(id)
+				val id = Equations.create("an equation")
+				Equations.delete(id)
+				val eq = Equations.read(id)
 
 				eq must beNone
 			}

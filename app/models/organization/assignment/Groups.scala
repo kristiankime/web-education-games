@@ -69,7 +69,7 @@ object Groups {
       ug <- usersAssignmentGroupsTable if ug.id === g.id && ug.userId === userId
     ) yield g).firstOption
 
-  def join(userId: UserId, groupId: GroupId)(implicit session: Session) = usersAssignmentGroupsTable += User2AssignmentGroup(userId, groupId)
+  def join(userId: UserId, groupId: GroupId)(implicit session: Session) = usersAssignmentGroupsTable += User2Group(userId, groupId)
 
   def leave(userId: UserId, groupId: GroupId)(implicit session: Session) = usersAssignmentGroupsTable.where(r => r.userId === userId && r.id === groupId).delete
 

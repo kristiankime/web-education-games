@@ -11,7 +11,7 @@ class EquationsTable(tag: Tag) extends Table[Equation](tag, "equations") {
   def * = (id, equation) <> (Equation.tupled, Equation.unapply _)
 }
 
-object EquationsModel {
+object Equations {
 	val table = TableQuery[EquationsTable]
 
 	def all()(implicit session: Session) = table.list

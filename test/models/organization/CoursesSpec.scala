@@ -9,7 +9,7 @@ import play.api.test.Helpers._
 import play.api.db.slick.DB
 import models.DBTest.inMemH2
 import play.api.test.FakeApplication
-import models.EquationsModel
+import models.Equations
 import models.DBTest
 import service.UserTmpTest
 import models.organization._

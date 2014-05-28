@@ -13,16 +13,12 @@ class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") with Identifi
 	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name", O.NotNull)
 	def owner = column[UserId]("owner", O.NotNull)
-	def editCode = column[String]("editCode", O.NotNull)
-	def viewCode = column[String]("viewCode", O.NotNull)
-	def creationDate = column[DateTime]("creationDate", O.NotNull)
-	def updateDate = column[DateTime]("updateDate", O.NotNull)
+	def editCode = column[String]("edit_code", O.NotNull)
+	def viewCode = column[String]("view_code", O.NotNull)
+	def creationDate = column[DateTime]("creation_Date", O.NotNull)
+	def updateDate = column[DateTime]("update_date", O.NotNull)
 
 	def * = (id, name, owner, editCode, viewCode, creationDate, updateDate) <> (Course.tupled, Course.unapply _)
 
 	def ownerFK = foreignKey("courses_owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-
-//	def autoInc = name ~ owner ~ editCode ~ viewCode ~ creationDate ~ updateDate returning id
-
-//	def insert(t: CourseTmp)(implicit s: Session) = this.autoInc.insert(t.name, t.owner, t.editCode, t.viewCode, t.date, t.date)
 }

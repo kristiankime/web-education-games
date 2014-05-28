@@ -47,7 +47,7 @@ object Courses {
 
 	def apply(userId: UserId)(implicit session: Session) = {
 		(for (
-			uc <- UsersCoursesTable.usersCoursesTable if uc.userId === userId;
+			uc <- Users2CoursesTable.usersCoursesTable if uc.userId === userId;
 			c <- coursesTable if uc.id === c.id
 		) yield c)
 			.union(
@@ -58,13 +58,13 @@ object Courses {
 
 	// ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =
-    UsersCoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
+    Users2CoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 
 	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) {
 		if (course.access < access) {
-      UsersCoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
-				case Some(u2c) if u2c.access < access => UsersCoursesTable.usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access))
-				case None => UsersCoursesTable.usersCoursesTable.insert(User2Course(user.id, course.id, access))
+      Users2CoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
+				case Some(u2c) if u2c.access < access => Users2CoursesTable.usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access))
+				case None => Users2CoursesTable.usersCoursesTable.insert(User2Course(user.id, course.id, access))
 				case _ => {}
 			}
 		}

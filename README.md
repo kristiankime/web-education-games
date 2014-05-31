@@ -128,6 +128,7 @@ http://googlecode.blogspot.com/2009/11/oauth-enhancements.html
 
 ##### Backing up Postgress
 https://devcenter.heroku.com/articles/pgbackups
+https://devcenter.heroku.com/articles/heroku-postgres-import-export#export
 
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.

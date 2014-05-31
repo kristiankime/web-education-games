@@ -12,8 +12,8 @@ import Match._
 
 object MathMLEq {
 	private val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
-	private val vals = (Vector.fill(20)((ran.nextDouble * 2000d) - 1000d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
-	private val tooSmall = 1e-154 // LATER figure out how small is too small :( i.e. 1e-312 works for most tests... 
+	private val vals = (Vector.fill(20)((ran.nextDouble * 1000d) - 500d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
+	private val tooSmall = 1e-154 // LATER figure out how small is too small :( i.e. 1e-312 works for most tests...
 	private val tooBig = 1e154 // LATER figure out how big is too big 
 	private val ε = .00001d
 
@@ -24,9 +24,11 @@ object MathMLEq {
 		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
 
-		//		System.err.println((vals, eq1s.zip(eq2s), matches).zipped.map((a, b, c) => "val=[" + a + "] evals=[" + b + "] match=[" + c + "]\n"))
+//    System.err.println(eq1)
+//    System.err.println(eq2)
+//		System.err.println((vals, eq1s.zip(eq2s), matches).zipped.map((a, b, c) => "val=[" + a + "] evals=[" + b + "] match=[" + c + "]\n"))
 
-		matches.reduce((_, _) match {
+		matches.reduce( (a : Match.Value, b: Match.Value) => (a , b) match {
 			case (No, _) => No
 			case (_, No) => No // If we ever see a No they are not a match
 			case (Yes, _) => Yes
@@ -67,4 +69,20 @@ object MathMLEq {
 	//		ret
 	//	}
 
+//  def main(args: Array[String]) {
+  //
+  //    var x = -1d
+  //    while( math.pow(math.E, x) == (2.718281828459045 * math.pow(math.E, x - 1d)) ) {
+  //      System.err.println(x)
+  //      System.err.println(math.pow(math.E, x))
+  //      System.err.println((2.718281828459045 * math.pow(math.E, x - 1d)))
+  //      x = x - 1d
+  //    }
+  //
+  //    System.err.println("failed at")
+  //    System.err.println(x)
+  //    System.err.println(math.pow(math.E, x))
+  //    System.err.println((2.718281828459045 * math.pow(math.E, x - 1d)))
+  //
+  //  }
 }

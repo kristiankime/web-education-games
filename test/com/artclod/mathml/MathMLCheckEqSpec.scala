@@ -60,6 +60,20 @@ class MathMLCheckEqSpec extends Specification {
 			((f dx) ?= g) must beEqualTo(Yes)
 		}
 
+    "confirm ln(e^x)dx = 1" in {
+      val f = ln(e^x)
+      val g = `1`
+
+      ((f dx) ?= g) must beEqualTo(Yes)
+    }
+
+    "confirm (e^x / e^x) dx = 0" in {
+      val f =  (e^x) / (e^x)
+      val g = `0`
+
+      ((f dx) ?= g) must beEqualTo(Yes)
+    }
+
 	}
 
 	"Check that multiplying top and bottom of a quotient by the same thing " should {
@@ -71,5 +85,7 @@ class MathMLCheckEqSpec extends Specification {
 		}
 
 	}
+
+
 
 }

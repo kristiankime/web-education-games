@@ -4,28 +4,28 @@
 
 # --- !Ups
 
-create table "assignment_groups" ("id" SERIAL NOT NULL PRIMARY KEY,"name" VARCHAR(254) NOT NULL,"section_id" BIGINT NOT NULL,"assignment_id" BIGINT NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
+create table "assignment_groups" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"section_id" BIGINT NOT NULL,"assignment_id" BIGINT NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "assignment_groups_2_derivative_quizzes" ("group_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL);
 alter table "assignment_groups_2_derivative_quizzes" add constraint "assignment_groups_2_derivative_quizzes_pk" primary key("group_id","quiz_id");
-create table "assignments" ("id" SERIAL NOT NULL PRIMARY KEY,"name" VARCHAR(254) NOT NULL,"course_id" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL,"start_date" TIMESTAMP,"end_date" TIMESTAMP);
-create table "courses" ("id" SERIAL NOT NULL PRIMARY KEY,"name" VARCHAR(254) NOT NULL,"owner" BIGINT NOT NULL,"edit_code" VARCHAR(254) NOT NULL,"view_code" VARCHAR(254) NOT NULL,"creation_Date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
+create table "assignments" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"course_id" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL,"start_date" TIMESTAMP,"end_date" TIMESTAMP);
+create table "courses" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"owner" BIGINT NOT NULL,"edit_code" TEXT NOT NULL,"view_code" TEXT NOT NULL,"creation_Date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "courses_2_derivative_quizzes" ("course_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL);
 alter table "courses_2_derivative_quizzes" add constraint "courses_2_derivative_quizzes_pk" primary key("course_id","quiz_id");
 create table "derivative_answer_times" ("user_id" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"time" TIMESTAMP NOT NULL);
 alter table "derivative_answer_times" add constraint "derivative_answer_times_pk" primary key("user_id","question_id");
-create table "derivative_answers" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"mathml" VARCHAR(254) NOT NULL,"rawstr" VARCHAR(254) NOT NULL,"correct" BOOLEAN NOT NULL,"creation_date" TIMESTAMP NOT NULL);
-create table "derivative_questions" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"mathml" VARCHAR(254) NOT NULL,"rawstr" VARCHAR(254) NOT NULL,"creation_date" TIMESTAMP NOT NULL);
-create table "derivative_quizzes" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"name" VARCHAR(254) NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
+create table "derivative_answers" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"correct" BOOLEAN NOT NULL,"creation_date" TIMESTAMP NOT NULL);
+create table "derivative_questions" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"creation_date" TIMESTAMP NOT NULL);
+create table "derivative_quizzes" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"name" TEXT NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "derivative_quizzes_2_questions" ("quiz_id" BIGINT NOT NULL,"question_id" BIGINT NOT NULL);
 alter table "derivative_quizzes_2_questions" add constraint "derivative_quizzes_2_questions_pk" primary key("question_id","quiz_id");
-create table "equations" ("id" SERIAL NOT NULL PRIMARY KEY,"equation" VARCHAR(254) NOT NULL);
+create table "equations" ("id" SERIAL NOT NULL PRIMARY KEY,"equation" TEXT NOT NULL);
 create table "group_question_2_user" ("group_id" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"user_id" BIGINT NOT NULL);
 alter table "group_question_2_user" add constraint "group_question_2_user_pk" primary key("group_id","question_id","user_id");
 create table "section_derivative_quizzes" ("course_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL);
 alter table "section_derivative_quizzes" add constraint "section_derivative_quizzes_pk" primary key("course_id","quiz_id");
-create table "sections" ("id" SERIAL NOT NULL PRIMARY KEY,"name" VARCHAR(254) NOT NULL,"course_id" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"edit_code" VARCHAR(254) NOT NULL,"view_code" VARCHAR(254) NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
-create table "secure_social_tokens" ("uuid" VARCHAR(254) NOT NULL PRIMARY KEY,"email" VARCHAR(254) NOT NULL,"creation_time" TIMESTAMP NOT NULL,"expiration_time" TIMESTAMP NOT NULL,"is_sign_up" BOOLEAN NOT NULL);
-create table "secure_social_users" ("id" SERIAL NOT NULL PRIMARY KEY,"user_id" VARCHAR(254) NOT NULL,"provider_id" VARCHAR(254) NOT NULL,"first_name" VARCHAR(254) NOT NULL,"last_name" VARCHAR(254) NOT NULL,"full_name" VARCHAR(254) NOT NULL,"email" VARCHAR(254),"avatar_url" VARCHAR(254),"auth_Method" VARCHAR(254) NOT NULL,"token" VARCHAR(254),"secret" VARCHAR(254),"access_token" VARCHAR(254),"token_type" VARCHAR(254),"expires_in" INTEGER,"refresh_token" VARCHAR(254),"hasher" VARCHAR(254),"password" VARCHAR(254),"salt" VARCHAR(254),"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
+create table "sections" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"course_id" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"edit_code" TEXT NOT NULL,"view_code" TEXT NOT NULL,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
+create table "secure_social_tokens" ("uuid" TEXT NOT NULL PRIMARY KEY,"email" TEXT NOT NULL,"creation_time" TIMESTAMP NOT NULL,"expiration_time" TIMESTAMP NOT NULL,"is_sign_up" BOOLEAN NOT NULL);
+create table "secure_social_users" ("id" SERIAL NOT NULL PRIMARY KEY,"user_id" TEXT NOT NULL,"provider_id" TEXT NOT NULL,"first_name" TEXT NOT NULL,"last_name" TEXT NOT NULL,"full_name" TEXT NOT NULL,"email" TEXT,"avatar_url" TEXT,"auth_Method" TEXT NOT NULL,"token" TEXT,"secret" TEXT,"access_token" TEXT,"token_type" TEXT,"expires_in" INTEGER,"refresh_token" TEXT,"hasher" TEXT,"password" TEXT,"salt" TEXT,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "users_2_assignment_groups" ("user_id" BIGINT NOT NULL,"assignment_group_id" BIGINT NOT NULL);
 alter table "users_2_assignment_groups" add constraint "users_2_assignment_groups_pk" primary key("user_id","assignment_group_id");
 create table "users_2_courses" ("user_id" BIGINT NOT NULL,"course_id" BIGINT NOT NULL,"access" SMALLINT NOT NULL);

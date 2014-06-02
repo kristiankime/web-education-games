@@ -11,8 +11,14 @@ object Status{
 	}
 }
 
-object Correct extends Status
+object Correct extends Status {
+  override def toString = "Correct"
+}
 
-object Incorrect extends Status
+object Incorrect extends Status {
+  override def toString = "Incorrect"
+}
 
-object Unanswered extends Status
+object Unanswered extends Status {
+  override def toString = "Unanswered"
+}

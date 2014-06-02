@@ -34,9 +34,7 @@
         @if(access > Non) {
             @if(group.students.isEmpty) {Currently there are no students in this group} else { the following students are in this group:
                 <ul>
-                @for(student <- group.students) {
-                    <li> @student.email </li>
-                }
+                    @for(student <- group.students) {<li> @student.fullName </li>}
                 </ul>
             }
         }
@@ -53,11 +51,14 @@
 
                 @defining(group.quizzes) { quizzes =>
                     @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {The following quizzes are in this group:<br>
-                        <ul>
+                        <table>
+                        <tr><th>Quiz</th><th># Questions</th><th># Correct</th><th># Attempted</th></tr>
                         @for(quiz <- group.quizzes) {
-                            <li>[ @groupQuizLink(group, quiz) ]</li>
+                            @defining(quiz.results(user)){ results =>
+                            <tr><td>[ @groupQuizLink(group, quiz) ]</td> <td>@results.numQuestions</td> <td>@results.numCorrect</td> <td>@results.numAttempted</td> </tr>
+                            }
                         }
-                        </ul>
+                        </table>
                     }
                 }
 
@@ -65,7 +66,7 @@
                     @for(quiz <- quizOp) {
                         You created the quiz [ @groupQuizLink(group, quiz) ] <br>
                     } @if(quizOp.isEmpty) {
-                        [ <a href="@GroupQuizzesController.add(course.id, section.id, assignment.id, group.id)"> Create your Quiz for this group ] <br>
+                        [ <a href="@GroupQuizzesController.add(course.id, section.id, assignment.id, group.id)">Create your Quiz for this group</a> ] <br>
                     }
                 }
             }

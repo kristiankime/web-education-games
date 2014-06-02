@@ -33,14 +33,17 @@
 
     @if(access.write){
     <table>
-        <th> Question </th> <th> details </th> <th> Question For </th> <th> Remove </th>
+        <th> Question </th> <th> details </th> <th> For Who </th> <th> How did they do </th> <th> Remove </th>
         @for(question <- questions){
+        @defining(question.forWho){ forWho =>
             <tr>
                 <td> @math.mathmlContent(question) </td>
             	<td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, question.id)">view question </a> </td>
-                <td> @question.forWho.map(_.fullName) </td>
+                <td> @forWho.map(_.fullName) </td>
+                <td> @forWho.map(question.results(_).status) </td>
                 <td> @form(GroupQuestionsController.remove(course.id, section.id, assignment.id, group.id, quiz.id, question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td>
             </tr>
+        }
         }
     </table>
     } else {

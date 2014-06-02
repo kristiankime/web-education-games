@@ -20,7 +20,7 @@
     and the group [ @groupLink(group) ] <br>
 
     @form(action = GroupQuizzesController.create(course.id, section.id, assignment.id, group.id)) {
-        Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
+        Name: <input type="text" name="@QuizForm.name" value="@{user.firstName}'s quiz"> <br>
         <input type="submit" value="Submit">
     }
 

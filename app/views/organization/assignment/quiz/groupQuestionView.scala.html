@@ -67,8 +67,13 @@
     }
     </script>
 
-    @for(next <- quiz.nextQuestion(question)) {
+    @defining(quiz.nextQuestion(question)){ nextOp =>
+    @for(next <- nextOp) {
         Go to the [<a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, next.id)">next question</a>] <br>
+    }
+    @if(nextOp.isEmpty) {
+        There are no more questions in this quiz back to the assignment [ @assignmentLink(assignment) ]
+    }
     }
 
     @defining(question.results(user)) { results =>

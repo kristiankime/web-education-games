@@ -28,10 +28,13 @@
     	} 
     }
 
-    @defining(quiz.questions){ questions =>
-    <h4>There are @questions.size Question(s) in the quiz</h4>
+
+
 
     @if(access.write){
+    @defining(quiz.questions){ questions =>
+
+    <h4>There are @questions.size Question(s) in the quiz you created</h4>
     <table>
         <th> Question </th> <th> details </th> <th> For Who </th> <th> How did they do </th> <th> Remove </th>
         @for(question <- questions){
@@ -46,16 +49,26 @@
         }
         }
     </table>
+
+    }
     } else {
+    @defining(quiz.results(user)){ results =>
+
+    <h4>There are @results.numQuestions Question(s) in the quiz</h4>
     <table>
-        <th>Question #</th> <th>Status</th>
-        @for(questionAndIndex <- questions.zipWithIndex){
+        <th>Question #</th> <th>Status</th> <th># Attempts </th> <th># Before Correct </th> <th> Score </th>
+        @for(questionAndIndex <- results.results.zipWithIndex){
             <tr>
-                <td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, questionAndIndex._1.id)">view question @questionAndIndex._2 </a> </td>
-                <td> @views.html.question.status(questionAndIndex._1.results(user).status) </td>
+                <td> <a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, questionAndIndex._1.question.id)">view question @questionAndIndex._2 </a> </td>
+                <td> @views.html.question.status(questionAndIndex._1.status) </td>
+                <td> @questionAndIndex._1.numAttempts </td>
+                <td> @questionAndIndex._1.numAttemptsToCorrect </td>
+                <td> @questionAndIndex._1.score </td>
             </tr>
         }
     </table>
+    @for(score <- results.score){Your score for the quiz was @scoreDisplay(score)}
+
     }
     }
     
@@ -71,7 +84,7 @@
         <h5>Please add a questions for </h5>
 	    <p>
 			Type in an equation and press "Save Question": <br> 
-			@math.mathmlEditor(editorName="QUESTION")
+ u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              			@math.mathmlEditor(editorName="QUESTION")
 		</p>
 	
 	    @form(GroupQuestionsController.create(course.id, section.id, assignment.id, group.id, quiz.id), 'id -> "derivativeqForm" ) {

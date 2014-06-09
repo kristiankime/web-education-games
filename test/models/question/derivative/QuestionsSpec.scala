@@ -28,7 +28,7 @@ class QuestionsSpec extends Specification {
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 
-				question.results(user) must beEqualTo(QuestionResults(question, List(answer1, answer2)))
+				question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
 			}
 		}
 		
@@ -41,7 +41,7 @@ class QuestionsSpec extends Specification {
 				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = true))
 
-				question.results(user) must beEqualTo(QuestionResults(question, List(answer1, answer2)))
+				question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
 			}
 		}
 	}

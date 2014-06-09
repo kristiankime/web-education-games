@@ -12,15 +12,21 @@ import viewsupport.question.derivative.QuestionResults
 
 case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Owned {
 
-  def answers(user: User)(implicit session: Session) = answersTable.where(a => a.questionId === id && a.ownerId === user.id).list
+  def answers(user: User)(implicit session: Session) = Questions(id, user)
 
-  def results(user: User)(implicit session: Session) = QuestionResults(this, answers(user))
+  def results(user: User)(implicit session: Session) = QuestionResults(user, this, answers(user), start(user))
+
+  def start(user: User)(implicit session: Session) = Answers.startedWork(user, id).map(_.time)
 
   def quiz(implicit session: Session) = Questions.quizFor(id)
 
   def forWho(implicit session: Session) = Questions.forWho(id)
 
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
+
+//  def difficulty(implicit session: Session) = {
+//    Questions.answerers(id).map(_.results)
+//  }
 
 }
 
@@ -44,7 +50,7 @@ object Questions {
 
   def apply(questionId: QuestionId)(implicit session: Session) = questionsTable.where(_.id === questionId).firstOption
 
-  def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(r => r.questionId === qid && r.ownerId === owner.id).list
+  def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(a => a.questionId === qid && a.ownerId === owner.id).sortBy(_.creationDate).list
 
   def answers(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).list
 
@@ -67,6 +73,8 @@ object Questions {
       u <- UsersTable.userTable if u.id === q4.userId
     ) yield u).firstOption
   }
+
+  def answerers(questionId: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({case(ownerId, query) => ownerId}).list
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete

@@ -216,3 +216,10 @@ heroku config:set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-play.
 https://github.com/heroku/heroku/issues/514
 git commit --allow-empty -m "empty commit"
 git push heroku master
+
+##### Scala Compile error 
+http://stackoverflow.com/questions/18872062/scala-compile-server-error-when-using-nailgun
+
+find the process (PID) || lsof -i :3200
+check that process     || ps axu |grep <PID>
+kill the process       || kill -9 <PID>

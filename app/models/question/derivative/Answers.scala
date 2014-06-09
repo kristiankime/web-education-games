@@ -34,12 +34,30 @@ object Answers {
 
   def apply(qid: QuestionId, aid: AnswerId)(implicit session: Session) = answersTable.where(v => v.questionId === qid && v.id === aid).firstOption
 
+  def byUser(qid: QuestionId)(implicit session: Session) = {
+    val groupBy = answersTable.where(_.questionId === qid).groupBy(a => a.ownerId)//.map(r => (r._1, r._2.list)).list
+    groupBy.map({case(ownerId, answers) => ownerId }).list
+
+//    groupBy.map(_).list
+//    groupBy.list
+//      case (user, answers) => user -> answers.list)
+//    )
+
+//      .map(m => (m._1, m._2.list)).list
+//    answersTable.where(v => v.questionId === qid )
+
+//    null
+  }
+
   // ======== TIME ======
   def startWorkingOn(questionId: QuestionId)(implicit user: User, session: Session) =
     if(startWorkTime(questionId).isEmpty) { answerTimesTable += AnswerTime(user.id, questionId, Joda.now) }
 
   def startWorkTime(questionId: QuestionId)(implicit user: User, session: Session) =
     answerTimesTable.where(r => r.userId === user.id && r.questionId === questionId).firstOption
+
+  def startedWork(user: User, questionId: QuestionId)(implicit session: Session) =
+    answerTimesTable.where(r => r.userId === user.id && r.questionId === questionId).sortBy(_.time).firstOption
 
 }
 

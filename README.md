@@ -223,3 +223,10 @@ http://stackoverflow.com/questions/18872062/scala-compile-server-error-when-usin
 find the process (PID) || lsof -i :3200
 check that process     || ps axu |grep <PID>
 kill the process       || kill -9 <PID>
+
+##### Git Tagging
+http://git-scm.com/book/en/Git-Basics-Tagging
+For Major x Minor y and Build z
+
+git tag -a vx.y.z -m 'my version x.y.z'
+git push origin vx.y.x

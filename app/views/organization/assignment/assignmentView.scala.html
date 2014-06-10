@@ -11,7 +11,7 @@
         </h1>
 
         This assignment is for the Course: @courseLink(course) <br>
-        
+
         @* ===== Start and end dates ===== *@
         @assignment.startAndEnd match {
             case (Some(start), Some(end)) => {This assignment starts on @datetime(start) and ends on @datetime(end)<br>}

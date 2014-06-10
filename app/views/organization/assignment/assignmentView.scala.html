@@ -10,12 +10,13 @@
             Welcome to the information page for the assignment: @assignment.name
         </h1>
 
-        This assignment is for the Course: @courseLink(course)
+        This assignment is for the Course: @courseLink(course) <br>
+        
         @* ===== Start and end dates ===== *@
         @assignment.startAndEnd match {
-            case (Some(start), Some(end)) => {This assignment starts on @start and ends on @end}
-            case (Some(start), None) => {This assignment starts on @start}
-            case (None, Some(end)) => {This assignment ends on @end}
+            case (Some(start), Some(end)) => {This assignment starts on @datetime(start) and ends on @datetime(end)<br>}
+            case (Some(start), None) => {This assignment starts on @datetime(start)<br>}
+            case (None, Some(end)) => {This assignment ends on @datetime(end)<br>}
             case (None, None) => {}
         }
         @* ===== Groups ===== *@

@@ -57,9 +57,11 @@ case class QuestionResults(answerer: User, question: Question, answers: List[Ans
 
   val score: Option[Double] = numAttemptsToCorrect.map(_ match {
     case 1 => 1.0
-    case 2 => 0.9
-    case 3 => 0.8
-    case _ => 0.0
+    case 2 => 1.0 // First error free
+    case 3 => 0.8 // all others -.2
+    case 4 => 0.6
+    case 5 => 0.4
+    case _ => 0.2 // Always get at least .2
   })
 }
 

@@ -5,12 +5,11 @@ import com.artclod.collection.PimpedSeq
 import models.question.Status
 import models.question.derivative._
 import org.joda.time.{Duration, DateTime}
+import play.api.db.slick.Config.driver.simple._
 
 case class QuizResults(quiz: Quiz, results: List[UserQuizResults])
 
 case class UserQuizResults(user: User, quiz: Quiz, results: List[QuestionResults]) {
-//  require(results.forall(_.answerer == user.id), "All the question results must be from the same user")
-
   def numQuestions = results.size
 
   val numCorrect = results.map(s => if (s.correct) 1 else 0).sum
@@ -26,7 +25,13 @@ case class UserQuizResults(user: User, quiz: Quiz, results: List[QuestionResults
   val score = results.map(_.score).foldLeft(Option(0d))((a, b) => (a, b) match {
     case (Some(v1), Some(v2)) => Some(v1 + v2)
     case _ => None
-  }).map( _ / numQuestions)
+  }).map(_ / numQuestions)
+
+  def teacherScore(implicit session: Session): Option[Double] = {
+    val teacherScores = results.flatMap(_.teacherScore)
+    if(teacherScores.isEmpty) None
+    else Some(teacherScores.sum / teacherScores.size)
+  }
 }
 
 case class QuestionResults(answerer: User, question: Question, answers: List[Answer], startTime: Option[DateTime]) {
@@ -55,14 +60,20 @@ case class QuestionResults(answerer: User, question: Question, answers: List[Ans
     if (num == -1) None else Some(num + 1)
   }
 
-  val score: Option[Double] = numAttemptsToCorrect.map(_ match {
-    case 1 => 1.0
-    case 2 => 1.0 // First error free
-    case 3 => 0.8 // all others -.2
-    case 4 => 0.6
-    case 5 => 0.4
-    case _ => 0.2 // Always get at least .2
-  })
+  val score: Option[Double] = if (!attempted) None
+  else {
+    numAttemptsToCorrect match {
+      case None => Some(0.0) // No correct answers is a 0
+      case Some(1) => Some(1.0)
+      case Some(2) => Some(1.0) // First error free
+      case Some(3) => Some(0.8) // all others -.2
+      case Some(4) => Some(0.6)
+      case Some(5) => Some(0.4)
+      case Some(_) => Some(0.2) // Always get at least .2 if you get it right
+    }
+  }
+
+  def teacherScore(implicit session: Session): Option[Double] = question.difficulty.map(d => if (correct) d else 1.0 - d)
 }
 
 sealed trait AnswerTime

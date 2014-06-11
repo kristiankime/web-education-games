@@ -24,22 +24,24 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
 
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
 
-//  def difficulty(implicit session: Session) = {
-//    Questions.answerers(id).map(_.results)
-//  }
+  def difficulty(implicit session: Session) : Option[Double] = {
+    val difficulties = Questions.answerers(id).flatMap(results(_).score).map(1d - _)
+    if (difficulties.isEmpty) None
+    else Some(difficulties.sum / difficulties.size)
+  }
 
 }
 
 object Questions {
 
   // ======= CREATE ======
-  def create(info: Question, quizId: QuizId)(implicit session: Session) : Question = {
+  def create(info: Question, quizId: QuizId)(implicit session: Session): Question = {
     val questionId = (questionsTable returning questionsTable.map(_.id)) += info
     quizzesQuestionsTable += Quiz2Question(quizId, questionId)
     info.copy(id = questionId)
   }
 
-  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session) : Question = {
+  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session): Question = {
     val question = create(info, quizId)
     questionsForTable += GroupQuestion2User(groupId, question.id, userId)
     question
@@ -61,20 +63,24 @@ object Questions {
     ) yield (a, u)).sortBy(_._2.lastName).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) = {
-    (for(
+    (for (
       q2q <- quizzesQuestionsTable if q2q.questionId === questionId;
-        q <- quizzesTable if q.id === q2q.quizId
+      q <- quizzesTable if q.id === q2q.quizId
     ) yield q).firstOption
   }
 
   def forWho(questionId: QuestionId)(implicit session: Session) = {
-    (for(
+    (for (
       q4 <- questionsForTable if q4.questionId === questionId;
       u <- UsersTable.userTable if u.id === q4.userId
     ) yield u).firstOption
   }
 
-  def answerers(questionId: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({case(ownerId, query) => ownerId}).list
+  def answerers(questionId: QuestionId)(implicit session: Session) = {
+    val userIds = answersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
+    val users = service.table.UsersTable.userTable.where(_.id in userIds)
+    users.list
+  }
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete

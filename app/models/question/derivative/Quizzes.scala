@@ -1,6 +1,7 @@
 package models.question.derivative
 
 import com.artclod.collection._
+import models.organization.assignment.Group
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
 import service._
@@ -14,7 +15,7 @@ import com.google.common.annotations.VisibleForTesting
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-  def groupResults(implicit session: Session) = questions.flatMap(q => q.forWho.map(u => q.results(u)) )
+  def groupResults(implicit session: Session) = UserQuizResults(owner, this, questions.flatMap(q => q.forWho.map(u => q.results(u)) ))
 
   def results(student: User)(implicit session: Session) = UserQuizResults(student, this, questions.map(v => v.results(student)))
 
@@ -82,19 +83,19 @@ object Quizzes {
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
     ) yield q).list
 
-  def questions(quizId: QuizId)(implicit session: Session) =
+  def questions(quizId: QuizId)(implicit session: Session) : List[Question] =
     (for {
       l <- quizzesQuestionsTable if l.quizId === quizId
       q <- questionsTable if l.questionId === q.id
     } yield q).list
 
-  def courses(quizId: QuizId)(implicit session: Session) =
+  def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (
       c <- coursesTable;
       cq <- coursesQuizzesTable if cq.courseId === c.id && cq.quizId === quizId
     ) yield c).list
 
-  def groupFor(quizId: QuizId)(implicit session: Session) =
+  def groupFor(quizId: QuizId)(implicit session: Session) : Option[Group] =
     (for (
       ag2q <- assignmentGroupsQuizzesTable if ag2q.quizId === quizId;
       g <- assignmentGroupsTable if g.id === ag2q.groupId

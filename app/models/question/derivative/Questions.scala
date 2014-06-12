@@ -73,12 +73,12 @@ object Questions {
     (for (
       q4 <- questionsForTable if q4.questionId === questionId;
       u <- UsersTable.userTable if u.id === q4.userId
-    ) yield u).firstOption
+    ) yield u).sortBy(_.lastName).firstOption
   }
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = answersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
-    val users = service.table.UsersTable.userTable.where(_.id in userIds)
+    val users = service.table.UsersTable.userTable.where(_.id in userIds).sortBy(_.lastName)
     users.list
   }
 

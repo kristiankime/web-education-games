@@ -1,26 +1,18 @@
 package models.organization
 
-import play.api.db.slick.Config.driver.simple._
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 import play.api.test._
-import play.api.test.Helpers._
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
-import models.DBTest.inMemH2
 import play.api.test.FakeApplication
-import models.Equations
+import models.DBTest.inMemH2
 import models.DBTest
-import service.UserTmpTest
-import models.organization._
-import models.organization.table._
-import service._
-import service.table._
-import models.support.UserId
 import models.question.derivative.Quizzes
 import models.question.derivative.QuizTmpTest
-import viewsupport.question.derivative.UserQuizResult
+import service._
+import viewsupport.question.derivative.StudentQuizResult
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
@@ -39,8 +31,8 @@ class SectionsSpec extends Specification {
 				val student2 = DBTest.fakeUser(UserTmpTest())
 				section.grantAccess(View)(student2, session)
 				
-				val student1Results = UserQuizResult(student1, quiz, List())
-				val student2Results = UserQuizResult(student2, quiz, List())
+				val student1Results = StudentQuizResult(student1, quiz, List())
+				val student2Results = StudentQuizResult(student2, quiz, List())
 				section.results(quiz) must beEqualTo(List(student1Results, student2Results))
 			}
 		}

@@ -1,7 +1,6 @@
 package viewsupport.organization
 
-import service.Access
-import viewsupport.question.derivative.UserQuizResults
+import viewsupport.question.derivative.StudentQuizResult
 import models.organization.Section
 
-case class SectionResults(section: Section, studentResults: List[UserQuizResults])
+case class SectionResults(section: Section, studentResults: List[StudentQuizResult])

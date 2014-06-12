@@ -34,7 +34,7 @@ class QuizzesSpec extends Specification {
 				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = student.id, questionId = question1.id))
 
 				val sqr1 = QuestionResults(student, question1, List(answer1, answer2), Some(answer1.creationDate))
-				val sr = UserQuizResults(student, quiz, List(sqr1))
+				val sr = UserQuizResult(student, quiz, List(sqr1))
 				quiz.results(student) must beEqualTo(sr)
 			}
 		}
@@ -50,7 +50,7 @@ class QuizzesSpec extends Specification {
 
 				val sqr1 = QuestionResults(user, question1, List(answer), Some(answer.creationDate))
 				val sqr2 = QuestionResults(user, question2, List(), None)
-				val sr = UserQuizResults(student, quiz, List(sqr1, sqr2))
+				val sr = UserQuizResult(student, quiz, List(sqr1, sqr2))
 				quiz.results(student) must beEqualTo(sr)
 			}
 		}

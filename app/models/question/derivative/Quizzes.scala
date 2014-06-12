@@ -15,9 +15,9 @@ import com.google.common.annotations.VisibleForTesting
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-  def groupResults(implicit session: Session) = UserQuizResults(owner, this, questions.flatMap(q => q.forWho.map(u => q.results(u)) ))
+  def groupResults(implicit session: Session) = TeacherQuizResult(this, questions.flatMap(q => q.forWho.map(u => q.results(u)) ))
 
-  def results(student: User)(implicit session: Session) = UserQuizResults(student, this, questions.map(v => v.results(student)))
+  def results(student: User)(implicit session: Session) = StudentQuizResult(student, this, questions.map(v => v.results(student)))
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 

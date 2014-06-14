@@ -19,10 +19,9 @@ object GroupAnswersController extends Controller with SecureSocialDB {
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
     Answers(answerId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no answer for id=["+answerId+"]")))
-      case Some(answer) => {
+      case Some(answer) =>
         if(answer.id != answerId) Left(NotFound(views.html.errors.notFoundPage("The answer id=["+answerId+"] was not for the question id=[" + questionId + "]")))
         else Right(answer)
-      }
     }
 
 
@@ -38,8 +37,8 @@ object GroupAnswersController extends Controller with SecureSocialDB {
 
 	def create(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId, quizId: QuizId, questionId: QuestionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     GroupsController(courseId, sectionId, assignmentId, groupId) +
-      GroupQuizzesController(groupId, quizId) +
-      GroupQuestionsController(quizId, questionId) match {
+    GroupQuizzesController(groupId, quizId) +
+    GroupQuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((group, quiz, question)) =>
         AnswerForm.values.bindFromRequest.fold(

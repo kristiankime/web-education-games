@@ -1,5 +1,9 @@
 package models
 
+import com.artclod.slick.Joda
+import models.question.derivative.table._
+import models.support.QuestionId
+import org.joda.time.DateTime
 import play.api.test.Helpers.inMemoryDatabase
 import play.api.test.FakeApplication
 import play.api.Play.current
@@ -14,7 +18,12 @@ object DBTest {
 
 	val inMemH2 = inMemoryDatabase(options = Map("MODE" -> "PostgreSQL"))
 
-	def fakeUser(user: User)(implicit session: Session): User = UsersTable.insert(user)
+	def newFakeUser(user: User)(implicit session: Session): User = UsersTable.insert(user)
 
-	def fakeUser(implicit session: Session): User = fakeUser(UserTmpTest())
+	def newFakeUser(implicit session: Session): User = newFakeUser(UserTmpTest())
+
+  def fakeStartWorkingOn(user: User, questionId: QuestionId, time: DateTime)(implicit session: Session) ={
+    answerTimesTable += AnswerTime(user.id, questionId, time)
+    time
+  }
 }

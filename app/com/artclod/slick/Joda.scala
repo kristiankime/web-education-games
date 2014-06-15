@@ -15,4 +15,5 @@ object Joda {
 
   def now = DateTime.now(DateTimeZone.UTC)
 
+  val zero = new DateTime(0L, DateTimeZone.UTC)
 }

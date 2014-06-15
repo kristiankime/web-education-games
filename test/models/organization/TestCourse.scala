@@ -1,13 +1,14 @@
 package models.organization
 
+import com.artclod.slick.Joda
 import models.support._
 import org.joda.time.{DateTimeZone, DateTime}
 
-object CourseTmpTest {
+object TestCourse {
 	def apply(name: String = "course", 
 		owner: UserId, 
 		editCode: String = "editCode", 
 		viewCode: String = "viewCode", 
-		date: DateTime = new DateTime(0L, DateTimeZone.UTC)) = Course(null, name, owner, editCode, viewCode, date, date)
+		date: DateTime = Joda.zero) = Course(null, name, owner, editCode, viewCode, date, date)
 
 }

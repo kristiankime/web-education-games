@@ -7,7 +7,7 @@ import play.api.test._
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import models.DBTest.inMemH2
-import models.DBTest.fakeUser
+import models.DBTest.newFakeUser
 import models.organization._
 import service._
 import play.api.test.FakeApplication
@@ -19,10 +19,10 @@ class AssignmentsSpec extends Specification {
   "AssignmentAccess" should {
     "be Edit for the owner of the course that the Assignment is in" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val courseOwner = fakeUser
-        val course = Courses.create(CourseTmpTest(owner = courseOwner.id))
-        val assignmentOwner = fakeUser
-        val assignment = Assignments.create(AssignmentTmpTest(owner = assignmentOwner.id, courseId = course.id))
+        val courseOwner = newFakeUser
+        val course = Courses.create(TestCourse(owner = courseOwner.id))
+        val assignmentOwner = newFakeUser
+        val assignment = Assignments.create(TestAssignment(owner = assignmentOwner.id, courseId = course.id))
 
         assignment.access(courseOwner, session) must beEqualTo(Edit)
       }
@@ -30,10 +30,10 @@ class AssignmentsSpec extends Specification {
 
     "be Own for the owner of the Assignment" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val courseOwner = fakeUser
-        val course = Courses.create(CourseTmpTest(owner = courseOwner.id))
-        val assignmentOwner = fakeUser
-        val assignment = Assignments.create(AssignmentTmpTest(owner = assignmentOwner.id, courseId = course.id))
+        val courseOwner = newFakeUser
+        val course = Courses.create(TestCourse(owner = courseOwner.id))
+        val assignmentOwner = newFakeUser
+        val assignment = Assignments.create(TestAssignment(owner = assignmentOwner.id, courseId = course.id))
 
         assignment.access(assignmentOwner, session) must beEqualTo(Own)
       }

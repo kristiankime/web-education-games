@@ -1,4 +1,4 @@
-import models.question.derivative.{QuestionTmpTest, Questions, QuizTmpTest, Quizzes}
+import models.question.derivative.{TestQuestion, Questions, TestQuiz, Quizzes}
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
@@ -6,8 +6,8 @@ import play.api.test._
 import play.api.test.Helpers._
 import com.artclod.securesocial.TestUtils._
 import models.DBTest
-import models.DBTest.fakeUser
-import models.organization.{SectionTmpTest, Sections, Courses, CourseTmpTest}
+import models.DBTest.newFakeUser
+import models.organization.{TestSection, Sections, Courses, TestCourse}
 import play.mvc.SimpleResult
 import service.{UserTmpTest => U}
 import securesocial.core.PasswordInfo
@@ -31,7 +31,7 @@ class ApplicationSpec extends Specification {
     "render the index page" in new WithApplication {
       DB.withSession {
         implicit session: Session =>
-          val user = fakeUser
+          val user = newFakeUser
           val home = route(FakeRequest(GET, "/").withLoggedInUser(user)).get
 
           status(home) must equalTo(OK)
@@ -46,8 +46,8 @@ class ApplicationSpec extends Specification {
     "allow any user to view a course" in new WithApplication {
       DB.withSession {
         implicit session: Session =>
-          val user = fakeUser
-          val course = Courses.create(CourseTmpTest(owner = fakeUser.id))
+          val user = newFakeUser
+          val course = Courses.create(TestCourse(owner = newFakeUser.id))
 
           val page = route(FakeRequest(GET, "/courses/" + course.id.v).withLoggedInUser(user)).get
 
@@ -60,7 +60,7 @@ class ApplicationSpec extends Specification {
     "allow any user to add a course" in new WithApplication {
       DB.withSession {
         implicit session: Session =>
-          val user = fakeUser
+          val user = newFakeUser
 
           val page = route(FakeRequest(GET, "/courses/add").withLoggedInUser(user)).get
 
@@ -77,11 +77,11 @@ class ApplicationSpec extends Specification {
     "allow any user to view a section" in new WithApplication {
       DB.withSession {
         implicit session: Session =>
-          val user = fakeUser
+          val user = newFakeUser
 
-          val owner = fakeUser
-          val course = Courses.create(CourseTmpTest(owner = owner.id))
-          val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
+          val owner = newFakeUser
+          val course = Courses.create(TestCourse(owner = owner.id))
+          val section = Sections.create(TestSection(owner = owner.id, courseId = course.id))
 
           val routeStr: String = "/courses/" + course.id.v + "/sections/" + section.id.v
           val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
@@ -94,11 +94,11 @@ class ApplicationSpec extends Specification {
       "respond with a BadRequest if the course doesn't match the section" in new WithApplication {
         DB.withSession {
           implicit session: Session =>
-            val user = fakeUser
+            val user = newFakeUser
 
-            val owner = fakeUser
-            val course = Courses.create(CourseTmpTest(owner = owner.id))
-            val section = Sections.create(SectionTmpTest(owner = owner.id, courseId = course.id))
+            val owner = newFakeUser
+            val course = Courses.create(TestCourse(owner = owner.id))
+            val section = Sections.create(TestSection(owner = owner.id, courseId = course.id))
 
             val routeStr: String = "/courses/" + Long.MaxValue + "/sections/" + section.id.v
             val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
@@ -116,12 +116,12 @@ class ApplicationSpec extends Specification {
     "allow any user to view a quiz" in new WithApplication {
       DB.withSession {
         implicit session: Session =>
-          val user = fakeUser
+          val user = newFakeUser
 
-          val owner = fakeUser
-          val course = Courses.create(CourseTmpTest(owner = owner.id))
-          val quiz = Quizzes.create(QuizTmpTest(owner = owner.id), course.id)
-          val question = Questions.create(QuestionTmpTest(owner = owner.id), quiz.id)
+          val owner = newFakeUser
+          val course = Courses.create(TestCourse(owner = owner.id))
+          val quiz = Quizzes.create(TestQuiz(owner = owner.id), course.id)
+          val question = Questions.create(TestQuestion(owner = owner.id), quiz.id)
 
           val routeStr: String = "/quizzes/" + quiz.id.v + "/questions/" + question.id.v + "?cid=" + course.id.v
 

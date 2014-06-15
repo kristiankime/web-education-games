@@ -3,7 +3,7 @@ package viewsupport.organization
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-import models.question.derivative.AnswerTmpTest
+import models.question.derivative.TestAnswer
 import models.support._
 import models.question.derivative.Answer
 import com.artclod.mathml.scalar.Cn
@@ -20,7 +20,7 @@ class PackageSpec extends Specification {
 		}
 	
 		"get math string from AnswerTmp" in {
-			mathMLStr(Some(Left(AnswerTmpTest(UserId(0), QuestionId(0), rawStr="rawStr")))) must beEqualTo(Some("rawStr"))
+			mathMLStr(Some(Left(TestAnswer(UserId(0), QuestionId(0), rawStr="rawStr")))) must beEqualTo(Some("rawStr"))
 		}
 
 		"get math string from Answer" in {

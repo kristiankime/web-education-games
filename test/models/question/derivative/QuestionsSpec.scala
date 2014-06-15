@@ -1,6 +1,8 @@
 package models.question.derivative
 
 import com.artclod.slick.Joda
+import models.organization.{SectionTmpTest, Sections, CourseTmpTest, Courses}
+import models.organization.assignment.{AssignmentTmpTest, Assignments, GroupTmpTest, Groups}
 import org.joda.time.{DateTimeZone, DateTime}
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -9,7 +11,7 @@ import play.api.test._
 import com.artclod.mathml.scalar._
 import models.support._
 import models.DBTest
-import models.DBTest.inMemH2
+import models.DBTest._
 import service._
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
@@ -18,116 +20,147 @@ import viewsupport.question.derivative.QuestionResults
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {
 
-	"results" should {
-		"find all the answers by the user and record false if all of the answers were wrong" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmpTest(owner = user.id))
-				val question = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+  "results" should {
+    "find all the answers by the user and record false if all of the answers were wrong" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(QuizTmpTest(owner = user.id))
+        val question = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 
-				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
-				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
+        val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
+        val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
 
-				question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
-			}
-		}
-		
-		"find all the answers by the user and record true if any of the answers were correct" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(QuizTmpTest(owner = user.id))
-				val question = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
+      }
+    }
 
-				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
-				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = true))
+    "find all the answers by the user and record true if any of the answers were correct" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(QuizTmpTest(owner = user.id))
+        val question = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 
-				question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
-			}
-		}
-	}
+        val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = false))
+        val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id, correct = true))
 
-	"answers" should {
-		"find all the answers by the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
-				val question = Questions.create(qTmp, quiz.id)
+        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
+      }
+    }
+  }
 
-				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
-				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
+  "answers" should {
+    "find all the answers by the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val question = Questions.create(qTmp, quiz.id)
 
-				question.answers(user) must beEqualTo(List(answer1, answer2))
-			}
-		}
-		
-		"not find answers by other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
-				val question = Questions.create(qTmp, quiz.id)
+        val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
+        val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
 
-				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
-				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
+        question.answers(user) must beEqualTo(List(answer1, answer2))
+      }
+    }
 
-				val otherAnswer = Answers.createAnswer(AnswerTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id, questionId = question.id))
-				
-				question.answers(user) must beEqualTo(List(answer1, answer2))
-			}
-		}
-		
-		"not find answers to other questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
-				val question = Questions.create(qTmp, quiz.id)
-				val otherQuestion = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
+    "not find answers by other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val question = Questions.create(qTmp, quiz.id)
 
-				val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
-				val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
+        val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
+        val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
 
-				val otherAnswer = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = otherQuestion.id))
-				
-				question.answers(user) must beEqualTo(List(answer1, answer2))
-			}
-		}
-	}
+        val otherAnswer = Answers.createAnswer(AnswerTmpTest(owner = DBTest.fakeUser(UserTmpTest()).id, questionId = question.id))
 
-	"Questions" should {
-		"create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-				val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
-				val question = Questions.create(qTmp, quiz.id)
-				val eq = Questions(question.id)
+        question.answers(user) must beEqualTo(List(answer1, answer2))
+      }
+    }
 
-				eq.get must beEqualTo(question)
-			}
-		}
+    "not find answers to other questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val question = Questions.create(qTmp, quiz.id)
+        val otherQuestion = Questions.create(QuestionTmpTest(owner = user.id), quiz.id)
 
-		"return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val user = DBTest.fakeUser(UserTmpTest())
-				val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+        val answer1 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
+        val answer2 = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = question.id))
 
-				Questions.create(Question(null, user.id, x + `1`, "x + 2", Joda.now), quiz.id)
-				Questions.create(Question(null, user.id, x + `2`, "x + 2", Joda.now), quiz.id)
+        val otherAnswer = Answers.createAnswer(AnswerTmpTest(owner = user.id, questionId = otherQuestion.id))
 
-				val eqs = Questions.list.map(_.mathML)
-				eqs must beEqualTo(List(x + `1`, x + `2`))
-			}
-		}
+        question.answers(user) must beEqualTo(List(answer1, answer2))
+      }
+    }
+  }
 
-		"return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val eq = Questions(QuestionId(Int.MaxValue))
+  "Questions" should {
+    "create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val question = Questions.create(qTmp, quiz.id)
+        val eq = Questions(question.id)
 
-				eq must beNone
-			}
-		}
-	}
+        eq.get must beEqualTo(question)
+      }
+    }
+
+    "return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.fakeUser(UserTmpTest())
+        val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
+
+        Questions.create(Question(null, user.id, x + `1`, "x + 2", Joda.now), quiz.id)
+        Questions.create(Question(null, user.id, x + `2`, "x + 2", Joda.now), quiz.id)
+
+        val eqs = Questions.list.map(_.mathML)
+        eqs must beEqualTo(List(x + `1`, x + `2`))
+      }
+    }
+
+    "return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val eq = Questions(QuestionId(Int.MaxValue))
+
+        eq must beNone
+      }
+    }
+
+  }
+
+  "Questions.create (group version)" should {
+
+    "create a new questions and associate it with a user and group" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val admin = fakeUser
+        val (course, section, assignment, group) = GroupTmpTest(admin.id)
+        val quiz = Quizzes.create(QuizTmpTest(admin.id))
+        val student = DBTest.fakeUser(UserTmpTest())
+
+        val question = Questions.create(QuestionTmpTest(student.id), group.id, quiz.id, student.id)
+
+        question.forWho.get must beEqualTo(student)
+        question.group.get must beEqualTo(group)
+      }
+    }
+
+
+    "throw if a question has already been created for a given user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val admin = fakeUser
+        val (course, section, assignment, group) = GroupTmpTest(admin.id)
+        val quiz = Quizzes.create(QuizTmpTest(admin.id))
+        val student = DBTest.fakeUser(UserTmpTest())
+
+        val question1 = Questions.create(QuestionTmpTest(student.id), group.id, quiz.id, student.id)
+        Questions.create(QuestionTmpTest(student.id), group.id, quiz.id, student.id) must throwAn[IllegalStateException]
+      }
+    }
+  }
 
 }

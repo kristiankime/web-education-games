@@ -1,5 +1,6 @@
 package models.question.derivative
 
+import models.organization.assignment.Groups
 import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
 import models.support._
@@ -22,6 +23,8 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
 
   def forWho(implicit session: Session) = Questions.forWho(id)
 
+  def group(implicit session: Session) = Groups(id)
+
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
 
   def difficulty(implicit session: Session) : Option[Double] = {
@@ -41,11 +44,16 @@ object Questions {
     info.copy(id = questionId)
   }
 
-  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session): Question = {
-    val question = create(info, quizId)
-    questionsForTable += GroupQuestion2User(groupId, question.id, userId)
-    question
-  }
+  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session): Question =
+    questionsForTable.where(q => q.groupId === groupId && q.userId === userId).firstOption match {
+      case Some(_) => throw new IllegalStateException("The user=["+ userId + "] already had a question for groupId=[" + groupId+ "]")
+      case None => {
+        val question = create(info, quizId)
+        questionsForTable += GroupQuestion2User(groupId, question.id, userId)
+        question
+      }
+    }
+
 
   // ======= FIND ======
   def list()(implicit session: Session) = questionsTable.list

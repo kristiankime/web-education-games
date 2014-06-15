@@ -56,6 +56,12 @@ object Groups {
 
   def apply(sectionId: SectionId, assignmentId: AssignmentId)(implicit session: Session) : List[Group] = assignmentGroupsTable.where(a => a.sectionId === sectionId && a.assignmentId === assignmentId).sortBy(_.name).list
 
+  def apply(questionId: QuestionId)(implicit session: Session) = //questionsForTable.where(_.questionId === questionId).firstOption
+    (for (
+      g <- assignmentGroupsTable;
+      qf <- questionsForTable if qf.questionId === questionId && qf.groupId === g.id
+    ) yield g).firstOption
+
   def students(groupId: GroupId)(implicit session: Session) =
     (for (
       u <- UsersTable.userTable;

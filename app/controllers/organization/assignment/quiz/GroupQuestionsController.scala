@@ -19,10 +19,9 @@ object GroupQuestionsController extends Controller with SecureSocialDB {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))
       case Some(question) => question.quiz match {
         case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for question for id=["+questionId+"]")))
-        case Some(quiz) => {
+        case Some(quiz) =>
           if(quiz.id != quizId) Left(NotFound(views.html.errors.notFoundPage("Question for id=["+questionId+"] is associated with quiz id=[" + quiz.id + "] not quiz id=[" + quizId + "]")))
           else Right(question)
-        }
       }
     }
 

@@ -50,11 +50,11 @@ object AnswersController extends Controller with SecureSocialDB {
 
 				(questionOp, mathOp, quizOp) match {
 					case (Some(question), Success(math), Some(quiz)) => {
-            val aTmp = AnswerLater(user.id, question.id, math, rawStr, Joda.now)_
+            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, Joda.now)_
 						Answers.correct(question, math) match {
-							case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(aTmp(true)).id, courseIdOp, groupIdOp))
-							case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(aTmp(false)).id, courseIdOp, groupIdOp))
-							case Inconclusive => questionView(access(question, courseOp), where, quiz, question, Some(Left(aTmp(false))))
+							case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id, courseIdOp, groupIdOp))
+							case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id, courseIdOp, groupIdOp))
+							case Inconclusive => questionView(access(question, courseOp), where, quiz, question, Some(Left(unfinishedAnswer(false))))
 						}
 					}
 					case _ => BadRequest(views.html.index())

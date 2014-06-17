@@ -46,12 +46,12 @@ object GroupAnswersController extends Controller with SecureSocialDB {
           form => {
             val math = MathML(form._1).get // TODO better error here
             val rawStr = form._2
-            val aTmp = AnswerLater(user.id, question.id, math, rawStr, Joda.now)_
+            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, Joda.now)_
 
             Answers.correct(question, math) match {
-              case Yes => Redirect(routes.GroupAnswersController.view(courseId, sectionId, assignmentId, groupId, quiz.id, question.id, Answers.createAnswer(aTmp(true)).id))
-              case No => Redirect(routes.GroupAnswersController.view(courseId, sectionId, assignmentId, groupId, quiz.id, question.id, Answers.createAnswer(aTmp(false)).id))
-              case Inconclusive => Ok(views.html.organization.assignment.quiz.groupQuestionView(group, quiz, question, Some(Left(aTmp(false)))))
+              case Yes => Redirect(routes.GroupAnswersController.view(courseId, sectionId, assignmentId, groupId, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+              case No => Redirect(routes.GroupAnswersController.view(courseId, sectionId, assignmentId, groupId, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
+              case Inconclusive => Ok(views.html.organization.assignment.quiz.groupQuestionView(group, quiz, question, Some(Left(unfinishedAnswer(false)))))
             }
           })
     }

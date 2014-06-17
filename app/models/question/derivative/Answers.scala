@@ -12,7 +12,7 @@ import service.User
 
 case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML with Owned
 
-object AnswerLater {
+object UnfinishedAnswer {
   def apply(ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean): Answer =
     Answer(null, ownerId, questionId, mathML, rawStr, correct, creationDate)
 }

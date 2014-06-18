@@ -1,5 +1,5 @@
 @(access: service.Access,
-        where: Either[models.organization.Course, models.organization.assignment.Group],
+        course: models.organization.Course,
         quiz: models.question.derivative.Quiz,
         results: viewsupport.question.derivative.QuestionResults,
         currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]],
@@ -16,17 +16,12 @@
 @import views.html.tag._
 @import models.support._
 
-@defining(models.organization.courseFrom(where)){ course =>
-
 @main("Question Page") {
 
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
     This is a quiz for the course [ @courseLink(course) ] <br>
-
-    @for(group <- where.rightOp){ And the group [ <a href="@GroupsController.view(course.id, group.sectionId, group.assignmentId, group.id)"> @group.name </a> ] <br> }
-
-    Back to the quiz [ <a href="@QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id))">@quiz.name</a> ] <br>
+    Back to the quiz [ @courseQuizLink(course, quiz) ] <br>
 
     <h2>What is the Derivative of</h2> @math.mathmlContent(results.question)
 
@@ -49,7 +44,7 @@
     </section>
 
     <section>
-    @form(AnswersController.create(quiz.id, results.question.id, where.leftOp(_.id), where.rightOp(_.id)), 'id -> "answerForm") {
+    @form(AnswersController.create(quiz.id, results.question.id, course.id), 'id -> "answerForm") {
         <input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
         <input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">
@@ -69,7 +64,7 @@
     </script>
 
     @for(next <- nextQuestion) {
-        Go to the [<a href="@QuestionsController.view(quiz.id, next.id, where.leftOp(_.id), where.rightOp(_.id))">next question</a>] <br>
+        Go to the [<a href="@QuestionsController.view(quiz.id, next.id, course.id))">next question</a>] <br>
     }
 
     @if(results.answers.nonEmpty) {
@@ -102,6 +97,4 @@
             </table>
         </section>
     }
-}
-
 }

@@ -14,40 +14,37 @@ GET         /user                                                               
 GET         /courses                                                                                   controllers.organization.CoursesController.list
 GET         /courses/add                                                                               controllers.organization.CoursesController.add
 POST        /courses                                                                                   controllers.organization.CoursesController.create
-GET         /courses/:id                                                                               controllers.organization.CoursesController.view(id: CourseId)
-POST        /courses/:id/join                                                                          controllers.organization.CoursesController.join(id: CourseId)
+GET         /courses/:c                                                                                controllers.organization.CoursesController.view(c: CourseId)
+POST        /courses/:c/join                                                                           controllers.organization.CoursesController.join(c: CourseId)
 # Sections
-GET         /courses/:cid/sections/add                                                                 controllers.organization.SectionsController.add(cid: CourseId)
-POST        /courses/:cid/sections                                                                     controllers.organization.SectionsController.create(cid: CourseId)
-GET         /courses/:cid/sections/:id                                                                 controllers.organization.SectionsController.view(cid: CourseId, id: SectionId)
-POST        /courses/:cid/sections/:id/join                                                            controllers.organization.SectionsController.join(cid: CourseId, id: SectionId)
-
-# Questions pages
-# Quizzes
-GET         /quizzes/add                                                                               controllers.question.derivative.QuizzesController.add(cid: Option[CourseId], gid: Option[GroupId])
-POST        /quizzes                                                                                   controllers.question.derivative.QuizzesController.create(cid: Option[CourseId], gid: Option[GroupId])
-GET         /quizzes/:id                                                                               controllers.question.derivative.QuizzesController.view(id: QuizId, cid: Option[CourseId], gid: Option[GroupId])
-POST        /quizzes/:id/rename                                                                        controllers.question.derivative.QuizzesController.rename(id: QuizId, cid: Option[CourseId], gid: Option[GroupId])
+GET         /courses/:c/sections/add                                                                   controllers.organization.SectionsController.add(c: CourseId)
+POST        /courses/:c/sections                                                                       controllers.organization.SectionsController.create(c: CourseId)
+GET         /courses/:c/sections/:s                                                                    controllers.organization.SectionsController.view(c: CourseId, s: SectionId)
+POST        /courses/:c/sections/:s/join                                                               controllers.organization.SectionsController.join(c: CourseId, s: SectionId)
+# Course Quizzes
+GET         /courses/:c/quizzes/add                                                                    controllers.question.derivative.QuizzesController.add(c: CourseId)
+POST        /courses/:c/quizzes                                                                        controllers.question.derivative.QuizzesController.create(c: CourseId)
+GET         /courses/:c/quizzes/:z                                                                     controllers.question.derivative.QuizzesController.view(z: QuizId, c: CourseId)
+POST        /courses/:c/quizzes/:z/rename                                                              controllers.question.derivative.QuizzesController.rename(z: QuizId, c: CourseId)
 # Questions
-GET         /quizzes/:qid/questions/:id                                                                controllers.question.derivative.QuestionsController.view(qid: QuizId, id: QuestionId, cid: Option[CourseId], gid: Option[GroupId])
-POST        /quizzes/:qid/questions                                                                    controllers.question.derivative.QuestionsController.create(qid: QuizId, cid: Option[CourseId], gid: Option[GroupId])
-POST        /quizzes/:qid/questions/:id/remove                                                         controllers.question.derivative.QuestionsController.remove(qid: QuizId, id: QuestionId, cid: Option[CourseId], gid: Option[GroupId])
+GET         /courses/:c/quizzes/:z/questions/:q                                                        controllers.question.derivative.QuestionsController.view(z: QuizId, q: QuestionId, c: CourseId)
+POST        /courses/:c/quizzes/:z/questions                                                           controllers.question.derivative.QuestionsController.create(z: QuizId, c: CourseId)
+POST        /courses/:c/quizzes/:z/questions/:q/remove                                                 controllers.question.derivative.QuestionsController.remove(z: QuizId, q: QuestionId, c: CourseId)
 # Answers
-GET         /quizzes/:qzid/questions/:qid/answers/:id                                                  controllers.question.derivative.AnswersController.view(qzid: QuizId, qid: QuestionId, id: AnswerId, cid: Option[CourseId], gid: Option[GroupId])
-POST        /quizzes/:qzid/questions/:qid/answers                                                      controllers.question.derivative.AnswersController.create(qzid: QuizId, qid: QuestionId, cid: Option[CourseId], gid: Option[GroupId])
+GET         /courses/:c/quizzes/:z/questions/:q/answers/:n                                             controllers.question.derivative.AnswersController.view(z: QuizId, q: QuestionId, n: AnswerId, c: CourseId)
+POST        /courses/:c/quizzes/:z/questions/:q/answers                                                controllers.question.derivative.AnswersController.create(z: QuizId, q: QuestionId, c: CourseId)
 
 # Assignments
-GET         /courses/:cid/assignments/add                                                              controllers.organization.assignment.AssignmentsController.add(cid: CourseId)
-POST        /courses/:cid/assignments                                                                  controllers.organization.assignment.AssignmentsController.create(cid: CourseId)
-GET         /courses/:cid/assignments/:id                                                              controllers.organization.assignment.AssignmentsController.view(cid: CourseId, id: AssignmentId)
-GET         /courses/:cid/sections/:sid/assignments/:aid                                               controllers.organization.assignment.AssignmentsController.viewSection(cid: CourseId, sid: SectionId, aid: AssignmentId)
+GET         /courses/:c/assignments/add                                                                controllers.organization.assignment.AssignmentsController.add(c: CourseId)
+POST        /courses/:c/assignments                                                                    controllers.organization.assignment.AssignmentsController.create(c: CourseId)
+GET         /courses/:c/assignments/:a                                                                 controllers.organization.assignment.AssignmentsController.view(c: CourseId, a: AssignmentId)
+GET         /courses/:c/sections/:s/assignments/:a                                                     controllers.organization.assignment.AssignmentsController.viewSection(c: CourseId, s: SectionId, a: AssignmentId)
 # Assignment Groups
-GET         /courses/:cid/sections/:sid/assignments/:aid/groups/add                                    controllers.organization.assignment.GroupsController.add(cid: CourseId, sid: SectionId, aid: AssignmentId)
-POST        /courses/:cid/sections/:sid/assignments/:aid/groups                                        controllers.organization.assignment.GroupsController.create(cid: CourseId, sid: SectionId, aid: AssignmentId)
-GET         /courses/:cid/sections/:sid/assignments/:aid/groups/:id                                    controllers.organization.assignment.GroupsController.view(cid: CourseId, sid: SectionId, aid: AssignmentId, id: GroupId)
-POST        /courses/:cid/sections/:sid/assignments/:aid/groups/:id/join                               controllers.organization.assignment.GroupsController.join(cid: CourseId, sid: SectionId, aid: AssignmentId, id: GroupId)
-# Questions For Groups pages
-# Quizzes
+GET         /courses/:c/sections/:s/assignments/:a/groups/add                                          controllers.organization.assignment.GroupsController.add(c: CourseId, s: SectionId, a: AssignmentId)
+POST        /courses/:c/sections/:s/assignments/:a/groups                                              controllers.organization.assignment.GroupsController.create(c: CourseId, s: SectionId, a: AssignmentId)
+GET         /courses/:c/sections/:s/assignments/:a/groups/:g                                           controllers.organization.assignment.GroupsController.view(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId)
+POST        /courses/:c/sections/:s/assignments/:a/groups/:g/join                                      controllers.organization.assignment.GroupsController.join(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId)
+# Groups Quizzes
 GET         /courses/:c/sections/:s/assignments/:a/groups/:g/quizzes/add                               controllers.organization.assignment.quiz.GroupQuizzesController.add(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId)
 POST        /courses/:c/sections/:s/assignments/:a/groups/:g/quizzes                                   controllers.organization.assignment.quiz.GroupQuizzesController.create(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId)
 GET         /courses/:c/sections/:s/assignments/:a/groups/:g/quizzes/:q                                controllers.organization.assignment.quiz.GroupQuizzesController.view(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId, q: QuizId)

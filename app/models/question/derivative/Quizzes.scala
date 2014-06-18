@@ -29,11 +29,13 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def results(section: Section)(implicit session: Session): QuizResults = QuizResults(this, section.results(this))
 
+  def course(implicit session: Session): Option[Course] = Quizzes.course(id)
+
   protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
 
   def access(implicit user: User, session: Session) = {
     val groupAccess = Access(group.map(_.access)).ceilEdit
-    val courseAccess = Quizzes.courses(id).map(_.access.ceilEdit)
+    val courseAccess = Quizzes.course(id).map(_.access.ceilEdit).toSeq
     (courseAccess :+ groupAccess :+ directAccess) max
   }
 
@@ -89,11 +91,18 @@ object Quizzes {
       q <- questionsTable if l.questionId === q.id
     } yield q).list
 
-  def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
+//  def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
+//    (for (
+//      c <- coursesTable;
+//      cq <- coursesQuizzesTable if cq.courseId === c.id && cq.quizId === quizId
+//    ) yield c).list
+
+  def course(quizId: QuizId)(implicit session: Session) : Option[Course] =
     (for (
       c <- coursesTable;
       cq <- coursesQuizzesTable if cq.courseId === c.id && cq.quizId === quizId
-    ) yield c).list
+    ) yield c).firstOption
+
 
   def groupFor(quizId: QuizId)(implicit session: Session) : Option[Group] =
     (for (

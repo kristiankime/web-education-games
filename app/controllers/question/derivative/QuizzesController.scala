@@ -1,73 +1,80 @@
 package controllers.question.derivative
 
-import com.artclod.util._
 import com.artclod.slick.Joda
-import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple.Session
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.Controller
-import service._
+import play.api.mvc.{Result, Controller}
+import controllers.organization.CoursesController
 import models.support._
 import models.question.derivative._
-import models.organization.Courses
-import models.organization.assignment.Groups
-import controllers.support.SecureSocialDB
-
+import models.organization.Course
+import controllers.support.{RequireAccess, SecureSocialDB}
 import play.api.Logger
+import service.Edit
+
 
 object QuizzesController extends Controller with SecureSocialDB {
 
-  def add(courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
-
-    Ok(views.html.question.derivative.quizAdd(where))
-  }
-
-  def create(courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
-
-    QuizForm.values.bindFromRequest.fold(
-      errors => {
-        Logger("create").info("error" + errors)
-        BadRequest(views.html.errors.formErrorPage(errors))
-      },
-      form => where match {
-          case Right(group) => {
-            val now = Joda.now
-            val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), group.id)
-            Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
-          }
-          case Left(course) => {
-            val now = Joda.now
-            val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
-            Redirect(routes.QuizzesController.view(quiz.id, where.leftOp(_.id), where.rightOp(_.id)))
-          }
-        })
-  }
-
-  def view(quizId: QuizId, courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
-    val course = models.organization.courseFrom(where)
-    val access = where.access
-
+  def apply(courseId: CourseId, quizId: QuizId)(implicit session: Session) : Either[Result, (Course, Quiz)] =
     Quizzes(quizId) match {
+      case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for id=["+quizId+"]")))
       case Some(quiz) => {
-        val results = access.write(() => course.sectionResults(quiz))
-        Ok(views.html.question.derivative.quizView(access, where, quiz.results(user), results))
+        quiz.course match {
+          case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for the quiz for id=["+quizId+"]")))
+          case Some(course) =>
+            if(quiz.course != courseId) Left(NotFound(views.html.errors.notFoundPage("quizId=[" + courseId +"] was not for courseId=["+courseId+"]")))
+            else Right((course, quiz))
+        }
       }
-      case _ => BadRequest(views.html.index())
+    }
+
+  def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(course) => Ok(views.html.question.derivative.quizAdd(course))
     }
   }
 
-  def rename(quizId: QuizId, courseIdOp: Option[CourseId], groupIdOp: Option[GroupId]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val where = eitherOp(courseIdOp.flatMap(Courses(_)), groupIdOp.flatMap(Groups(_)))
+  def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(course) =>
+        QuizForm.values.bindFromRequest.fold(
+          errors => {
+            Logger("create").info("error" + errors)
+            BadRequest(views.html.errors.formErrorPage(errors))
+          },
+          form => {
+              val now = Joda.now
+              val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
+              Redirect(routes.QuizzesController.view(quiz.id, course.id))
+            })
+    }
+  }
 
-    QuizForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.index()),
-      form => {
-        Quizzes.rename(quizId, form)
-        Redirect(routes.QuizzesController.view(quizId, where.leftOp(_.id), where.rightOp(_.id)))
-      })
+  def view(quizId: QuizId, courseId: CourseId) = SecuredUserDBAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
+    QuizzesController(courseId, quizId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((course, quiz)) => {
+        val access = course.access
+        val results = access.write(() => course.sectionResults(quiz))
+        Ok(views.html.question.derivative.quizView(course.access, course, quiz.results(user), results))
+      }
+    }
+  }
+
+  def rename(quizId: QuizId, courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    QuizzesController(courseId, quizId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((course, quiz)) =>
+        QuizForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.index()),
+          form => {
+            Quizzes.rename(quizId, form)
+            Redirect(routes.QuizzesController.view(quizId, courseId))
+          })
+    }
   }
 
 }

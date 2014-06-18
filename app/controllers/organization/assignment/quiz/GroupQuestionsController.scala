@@ -1,5 +1,6 @@
 package controllers.organization.assignment.quiz
 
+import controllers.question.derivative.QuestionsController
 import play.api.db.slick.Config.driver.simple.Session
 import com.artclod.util._
 import com.artclod.slick.Joda
@@ -14,21 +15,10 @@ import controllers.organization.assignment.GroupsController
 
 object GroupQuestionsController extends Controller with SecureSocialDB {
 
-  def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
-    Questions(questionId) match {
-      case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))
-      case Some(question) => question.quiz match {
-        case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for question for id=["+questionId+"]")))
-        case Some(quiz) =>
-          if(quiz.id != quizId) Left(NotFound(views.html.errors.notFoundPage("Question for id=["+questionId+"] is associated with quiz id=[" + quiz.id + "] not quiz id=[" + quizId + "]")))
-          else Right(question)
-      }
-    }
-
 	def view(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId, quizId: QuizId, questionId: QuestionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     GroupsController(courseId, sectionId, assignmentId, groupId) +
     GroupQuizzesController(groupId, quizId) +
-    GroupQuestionsController(quizId, questionId) match {
+    QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((group, quiz, question)) => Ok(views.html.organization.assignment.quiz.groupQuestionView(group, quiz, question, None))
     }
@@ -52,7 +42,7 @@ object GroupQuestionsController extends Controller with SecureSocialDB {
 	def remove(courseId: CourseId, sectionId: SectionId, assignmentId: AssignmentId, groupId: GroupId, quizId: QuizId, questionId: QuestionId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     GroupsController(courseId, sectionId, assignmentId, groupId) +
     GroupQuizzesController(groupId, quizId) +
-    GroupQuestionsController(quizId, questionId) match {
+    QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((group, quiz, question)) => {
         quiz.remove(question)

@@ -1,4 +1,4 @@
-@(where: Either[models.organization.Course, models.organization.assignment.Group])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import com.artclod.util._
 @import models.support._
@@ -9,19 +9,16 @@
 @import controllers.organization.routes._
 @import controllers.organization.assignment.routes.GroupsController
 
-@defining(models.organization.courseFrom(where)){ course =>
 @main("Create a Quiz") {
 
     <h2>Please enter the information about your quiz:</h2>
 
     This quiz is for the course [ @courseLink(course) ] <br>
 
-    @for(group <- where.rightOp){ And the group [ <a href="@GroupsController.view(course.id, group.sectionId, group.assignmentId, group.id)"> @group.name </a> ] <br> }
 
-    @form(action = QuizzesController.create(where.leftOp(_.id), where.rightOp(_.id))) {
+    @form(action = QuizzesController.create(course.id)) {
         Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
         <input type="submit" value="Submit">
     }
 
-}
 }

@@ -47,7 +47,7 @@
                 }
             }
             @* ===== Quizzes for the group ===== *@
-            @if(access > Non && enrolled) {
+            @if(access > Non && enrolled || access.write) {
 
                 @defining(group.quizzes) { quizzes =>
                     @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {The following quizzes are in this group:<br>

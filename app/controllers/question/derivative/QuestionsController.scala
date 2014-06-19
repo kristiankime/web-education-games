@@ -31,9 +31,8 @@ object QuestionsController extends Controller with SecureSocialDB {
       case Left(notFoundResult) => notFoundResult
       case Right((course : Course, quiz: Quiz, question: Question)) => {
         val nextQuestion = quiz.results(user).nextQuestion(question)
-        val allAnswers = Questions.answersAndOwners(questionId)
         Answers.startWorkingOn(question.id)
-        Ok(views.html.question.derivative.questionView(quiz.access, course, quiz, question.results(user), None, nextQuestion, allAnswers))
+        Ok(views.html.question.derivative.questionView(quiz.access, course, quiz, question.results(user), None, nextQuestion))
       }
     }
 	}

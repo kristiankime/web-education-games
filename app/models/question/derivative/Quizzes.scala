@@ -91,12 +91,6 @@ object Quizzes {
       q <- questionsTable if l.questionId === q.id
     } yield q).list
 
-//  def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
-//    (for (
-//      c <- coursesTable;
-//      cq <- coursesQuizzesTable if cq.courseId === c.id && cq.quizId === quizId
-//    ) yield c).list
-
   def course(quizId: QuizId)(implicit session: Session) : Option[Course] =
     (for (
       c <- coursesTable;

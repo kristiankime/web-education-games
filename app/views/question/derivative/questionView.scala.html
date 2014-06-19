@@ -3,18 +3,13 @@
         quiz: models.question.derivative.Quiz,
         results: viewsupport.question.derivative.QuestionResults,
         currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]],
-        nextQuestion: Option[models.question.derivative.Question],
-        allAnswers: List[(models.question.derivative.Answer, service.User)])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+        nextQuestion: Option[models.question.derivative.Question])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import com.artclod.util._
 @import helper._
-@import controllers.organization.routes._
-@import controllers.organization.assignment.routes.GroupsController
 @import controllers.question.derivative.AnswerForm
 @import controllers.question.derivative.routes._
 @import com.artclod.play.s
 @import views.html.tag._
-@import models.support._
 
 @main("Question Page") {
 
@@ -78,23 +73,6 @@
         </section>
     }
 
-    @if(access.write) {
-        <section>
-            <h4>There have been @allAnswers.size Answer@s(allAnswers) to this question</h4>
-            <table>
-                <tr> <th> Last Name </th> <th> First Name </th> <th> Email </th> <th> Answer </th> <th> Correct </th> <th>
-                    Time </th> </tr>
-                @for(answer <- allAnswers) {
-                    <tr>
-                        <td> @answer._2.lastName </td>
-                        <td> @answer._2.firstName </td>
-                        <td> @answer._2.email </td>
-                        <td> @math.mathmlContent(answer._1) </td>
-                        <td> @math.correct(answer._1.correct) </td>
-                        <td> @datetime(answer._1.creationDate) </td>
-                    </tr>
-                }
-            </table>
-        </section>
-    }
+    @if(access.write) {@allAnswers(results.question)}
+
 }

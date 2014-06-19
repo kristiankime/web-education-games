@@ -89,27 +89,7 @@
     }
     }
 
-    @if(access.write) {
-    @defining(question.answersAndOwners) { allAnswers =>
-        <section>
-            <h4>There have been @allAnswers.size Answer@s(allAnswers) to this question</h4>
-            <table>
-                <tr> <th> Last Name </th> <th> First Name </th> <th> Email </th> <th> Answer </th> <th> Correct </th> <th>
-                    Time </th> </tr>
-                @for(answer <- allAnswers) {
-                    <tr>
-                        <td> @answer._2.lastName </td>
-                        <td> @answer._2.firstName </td>
-                        <td> @answer._2.email </td>
-                        <td> @math.mathmlContent(answer._1) </td>
-                        <td> @math.correct(answer._1.correct) </td>
-                        <td> @datetime(answer._1.creationDate) </td>
-                    </tr>
-                }
-            </table>
-        </section>
-    }
-    }
+    @if(access.write) {@allAnswers(question)}
 }
 
 }

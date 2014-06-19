@@ -3,12 +3,8 @@
 	quizResults: viewsupport.question.derivative.StudentQuizResult,
 	sectionResultsOp: Option[List[viewsupport.organization.SectionResults]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import com.artclod.util._
 @import helper._
 @import views.html.tag._
-@import models.support._
-@import controllers.organization.routes.CoursesController
-@import controllers.organization.assignment.routes.GroupsController
 @import controllers.question.derivative.routes.QuestionsController
 @import controllers.question.derivative.routes.QuizzesController
 @import controllers.question.derivative.QuizForm
@@ -67,26 +63,6 @@
 	    </script>
     }
     
-    @for(sectionResults <- sectionResultsOp){
-    <h4>Results by section</h4>
-    	
-		@for(sectionResult <- sectionResults) {
-		<h5>@sectionResult.section.name</h5>
-		<table>
-			<tr> <th> Last Name </th> <th> First Name </th> <th> Email </th> <th> # Questions </th> <th> # Correct </th> <th> # Attempted </th> </tr>
-			@for(studentResult <- sectionResult.studentResults) {
-			<tr> 
-				<td> @studentResult.student.lastName </td>
-				<td> @studentResult.student.firstName </td>
-				<td> @studentResult.student.email </td>
-				<td> @studentResult.numQuestions </td>
-				<td> @studentResult.numCorrect </td>
-				<td> @studentResult.numAttempted </td>
-			</tr>
-			}
-		</table>
-		}
-    	
-    }
+    @for(sectionResults <- sectionResultsOp) {@views.html.tag.sectionResults(sectionResults)}
 
 }

@@ -58,8 +58,8 @@ object QuizzesController extends Controller with SecureSocialDB {
       case Left(notFoundResult) => notFoundResult
       case Right((course, quiz)) => {
         val access = course.access
-        val results = access.write(() => course.sectionResults(quiz))
-        Ok(views.html.question.derivative.quizView(course.access, course, quiz.results(user), results))
+        val sectionResultsOp = access.write(() => course.sectionResults(quiz))
+        Ok(views.html.question.derivative.quizView(course.access, course, quiz.results(user), sectionResultsOp))
       }
     }
   }

@@ -61,9 +61,8 @@ object AnswersController extends Controller with SecureSocialDB {
 	}
 
 	private def questionView(access: Access, course: Course, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) = {
-		val allAnswers = Questions.answersAndOwners(question.id)
 		val nextQuestion = quiz.results(user).nextQuestion(question)
-		Ok(views.html.question.derivative.questionView(access, course, quiz, question.results(user), answer, nextQuestion, allAnswers))
+		Ok(views.html.question.derivative.questionView(access, course, quiz, question.results(user), answer, nextQuestion))
 	}
 
 	private def access(qu: Question, cOp: Course)(implicit user: User, session: Session) = {

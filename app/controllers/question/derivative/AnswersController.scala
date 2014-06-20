@@ -23,7 +23,7 @@ object AnswersController extends Controller with SecureSocialDB {
     Answers(answerId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no answer for id=["+answerId+"]")))
       case Some(answer) =>
-        if(answer.id !== answerId) Left(NotFound(views.html.errors.notFoundPage("The answer id=["+answerId+"] was not for the question id=[" + questionId + "]")))
+        if(answer.id ^!= answerId) Left(NotFound(views.html.errors.notFoundPage("The answer id=["+answerId+"] was not for the question id=[" + questionId + "]")))
         else Right(answer)
     }
 

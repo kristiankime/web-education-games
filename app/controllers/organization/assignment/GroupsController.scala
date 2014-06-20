@@ -22,9 +22,9 @@ object GroupsController extends Controller with SecureSocialDB {
     Groups(groupId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no group for id=["+groupId+"]")))
       case Some(group) => {
-        if(courseId !== group.courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for groupId=["+groupId+"]")))
-        if(sectionId !== group.sectionId) Left(NotFound(views.html.errors.notFoundPage("sectionId=[" + sectionId +"] was not for groupId=["+groupId+"]")))
-        if(assignmentId !== group.assignmentId) Left(NotFound(views.html.errors.notFoundPage("assignmentId=[" + assignmentId +"] was not for groupId=["+groupId+"]")))
+        if(courseId  ^!= group.courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for groupId=["+groupId+"]")))
+        if(sectionId ^!= group.sectionId) Left(NotFound(views.html.errors.notFoundPage("sectionId=[" + sectionId +"] was not for groupId=["+groupId+"]")))
+        if(assignmentId ^!= group.assignmentId) Left(NotFound(views.html.errors.notFoundPage("assignmentId=[" + assignmentId +"] was not for groupId=["+groupId+"]")))
         Right(group)
       }
     }

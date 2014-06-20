@@ -20,7 +20,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
     Assignments(assignmentId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no assignment for id=["+assignmentId+"]")))
       case Some(assignment) => {
-        if(courseId !== assignment.courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for assignmentId=["+assignmentId+"]")))
+        if(courseId ^!= assignment.courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for assignmentId=["+assignmentId+"]")))
         Right(assignment)
       }
     }

@@ -19,7 +19,7 @@ object GroupQuizzesController extends Controller with SecureSocialDB {
       case Some(quiz) => quiz.group match {
         case None => Left(NotFound(views.html.errors.notFoundPage("There was no group associated with quiz for id=["+quizId+"]")))
         case Some(group) => {
-          if(group.id !== groupId) Left(NotFound(views.html.errors.notFoundPage("quiz for with id=["+quizId+"] was associated with group id=[" +group.id+"] not group [" + groupId +"]")))
+          if(group.id ^!= groupId) Left(NotFound(views.html.errors.notFoundPage("quiz for with id=["+quizId+"] was associated with group id=[" +group.id+"] not group [" + groupId +"]")))
           Right(quiz)
         }
       }

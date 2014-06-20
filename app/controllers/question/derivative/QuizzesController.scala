@@ -24,7 +24,7 @@ object QuizzesController extends Controller with SecureSocialDB {
         quiz.course match {
           case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for the quiz for id=["+quizId+"]")))
           case Some(course) =>
-            if (course.id !== courseId) Left(NotFound(views.html.errors.notFoundPage("quizId=[" + quizId + "] was not for courseId=[" + courseId + "]")))
+            if (course.id ^!= courseId) Left(NotFound(views.html.errors.notFoundPage("quizId=[" + quizId + "] was not for courseId=[" + courseId + "]")))
             else Right((course, quiz))
         }
       }

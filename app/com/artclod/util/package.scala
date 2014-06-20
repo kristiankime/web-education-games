@@ -2,6 +2,12 @@ package com.artclod
 
 package object util {
 
+  implicit class TypeSafeEquals[T](a:T) {
+    def ===(b: T) = { a == b }
+
+    def !==(b: T) = { a != b }
+  }
+
   def eitherOp[A, B](opA: Option[A], opB: Option[B]) = (opA, opB) match {
     case (_, Some(b)) => Right(b)
     case (Some(a), None) => Left(a)

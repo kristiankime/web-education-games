@@ -1,13 +1,12 @@
 package controllers.organization.assignment.quiz
 
 import controllers.question.derivative.QuestionsController
-import play.api.db.slick.Config.driver.simple.Session
 import com.artclod.util._
 import com.artclod.slick.Joda
 import com.artclod.mathml.MathML
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Result, Controller}
+import play.api.mvc.Controller
 import controllers.support.SecureSocialDB
 import models.support._
 import models.question.derivative._

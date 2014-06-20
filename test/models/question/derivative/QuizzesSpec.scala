@@ -112,4 +112,27 @@ class QuizzesSpec extends Specification {
 		}
 	}
 
+  "quiz.course" should {
+
+    "return a course if the quiz is associated with a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = newFakeUser(UserTmpTest())
+        val course = Courses.create(TestCourse(owner = user.id))
+        val quiz = Quizzes.create(TestQuiz(owner = user.id), course.id)
+
+        quiz.course.get must beEqualTo(course)
+      }
+    }
+
+    "return none if the quiz is not with a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = newFakeUser(UserTmpTest())
+        val quiz = Quizzes.create(TestQuiz(owner = user.id))
+
+        quiz.course must beNone
+      }
+    }
+
+  }
+
 }

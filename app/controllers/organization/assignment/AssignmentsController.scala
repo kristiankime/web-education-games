@@ -9,7 +9,6 @@ import com.artclod.time._
 import com.artclod.util._
 import controllers.support._
 import models.support._
-import models.organization._
 import models.organization.assignment._
 import service.Edit
 import views.html.organization.assignment._
@@ -21,7 +20,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
     Assignments(assignmentId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no assignment for id=["+assignmentId+"]")))
       case Some(assignment) => {
-        if(courseId != assignment.courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for assignmentId=["+assignmentId+"]")))
+        if(courseId !== assignment.courseId) Left(NotFound(views.html.errors.notFoundPage("courseId=[" + courseId +"] was not for assignmentId=["+assignmentId+"]")))
         Right(assignment)
       }
     }

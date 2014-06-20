@@ -1,5 +1,6 @@
 package controllers.question.derivative
 
+import com.artclod.util._
 import com.artclod.slick.Joda
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.data.Form
@@ -23,7 +24,7 @@ object QuizzesController extends Controller with SecureSocialDB {
         quiz.course match {
           case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for the quiz for id=["+quizId+"]")))
           case Some(course) =>
-            if(quiz.course != courseId) Left(NotFound(views.html.errors.notFoundPage("quizId=[" + courseId +"] was not for courseId=["+courseId+"]")))
+            if (course.id !== courseId) Left(NotFound(views.html.errors.notFoundPage("quizId=[" + quizId + "] was not for courseId=[" + courseId + "]")))
             else Right((course, quiz))
         }
       }
@@ -59,7 +60,7 @@ object QuizzesController extends Controller with SecureSocialDB {
       case Right((course, quiz)) => {
         val access = course.access
         val sectionResultsOp = access.write(() => course.sectionResults(quiz))
-        Ok(views.html.question.derivative.quizView(course.access, course, quiz.results(user), sectionResultsOp))
+        Ok(views.html.question.derivative.quizView(access, course, quiz.results(user), sectionResultsOp))
       }
     }
   }

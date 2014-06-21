@@ -3,6 +3,7 @@ package models.question.derivative
 import models.organization.assignment.Groups
 import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
+import com.artclod.util._
 import models.support._
 import models.question.AsciiMathML
 import models.question.derivative.table._
@@ -44,16 +45,16 @@ object Questions {
     info.copy(id = questionId)
   }
 
-  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session): Question =
-    questionsForTable.where(q => q.groupId === groupId && q.userId === userId).firstOption match {
-      case Some(_) => throw new IllegalStateException("The user=["+ userId + "] already had a question for groupId=[" + groupId+ "]")
-      case None => {
-        val question = create(info, quizId)
-        questionsForTable += GroupQuestion2User(groupId, question.id, userId)
-        question
-      }
+  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session): Question = {
+    for(groupQuestion2User <- questionsForTable.where(q => q.groupId === groupId && q.userId === userId).firstOption) {
+        val otherQuiz = Questions(groupQuestion2User.questionId).get.quiz.get
+        if(otherQuiz.id ^== quizId) throw new IllegalStateException("The user=[" + userId + "] already had a question for quizId=[" + otherQuiz.id + "] in groupId=[" + groupId + "]")
     }
 
+    val question = create(info, quizId)
+    questionsForTable += GroupQuestion2User(groupId, question.id, userId)
+    question
+  }
 
   // ======= FIND ======
   def list()(implicit session: Session) = questionsTable.list

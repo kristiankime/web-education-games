@@ -39,15 +39,15 @@
             }
         }
 
-        @defining(group.enrolled) { enrolled =>
+        @defining(group.enrolled) { enrolledInThisGroup =>
             @* ===== Joining the Group ===== *@
-            @if(access > Non && !enrolled) {
+            @if(access > Non && !enrolledInThisGroup && assignment.enrolled.isEmpty) {
                 @form(action = GroupsController.join(course.id, section.id, assignment.id, group.id)) {
                     Join this group: <input type="submit" value="Join">
                 }
             }
             @* ===== Quizzes for the group ===== *@
-            @if(access > Non && enrolled || access.write) {
+            @if(access > Non && enrolledInThisGroup || access.write) {
 
                 @defining(group.quizzes) { quizzes =>
                     @if(quizzes.isEmpty) {There are no quizzes for this group yet<br>} else {The following quizzes are in this group:<br>

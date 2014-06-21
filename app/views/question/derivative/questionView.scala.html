@@ -18,14 +18,14 @@
     This is a quiz for the course [ @courseLink(course) ] <br>
     Back to the quiz [ @courseQuizLink(course, quiz) ] <br>
 
-    <h2>What is the Derivative of</h2> @math.mathmlContent(results.question)
+    <h2>What is the Derivative of</h2> @mathml.mathmlContent(results.question)
 
     @for(answerEither <- currentAnswer) {
         <section align="center">
             <h4>
             @answerEither match {
-                case Right(answer) => {You answered @math.mathmlContent(answer) that answer was @math.correct(answer.correct)}
-                case Left(answerTmp) => {You answered @math.mathmlContent(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+                case Right(answer) => {You answered @mathml.mathmlContent(answer) that answer was @mathml.correct(answer.correct)}
+                case Left(answerTmp) => {You answered @mathml.mathmlContent(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
             }
             </h4>
         </section>
@@ -34,7 +34,7 @@
     <section>
         <p>
             Type in your answer, and then hit the submit button <br>
-            @math.mathmlEditor("ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
+            @mathml.mathmlEditor("ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
         </p>
     </section>
 
@@ -67,7 +67,7 @@
             <h4>You have answered this questions @results.answers.size time@s(results.answers)</h4>
             <ul>
             @for(answer <- results.answers) {
-                <li> @math.mathmlContent(answer) this answer was @math.correct(answer.correct) </li>
+                <li> @mathml.mathmlContent(answer) this answer was @mathml.correct(answer.correct) </li>
             }
             </ul>
         </section>

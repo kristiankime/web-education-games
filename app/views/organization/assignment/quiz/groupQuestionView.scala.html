@@ -17,7 +17,6 @@
 @defining(group.assignment){ assignment =>
 
 @main("Question Page") {
-
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
     This quiz will be for the course [ @courseLink(course) ] <br>
@@ -67,14 +66,20 @@
     }
     </script>
 
+    @* ===== Question Navigation ===== *@
+    @defining(quiz.previousQuestion(question)){ previousOp =>
+        @for(previous <- previousOp) {Go to the [<a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, previous.id)">previous question</a>] <br>}
+    }
+
+    @defining(quiz.firstUnfinishedQuestion(user)){ unfinishedOp =>
+        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, unfinished.question.id)">unfinished question</a>] <br>}
+    }
+
     @defining(quiz.nextQuestion(question)){ nextOp =>
-    @for(next <- nextOp) {
-        Go to the [<a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, next.id)">next question</a>] <br>
+        @for(next <- nextOp) {Go to the [<a href="@GroupQuestionsController.view(course.id, section.id, assignment.id, group.id, quiz.id, next.id)">next question</a>]}
+        @if(nextOp.isEmpty) {There are no more questions in this quiz back to the group [ @groupLink(group) ]}
     }
-    @if(nextOp.isEmpty) {
-        There are no more questions in this quiz back to the group [ @groupLink(group) ]
-    }
-    }
+    <br>
 
     @defining(question.results(user)) { results =>
     @if(results.answers.nonEmpty) {

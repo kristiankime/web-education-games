@@ -32,7 +32,7 @@ object QuestionsController extends Controller with SecureSocialDB {
       case Right((course : Course, quiz: Quiz, question: Question)) => {
         val nextQuestion = quiz.results(user).nextQuestion(question)
         Answers.startWorkingOn(question.id)
-        Ok(views.html.question.derivative.questionView(quiz.access, course, quiz, question.results(user), None, nextQuestion))
+        Ok(views.html.question.derivative.questionView(course, quiz, question.results(user), None))
       }
     }
 	}

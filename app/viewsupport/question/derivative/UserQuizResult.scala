@@ -21,6 +21,7 @@ trait UserQuizResult {
 
   def nextQuestion(question: Question) = questions.elementAfter(question)
 
+  def firstUnfinishedQuestion = results.find(!_.correct)
 }
 
 case class StudentQuizResult(student: User, quiz: Quiz, results: List[QuestionResults]) extends UserQuizResult {

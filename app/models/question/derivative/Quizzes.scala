@@ -21,7 +21,11 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 
+  def previousQuestion(question: Question)(implicit session: Session) = questions.elementBefore(question)
+
   def nextQuestion(question: Question)(implicit session: Session) = questions.elementAfter(question)
+
+  def firstUnfinishedQuestion(user: User)(implicit session: Session) = results(user).firstUnfinishedQuestion
 
   def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
 
@@ -83,13 +87,13 @@ object Quizzes {
     (for (
       q <- quizzesTable;
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
-    ) yield q).list
+    ) yield q).sortBy(_.creationDate).list
 
   def questions(quizId: QuizId)(implicit session: Session) : List[Question] =
     (for {
       l <- quizzesQuestionsTable if l.quizId === quizId
       q <- questionsTable if l.questionId === q.id
-    } yield q).list
+    } yield q).sortBy(_.creationDate).list
 
   def course(quizId: QuizId)(implicit session: Session) : Option[Course] =
     (for (

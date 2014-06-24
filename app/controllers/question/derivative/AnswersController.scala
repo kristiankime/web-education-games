@@ -32,9 +32,7 @@ object AnswersController extends Controller with SecureSocialDB {
     QuestionsController(quizId, questionId) +
     AnswersController(questionId, answerId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz, question, answer)) => {
-        questionView(access(question, course), course, quiz, question, Some(Right(answer)))
-      }
+      case Right((course, quiz, question, answer)) => questionView(course, quiz, question, Some(Right(answer)))
     }
 	}
 
@@ -53,24 +51,16 @@ object AnswersController extends Controller with SecureSocialDB {
             Answers.correct(question, math) match {
               case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id, course.id))
               case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id, course.id))
-              case Inconclusive => questionView(access(question, course), course, quiz, question, Some(Left(unfinishedAnswer(false))))
+              case Inconclusive => questionView(course, quiz, question, Some(Left(unfinishedAnswer(false))))
             }
           })
       }
     }
 	}
 
-	private def questionView(access: Access, course: Course, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) = {
-		val nextQuestion = quiz.results(user).nextQuestion(question)
-		Ok(views.html.question.derivative.questionView(access, course, quiz, question.results(user), answer, nextQuestion))
+	private def questionView(course: Course, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) = {
+    Ok(views.html.question.derivative.questionView(course, quiz, question.results(user), answer))
 	}
-
-	private def access(qu: Question, cOp: Course)(implicit user: User, session: Session) = {
-		val cAccess = cOp.access
-		val qAccess = Access(user, qu.ownerId)
-		Seq(cAccess, qAccess).max
-	}
-
 }
 
 object AnswerForm {

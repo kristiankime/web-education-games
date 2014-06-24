@@ -1,5 +1,6 @@
 package models.question.derivative
 
+import models.organization.Course
 import models.organization.assignment.Groups
 import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
@@ -32,6 +33,12 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
     val difficulties = Questions.answerers(id).flatMap(results(_).score).map(1d - _)
     if (difficulties.isEmpty) None
     else Some(difficulties.sum / difficulties.size)
+  }
+
+  def access(cOp: Course)(implicit user: User, session: Session) = {
+    val cAccess = cOp.access
+    val qAccess = Access(user, ownerId)
+    Seq(cAccess, qAccess).max
   }
 
 }

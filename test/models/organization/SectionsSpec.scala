@@ -12,7 +12,7 @@ import models.DBTest
 import models.question.derivative.Quizzes
 import models.question.derivative.TestQuiz
 import service._
-import viewsupport.question.derivative.StudentQuizResult
+import viewsupport.question.derivative.StudentQuizResults
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
@@ -31,8 +31,8 @@ class SectionsSpec extends Specification {
 				val student2 = DBTest.newFakeUser(UserTmpTest())
 				section.grantAccess(View)(student2, session)
 				
-				val student1Results = StudentQuizResult(student1, quiz, List())
-				val student2Results = StudentQuizResult(student2, quiz, List())
+				val student1Results = StudentQuizResults(student1, quiz, List())
+				val student2Results = StudentQuizResults(student2, quiz, List())
 				section.results(quiz) must beEqualTo(List(student1Results, student2Results))
 			}
 		}

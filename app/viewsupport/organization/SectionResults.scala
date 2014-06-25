@@ -1,6 +1,6 @@
 package viewsupport.organization
 
-import viewsupport.question.derivative.StudentQuizResult
+import viewsupport.question.derivative.StudentQuizResults
 import models.organization.Section
 
-case class SectionResults(section: Section, studentResults: List[StudentQuizResult])
+case class SectionResults(section: Section, studentResults: List[StudentQuizResults])

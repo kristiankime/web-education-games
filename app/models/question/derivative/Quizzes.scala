@@ -15,9 +15,9 @@ import com.google.common.annotations.VisibleForTesting
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-  def groupResults(implicit session: Session) = TeacherQuizResult(this, questions.flatMap(q => q.forWho.map(u => q.results(u)) ))
+  def groupResults(implicit session: Session) = TeacherQuizResults(this, questions.flatMap(q => q.forWho.map(u => q.results(u)) ))
 
-  def results(student: User)(implicit session: Session) = StudentQuizResult(student, this, questions.map(v => v.results(student)))
+  def results(student: User)(implicit session: Session) = StudentQuizResults(student, this, questions.map(v => v.results(student)))
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 
@@ -31,7 +31,7 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def remove(question: Question)(implicit session: Session) = Questions.remove(this, question)
 
-  def results(section: Section)(implicit session: Session): QuizResults = QuizResults(this, section.results(this))
+  def results(section: Section)(implicit session: Session): BasicQuizResults = BasicQuizResults(this, section.results(this))
 
   def course(implicit session: Session): Option[Course] = Quizzes.course(id)
 

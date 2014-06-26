@@ -230,3 +230,10 @@ For Major x Minor y and Build z
 
 git tag -a vx.y.z -m 'my version x.y.z'
 git push origin vx.y.x
+
+##### SBT clean
+Heroku will keep left over build files. If you get errors due to files that shouldn't exist try turning on clean
+    heroku config:set SBT_CLEAN=true
+It can be turned off later
+    heroku config:unset SBT_CLEAN
+for more info : https://devcenter.heroku.com/articles/scala-support

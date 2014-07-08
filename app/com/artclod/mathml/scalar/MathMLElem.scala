@@ -65,16 +65,41 @@ abstract class MathMLElem(
 	def dx = d("x")
 
 	def +(m: MathMLElem) = ApplyPlus(this, m)
+  def +(m: Short) = ApplyPlus(this, Cn(m))
+  def +(m: Int) = ApplyPlus(this, Cn(m))
+  def +(m: Long) = ApplyPlus(this, Cn(m))
+  def +(m: Float) = ApplyPlus(this, Cn(m))
+  def +(m: Double) = ApplyPlus(this, Cn(m))
 
 	def *(m: MathMLElem) = ApplyTimes(this, m)
+  def *(m: Short) = ApplyTimes(this, Cn(m))
+  def *(m: Int) = ApplyTimes(this, Cn(m))
+  def *(m: Long) = ApplyTimes(this, Cn(m))
+  def *(m: Float) = ApplyTimes(this, Cn(m))
+  def *(m: Double) = ApplyTimes(this, Cn(m))
 
-	def -(m: MathMLElem) = ApplyMinusB(this, m)
+  def -(m: MathMLElem) = ApplyMinusB(this, m)
+  def -(m: Short) = ApplyMinusB(this, Cn(m))
+  def -(m: Int) = ApplyMinusB(this, Cn(m))
+  def -(m: Long) = ApplyMinusB(this, Cn(m))
+  def -(m: Float) = ApplyMinusB(this, Cn(m))
+  def -(m: Double) = ApplyMinusB(this, Cn(m))
 
-	def unary_-() = ApplyMinusU(this)
+  def unary_-() = ApplyMinusU(this)
 
 	def /(m: MathMLElem) = ApplyDivide(this, m)
+  def /(m: Short) = ApplyDivide(this, Cn(m))
+  def /(m: Int) = ApplyDivide(this, Cn(m))
+  def /(m: Long) = ApplyDivide(this, Cn(m))
+  def /(m: Float) = ApplyDivide(this, Cn(m))
+  def /(m: Double) = ApplyDivide(this, Cn(m))
 
 	def ^(m: MathMLElem) = ApplyPower(this, m)
+  def ^(m: Short) = ApplyPower(this, Cn(m))
+  def ^(m: Int) = ApplyPower(this, Cn(m))
+  def ^(m: Long) = ApplyPower(this, Cn(m))
+  def ^(m: Float) = ApplyPower(this, Cn(m))
+  def ^(m: Double) = ApplyPower(this, Cn(m))
 
 	def ?=(e: MathMLElem) = MathMLEq.checkEq("x", this, e)
 

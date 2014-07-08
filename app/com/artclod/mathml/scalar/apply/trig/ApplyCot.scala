@@ -15,6 +15,6 @@ case class ApplyCot(value: MathMLElem) extends UnaryFunction(value, Cot) {
 
 	def simplifyStep() = ApplyCot(v.s)
 
-	def derivative(x: String) = (-ApplyCsc(v) ^ `2`) * v.d(x)
+	def derivative(x: String) = -(ApplyCsc(v) ^ 2) * v.d(x)
 
 }

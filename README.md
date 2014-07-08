@@ -15,12 +15,12 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Source Control: [Git](http://git-scm.com/)
 * Markdown Editor: [Mou](http://mouapp.com/)
 * Web Framework: [Play](http://www.playframework.com/)
-* IDE: [Eclipse](http://www.eclipse.org/)
+* IDE: [Eclipse](http://www.eclipse.org/) or [IntelliJ](http://www.jetbrains.com/idea/)
 * Web Hosting: [Heroku](https://www.heroku.com/)
 * Database: [Slick](http://slick.typesafe.com/) for accessing [H2](http://www.h2database.com/) for development & [PostgreSQL](http://www.postgresql.org/) for production
 * Authentication (TDB): [SecureSocial.ws](http://securesocial.ws/)
 * HTML UI: [Twitter Bootstrap](http://getbootstrap.com/)
-
+* Profanity Filter: [PurgoMalum](http://www.purgomalum.com/)
 
 ### [Git](http://git-scm.com/)
 This project is using Git as a version control system. If you are new to Git you can find an [install guide and crash course here](http://git-scm.com/book/en/Getting-Started-Git-Basics). 

@@ -35,8 +35,8 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
     else Some(difficulties.sum / difficulties.size)
   }
 
-  def access(cOp: Course)(implicit user: User, session: Session) = {
-    val cAccess = cOp.access
+  def access(course: Course)(implicit user: User, session: Session) = {
+    val cAccess = course.access
     val qAccess = Access(user, ownerId)
     Seq(cAccess, qAccess).max
   }

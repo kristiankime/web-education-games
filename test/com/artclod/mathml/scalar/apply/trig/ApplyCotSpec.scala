@@ -41,7 +41,7 @@ class ApplyCotSpec extends Specification {
 
 	"d" should {
 		"obey the derivative rule: cot(f)' = -csc(f)^2 * f'" in {
-			ApplyCot(F).dx must beEqualTo((-ApplyCsc(F) ^ `2`) * Fdx)
+			ApplyCot(F).dx must beEqualTo((-(ApplyCsc(F) ^ `2`)) * Fdx)
 		}
 	}
 

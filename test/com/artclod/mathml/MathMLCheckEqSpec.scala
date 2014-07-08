@@ -9,8 +9,7 @@ import org.specs2.mutable._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.apply.{ ApplyLn => ln, ApplyLog => log }
-import com.artclod.mathml.scalar.apply.trig.{ ApplyTan => tan, ApplySec => sec }
-
+import com.artclod.mathml.scalar.apply.trig.{ ApplySin => sin, ApplyCot => cot, ApplyTan => tan, ApplySec => sec, ApplyCos => cos, ApplyCsc => csc }
 import com.artclod.mathml.Match._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
@@ -60,20 +59,33 @@ class MathMLCheckEqSpec extends Specification {
 			((f dx) ?= g) must beEqualTo(Yes)
 		}
 
-    "confirm ln(e^x)dx = 1" in {
+    "confirm ln(e^x)' = 1" in {
       val f = ln(e^x)
       val g = `1`
 
       ((f dx) ?= g) must beEqualTo(Yes)
     }
 
-    "confirm (e^x / e^x) dx = 0" in {
+    "confirm (e^x / e^x)' = 0" in {
       val f =  (e^x) / (e^x)
       val g = `0`
 
       ((f dx) ?= g) must beEqualTo(Yes)
     }
 
+    "confirm ((cot(x) ^ 2) * sin(x))' = -cos(x) - (cot(x) * csc(x))" in {
+      val f =  ((cot(x) ^ `2`) * sin(x))
+      val g = -cos(x) - (cot(x) * csc(x))
+
+      ((f dx) ?= g) must beEqualTo(Yes)
+    }
+
+    "confirm ((cot(x) ^ 2) * sin(x))' = 2 * cot(x) * -(csc(x)^2) * sin(x) + (cot(x)^2) * cos(x)" in {
+      val f =  ((cot(x) ^ `2`) * sin(x))
+      val g = `2` * cot(x) * -(csc(x)^`2`) * sin(x) + (cot(x)^`2`) * cos(x)
+
+      ((f dx) ?= g) must beEqualTo(Yes)
+    }
 	}
 
 	"Check that multiplying top and bottom of a quotient by the same thing " should {

@@ -21,23 +21,27 @@ class HomeSpec extends Specification {
 
   "index" should {
 
-    "render if the user has consented" in new WithApplication { DB.withSession { implicit session: Session =>
-          val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUser)).get
+    "render home page if the user has consented" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
+      val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUser)).get
 
-          status(response) must equalTo(OK)
-          contentType(response) must beSome.which(_ == "text/html")
-          contentAsString(response) must contain(viewsupport.ViewText.welcome)
-    } }
-
-    "redirect to consent form if the user has not consented" in new WithApplication { DB.withSession { implicit session: Session =>
-      val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUserNoConsent)).get
+      val statusVal = status(response)
+      val redirectLocationVal = redirectLocation(response)
 
       status(response) must equalTo(OK)
       contentType(response) must beSome.which(_ == "text/html")
       contentAsString(response) must contain(viewsupport.ViewText.welcome)
     } }
 
-  }
+    "redirect to consent form if the user has not consented" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
+      val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUserNoConsent)).get
 
+      val statusVal = status(response)
+      val redirectLocationVal = redirectLocation(response)
+
+      status(response) must equalTo(SEE_OTHER)
+      redirectLocation(response).map(_ must equalTo("/consent?goTo=%2F")) getOrElse failure("missing redirect location")
+    } }
+
+  }
 
 }

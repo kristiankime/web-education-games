@@ -1,7 +1,7 @@
 package controllers
 
 import com.artclod.securesocial.TestUtils._
-import models.DBTest.newFakeUser
+import models.DBTest._
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -15,7 +15,7 @@ class ApplicationSpec extends Specification {
 
   "Application" should {
 
-    "render the index page (when logged in)" in new WithApplication { DB.withSession { implicit session: Session =>
+    "render the index page (when logged in)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
           val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUser)).get
 
           status(response) must equalTo(OK)
@@ -30,7 +30,7 @@ class ApplicationSpec extends Specification {
 
 
   "untrail" should {
-    "indicated trailing / are not used in the application" in new WithApplication { DB.withSession { implicit session: Session =>
+    "indicated trailing / are not used in the application" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
       val response = route(FakeRequest(GET, "/boum/").withLoggedInUser(newFakeUser)).get
 
       status(response) must equalTo(MOVED_PERMANENTLY)
@@ -39,7 +39,7 @@ class ApplicationSpec extends Specification {
   }
 
   "backTrack" should {
-    "redirect back to a working url" in new WithApplication { DB.withSession { implicit session: Session =>
+    "redirect back to a working url" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
       val response = route(FakeRequest(GET, "/boum").withLoggedInUser(newFakeUser)).get
 
       status(response) must equalTo(SEE_OTHER)

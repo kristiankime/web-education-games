@@ -19,10 +19,10 @@ class QuizzesSpec extends Specification {
 	"studentResults" should {
 		"lists questions with whatever answers they have" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val user = newFakeUser(UserTmpTest())
+				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-				val student = newFakeUser(UserTmpTest())
+				val student = newFakeUser(UserTest())
         val startTime = fakeStartWorkingOn(student, question1.id, Joda.zero)
 				val answer1 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 				val answer2 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
@@ -35,11 +35,11 @@ class QuizzesSpec extends Specification {
 
 		"questions with no answers are incorrect" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val user = newFakeUser(UserTmpTest())
+				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
 				val question2 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-				val student = newFakeUser(UserTmpTest())
+				val student = newFakeUser(UserTest())
         val startTime = fakeStartWorkingOn(student, question1.id, Joda.zero)
         val answer = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id, correct = true))
 
@@ -55,7 +55,7 @@ class QuizzesSpec extends Specification {
 		"find all the questions for this quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 
-				val user = newFakeUser(UserTmpTest())
+				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 
 				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
@@ -67,7 +67,7 @@ class QuizzesSpec extends Specification {
 
 		"not find questions for other quizesz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val user = newFakeUser(UserTmpTest())
+				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 				val otherQuiz = Quizzes.create(TestQuiz(owner = user.id))
 
@@ -84,7 +84,7 @@ class QuizzesSpec extends Specification {
 	"access" should {
 		"return own if the user owns the quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val user = newFakeUser(UserTmpTest())
+				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 
 				quiz.access(user, session) must beEqualTo(Own)
@@ -93,8 +93,8 @@ class QuizzesSpec extends Specification {
 
 		"return non if the user has no relation to the quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val quiz = Quizzes.create(TestQuiz(owner = newFakeUser(UserTmpTest()).id))
-				val user = newFakeUser(UserTmpTest())
+				val quiz = Quizzes.create(TestQuiz(owner = newFakeUser(UserTest()).id))
+				val user = newFakeUser(UserTest())
 				Courses.create(TestCourse(owner = user.id)) // This course does not contain the quiz so it should have no effect
 				
 				quiz.access(user, session) must beEqualTo(Non)
@@ -103,9 +103,9 @@ class QuizzesSpec extends Specification {
 
 		"return edit if the user owns a course that contains the quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val user = newFakeUser(UserTmpTest())
+				val user = newFakeUser(UserTest())
 				val course = Courses.create(TestCourse(owner = user.id))
-				val quiz = Quizzes.create(TestQuiz(owner = newFakeUser(UserTmpTest()).id), course.id)
+				val quiz = Quizzes.create(TestQuiz(owner = newFakeUser(UserTest()).id), course.id)
 
 				quiz.access(user, session) must beEqualTo(Edit)
 			}
@@ -116,7 +116,7 @@ class QuizzesSpec extends Specification {
 
     "return a course if the quiz is associated with a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = newFakeUser(UserTmpTest())
+        val user = newFakeUser(UserTest())
         val course = Courses.create(TestCourse(owner = user.id))
         val quiz = Quizzes.create(TestQuiz(owner = user.id), course.id)
 
@@ -126,7 +126,7 @@ class QuizzesSpec extends Specification {
 
     "return none if the quiz is not with a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = newFakeUser(UserTmpTest())
+        val user = newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id))
 
         quiz.course must beNone

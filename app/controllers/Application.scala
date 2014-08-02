@@ -2,11 +2,9 @@ package controllers
 
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import models.organization.Courses
-import controllers.support.SecureSocialDB
 
-object Application extends Controller with SecureSocialDB {
-	val version = Version(0, 3, 2)
+object Application extends Controller {
+	val version = Version(0, 4, 0)
 	
 	/**
 	 * Application does not use trailing slashes so indicate to browsers
@@ -15,17 +13,13 @@ object Application extends Controller with SecureSocialDB {
 		MovedPermanently("/" + path)
 	}
 
+  /**
+   * If the bath is not valid backtrack to an earlier "/"
+   */
   def backTrack(path: String) = Action {
-    Redirect("/" + path.substring(0, path.lastIndexOf("/")))
+    Redirect(("/" + path).substring(0, ("/" + path).lastIndexOf("/") + 1))
   }
 
-	def index = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.index())
-	}
-
-	def userInfo = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.user.userInfo())
-	}
 }
 
 object Version{

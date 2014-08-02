@@ -23,7 +23,7 @@ class QuestionsSpec extends Specification {
   "results" should {
     "find all the answers by the user and record false if all of the answers were wrong" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id))
         val question = Questions.create(TestQuestion(owner = user.id), quiz.id)
 
@@ -36,7 +36,7 @@ class QuestionsSpec extends Specification {
 
     "find all the answers by the user and record true if any of the answers were correct" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id))
         val question = Questions.create(TestQuestion(owner = user.id), quiz.id)
 
@@ -51,7 +51,7 @@ class QuestionsSpec extends Specification {
   "answers" should {
     "find all the answers by the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
         val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
         val question = Questions.create(qTmp, quiz.id)
@@ -65,7 +65,7 @@ class QuestionsSpec extends Specification {
 
     "not find answers by other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
         val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
         val question = Questions.create(qTmp, quiz.id)
@@ -73,7 +73,7 @@ class QuestionsSpec extends Specification {
         val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
         val answer2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
 
-        val otherAnswer = Answers.createAnswer(TestAnswer(owner = DBTest.newFakeUser(UserTmpTest()).id, questionId = question.id))
+        val otherAnswer = Answers.createAnswer(TestAnswer(owner = DBTest.newFakeUser(UserTest()).id, questionId = question.id))
 
         question.answers(user) must beEqualTo(List(answer1, answer2))
       }
@@ -81,7 +81,7 @@ class QuestionsSpec extends Specification {
 
     "not find answers to other questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
         val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
         val question = Questions.create(qTmp, quiz.id)
@@ -100,7 +100,7 @@ class QuestionsSpec extends Specification {
   "Questions" should {
     "create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
         val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
         val question = Questions.create(qTmp, quiz.id)
@@ -112,7 +112,7 @@ class QuestionsSpec extends Specification {
 
     "return all the questions that were created when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val user = DBTest.newFakeUser(UserTmpTest())
+        val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
 
         Questions.create(Question(null, user.id, x + `1`, "x + 2", Joda.now), quiz.id)
@@ -140,7 +140,7 @@ class QuestionsSpec extends Specification {
         val admin = newFakeUser
         val (course, section, assignment, group) = TestGroup(admin.id)
         val quiz = Quizzes.create(TestQuiz(admin.id), group.id)
-        val student = DBTest.newFakeUser(UserTmpTest())
+        val student = DBTest.newFakeUser(UserTest())
 
         val question = Questions.create(TestQuestion(student.id), group.id, quiz.id, student.id)
 
@@ -156,7 +156,7 @@ class QuestionsSpec extends Specification {
         val admin = newFakeUser
         val (course, section, assignment, group) = TestGroup(admin.id)
         val quiz = Quizzes.create(TestQuiz(admin.id), group.id)
-        val student = DBTest.newFakeUser(UserTmpTest())
+        val student = DBTest.newFakeUser(UserTest())
 
         val question1 = Questions.create(TestQuestion(student.id), group.id, quiz.id, student.id)
         Questions.create(TestQuestion(student.id), group.id, quiz.id, student.id) must throwAn[IllegalStateException]
@@ -169,7 +169,7 @@ class QuestionsSpec extends Specification {
         val (course, section, assignment, group) = TestGroup(admin.id)
         val quiz1 = Quizzes.create(TestQuiz(admin.id), group.id)
         val quiz2 = Quizzes.create(TestQuiz(admin.id), group.id)
-        val student = DBTest.newFakeUser(UserTmpTest())
+        val student = DBTest.newFakeUser(UserTest())
 
         val question1 = Questions.create(TestQuestion(student.id), group.id, quiz1.id, student.id)
 

@@ -22,8 +22,8 @@
 
     <header>
     	<div class="header-links">
-        	[<a href="@routes.Application.userInfo">User(@user.email)</a>]
-            [<a href="@routes.Application.index">Home</a>]
+        	[<a href="@routes.Home.userInfo">User(@user.email)</a>]
+            [<a href="@routes.Home.index">Home</a>]
             [<a href="@controllers.organization.routes.CoursesController.list">Courses</a>]
         	@for(header <- headers) {
                 @header

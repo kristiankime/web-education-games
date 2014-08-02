@@ -5,9 +5,14 @@
 # Remove trailing /'s from paths 
 GET         /*path/                                                                                    controllers.Application.untrail(path: String)
 
+# Consent Form
+GET         /consent                                                                                   controllers.Consent.consent(goTo: Option[String])
+POST        /consent                                                                                   controllers.Consent.consentSubmit(goTo: Option[String])
+GET         /noconsent                                                                                 controllers.Consent.noConsent
+
 # Home page
-GET         /                                                                                          controllers.Application.index
-GET         /user                                                                                      controllers.Application.userInfo
+GET         /                                                                                          controllers.Home.index
+GET         /user                                                                                      controllers.Home.userInfo
 
 # Organization pages
 # Courses
@@ -64,7 +69,7 @@ POST        /equation                                                           
 POST        /equation/:id/delete                                                                       controllers.EquationController.deleteEquation(id: Long)
 # ======== END DEPRICATED ========
 
-# START Routes for Secure Social
+# ======== START Routes for Secure Social ========
 # Login page
 GET         /login                                                                                     securesocial.controllers.LoginPage.login
 GET         /logout                                                                                    securesocial.controllers.LoginPage.logout
@@ -83,10 +88,11 @@ POST        /password                                                           
 GET         /authenticate/:provider                                                                    securesocial.controllers.ProviderController.authenticate(provider)
 POST        /authenticate/:provider                                                                    securesocial.controllers.ProviderController.authenticateByPost(provider)
 GET         /not-authorized                                                                            securesocial.controllers.ProviderController.notAuthorized
-# END Routes for Secure Social
+# ======== END Routes for Secure Social ========
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                                                              controllers.Assets.at(path="/public", file)
 
+# If a path is not valid backtrack until we hit the home page
 GET         /*path                                                                                     controllers.Application.backTrack(path: String)

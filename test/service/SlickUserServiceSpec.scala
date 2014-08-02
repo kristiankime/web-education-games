@@ -28,7 +28,7 @@ class SlickUserServiceSpec extends Specification {
 			val service = new SlickUserService
 
 			val identityId = IdentityId("userId", "providerId")
-			val user = service.save(UserTmpTest(identityId = identityId))
+			val user = service.save(UserTest(identityId = identityId))
 
 			service.find(identityId).get must beEqualTo(user)
 		}
@@ -36,7 +36,7 @@ class SlickUserServiceSpec extends Specification {
 		"be able to find a user by email and provider" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			val service = new SlickUserService
 			val identityId = IdentityId("userId", "providerId")
-			val user = service.save(UserTmpTest(identityId = identityId, email = Some("email")))
+			val user = service.save(UserTest(identityId = identityId, email = Some("email")))
 
 			service.findByEmailAndProvider("email", "providerId").get must beEqualTo(user)
 		}

@@ -5,7 +5,7 @@ import securesocial.core._
 import org.joda.time.{DateTimeZone, DateTime}
 import models.support.UserId
 
-object UserTmpTest {
+object UserTest {
   private val id = new AtomicLong(-1000L)
 
 	def apply(identityId: IdentityId = IdentityId("userId", "providerId"),

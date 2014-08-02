@@ -98,6 +98,7 @@ http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 
 ##### Facebook
 facebook login
+https://developers.facebook.com/docs/web/tutorials/scrumptious/register-facebook-application
 https://developers.facebook.com/apps/?action=create
 https://developers.facebook.com/
 https://developers.facebook.com/docs/facebook-login/
@@ -107,6 +108,9 @@ http://stackoverflow.com/questions/2459728/how-to-test-facebook-connect-locally
 
 Set config vars locally and on Heroku
 https://devcenter.heroku.com/articles/config-vars
+
+Make sure to make the app publicly available
+http://stackoverflow.com/questions/21329250/the-developers-of-this-app-have-not-set-up-this-app-properly-for-facebook-login
 
 ##### Google
 https://developers.google.com/accounts/docs/OAuth2Login#registeringyourapp

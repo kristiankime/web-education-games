@@ -48,7 +48,8 @@
     </ul>
 
     @form(action = routes.Consent.consentSubmit(goTo)) {
-        <input type="checkbox" name="@ConsentForm.agree" value="true"> I agree to take part in this study <input type="submit" value="Submit">
+        @*  https://groups.google.com/forum/?fromgroups=#!topic/play-framework/HygQuYF3a8E *@
+        <input type="checkbox" name="@ConsentForm.agree" value="true"> <input type="hidden" name="@ConsentForm.agree" value="false" /> I agree to take part in this study <input type="submit" value="Submit">
     }
 
 }

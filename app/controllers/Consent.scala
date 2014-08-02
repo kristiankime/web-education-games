@@ -48,6 +48,7 @@ object Consent extends Controller with SecureSocialDB {
 object ConsentForm {
   val agree = "agree"
 
-  val values = Form(agree -> checked(agree))
+//  val values = Form(agree -> checked("false"))
 //  val values = Form(agree -> text)
+    val values = Form(agree -> boolean)
 }

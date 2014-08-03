@@ -6,14 +6,6 @@ import play.api.mvc.Controller
 
 object Home extends Controller with SecureSocialConsented {
 
-//  def index = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-//    Ok(views.html.index())
-//  }
-//
-//  def userInfo = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-//    Ok(views.html.user.userInfo())
-//  }
-
   def index = ConsentedAction { implicit request => implicit user => implicit session =>
     Ok(views.html.index())
   }

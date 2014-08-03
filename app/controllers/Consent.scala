@@ -44,11 +44,8 @@ object Consent extends Controller with SecureSocialDB {
 
 }
 
-// https://github.com/ics-software-engineering/play-example-form
 object ConsentForm {
   val agree = "agree"
 
-//  val values = Form(agree -> checked("false"))
-//  val values = Form(agree -> text)
     val values = Form(agree -> boolean)
 }

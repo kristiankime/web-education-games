@@ -3,7 +3,7 @@ package controllers.organization
 import play.api.db.slick.Config.driver.simple.Session
 import scala.util.Random
 import com.artclod.random._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import play.api.mvc.{Result, Controller}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -13,7 +13,7 @@ import models.organization._
 import controllers.support.SecureSocialDB
 
 object CoursesController extends Controller with SecureSocialDB {
-	implicit val randomEngine = new Random(Joda.now.getMillis())
+	implicit val randomEngine = new Random(JodaUTC.now.getMillis())
   val codeRange = (0 to 100000).toVector
 
   def apply(courseId: CourseId)(implicit session: Session) : Either[Result, Course] = Courses(courseId) match {
@@ -34,7 +34,7 @@ object CoursesController extends Controller with SecureSocialDB {
 			errors => BadRequest(views.html.index()),
 			form => {
         val (editNum, viewNum) = codeRange.pick2From
-        val now = Joda.now
+        val now = JodaUTC.now
 				val course = Courses.create(Course(null, form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, now, now))
 				Redirect(routes.CoursesController.view(course.id))
 			})

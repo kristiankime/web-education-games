@@ -2,6 +2,8 @@ package models.support
 
 case class UserId(v: Long)
 
+case class OrganizationId(v: Long)
+
 case class CourseId(v: Long)
 
 case class SectionId(v: Long)

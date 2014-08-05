@@ -1,6 +1,6 @@
 package models.organization
 
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import org.joda.time.{DateTimeZone, DateTime}
 import models.support._
 
@@ -10,5 +10,5 @@ object TestSection {
 		owner: UserId,
 		editCode: String = "editCode",
 		viewCode: String = "viewCode",
-		date: DateTime = Joda.zero) = Section(null, name, courseId, owner, editCode, viewCode, date, date)
+		date: DateTime = JodaUTC.zero) = Section(null, name, courseId, owner, editCode, viewCode, date, date)
 }

@@ -1,4 +1,4 @@
-@()(implicit user: service.User)
+@()(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.organization.routes._
 

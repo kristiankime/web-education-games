@@ -4,6 +4,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.support.UserId
 import models.user.table._
 import scala.util.Try
+import play.api.Logger
 
 case class UserSetting(userId: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true)
 

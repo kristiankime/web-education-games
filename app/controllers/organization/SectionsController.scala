@@ -2,7 +2,7 @@ package controllers.organization
 
 import play.api.db.slick.Config.driver.simple.Session
 import scala.util.Random
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import com.artclod.random._
 import com.artclod.util._
 import play.api.mvc.{Result, Controller}
@@ -15,7 +15,7 @@ import controllers.support.SecureSocialDB
 import controllers.support.RequireAccess
 
 object SectionsController extends Controller with SecureSocialDB {
-	implicit val randomEngine = new Random(Joda.now.getMillis())
+	implicit val randomEngine = new Random(JodaUTC.now.getMillis())
   val codeRange = (0 to 100000).toVector
 
   def apply(courseId: CourseId, sectionId: SectionId)(implicit session: Session) : Either[Result, Section] =
@@ -44,7 +44,7 @@ object SectionsController extends Controller with SecureSocialDB {
             val (editNum, viewNum) = codeRange.pick2From
             val editCode = "SE-E-" + editNum
             val viewCode = "SE-V-" + viewNum
-            val now = Joda.now
+            val now = JodaUTC.now
             Sections.create(Section(null, form, courseId, user.id, editCode, viewCode, now, now))
             Redirect(routes.CoursesController.view(courseId))
           })

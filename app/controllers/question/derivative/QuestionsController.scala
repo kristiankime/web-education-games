@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
 import play.api.db.slick.Config.driver.simple.Session
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
 import com.artclod.util._
 import play.api.data.Form
@@ -45,7 +45,7 @@ object QuestionsController extends Controller with SecureSocialDB {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
-            Questions.create(Question(null, user.id, mathML, form._2, Joda.now), quizId)
+            Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quizId)
             Redirect(routes.QuizzesController.view(quiz.id, course.id))
           })
       }

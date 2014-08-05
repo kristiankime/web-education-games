@@ -5,7 +5,7 @@ import models.question.derivative._
 import models.support._
 import org.joda.time.DateTime
 import service.table.UsersTable
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import scala.slick.model.ForeignKeyAction
 
 class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "derivative_quizzes") {

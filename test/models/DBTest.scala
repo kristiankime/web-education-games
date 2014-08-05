@@ -1,6 +1,6 @@
 package models
 
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import models.question.derivative.table._
 import models.support.{UserId, QuestionId}
 import models.user.{UserSetting, UserSettings}

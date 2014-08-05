@@ -1,6 +1,6 @@
 package models.organization.assignment
 
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import models.organization._
 import models.support.{AssignmentId, SectionId, UserId}
 import org.joda.time.{DateTime, DateTimeZone}
@@ -10,7 +10,7 @@ object TestGroup {
   def apply(name: String = "group",
             sectionId: SectionId,
             assignmentId: AssignmentId,
-            date: DateTime = Joda.zero) : Group = Group(null, name, sectionId, assignmentId, date, date)
+            date: DateTime = JodaUTC.zero) : Group = Group(null, name, sectionId, assignmentId, date, date)
 
   def apply(userId: UserId)(implicit session: Session) : (Course, Section, Assignment, Group) = {
     val course = Courses.create(TestCourse(owner = userId))

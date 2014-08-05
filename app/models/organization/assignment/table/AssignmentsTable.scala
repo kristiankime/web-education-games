@@ -3,7 +3,7 @@ package models.organization.assignment.table
 import play.api.db.slick.Config.driver.simple._
 import models.support._
 import org.joda.time.DateTime
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 import models.organization.assignment.Assignment

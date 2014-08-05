@@ -1,6 +1,6 @@
 package models.question.derivative
 
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
@@ -23,7 +23,7 @@ class QuizzesSpec extends Specification {
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
 				val student = newFakeUser(UserTest())
-        val startTime = fakeStartWorkingOn(student, question1.id, Joda.zero)
+        val startTime = fakeStartWorkingOn(student, question1.id, JodaUTC.zero)
 				val answer1 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 				val answer2 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 
@@ -40,7 +40,7 @@ class QuizzesSpec extends Specification {
 				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
 				val question2 = Questions.create(TestQuestion(owner = user.id), quiz.id)
 				val student = newFakeUser(UserTest())
-        val startTime = fakeStartWorkingOn(student, question1.id, Joda.zero)
+        val startTime = fakeStartWorkingOn(student, question1.id, JodaUTC.zero)
         val answer = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id, correct = true))
 
 				val sqr1 = QuestionResults(student, question1, List(answer), Some(startTime))

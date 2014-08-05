@@ -2,7 +2,7 @@ package models.question.derivative
 
 import com.artclod.mathml._
 import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import models.question.AsciiMathML
 import models.question.derivative.table._
 import models.support._
@@ -41,7 +41,7 @@ object Answers {
 
   // ======== TIME ======
   def startWorkingOn(questionId: QuestionId)(implicit user: User, session: Session) =
-    if (startWorkTime(questionId).isEmpty) { answerTimesTable += AnswerTime(user.id, questionId, Joda.now) }
+    if (startWorkTime(questionId).isEmpty) { answerTimesTable += AnswerTime(user.id, questionId, JodaUTC.now) }
 
   def startWorkTime(questionId: QuestionId)(implicit user: User, session: Session) =
     answerTimesTable.where(r => r.userId === user.id && r.questionId === questionId).firstOption

@@ -1,6 +1,6 @@
 package models.organization.table
 
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import play.api.db.slick.Config.driver.simple._
 import models.organization._
 import models.support._

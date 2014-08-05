@@ -39,6 +39,35 @@ package object support {
 		def unbind(key: String, id: UserId): String = longBinder.unbind(key, id.v)
 	}
 
+  // ==========================
+  // OrganizationId
+  // ==========================
+  implicit def long2organizationId = MappedColumnType.base[OrganizationId, Long](
+    id => id.v,
+    long => OrganizationId(long))
+
+  implicit def organizationIdPathBindable(implicit longBinder: PathBindable[Long]) = new PathBindable[OrganizationId] {
+    def bind(key: String, value: String): Either[String, OrganizationId] = {
+      try { Right(OrganizationId(value.toLong)) }
+      catch { case e: NumberFormatException => Left("Could not parse " + value + " as a OrganizationId => " + e.getMessage) }
+    }
+
+    def unbind(key: String, id: OrganizationId): String = longBinder.unbind(key, id.v)
+  }
+
+  implicit def organizationIdQueryStringBindable(implicit longBinder: QueryStringBindable[Long]) = new QueryStringBindable[OrganizationId] {
+    def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, OrganizationId]] = {
+      for { either <- longBinder.bind(key, params) } yield {
+        either match {
+          case Right(long) => Right(OrganizationId(long))
+          case _ => Left("Unable to bind a OrganizationId for key " + key)
+        }
+      }
+    }
+
+    def unbind(key: String, id: OrganizationId): String = longBinder.unbind(key, id.v)
+  }
+
 	// ==========================
 	// CourseId
 	// ==========================

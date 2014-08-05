@@ -2,7 +2,7 @@ package models.question.derivative.table
 
 import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.model.ForeignKeyAction
 import models.question.derivative.table.MathMLMapper._

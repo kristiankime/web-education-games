@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
 import com.artclod.util._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.data.Form
 import play.api.data.Forms._
@@ -47,7 +47,7 @@ object QuizzesController extends Controller with SecureSocialDB {
             BadRequest(views.html.errors.formErrorPage(errors))
           },
           form => {
-              val now = Joda.now
+              val now = JodaUTC.now
               val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
               Redirect(routes.QuizzesController.view(quiz.id, course.id))
             })

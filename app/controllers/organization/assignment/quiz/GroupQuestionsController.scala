@@ -2,7 +2,7 @@ package controllers.organization.assignment.quiz
 
 import controllers.question.derivative.QuestionsController
 import com.artclod.util._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
 import play.api.data.Form
 import play.api.data.Forms._
@@ -32,7 +32,7 @@ object GroupQuestionsController extends Controller with SecureSocialDB {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
-            Questions.create(Question(null, user.id, mathML, form._2, Joda.now), groupId, quiz.id, UserId(form._3))
+            Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), groupId, quiz.id, UserId(form._3))
             Redirect(routes.GroupQuizzesController.view(group.courseId, group.sectionId, group.assignmentId, group.id, quiz.id))
           })
     }

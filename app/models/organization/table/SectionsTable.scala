@@ -1,7 +1,7 @@
 package models.organization.table
 
 import play.api.db.slick.Config.driver.simple._
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import org.joda.time.DateTime
 import models.organization._
 import models.support._

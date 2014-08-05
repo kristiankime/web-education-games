@@ -6,7 +6,7 @@ import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.support._
 import org.joda.time.DateTime
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 

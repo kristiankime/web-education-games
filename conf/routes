@@ -14,6 +14,15 @@ GET         /noconsent                                                          
 GET         /                                                                                          controllers.Home.index
 GET         /user                                                                                      controllers.Home.userInfo
 
+# Organizations
+GET         /orgs/                                                                                   controllers.organization.CoursesController.list
+
+
+
+
+
+
+# ======== START DEPRICATED ========
 # Organization pages
 # Courses
 GET         /courses                                                                                   controllers.organization.CoursesController.list
@@ -62,7 +71,7 @@ POST        /courses/:c/sections/:s/assignments/:a/groups/:g/quizzes/:z/question
 GET         /courses/:c/sections/:s/assignments/:a/groups/:g/quizzes/:z/questions/:q/answers/:n        controllers.organization.assignment.quiz.GroupAnswersController.view(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId, z: QuizId, q: QuestionId, n: AnswerId)
 POST        /courses/:c/sections/:s/assignments/:a/groups/:g/quizzes/:z/questions/:q/answers           controllers.organization.assignment.quiz.GroupAnswersController.create(c: CourseId, s: SectionId, a: AssignmentId, g: GroupId, z: QuizId, q: QuestionId)
 
-# ======== START DEPRICATED ========
+
 # Equation pages
 GET         /equation                                                                                  controllers.EquationController.equations
 POST        /equation                                                                                  controllers.EquationController.newEquation

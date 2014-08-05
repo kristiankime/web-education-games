@@ -2,10 +2,10 @@ package models.question.derivative
 
 import models.support.UserId
 import org.joda.time.DateTime
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 
 object TestQuiz {
 	def apply(owner: UserId,
 		name: String = "quiz",
-		date: DateTime = Joda.zero) = Quiz(null, owner, name, date, date)
+		date: DateTime = JodaUTC.zero) = Quiz(null, owner, name, date, date)
 }

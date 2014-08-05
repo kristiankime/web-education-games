@@ -16,7 +16,7 @@ import java.util.UUID
 import org.joda.time.{DateTimeZone, DateTime}
 import securesocial.core.providers.Token
 import service.table._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
@@ -79,7 +79,7 @@ class SlickUserServiceSpec extends Specification {
 object TestToken {
 	def apply(uuid: String = UUID.randomUUID.toString,
 		email: String = "email",
-		creationTime: DateTime = Joda.now,
-		expirationTime: DateTime = Joda.now.plusDays(1),
+		creationTime: DateTime = JodaUTC.now,
+		expirationTime: DateTime = JodaUTC.now.plusDays(1),
 		isSignUp: Boolean = false) = Token(uuid, email, creationTime, expirationTime, isSignUp)
 }

@@ -4,7 +4,7 @@ import controllers.question.derivative.{QuestionsController, AnswersController}
 
 import scala.util._
 import com.artclod.util._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
 import com.artclod.mathml.Match._
 import play.api.data.Form
@@ -39,7 +39,7 @@ object GroupAnswersController extends Controller with SecureSocialDB {
           form => {
             val math = MathML(form._1).get // TODO better error here
             val rawStr = form._2
-            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, Joda.now)_
+            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
 
             Answers.correct(question, math) match {
               case Yes => Redirect(routes.GroupAnswersController.view(courseId, sectionId, assignmentId, groupId, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))

@@ -4,7 +4,7 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.mvc.{Result, Controller}
 import play.api.data.Form
 import play.api.data.Forms._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import com.artclod.time._
 import com.artclod.util._
 import controllers.support._
@@ -40,7 +40,7 @@ object AssignmentsController extends Controller with SecureSocialDB {
         AssignmentCreate.form.bindFromRequest.fold(
           errors => BadRequest(views.html.organization.assignment.assignmentAdd(course, errors)),
           form => {
-            val now = Joda.now
+            val now = JodaUTC.now
             Assignments.create(Assignment(null, form.name, courseId, user.id, now, now, form.start, form.end))
             Redirect(controllers.organization.routes.CoursesController.view(courseId))
           })

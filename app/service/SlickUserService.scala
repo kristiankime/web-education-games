@@ -1,6 +1,6 @@
 package service
 
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import play.api.Application
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
@@ -11,7 +11,7 @@ import service.table._
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 	// =========== Identity Methods ===========
 	def save(identity: Identity) = DB.withSession { implicit s: Session =>
-    val user = User(identity, Joda.now)
+    val user = User(identity, JodaUTC.now)
 		UsersTable.save(user)
 	}
 

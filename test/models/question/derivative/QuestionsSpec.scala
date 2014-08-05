@@ -1,6 +1,6 @@
 package models.question.derivative
 
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import models.organization.{TestSection, Sections, TestCourse, Courses}
 import models.organization.assignment.{TestAssignment, Assignments, TestGroup, Groups}
 import org.joda.time.{DateTimeZone, DateTime}
@@ -53,7 +53,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
         val question = Questions.create(qTmp, quiz.id)
 
         val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
@@ -67,7 +67,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
         val question = Questions.create(qTmp, quiz.id)
 
         val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
@@ -83,7 +83,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
         val question = Questions.create(qTmp, quiz.id)
         val otherQuestion = Questions.create(TestQuestion(owner = user.id), quiz.id)
 
@@ -102,7 +102,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", Joda.now)
+        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
         val question = Questions.create(qTmp, quiz.id)
         val eq = Questions(question.id)
 
@@ -115,8 +115,8 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
 
-        Questions.create(Question(null, user.id, x + `1`, "x + 2", Joda.now), quiz.id)
-        Questions.create(Question(null, user.id, x + `2`, "x + 2", Joda.now), quiz.id)
+        Questions.create(Question(null, user.id, x + `1`, "x + 2", JodaUTC.now), quiz.id)
+        Questions.create(Question(null, user.id, x + `2`, "x + 2", JodaUTC.now), quiz.id)
 
         val eqs = Questions.list.map(_.mathML)
         eqs must beEqualTo(List(x + `1`, x + `2`))

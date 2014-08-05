@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
 import scala.util._
-import com.artclod.slick.Joda
+import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
 import com.artclod.mathml.Match._
 import com.artclod.mathml.scalar.MathMLElem
@@ -47,7 +47,7 @@ object AnswersController extends Controller with SecureSocialDB {
             val math : MathMLElem = MathML(form._1).get // TODO better error handling
             val rawStr = form._2
             val quizOp : Option[Quiz] = Quizzes(quizId)
-            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, Joda.now)_
+            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
             Answers.correct(question, math) match {
               case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id, course.id))
               case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id, course.id))

@@ -2,7 +2,7 @@ package service.table
 
 import securesocial.core._
 import play.api.db.slick.Config.driver.simple._
-import com.artclod.slick.Joda._
+import com.artclod.slick.JodaUTC._
 import securesocial.core.IdentityId
 import service.table.SecurityMapper._
 import service._

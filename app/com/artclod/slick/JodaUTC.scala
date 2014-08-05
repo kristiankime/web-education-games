@@ -3,7 +3,7 @@ package com.artclod.slick
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.{DateTimeZone, DateTime, Duration}
 
-object Joda {
+object JodaUTC {
 
   implicit def long2Duration = MappedColumnType.base[Duration, Long](
     duration => duration.getMillis,

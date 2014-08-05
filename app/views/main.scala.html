@@ -1,5 +1,7 @@
 @(title: String, headers: Html*)(content: Html)(implicit user: service.User)
 
+@import models.user.UserPimped
+
 <!DOCTYPE html>
 
 <html>
@@ -19,29 +21,24 @@
         <link href="@routes.Assets.at("stylesheets/opentip.css")" rel="stylesheet" type="text/css" />
     </head>
     <body>
-
-    <header>
-    	<div class="header-links">
-        	[<a href="@routes.Home.userInfo">User(@user.email)</a>]
-            [<a href="@routes.Home.index">Home</a>]
-            [<a href="@controllers.organization.routes.CoursesController.list">Courses</a>]
-        	@for(header <- headers) {
-                @header
-            }
-        </div>
-
-        <div class="header-info">
-	    	This site is in Beta. If you have any feedback please <a href="mailto:edutech.brandeis@@gmail.com?subject=EduTech Calculus CoTutor">email us</a>.
-			Version: @controllers.Application.version.toString
-            [<a href="@securesocial.controllers.routes.LoginPage.logout">logout</a>]
-		</div>
-    </header>
-
-	<hr class="header-end">
-
-    <section>
-        @content
-    </section>
-
+        <header>
+            <div class="header-links">
+                [<a href="@routes.Home.index">Home</a>]
+                [<a href="@controllers.organization.routes.CoursesController.list">Courses</a>]
+                @for(header <- headers) {
+                    @header
+                }
+            </div>
+            <div class="header-info">
+                This site is in Beta. If you have any feedback please <a href="mailto:edutech.brandeis@@gmail.com?subject=EduTech Calculus CoTutor">email us</a>.
+                Version: @controllers.Application.version.toString
+                [<a href="@routes.Home.userInfo">@user.name</a>]
+                [<a href="@securesocial.controllers.routes.LoginPage.logout">logout</a>]
+            </div>
+        </header>
+        <hr class="header-end">
+        <section>
+            @content
+        </section>
     </body>
 </html>

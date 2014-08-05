@@ -11,9 +11,13 @@ package object user {
 
     def consented(implicit session: Session) = settings match {
       case None => false
-      case Some(info) => info.consented
+      case Some(setting) => setting.consented
     }
 
+    def name(implicit session: Session) = settings match {
+      case None => throw new IllegalStateException("Programming error, name() should only be called if the user has settings")
+      case Some(setting) => setting.name
+    }
   }
 
 }

@@ -7,11 +7,13 @@ import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
 
+import scala.util.Failure
+
 
 object Consent extends Controller with SecureSocialDB {
 
-  def consent(goTo: Option[String]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    Ok(views.html.user.consent(goTo))
+  def consent(goTo: Option[String], error : Option[String]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    Ok(views.html.user.consent(goTo, error))
   }
 
   def noConsent() = SecuredUserDBAction { implicit request => implicit user => implicit session =>
@@ -28,15 +30,16 @@ object Consent extends Controller with SecureSocialDB {
 
         val consented = consentedForm
 
-        (UserSettings(user.id) match {
+        val settings = (UserSettings(user.id) match {
           case Some(setting) => UserSettings.update(setting.copy(consented = consented))
           case None => UserSettings.create(UserSetting(userId = user.id, consented = consented, name = UserSettings.validName(user.identityId.userId), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
         })
 
-        (consented, goTo) match {
-          case (false, _) => Redirect(routes.Consent.noConsent())
-          case (true, Some(path)) => Redirect(path)
-          case (true, None) => Redirect(routes.Home.index())
+        (settings, consented, goTo) match {
+          case (Failure(_), _, _) => Redirect(routes.Consent.consent(goTo, Some("Sorry a system error occured please try again")))
+          case (_, false, _) => Redirect(routes.Consent.noConsent())
+          case (_, true, Some(path)) => Redirect(path)
+          case (_, true, None) => Redirect(routes.Home.index())
         }
 
       })

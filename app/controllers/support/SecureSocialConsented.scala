@@ -18,7 +18,7 @@ trait SecureSocialConsented extends SecureSocial {
   object ConsentedAction {
 
     def consentForm(path: String) =
-      Redirect(routes.Consent.consent(Some(path)))
+      Redirect(routes.Consent.consent(Some(path), None))
 
     def apply(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
       DB.withSession { session: Session =>

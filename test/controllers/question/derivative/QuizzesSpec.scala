@@ -29,7 +29,7 @@ class QuizzesSpec extends Specification {
           val quiz = Quizzes.create(TestQuiz(owner = owner.id), course.id)
           val question = Questions.create(TestQuestion(owner = owner.id), quiz.id)
 
-          val routeStr: String = "/quizzes/" + quiz.id.v + "/questions/" + question.id.v + "?cid=" + course.id.v
+          val routeStr: String = "/courses/" + course.id.v + "/quizzes/" + quiz.id.v + "/questions/" + question.id.v
 
           val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
 

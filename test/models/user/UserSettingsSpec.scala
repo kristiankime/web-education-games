@@ -19,7 +19,13 @@ class UserSettingsSpec extends Specification {
 
   "validName" should {
 
-    "create a unique name" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
+    "return the starting name if it does not conflict" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
+      val newName = UserSettings.validName("name")
+
+      newName must beEqualTo("name")
+    }  }
+
+    "create a unique name if the name already exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
       val user1 = newFakeUserNoConsent
       val user1Settings = UserSetting(userId = user1.id, name = "name")
       UserSettings.create(user1Settings)

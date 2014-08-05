@@ -6,7 +6,7 @@
 GET         /*path/                                                                                    controllers.Application.untrail(path: String)
 
 # Consent Form
-GET         /consent                                                                                   controllers.Consent.consent(goTo: Option[String])
+GET         /consent                                                                                   controllers.Consent.consent(goTo: Option[String], error: Option[String])
 POST        /consent                                                                                   controllers.Consent.consentSubmit(goTo: Option[String])
 GET         /noconsent                                                                                 controllers.Consent.noConsent
 

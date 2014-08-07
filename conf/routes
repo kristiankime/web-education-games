@@ -15,7 +15,8 @@ GET         /                                                                   
 GET         /user                                                                                      controllers.Home.userInfo
 
 # Organizations
-GET         /orgs/                                                                                   controllers.organization.CoursesController.list
+GET         /orgs/                                                                                     controllers.organization.OrganizationsController.list
+GET         /orgs/:o                                                                                   controllers.organization.OrganizationsController.view(o: OrganizationId)
 
 
 

@@ -1,0 +1,23 @@
+@(organizations: List[models.organization.Organization])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import views.html.tag._
+
+@main("List of Organizations") {
+
+    <h1> Welcome to the list of Organizations available on the CalcTutor </h1>
+
+    <h5> Here are the list of organizations </h5>
+    click on a organization for more info (or to join it)
+
+    <section>
+    @if(organizations.isEmpty) {
+        There are currently no organizations
+    } else {
+        <ul>
+        @for(organization <- organizations) {
+            <li> [ @organizationLink(organization) ] </li>
+        }
+        </ul>
+    }
+    </section>
+}

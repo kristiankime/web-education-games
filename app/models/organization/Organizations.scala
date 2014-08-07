@@ -10,6 +10,8 @@ case class Organization(id: OrganizationId, name: String, creationDate: DateTime
 
 object Organizations {
 
+  def list(implicit session: Session) = List(brandeis)
+
   def brandeis(implicit session: Session) = {
     val name = "Brandeis University"
 

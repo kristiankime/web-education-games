@@ -2,8 +2,7 @@ package controllers.organization
 
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser
-import models.organization.{Courses, Sections, TestCourse, TestSection}
-import models.question.derivative.{Questions, Quizzes, TestQuestion, TestQuiz}
+import models.organization._
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -11,10 +10,9 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test.Helpers._
 import play.api.test._
-import service.{UserTest => U}
 
 @RunWith(classOf[JUnitRunner])
-class CoursesSpec extends Specification {
+class CoursesControllerSpec extends Specification {
 
   "Courses" should {
 
@@ -22,9 +20,10 @@ class CoursesSpec extends Specification {
       DB.withSession {
         implicit session: Session =>
           val user = newFakeUser
-          val course = Courses.create(TestCourse(owner = newFakeUser.id))
+          val organization = Organizations.create(TestOrganization())
+          val course = Courses.create(TestCourse(owner = newFakeUser.id, organizationId = organization.id))
 
-          val page = route(FakeRequest(GET, "/courses/" + course.id.v).withLoggedInUser(user)).get
+          val page = route(FakeRequest(GET, "/orgs/" + organization.id.v + "/courses/" + course.id.v).withLoggedInUser(user)).get
 
           status(page) must equalTo(OK)
           contentType(page) must beSome.which(_ == "text/html")
@@ -36,8 +35,8 @@ class CoursesSpec extends Specification {
       DB.withSession {
         implicit session: Session =>
           val user = newFakeUser
-
-          val page = route(FakeRequest(GET, "/courses/add").withLoggedInUser(user)).get
+          val organization = Organizations.create(TestOrganization())
+          val page = route(FakeRequest(GET, "/orgs/" + organization.id.v + "/courses/create").withLoggedInUser(user)).get
 
           status(page) must equalTo(OK)
           contentType(page) must beSome.which(_ == "text/html")

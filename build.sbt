@@ -17,8 +17,9 @@ libraryDependencies ++= Seq(
   "postgresql"              %  "postgresql"          % "9.1-901-1.jdbc4" withSources,
   "com.typesafe.play"       %% "play-slick"          % "0.6.0.1" withSources,
   "securesocial"            %% "securesocial"        % "2.1.2" withSources,
-  "com.typesafe"            %% "play-plugins-mailer" % "2.2.0" withSources,
-  "io.github.nicolasstucki" %% "multisets"           % "0.1" withSources)
+  "com.typesafe"            %% "play-plugins-mailer" % "2.2.0" withSources //,
+//  "io.github.nicolasstucki" %% "multisets"           % "0.1" withSources
+)
 
 resolvers ++= Seq(
   Resolver.url("sbt-plugin-releases", new URL("http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)

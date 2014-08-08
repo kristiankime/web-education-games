@@ -7,7 +7,6 @@
 @import controllers.question.derivative.QuizForm
 @import controllers.question.derivative.routes.QuizzesController
 @import controllers.organization.routes._
-@import controllers.organization.assignment.routes.GroupsController
 
 @main("Create a Quiz") {
 
@@ -15,8 +14,7 @@
 
     This quiz is for the course [ @courseLink(course) ] <br>
 
-
-    @form(action = QuizzesController.create(course.id)) {
+    @form(action = QuizzesController.createSubmit(course.organizationId, course.id)) {
         Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
         <input type="submit" value="Submit">
     }

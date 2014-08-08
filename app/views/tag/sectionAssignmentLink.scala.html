@@ -1,1 +1,0 @@
-@(section: models.organization.Section, assignment: models.organization.assignment.Assignment)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.organization.assignment.routes.AssignmentsController.viewSection(section.course.id, section.id, assignment.id)">@section.name and @assignment.name</a>

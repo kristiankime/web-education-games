@@ -1,12 +1,12 @@
-@(courses: List[models.organization.Course])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(organization: models.organization.Organization, courses: List[models.organization.Course])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import views.html.tag._
 
-@main("Course Catalog") {
+@main("Courses for " + organization.name) {
 
-    <h1> Welcome to the EdTech Course Catalog </h1>
+    <h1> Welcome to the Course Catalog for @organization.name</h1>
 
-    <h5> Here are the list of courses and sections </h5>
+    <h5> Here are the list of courses </h5>
     click on a course or section for more info (or to join it)
 
     <section>
@@ -14,16 +14,7 @@
         There are currently no available courses
     } else {
         <ul>
-        @for(course <- courses) {
-            <li> [ @courseLink(course) ] @accessName(course.access) </li>
-            @if(course.sections.nonEmpty) {
-                <ul>
-                @for(section <- course.sections) {
-                    <li> [ @sectionLink(section) ] @accessName(section.access) </li>
-                }
-                </ul>
-            }
-        }
+            @for(course <- courses) {<li> [ @courseLink(course) ] @accessName(course.access) </li>}
         </ul>
     }
     </section>

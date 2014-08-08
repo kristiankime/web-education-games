@@ -1,1 +1,1 @@
-@(course: models.organization.Course, quiz: models.question.derivative.Quiz)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.question.derivative.routes.QuizzesController.view(quiz.id, course.id)">@quiz.name</a>
+@(course: models.organization.Course, quiz: models.question.derivative.Quiz)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.question.derivative.routes.QuizzesController.view(course.organizationId, course.id, quiz.id)">@quiz.name</a>

@@ -17,7 +17,7 @@
     This is a quiz for the course [ @courseLink(course) ] <br>
 
     @if(access.write){
-    	@form(QuizzesController.rename(quizResults.quiz.id, course.id), 'class -> "inline-block") {
+    	@form(QuizzesController.rename(course.organizationId, course.id, quizResults.quiz.id), 'class -> "inline-block") {
      		To rename type a new name here <input type="text" name="@QuizForm.name" value="@quizResults.quiz.name"> 
     		and click <input type="submit" value="rename" > 
     	} 
@@ -30,9 +30,9 @@
         @for(result <- quizResults.results){
             <tr>
             	<td> @mathml.mathmlContent(result.question) </td>
-            	<td> <a href="@QuestionsController.view(quizResults.quiz.id, result.question.id, course.id)">view</a> </td>
+            	<td> <a href="@QuestionsController.view(course.organizationId, course.id, quizResults.quiz.id, result.question.id)">view</a> </td>
                 <td> @views.html.question.status(result.status) </td>
-                @if(access.write){ <td> @form(QuestionsController.remove(quizResults.quiz.id, result.question.id, course.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
+                @if(access.write){ <td> @form(QuestionsController.remove(course.organizationId, course.id, quizResults.quiz.id, result.question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
             </tr>
         }
     </table>
@@ -45,7 +45,7 @@
 			@mathml.mathmlEditor(editorName="QUESTION")
 		</p>
 	
-	    @form(QuestionsController.create(quizResults.quiz.id, course.id), 'id -> "derivativeqForm" ) {
+	    @form(QuestionsController.create(course.organizationId, course.id, quizResults.quiz.id), 'id -> "derivativeqForm" ) {
 	    	<input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
 	    	<input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
 	    	<input type="button" value="Save Question" onclick="formSubmit()">
@@ -63,6 +63,6 @@
 	    </script>
     }
     
-    @for(sectionResults <- sectionResultsOp) {@views.html.tag.sectionResults(sectionResults)}
+    @* @for(sectionResults <- sectionResultsOp) {@views.html.tag.sectionResults(sectionResults)} *@
 
 }

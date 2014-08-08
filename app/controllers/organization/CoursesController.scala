@@ -1,61 +1,76 @@
 package controllers.organization
 
 import play.api.db.slick.Config.driver.simple.Session
-import scala.util.Random
+import scala.util.{Right, Random}
 import com.artclod.random._
 import com.artclod.slick.JodaUTC
+import com.artclod.util._
 import play.api.mvc.{Result, Controller}
 import play.api.data.Form
 import play.api.data.Forms._
 import service._
 import models.support._
 import models.organization._
-import controllers.support.SecureSocialDB
+import controllers.support.SecureSocialConsented
 
-object CoursesController extends Controller with SecureSocialDB {
+object CoursesController extends Controller with SecureSocialConsented {
 	implicit val randomEngine = new Random(JodaUTC.now.getMillis())
   val codeRange = (0 to 100000).toVector
 
-  def apply(courseId: CourseId)(implicit session: Session) : Either[Result, Course] = Courses(courseId) match {
-    case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for id=["+courseId+"]")))
-    case Some(course) => Right(course)
-  }
+  def apply(organizationId: OrganizationId, courseId: CourseId)(implicit session: Session) : Either[Result, (Organization, Course)] =
+    Courses(courseId) match {
+      case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for id=["+courseId+"]")))
+      case Some(course) => {
+        if(course.organizationId ^!= organizationId) Left(NotFound(views.html.errors.notFoundPage("organizationId=[" + organizationId +"] was not for courseId=["+courseId+"]")))
+        else Right((course.organization, course))
+      }
+    }
 
-	def list = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.organization.courseList(Courses.list))
-	}
-
-	def add = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		Ok(views.html.organization.courseAdd())
-	}
-
-	def create = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-		CourseCreate.form.bindFromRequest.fold(
-			errors => BadRequest(views.html.index()),
-			form => {
-        val (editNum, viewNum) = codeRange.pick2From
-        val now = JodaUTC.now
-				val course = Courses.create(Course(null, form, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, now, now))
-				Redirect(routes.CoursesController.view(course.id))
-			})
-	}
-
-	def view(courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    CoursesController(courseId) match {
+	def list(organizationId: OrganizationId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    OrganizationsController(organizationId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right(course) => Ok(views.html.organization.courseView(course))
+      case Right(organization) => Ok(views.html.organization.courseList(organization, Courses.list(organization.id)))
     }
 	}
 
-	def join(courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    CoursesController(courseId) match {
+	def createForm(organizationId: OrganizationId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    OrganizationsController(organizationId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right(course) => CourseJoin.form.bindFromRequest.fold(
+      case Right(organization) => Ok(views.html.organization.courseCreate(organization))
+    }
+	}
+
+	def createSubmit(organizationId: OrganizationId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    OrganizationsController(organizationId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(organization) =>
+        CourseCreate.form.bindFromRequest.fold(
+          errors => BadRequest(views.html.index()),
+          form => {
+            val (editNum, viewNum) = codeRange.pick2From
+            val now = JodaUTC.now
+            val course = Courses.create(Course(null, form, organization.id, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, now, now))
+            Redirect(routes.CoursesController.view(organization.id, course.id))
+          })
+    }
+	}
+
+	def view(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    CoursesController(organizationId, courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course)) => Ok(views.html.organization.courseView(organization, course))
+    }
+	}
+
+	def join(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    CoursesController(organizationId, courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course)) => CourseJoin.form.bindFromRequest.fold(
         errors => BadRequest(views.html.index()),
         form => {
             if (course.viewCode == form) Courses.grantAccess(course, View)
             if (course.editCode == form) Courses.grantAccess(course, Edit)
-            Redirect(routes.CoursesController.view(course.id)) // TODO indicate access was not granted in a better fashion
+            Redirect(routes.CoursesController.view(organization.id, course.id)) // TODO indicate access was not granted in a better fashion
         })
     }
 	}

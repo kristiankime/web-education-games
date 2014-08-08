@@ -9,38 +9,37 @@ import play.api.mvc.{Result, Controller}
 import controllers.organization.CoursesController
 import models.support._
 import models.question.derivative._
-import models.organization.Course
-import controllers.support.{RequireAccess, SecureSocialDB}
+import models.organization._
+import controllers.support.{SecureSocialConsented, RequireAccess, SecureSocialDB}
 import play.api.Logger
 import service.Edit
 
 
-object QuizzesController extends Controller with SecureSocialDB {
+object QuizzesController extends Controller with SecureSocialConsented {
 
-  def apply(courseId: CourseId, quizId: QuizId)(implicit session: Session) : Either[Result, (Course, Quiz)] =
+  def apply(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId)(implicit session: Session) : Either[Result, (Organization, Course, Quiz)] =
     Quizzes(quizId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for id=["+quizId+"]")))
       case Some(quiz) => {
-        quiz.course match {
-          case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for the quiz for id=["+quizId+"]")))
+        quiz.course(courseId) match {
+          case None => Left(NotFound(views.html.errors.notFoundPage("The course for id=[" + courseId + "] was not associated with the quiz for id=["+quizId+"]")))
           case Some(course) =>
-            if (course.id ^!= courseId) Left(NotFound(views.html.errors.notFoundPage("quizId=[" + quizId + "] was not for courseId=[" + courseId + "]")))
-            else Right((course, quiz))
+            CoursesController(organizationId, courseId) + Right(quiz)
         }
       }
     }
 
-  def add(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
-    CoursesController(courseId) match {
+  def createForm(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right(course) => Ok(views.html.question.derivative.quizAdd(course))
+      case Right((organization, course)) => Ok(views.html.question.derivative.quizAdd(course))
     }
   }
 
-  def create(courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
-    CoursesController(courseId) match {
+  def createSubmit(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right(course) =>
+      case Right((organization, course)) =>
         QuizForm.values.bindFromRequest.fold(
           errors => {
             Logger("create").info("error" + errors)
@@ -49,15 +48,15 @@ object QuizzesController extends Controller with SecureSocialDB {
           form => {
               val now = JodaUTC.now
               val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
-              Redirect(routes.QuizzesController.view(quiz.id, course.id))
+              Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
             })
     }
   }
 
-  def view(quizId: QuizId, courseId: CourseId) = SecuredUserDBAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) match {
+  def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz)) => {
+      case Right((organization, course, quiz)) => {
         val access = course.access
         val sectionResultsOp = access.write(() => course.sectionResults(quiz))
         Ok(views.html.question.derivative.quizView(access, course, quiz.results(user), sectionResultsOp))
@@ -65,15 +64,15 @@ object QuizzesController extends Controller with SecureSocialDB {
     }
   }
 
-  def rename(quizId: QuizId, courseId: CourseId) = SecuredUserDBAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) match {
+  def rename(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz)) =>
+      case Right((organization, course, quiz)) =>
         QuizForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.index()),
           form => {
             Quizzes.rename(quizId, form)
-            Redirect(routes.QuizzesController.view(quizId, courseId))
+            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
           })
     }
   }

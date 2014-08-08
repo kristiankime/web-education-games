@@ -9,7 +9,6 @@ import play.api.db.slick._
 import play.api.test.{FakeApplication, WithApplication}
 import com.artclod.util.TryUtil._
 
-import scala.collection.Bag
 import scala.collection.parallel.CompositeThrowable
 import scala.util.{Failure, Success}
 import play.api.Logger

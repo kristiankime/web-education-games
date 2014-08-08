@@ -1,1 +1,0 @@
-@(group: models.organization.assignment.Group, quiz: models.question.derivative.Quiz)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.organization.assignment.quiz.routes.GroupQuizzesController.view(group.courseId, group.sectionId, group.assignmentId, group.id, quiz.id)">@quiz.name</a>

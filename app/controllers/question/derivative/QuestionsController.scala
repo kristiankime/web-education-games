@@ -7,12 +7,12 @@ import com.artclod.util._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{Result, Controller}
-import controllers.support.SecureSocialDB
+import controllers.support.{SecureSocialConsented, SecureSocialDB}
 import models.question.derivative._
 import models.support._
 import models.organization.Course
 
-object QuestionsController extends Controller with SecureSocialDB {
+object QuestionsController extends Controller with SecureSocialConsented {
 
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {
@@ -25,11 +25,11 @@ object QuestionsController extends Controller with SecureSocialDB {
       }
     }
 
-	def view(quizId: QuizId, questionId: QuestionId, courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) +
+	def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) +
     QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course : Course, quiz: Quiz, question: Question)) => {
+      case Right((organization, course , quiz, question)) => {
         val nextQuestion = quiz.results(user).nextQuestion(question)
         Answers.startWorkingOn(question.id)
         Ok(views.html.question.derivative.questionView(course, quiz, question.results(user), None))
@@ -37,28 +37,28 @@ object QuestionsController extends Controller with SecureSocialDB {
     }
 	}
 
-	def create(quizId: QuizId, courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) match {
+	def create(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz)) => {
+      case Right((organization, course, quiz)) => {
         QuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
             Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quizId)
-            Redirect(routes.QuizzesController.view(quiz.id, course.id))
+            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
           })
       }
     }
 	}
 
-	def remove(quizId: QuizId, questionId: QuestionId, courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) +
+	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) +
       QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz, question)) => {
+      case Right((organization, course, quiz, question)) => {
         quiz.remove(question)
-        Redirect(routes.QuizzesController.view(quiz.id, course.id))
+        Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
       }
     }
 	}

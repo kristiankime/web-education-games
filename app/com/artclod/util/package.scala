@@ -60,5 +60,11 @@ package object util {
       }
   }
 
-
+  implicit class EitherCombine4[L, R1, R2, R3, R4](e: Either[L, (R1, R2, R3, R4)]) {
+    def +[R](o: Either[L, R]) = (e, o) match {
+      case (Left(l), _) => Left(l)
+      case (_, Left(l)) => Left(l)
+      case (Right(a), Right(b)) => Right((a._1, a._2, a._3, a._4, b))
+    }
+  }
 }

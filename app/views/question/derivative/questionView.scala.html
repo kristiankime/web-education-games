@@ -38,7 +38,7 @@
     </section>
 
     <section>
-    @form(AnswersController.create(quiz.id, results.question.id, course.id), 'id -> "answerForm") {
+    @form(AnswersController.create(course.organizationId, course.id, quiz.id, results.question.id), 'id -> "answerForm") {
         <input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
         <input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">
@@ -59,15 +59,15 @@
 
     @* ===== Question Navigation ===== *@
     @defining(quiz.previousQuestion(results.question)){ previousOp =>
-        @for(previous <- previousOp) {Go to the [<a href="@QuestionsController.view(quiz.id, previous.id, course.id)">previous question</a>]<br>}
+        @for(previous <- previousOp) {Go to the [<a href="@QuestionsController.view(course.organizationId, course.id, quiz.id, previous.id)">previous question</a>]<br>}
     }
 
     @defining(quiz.firstUnfinishedQuestion(user)){ unfinishedOp =>
-        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@QuestionsController.view(quiz.id, unfinished.question.id, course.id)">unfinished question</a>]<br>}
+        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@QuestionsController.view(course.organizationId, course.id, quiz.id, unfinished.question.id)">unfinished question</a>]<br>}
     }
 
     @defining(quiz.nextQuestion(results.question)){ nextOp =>
-        @for(next <- nextOp) {Go to the [<a href="@QuestionsController.view(quiz.id, next.id, course.id)">next question</a>]}
+        @for(next <- nextOp) {Go to the [<a href="@QuestionsController.view(course.organizationId, course.id, quiz.id, next.id)">next question</a>]}
         @if(nextOp.isEmpty) {This is the last question, back to the quiz [ @courseQuizLink(course, quiz) ]}
     }
     <br>

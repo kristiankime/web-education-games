@@ -9,7 +9,9 @@ import models.organization.assignment.Assignments
 import viewsupport.organization._
 import service._
 
-case class Course(id: CourseId, name: String, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
+case class Course(id: CourseId, name: String, organizationId: OrganizationId, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
+
+  def organization(implicit session: Session) = Organizations(organizationId).get
 
 	def sections(implicit session: Session) = Sections(id)
 
@@ -56,7 +58,9 @@ object Courses {
 
   def list(implicit session: Session) = coursesTable.list
 
-	// ======= AUTHORIZATION ======
+  def list(organizationId: OrganizationId)(implicit session: Session) = coursesTable.where(_.organization === organizationId).list
+
+  // ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =
     Users2CoursesTable.usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 

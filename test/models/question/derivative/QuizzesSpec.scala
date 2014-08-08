@@ -1,6 +1,7 @@
 package models.question.derivative
 
 import com.artclod.slick.JodaUTC
+import models.support.CourseId
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
@@ -10,8 +11,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.DBTest._
 import service._
 import viewsupport.question.derivative._
-import models.organization.Courses
-import models.organization.TestCourse
+import models.organization._
 
 @RunWith(classOf[JUnitRunner])
 class QuizzesSpec extends Specification {
@@ -95,7 +95,8 @@ class QuizzesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val quiz = Quizzes.create(TestQuiz(owner = newFakeUser(UserTest()).id))
 				val user = newFakeUser(UserTest())
-				Courses.create(TestCourse(owner = user.id)) // This course does not contain the quiz so it should have no effect
+        val organization = Organizations.create(TestOrganization())
+        Courses.create(TestCourse(owner = user.id, organizationId = organization.id)) // This course does not contain the quiz so it should have no effect
 				
 				quiz.access(user, session) must beEqualTo(Non)
 			}
@@ -104,7 +105,8 @@ class QuizzesSpec extends Specification {
 		"return edit if the user owns a course that contains the quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = user.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = user.id, organizationId = organization.id))
 				val quiz = Quizzes.create(TestQuiz(owner = newFakeUser(UserTest()).id), course.id)
 
 				quiz.access(user, session) must beEqualTo(Edit)
@@ -117,10 +119,11 @@ class QuizzesSpec extends Specification {
     "return a course if the quiz is associated with a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = newFakeUser(UserTest())
-        val course = Courses.create(TestCourse(owner = user.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = user.id, organizationId = organization.id))
         val quiz = Quizzes.create(TestQuiz(owner = user.id), course.id)
 
-        quiz.course.get must beEqualTo(course)
+        quiz.course(course.id).get must beEqualTo(course)
       }
     }
 
@@ -129,7 +132,7 @@ class QuizzesSpec extends Specification {
         val user = newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id))
 
-        quiz.course must beNone
+        quiz.course(CourseId(0L)) must beNone
       }
     }
 

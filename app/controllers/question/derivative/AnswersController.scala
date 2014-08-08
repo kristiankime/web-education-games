@@ -10,14 +10,14 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{Result, Controller}
-import controllers.support.SecureSocialDB
+import controllers.support.{SecureSocialConsented, SecureSocialDB}
 import models.support._
 import models.organization._
 import models.question.derivative._
 import service._
 
 
-object AnswersController extends Controller with SecureSocialDB {
+object AnswersController extends Controller with SecureSocialConsented {
 
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
     Answers(answerId) match {
@@ -27,20 +27,20 @@ object AnswersController extends Controller with SecureSocialDB {
         else Right(answer)
     }
 
-	def view(quizId: QuizId, questionId: QuestionId, answerId: AnswerId, courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) +
+	def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId, answerId: AnswerId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) +
     QuestionsController(quizId, questionId) +
     AnswersController(questionId, answerId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz, question, answer)) => questionView(course, quiz, question, Some(Right(answer)))
+      case Right((organization, course, quiz, question, answer)) => questionView(course, quiz, question, Some(Right(answer)))
     }
 	}
 
-	def create(quizId: QuizId, questionId: QuestionId, courseId: CourseId) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    QuizzesController(courseId, quizId) +
+	def create(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuizzesController(organizationId, courseId, quizId) +
     QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((course, quiz, question)) => {
+      case Right((organization, course, quiz, question)) => {
         AnswerForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.index()),
           form => {
@@ -49,8 +49,8 @@ object AnswersController extends Controller with SecureSocialDB {
             val quizOp : Option[Quiz] = Quizzes(quizId)
             val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
             Answers.correct(question, math) match {
-              case Yes => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id, course.id))
-              case No => Redirect(routes.AnswersController.view(quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id, course.id))
+              case Yes => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+              case No => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => questionView(course, quiz, question, Some(Left(unfinishedAnswer(false))))
             }
           })

@@ -2,7 +2,7 @@ package controllers.question.derivative
 
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser
-import models.organization.{Courses, Sections, TestCourse, TestSection}
+import models.organization._
 import models.question.derivative.{Questions, Quizzes, TestQuestion, TestQuiz}
 import org.junit.runner._
 import org.specs2.mutable._
@@ -15,7 +15,7 @@ import service.{UserTest => U}
 
 
 @RunWith(classOf[JUnitRunner])
-class QuizzesSpec extends Specification {
+class QuizzesControllerSpec extends Specification {
 
   "Quizzes" should {
 
@@ -25,11 +25,12 @@ class QuizzesSpec extends Specification {
           val user = newFakeUser
 
           val owner = newFakeUser
-          val course = Courses.create(TestCourse(owner = owner.id))
+          val organization = Organizations.create(TestOrganization())
+          val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
           val quiz = Quizzes.create(TestQuiz(owner = owner.id), course.id)
           val question = Questions.create(TestQuestion(owner = owner.id), quiz.id)
 
-          val routeStr: String = "/courses/" + course.id.v + "/quizzes/" + quiz.id.v + "/questions/" + question.id.v
+          val routeStr: String = "/orgs/" + organization.id.v + "/courses/" + course.id.v + "/quizzes/" + quiz.id.v + "/questions/" + question.id.v
 
           val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
 

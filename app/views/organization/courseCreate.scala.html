@@ -1,0 +1,18 @@
+@(organization: models.organization.Organization)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.organization.CourseCreate
+@import controllers.organization.routes._
+ 
+@main("Create a new Course for " + organization.name) {
+    
+    <h1>Welcome to the create a course page for @organization.name</h1>
+    
+    <h5>Please enter the information about your course:</h5>
+    
+    @form(action = CoursesController.createSubmit(organization.id)) {
+		Name: <input type="text" name="@CourseCreate.name" value="course name"> <br>
+	    <input type="submit" value="Submit">
+    }
+    
+}

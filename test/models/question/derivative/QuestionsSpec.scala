@@ -1,8 +1,8 @@
 package models.question.derivative
 
 import com.artclod.slick.JodaUTC
-import models.organization.{TestSection, Sections, TestCourse, Courses}
-import models.organization.assignment.{TestAssignment, Assignments, TestGroup, Groups}
+import models.organization._
+import models.organization.assignment._
 import org.joda.time.{DateTimeZone, DateTime}
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -128,55 +128,6 @@ class QuestionsSpec extends Specification {
         val eq = Questions(QuestionId(Int.MaxValue))
 
         eq must beNone
-      }
-    }
-
-  }
-
-  "Questions.create (group version)" should {
-
-    "create a new questions and associate it with a user, quiz and group" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      DB.withSession { implicit session: Session =>
-        val admin = newFakeUser
-        val (course, section, assignment, group) = TestGroup(admin.id)
-        val quiz = Quizzes.create(TestQuiz(admin.id), group.id)
-        val student = DBTest.newFakeUser(UserTest())
-
-        val question = Questions.create(TestQuestion(student.id), group.id, quiz.id, student.id)
-
-        question.forWho must beSome(student)
-        question.group must beSome(group)
-        question.quiz must beSome(quiz)
-      }
-    }
-
-
-    "throw if a question has already been created for a given user in that quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      DB.withSession { implicit session: Session =>
-        val admin = newFakeUser
-        val (course, section, assignment, group) = TestGroup(admin.id)
-        val quiz = Quizzes.create(TestQuiz(admin.id), group.id)
-        val student = DBTest.newFakeUser(UserTest())
-
-        val question1 = Questions.create(TestQuestion(student.id), group.id, quiz.id, student.id)
-        Questions.create(TestQuestion(student.id), group.id, quiz.id, student.id) must throwAn[IllegalStateException]
-      }
-    }
-
-    "not throw if a question has already been created for a given user in a different quiz" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      DB.withSession { implicit session: Session =>
-        val admin = newFakeUser
-        val (course, section, assignment, group) = TestGroup(admin.id)
-        val quiz1 = Quizzes.create(TestQuiz(admin.id), group.id)
-        val quiz2 = Quizzes.create(TestQuiz(admin.id), group.id)
-        val student = DBTest.newFakeUser(UserTest())
-
-        val question1 = Questions.create(TestQuestion(student.id), group.id, quiz1.id, student.id)
-
-        val question2 = Questions.create(TestQuestion(student.id), group.id, quiz2.id, student.id)
-        question2.forWho must beSome(student)
-        question2.group must beSome(group)
-        question2.quiz must beSome(quiz2)
       }
     }
 

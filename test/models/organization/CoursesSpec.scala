@@ -25,7 +25,8 @@ class CoursesSpec extends Specification {
 		
 		"grant the requested access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val course = Courses.create(TestCourse(owner = DBTest.newFakeUser(UserTest()).id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
 				val user = DBTest.newFakeUser(UserTest())
 				
 				course.grantAccess(Edit)(user, session)
@@ -36,7 +37,8 @@ class CoursesSpec extends Specification {
 		
 		"keep the higher access if access is granted twice" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val course = Courses.create(TestCourse(owner = DBTest.newFakeUser(UserTest()).id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
 				val user = DBTest.newFakeUser(UserTest())
 				
 				course.grantAccess(Edit)(user, session)
@@ -48,9 +50,10 @@ class CoursesSpec extends Specification {
 		
 		"only grant access to the requested course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val course1 = Courses.create(TestCourse(owner = DBTest.newFakeUser(UserTest()).id))
-				val course2 = Courses.create(TestCourse(owner = DBTest.newFakeUser(UserTest()).id))
-				val course3 = Courses.create(TestCourse(owner = DBTest.newFakeUser(UserTest()).id))
+        val organization = Organizations.create(TestOrganization())
+        val course1 = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+				val course2 = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+				val course3 = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
 				val user = DBTest.newFakeUser(UserTest())
 				
 				course1.grantAccess(Edit)(user, session)
@@ -64,7 +67,8 @@ class CoursesSpec extends Specification {
 		
 		"only grant the specified user access to the requested course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
-				val course = Courses.create(TestCourse(owner = DBTest.newFakeUser(UserTest()).id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
 				val userWithAccess = DBTest.newFakeUser(UserTest())
 				val userNoAccess = DBTest.newFakeUser(UserTest())
 				
@@ -82,7 +86,8 @@ class CoursesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.newFakeUser(UserTest())
 				val accessor = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
 				val courses0 = Courses.list(session)(0)
 
 				courses0.access(accessor, session) must beEqualTo(Non)
@@ -92,7 +97,8 @@ class CoursesSpec extends Specification {
 		"be Own when a user is the owner of the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
 				val courses0 = Courses.list(session)(0)
 
 				courses0.access(owner, session) must beEqualTo(Own)
@@ -103,7 +109,8 @@ class CoursesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.newFakeUser(UserTest())
 				val accessor = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
 				Courses.grantAccess(course, Edit)(accessor, session)
 				val courses0 = Courses.list(session)(0)
 
@@ -115,7 +122,8 @@ class CoursesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.newFakeUser(UserTest())
 				val accessor = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
 				Courses.grantAccess(course, Edit)(accessor, session)
 				val courses0 = Courses.list(session)(0)
 
@@ -126,7 +134,8 @@ class CoursesSpec extends Specification {
 		"be Own when a user is the owner of the course even if they have other lower access" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val owner = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
 				Courses.grantAccess(course, Edit)(owner, session)
 				val course0 = Courses.list(session)(0)
 
@@ -134,38 +143,6 @@ class CoursesSpec extends Specification {
 			}
 		}
 
-		"be Own for the owner, Edit for a section teacher and View for a section student" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val owner = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
-				val section = Sections.create(TestSection(owner = owner.id, courseId = course.id))
-				
-				val teacher = DBTest.newFakeUser(UserTest())
-				Sections.grantAccess(section, Edit)(teacher, session)
-
-				val student = DBTest.newFakeUser(UserTest())
-				Sections.grantAccess(section, View)(student, session)
-				
-				Courses.list(session)(0).access(owner, session) must beEqualTo(Own)
-				Courses.list(session)(0).access(teacher, session) must beEqualTo(Edit)
-				Courses.list(session)(0).access(student, session) must beEqualTo(View)
-			}
-		}
 	}
 
-	"access to section" should {
-
-		"be Non when a user has no connection to the section" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-			DB.withSession { implicit session: Session =>
-				val owner = DBTest.newFakeUser(UserTest())
-				val accessor = DBTest.newFakeUser(UserTest())
-				val course = Courses.create(TestCourse(owner = owner.id))
-				val section = Sections.create(TestSection(courseId = course.id, owner = owner.id))
-
-				val section0 = Courses(course.id)(session).get.sections(session)(0)
-
-				section0.access(accessor, session) must beEqualTo(Non)
-			}
-		}
-	}
 }

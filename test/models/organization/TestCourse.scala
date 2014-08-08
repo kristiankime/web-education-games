@@ -5,10 +5,11 @@ import models.support._
 import org.joda.time.{DateTimeZone, DateTime}
 
 object TestCourse {
-	def apply(name: String = "course", 
+	def apply(name: String = "course",
+    organizationId: OrganizationId,
 		owner: UserId, 
 		editCode: String = "editCode", 
 		viewCode: String = "viewCode", 
-		date: DateTime = JodaUTC.zero) = Course(null, name, owner, editCode, viewCode, date, date)
+		date: DateTime = JodaUTC.zero) = Course(null, name, organizationId, owner, editCode, viewCode, date, date)
 
 }

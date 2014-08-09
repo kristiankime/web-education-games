@@ -2,11 +2,13 @@ package models.organization
 
 import com.artclod.slick.JodaUTC
 import models.organization.table._
-import models.support.{CourseId, OrganizationId}
+import models.support._
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
 
-case class Organization(id: OrganizationId, name: String, creationDate: DateTime, updateDate: DateTime)
+case class Organization(id: OrganizationId, name: String, creationDate: DateTime, updateDate: DateTime) {
+  def courses(implicit session: Session) = Organizations.courses(id)
+}
 
 object Organizations {
 
@@ -32,4 +34,5 @@ object Organizations {
 
   def apply(name: String)(implicit session: Session) = organizationsTable.where(_.name === name).firstOption
 
+  def courses(id: OrganizationId)(implicit session: Session) = coursesTable.where(_.organization === id).sortBy(_.name).list
 }

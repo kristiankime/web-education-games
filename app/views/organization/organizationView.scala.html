@@ -1,15 +1,22 @@
 @(organization: models.organization.Organization)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import com.artclod.play.s
-@import com.artclod.play.plural
-@import helper._
-@import service._
+@import com.artclod.play._
 @import views.html.tag._
-@import viewsupport.organization._
-@import controllers.organization.CourseJoin
-@import controllers.organization.routes._
-@import controllers.question.derivative.routes._
+
+@defining(organization.courses) { courses =>
 
 @main(organization.name) {
     <h2>Welcome to the information page for the organization: @organization.name</h2>
+
+    <h3>The following course@s(courses) @are(courses) available:</h3>
+
+    @if(courses.isEmpty) {
+    There are currently no available courses
+    } else {
+    <ul>
+         <li> @for(course <- courses){[ @courseLink(course) ] @accessName(course.access)} </li>
+    </ul>}
+
+}
+
 }

@@ -2,7 +2,6 @@ package models.question.derivative
 
 import com.artclod.slick.JodaUTC
 import models.organization._
-import models.organization.assignment._
 import org.joda.time.{DateTimeZone, DateTime}
 import org.specs2.mutable._
 import org.specs2.runner._

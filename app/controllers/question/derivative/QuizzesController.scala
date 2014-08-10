@@ -58,8 +58,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         val access = course.access
-        val sectionResultsOp = access.write(() => course.sectionResults(quiz))
-        Ok(views.html.question.derivative.quizView(access, course, quiz.results(user), sectionResultsOp))
+        Ok(views.html.question.derivative.quizView(access, course, quiz.results(user)))
       }
     }
   }

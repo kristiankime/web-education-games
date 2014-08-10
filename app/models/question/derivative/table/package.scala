@@ -6,7 +6,6 @@ package object table {
 
   val answersTable = TableQuery[AnswersTable]
   val answerTimesTable = TableQuery[AnswerTimesTable]
-  val questionsForTable = TableQuery[GroupQuestion2UserTable]
   val questionsTable = TableQuery[QuestionsTable]
   val quizzesQuestionsTable = TableQuery[Quizzes2QuestionsTable]
   val quizzesTable = TableQuery[QuizzesTable]

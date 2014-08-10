@@ -5,21 +5,12 @@ import play.api.db.slick.Config.driver.simple._
 import models.support._
 import models.organization.table._
 import models.question.derivative._
-import models.organization.assignment.Assignments
 import viewsupport.organization._
 import service._
 
 case class Course(id: CourseId, name: String, organizationId: OrganizationId, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
   def organization(implicit session: Session) = Organizations(organizationId).get
-
-	def sections(implicit session: Session) = Sections(id)
-
-  def assignments(implicit session: Session) = Assignments(id)
-
-	def results(quiz: Quiz)(implicit session: Session) = sections.map(_.results(quiz))
-	
-	def sectionResults(quiz: Quiz)(implicit session: Session) = sections.map(s => SectionResults(s, s.results(quiz)))
 
   def quizzes(implicit session: Session) = Quizzes(id)
 

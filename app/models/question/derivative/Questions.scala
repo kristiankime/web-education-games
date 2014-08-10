@@ -1,7 +1,6 @@
 package models.question.derivative
 
 import models.organization.Course
-import models.organization.assignment.Groups
 import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
 import com.artclod.util._
@@ -22,10 +21,6 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
   def start(user: User)(implicit session: Session) = Answers.startedWork(user, id).map(_.time)
 
   def quiz(implicit session: Session) = Questions.quizFor(id)
-
-  def forWho(implicit session: Session) = Questions.forWho(id)
-
-  def group(implicit session: Session) = Groups(id)
 
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
 
@@ -52,17 +47,6 @@ object Questions {
     info.copy(id = questionId)
   }
 
-  def create(info: Question, groupId: GroupId, quizId: QuizId, userId: UserId)(implicit session: Session): Question = {
-    for(groupQuestion2User <- questionsForTable.where(q => q.groupId === groupId && q.userId === userId).firstOption) {
-        val otherQuiz = Questions(groupQuestion2User.questionId).get.quiz.get
-        if(otherQuiz.id ^== quizId) throw new IllegalStateException("The user=[" + userId + "] already had a question for quizId=[" + otherQuiz.id + "] in groupId=[" + groupId + "]")
-    }
-
-    val question = create(info, quizId)
-    questionsForTable += GroupQuestion2User(groupId, question.id, userId)
-    question
-  }
-
   // ======= FIND ======
   def list()(implicit session: Session) = questionsTable.list
 
@@ -83,13 +67,6 @@ object Questions {
       q2q <- quizzesQuestionsTable if q2q.questionId === questionId;
       q <- quizzesTable if q.id === q2q.quizId
     ) yield q).firstOption
-  }
-
-  def forWho(questionId: QuestionId)(implicit session: Session) = {
-    (for (
-      q4 <- questionsForTable if q4.questionId === questionId;
-      u <- UsersTable.userTable if u.id === q4.userId
-    ) yield u).sortBy(_.lastName).firstOption
   }
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {

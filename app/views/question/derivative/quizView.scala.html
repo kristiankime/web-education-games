@@ -1,7 +1,6 @@
 @(access: service.Access, 
 	course: models.organization.Course,
-	quizResults: viewsupport.question.derivative.StudentQuizResults,
-	sectionResultsOp: Option[List[viewsupport.organization.SectionResults]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+	quizResults: viewsupport.question.derivative.StudentQuizResults)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import views.html.tag._
@@ -63,6 +62,4 @@
 	    </script>
     }
     
-    @* @for(sectionResults <- sectionResultsOp) {@views.html.tag.sectionResults(sectionResults)} *@
-
 }

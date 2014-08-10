@@ -1,7 +1,6 @@
 package viewsupport
 
 import models.question.derivative._
-import models.organization.assignment.Assignment
 
 package object organization {
 

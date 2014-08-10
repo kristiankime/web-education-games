@@ -27,10 +27,6 @@ object RequireAccess {
 
 	def apply(level: Access, courseId: CourseId) = new RequireAccess(level, (s:Session) => Courses(courseId)(s))
 
-  def apply(sectionId: SectionId) = new RequireAccess(View, (s:Session) => Sections(sectionId)(s))
-
-  def apply(level: Access, sectionId: SectionId) = new RequireAccess(level, (s:Session) => Sections(sectionId)(s))
-
 }
 
 

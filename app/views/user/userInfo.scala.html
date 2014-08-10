@@ -3,13 +3,14 @@
 @import models.organization.Courses
 @import com.artclod.play.s
 @import views.html.tag._
+@import models.user.UserPimped
 
 @main("User Information") {
 
     <h1>Welcome to the EdTech Math Games Server</h1>
 
     <p>
-        You are logged in as: @user.fullName <br>
+        You are logged in as: @user.name <br>
         You email is: @user.email
     </p>
 
@@ -19,9 +20,7 @@
         } else {
             <h5> Your are associated with the following course@s(courses)</h5>
             <ul>
-            @for(course <- courses) {
-                <li> [ @courseLink(course) ] </li>
-            }
+                @for(course <- courses) {<li> [ @courseLink(course) ] </li>}
             </ul>
         }
     }

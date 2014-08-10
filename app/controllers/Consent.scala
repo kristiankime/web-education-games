@@ -32,7 +32,7 @@ object Consent extends Controller with SecureSocialDB {
 
         val settings = (UserSettings(user.id) match {
           case Some(setting) => UserSettings.update(setting.copy(consented = consented))
-          case None => UserSettings.create(UserSetting(userId = user.id, consented = consented, name = UserSettings.validName(user.identityId.userId), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
+          case None => UserSettings.create(UserSetting(userId = user.id, consented = consented, name = UserSettings.validName(user.fullName), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
         })
 
         (settings, consented, goTo) match {

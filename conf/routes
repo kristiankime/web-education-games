@@ -15,7 +15,7 @@ GET         /                                                             contro
 GET         /user                                                         controllers.Home.userInfo
 
 # Organizations
-GET         /orgs                                                        controllers.organization.OrganizationsController.list
+GET         /orgs                                                         controllers.organization.OrganizationsController.list
 GET         /orgs/:o                                                      controllers.organization.OrganizationsController.view(o: OrganizationId)
 
 # Courses
@@ -68,9 +68,8 @@ POST        /authenticate/:provider                                       secure
 GET         /not-authorized                                               securesocial.controllers.ProviderController.notAuthorized
 # ======== END Routes for Secure Social ========
 
-
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                                 controllers.Assets.at(path="/public", file)
 
-# If a path is not valid backtrack until we hit the home page
+# If a path is not valid backtrack until we hit something that is
 GET         /*path                                                        controllers.Application.backTrack(path: String)

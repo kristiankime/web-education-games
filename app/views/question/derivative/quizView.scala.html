@@ -56,8 +56,9 @@
 				$("#derivativeQuestionMathML").val(QUESTION.mathML);
 				$("#derivativeQuestionRawStr").val(QUESTION.rawStr);
 				$("#derivativeqForm").submit();
-			}
-			// TODO indicated that the form did not submit
+			} else {
+                alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
+            }
 	    }
 	    </script>
     }

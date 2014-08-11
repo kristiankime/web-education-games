@@ -1,5 +1,4 @@
 @(organization: models.organization.Organization, course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
-@defining(course.quizzes) { quizzes =>
 
 @import com.artclod.play._
 @import helper._
@@ -10,7 +9,6 @@
 @import controllers.organization.CourseJoin
 @import controllers.organization.routes._
 @import controllers.question.derivative.routes._
-
 
 @main(course.name) {
     <h2>Welcome to the information page for the course: @course.name</h2>
@@ -39,19 +37,19 @@
     }
     @* ======= Quizzes ======= *@
     @if(course.access > Non) {
+    @defining(course.quizzes) { quizzes =>
     <section>
         @if(quizzes.isEmpty) {
         <h5> There are no quizzes for this course </h5>
         } else {
         <h5> The course has the following quiz@zes(quizzes): </h5>
         <ul>
-            @for(quiz <- quizzes) { <li> [ <a href="@QuizzesController.view(course.organizationId, course.id, quiz.id)">@quiz.name</a> ] </li> }
+            @for(quiz <- quizzes) { <li> [ <a href="@QuizzesController.view(course.organizationId, course.id, quiz.id)">@quiz.name</a> ] </li>}
         </ul>
         }
-
-    @if(course.access.write) { [ <a href="@QuizzesController.createForm(course.organizationId, course.id)">add a quiz</a> ] }
+         @if(course.access.write) { [ <a href="@QuizzesController.createForm(course.organizationId, course.id)"> add a quiz</a> ] }
     </section>
     }
+    }
+}
 
-}
-}

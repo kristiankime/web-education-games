@@ -9,4 +9,11 @@ object AccessName {
 		case View => "Student"
 		case Non => "None"
 	}
+
+  def an(access: Access) = access match {
+    case Own => "an: Administrator"
+    case Edit => "a: Teacher"
+    case View => "a: Student"
+    case Non => "a: n/a"
+  }
 }

@@ -12,5 +12,7 @@ package object play {
 
   def es(v: TraversableOnce[_]) = plural(v)(Html("es"))
 
+  def zes(v: TraversableOnce[_]) = plural(v)(Html("zes"))
+
   def are(v: TraversableOnce[_]) = alternate(v)(Html("is"), Html("are"))
 }

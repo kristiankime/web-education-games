@@ -1,12 +1,9 @@
 @(course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import com.artclod.util._
-@import models.support._
 @import helper._
 @import views.html.tag._
 @import controllers.question.derivative.QuizForm
 @import controllers.question.derivative.routes.QuizzesController
-@import controllers.organization.routes._
 
 @main("Create a Quiz") {
 

@@ -5,10 +5,13 @@ import play.api.mvc._
 import service._
 
 /**
- * This object contains all the mappers/binders for the DB (TypeMapper) and the urls (PathBindable and QueryStringBindable)
+ * This object contains all the mappers/binders for the DB (TypeMapper),
+ * the urls (PathBindable and QueryStringBindable)
+ * and the forms (Mapping)
  * 
  * For a path binding example http://julien.richard-foy.fr/blog/2012/04/09/how-to-implement-a-custom-pathbindable-with-play-2/
  * For a query string binding check out https://gist.github.com/julienrf/2344517
+ * For a form binding check out http://workwithplay.com/blog/2013/07/10/advanced-forms-techniques/
  */
 package object support {
 
@@ -26,6 +29,8 @@ package object support {
 	// ==========================
 	// UserId
 	// ==========================
+  implicit def userId = models.support.form.UserIdForm.userId
+
 	implicit def long2userId = MappedColumnType.base[UserId, Long](
 		id => id.v,
 		long => UserId(long))

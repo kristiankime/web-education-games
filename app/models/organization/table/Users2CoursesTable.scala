@@ -5,7 +5,6 @@ import scala.slick.model.ForeignKeyAction
 import service.table._
 import service._
 import models.support._
-import models.organization.Courses
 import models.support.table.{UserLinkRow, UserLink}
 
 case class User2Course(userId: UserId, courseId: CourseId, access: Access) extends UserLinkRow
@@ -22,16 +21,16 @@ class Users2CoursesTable(tag: Tag) extends Table[User2Course](tag, "users_2_cour
 	def questionIdFK = foreignKey("users_2_courses_course_fk", id, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }
 
-object Users2CoursesTable{
-  val usersCoursesTable = TableQuery[Users2CoursesTable]
-
-  def raiseAccess(v: User2Course)(implicit s: Session) = {
-    val currentAccess = usersCoursesTable.where(r => r.userId === v.userId && r.id === v.courseId).firstOption
-    currentAccess match {
-      case None => usersCoursesTable += v
-      case Some(old) => {
-        if (old.access.v < v.access.v) { usersCoursesTable.where(r => r.userId === v.userId && r.id === v.courseId).update(v) }
-      }
-    }
-  }
-}
+//object Users2CoursesTable{
+//
+//  def raiseAccess(v: User2Course)(implicit s: Session) = {
+//    val currentAccess = usersCoursesTable.where(r => r.userId === v.userId && r.id === v.courseId).firstOption
+//    currentAccess match {
+//      case None => usersCoursesTable += v
+//      case Some(old) => {
+//        if (old.access.v < v.access.v) { usersCoursesTable.where(r => r.userId === v.userId && r.id === v.courseId).update(v) }
+//      }
+//    }
+//  }
+//
+//}

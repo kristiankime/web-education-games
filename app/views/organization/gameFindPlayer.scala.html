@@ -1,0 +1,29 @@
+@(organization: models.organization.Organization, course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.organization.routes.GamesController
+@import controllers.organization.GameRequest
+@import models.user.UserPimped
+
+@defining(course.students) { students =>
+
+@main("Find a player for a game in course " + course.name) {
+
+    <h1>Invite another player in the course @course.name to play with you</h1>
+
+    @if(students.isEmpty){
+    <h5>There are no students currently enrolled in the course</h5>
+    } else {
+    <h5>Please select a player you want to play with:</h5>
+
+    <p>an invitation will be sent to them.</p>
+
+    @form(action = GamesController.requestGame(organization.id, course.id)) {
+        @for(student <- students){<input type="radio" name="@GameRequest.requestee" value="@student.id"> @student.name <br>}
+	    <input type="submit" value="Submit">
+    }
+    }
+    
+}
+
+}

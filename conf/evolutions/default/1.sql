@@ -26,8 +26,8 @@ alter table "users_2_derivative_answers" add constraint "users_2_derivative_answ
 create table "users_2_derivative_quizzes" ("user_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL,"access" SMALLINT NOT NULL);
 alter table "users_2_derivative_quizzes" add constraint "users_2_derivative_quizzes_pk" primary key("user_id","quiz_id");
 alter table "application_user_settings" add constraint "application_user_settings_user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
-alter table "courses" add constraint "courses_owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "courses" add constraint "courses_organization_fk" foreign key("organization") references "organizations"("id") on update NO ACTION on delete CASCADE;
+alter table "courses" add constraint "courses_owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "courses_2_derivative_quizzes" add constraint "courses_2_derivative_quizzes_course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "courses_2_derivative_quizzes" add constraint "courses_2_derivative_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_answer_times" add constraint "derivative_answer_times_user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
@@ -38,8 +38,8 @@ alter table "derivative_questions" add constraint "derivative_questions_owner_fk
 alter table "derivative_quizzes" add constraint "derivative_quizzes_owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes_2_questions" add constraint "derivative_quizzes_2_questions_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes_2_questions" add constraint "derivative_quizzes_2_questions_question_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
-alter table "users_2_courses" add constraint "users_2_courses_course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_courses" add constraint "users_2_courses_user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
+alter table "users_2_courses" add constraint "users_2_courses_course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_derivative_answers" add constraint "users_2_derivative_answers_user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_derivative_answers" add constraint "users_2_derivative_answers_question_fk" foreign key("answer_id") references "derivative_answers"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_derivative_quizzes" add constraint "users_2_derivative_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
@@ -48,8 +48,8 @@ alter table "users_2_derivative_quizzes" add constraint "users_2_derivative_quiz
 # --- !Downs
 
 alter table "application_user_settings" drop constraint "application_user_settings_user_fk";
-alter table "courses" drop constraint "courses_owner_fk";
 alter table "courses" drop constraint "courses_organization_fk";
+alter table "courses" drop constraint "courses_owner_fk";
 alter table "courses_2_derivative_quizzes" drop constraint "courses_2_derivative_quizzes_course_fk";
 alter table "courses_2_derivative_quizzes" drop constraint "courses_2_derivative_quizzes_quiz_fk";
 alter table "derivative_answer_times" drop constraint "derivative_answer_times_user_fk";
@@ -60,8 +60,8 @@ alter table "derivative_questions" drop constraint "derivative_questions_owner_f
 alter table "derivative_quizzes" drop constraint "derivative_quizzes_owner_fk";
 alter table "derivative_quizzes_2_questions" drop constraint "derivative_quizzes_2_questions_quiz_fk";
 alter table "derivative_quizzes_2_questions" drop constraint "derivative_quizzes_2_questions_question_fk";
-alter table "users_2_courses" drop constraint "users_2_courses_course_fk";
 alter table "users_2_courses" drop constraint "users_2_courses_user_fk";
+alter table "users_2_courses" drop constraint "users_2_courses_course_fk";
 alter table "users_2_derivative_answers" drop constraint "users_2_derivative_answers_user_fk";
 alter table "users_2_derivative_answers" drop constraint "users_2_derivative_answers_question_fk";
 alter table "users_2_derivative_quizzes" drop constraint "users_2_derivative_quizzes_quiz_fk";

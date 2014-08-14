@@ -18,7 +18,9 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 
   def students(implicit session: Session) = Courses.students(id)
 
-	protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
+  def studentsExcept(user: User)(implicit session: Session) = Courses.studentsExcept(id, user.id)
+
+  protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
 
 	/**
 	 * In terms of access level Users can:
@@ -58,6 +60,11 @@ object Courses {
   def students(courseId: CourseId)(implicit session: Session) = (for (
     uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
     u <- userTable if u.id === uc.userId
+  ) yield u).list
+
+  def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) = (for (
+    uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
+    u <- userTable if (u.id === uc.userId) && (u.id != userId)
   ) yield u).list
 
   // ======= AUTHORIZATION ======

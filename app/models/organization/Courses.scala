@@ -5,8 +5,6 @@ import play.api.db.slick.Config.driver.simple._
 import models.support._
 import models.organization.table._
 import models.question.derivative._
-import models.user.table.userInfosTable
-import viewsupport.organization._
 import service._
 import service.table.UsersTable.userTable
 
@@ -20,6 +18,9 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 
   def studentsExcept(user: User)(implicit session: Session) = Courses.studentsExcept(id, user.id)
 
+  def gameRequests(user: User, course: Course)(implicit session: Session) = Games.requests(user.id, course.id)
+
+  // ========== Access Methods ==========
   protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
 
 	/**
@@ -64,7 +65,7 @@ object Courses {
 
   def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) = (for (
     uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-    u <- userTable if (u.id === uc.userId) && (u.id != userId)
+    u <- userTable if (u.id === uc.userId) && (u.id =!= userId)
   ) yield u).list
 
   // ======= AUTHORIZATION ======

@@ -7,6 +7,7 @@ package object table {
   val organizationsTable = TableQuery[OrganizationsTable]
   val coursesQuizzesTable = TableQuery[Courses2QuizzesTable]
   val coursesTable = TableQuery[CoursesTable]
+  val gamesTable = TableQuery[GamesTable]
   val usersCoursesTable = TableQuery[Users2CoursesTable]
 
 }

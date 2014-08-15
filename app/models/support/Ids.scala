@@ -6,11 +6,7 @@ case class OrganizationId(v: Long)
 
 case class CourseId(v: Long)
 
-case class SectionId(v: Long)
-
-case class AssignmentId(v: Long)
-
-case class GroupId(v: Long)
+case class GameId(v: Long)
 
 case class QuizId(v: Long)
 

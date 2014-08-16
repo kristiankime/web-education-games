@@ -42,7 +42,7 @@ object AnswersController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz, question)) => {
         AnswerForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.index()),
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val math : MathMLElem = MathML(form._1).get // TODO better error handling
             val rawStr = form._2

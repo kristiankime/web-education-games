@@ -19,7 +19,7 @@
     <p>an invitation will be sent to them.</p>
 
     @form(action = GamesController.requestGame(organization.id, course.id)) {
-        @for(student <- students){<input type="radio" name="@GameRequest.requestee" value="@student.id"> @student.name <br>}
+        @for(student <- students){<input type="radio" name="@GameRequest.requestee" value="@student.id.v"> @student.name <br>}
 	    <input type="submit" value="Submit">
     }
     }

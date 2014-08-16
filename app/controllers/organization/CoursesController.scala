@@ -45,7 +45,7 @@ object CoursesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(organization) =>
         CourseCreate.form.bindFromRequest.fold(
-          errors => BadRequest(views.html.index()),
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (editNum, viewNum) = codeRange.pick2From
             val now = JodaUTC.now
@@ -66,7 +66,7 @@ object CoursesController extends Controller with SecureSocialConsented {
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) => CourseJoin.form.bindFromRequest.fold(
-        errors => BadRequest(views.html.index()),
+        errors => BadRequest(views.html.errors.formErrorPage(errors)),
         form => {
             if (course.viewCode == form) Courses.grantAccess(course, View)
             if (course.editCode == form) Courses.grantAccess(course, Edit)

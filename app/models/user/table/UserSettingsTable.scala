@@ -20,6 +20,6 @@ class UserSettingsTable(tag: Tag) extends Table[UserSetting](tag, "application_u
 
   def userFK = foreignKey("application_user_settings_user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-  def nameIndex = index("application_user_settings", name, unique = true)
+  def nameIndex = index("application_user_settings_name_index", name, unique = true)
 }
 

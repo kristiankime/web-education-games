@@ -18,7 +18,7 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 
   def studentsExcept(user: User)(implicit session: Session) = Courses.studentsExcept(id, user.id)
 
-  def gameRequests(user: User, course: Course)(implicit session: Session) = Games.requests(user.id, course.id)
+  def gameRequests(user: User)(implicit session: Session) = Games.requests(user.id, id)
 
   // ========== Access Methods ==========
   protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)

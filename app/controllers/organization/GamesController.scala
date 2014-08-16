@@ -22,7 +22,7 @@ object GamesController extends Controller with SecureSocialConsented {
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) => GameRequest.form.bindFromRequest.fold(
-        errors => BadRequest(views.html.index()),
+        errors => BadRequest(views.html.errors.formErrorPage(errors)),
         form => {
           Games.requestCourse(user.id, form, course.id)
           Redirect(routes.CoursesController.view(organization.id, course.id))

@@ -5,6 +5,7 @@ import models.organization.table._
 import models.support.{CourseId, GameId, UserId, QuizId}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import service.table.UsersTable
 
 case class Game(id: GameId = null,
                 requestDate: DateTime,
@@ -18,6 +19,11 @@ case class Game(id: GameId = null,
                 requestorFinished: Boolean = false,
                 finishedDate: Option[DateTime] = None){
 
+  def requestor(implicit session: Session) = UsersTable.findById(requestorId).get
+
+  def requestee(implicit session: Session) = UsersTable.findById(requesteeId).get
+
+  def course(implicit session: Session) = courseId.map(Courses(_).get)
 }
 
 object Games {

@@ -41,10 +41,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) =>
         QuizForm.values.bindFromRequest.fold(
-          errors => {
-            Logger("create").info("error" + errors)
-            BadRequest(views.html.errors.formErrorPage(errors))
-          },
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
               val now = JodaUTC.now
               val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
@@ -68,7 +65,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) =>
         QuizForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.index()),
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             Quizzes.rename(quizId, form)
             Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))

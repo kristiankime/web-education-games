@@ -15,14 +15,11 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def requestor = column[UserId]("requestor", O.NotNull)
   def requestee = column[UserId]("requestee", O.NotNull)
   def requestAccepted = column[Boolean]("request_accepted", O.NotNull)
-
   def course = column[Option[CourseId]]("course", O.Nullable)
   def requestorQuiz = column[Option[QuizId]]("requestor_quiz", O.Nullable)
   def requesteeQuiz = column[Option[QuizId]]("requestee_quiz", O.Nullable)
-
   def requesteeFinished = column[Boolean]("requestee_finished", O.NotNull)
   def requestorFinished = column[Boolean]("requestor_finished", O.NotNull)
-
   def finishedDate = column[Option[DateTime]]("finished_date", O.Nullable)
 
   def * = (id, requestDate, requestor, requestee, requestAccepted, course, requestorQuiz, requesteeQuiz, requesteeFinished, requestorFinished, finishedDate) <> (Game.tupled, Game.unapply _)

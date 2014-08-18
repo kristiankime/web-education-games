@@ -9,6 +9,7 @@
 @import controllers.organization.CourseJoin
 @import controllers.organization.routes._
 @import controllers.question.derivative.routes._
+@import models.user.UserPimped
 
 @main(course.name) {
     <h2>Welcome to the information page for the course: @course.name</h2>
@@ -59,7 +60,7 @@
         [ <a href="@GamesController.findPlayer(course.organizationId, course.id)">new game</a> ]
     </section>
     @* ======= Course Game Requests ======= *@
-    @defining(course.gameRequests(user)) { requests =>
+    @defining(user.gameRequests(course.id)) { requests =>
     @if(requests.nonEmpty) {
     <section>
         <h5> The Following users have requested to play a game with you</h5>

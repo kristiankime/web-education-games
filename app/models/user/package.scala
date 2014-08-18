@@ -1,5 +1,7 @@
 package models
 
+import models.organization.Games
+import models.support.{CourseId, UserId}
 import play.api.db.slick.Config.driver.simple._
 import service.User
 
@@ -18,6 +20,12 @@ package object user {
       case None => throw new IllegalStateException("Programming error, name() should only be called if the user has settings")
       case Some(setting) => setting.name
     }
+
+    def activeGame(otherId: UserId)(implicit session: Session) = Games.activeGame(user.id, otherId)
+
+    def studentsToPlayWith(courseId: CourseId)(implicit session: Session) = Games.studentsToPlayWith(user.id, courseId)
+
+    def gameRequests(courseId: CourseId)(implicit session: Session) = Games.requests(user.id, courseId)
   }
 
 }

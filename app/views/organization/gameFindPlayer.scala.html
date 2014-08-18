@@ -5,7 +5,7 @@
 @import controllers.organization.GameRequest
 @import models.user.UserPimped
 
-@defining(course.studentsExcept(user)) { students =>
+@defining(user.studentsToPlayWith(course.id)) { students =>
 
 @main("Find a player for a game in course " + course.name) {
 

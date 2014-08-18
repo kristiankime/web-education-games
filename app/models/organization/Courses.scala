@@ -16,9 +16,9 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 
   def students(implicit session: Session) = Courses.students(id)
 
-  def studentsExcept(user: User)(implicit session: Session) = Courses.studentsExcept(id, user.id)
-
-  def gameRequests(user: User)(implicit session: Session) = Games.requests(user.id, id)
+//  def studentsExcept(user: User)(implicit session: Session) = Courses.studentsExcept(id, user.id)
+//
+//  def gameRequests(user: User)(implicit session: Session) = Games.requests(user.id, id)
 
   // ========== Access Methods ==========
   protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
@@ -63,10 +63,17 @@ object Courses {
     u <- userTable if u.id === uc.userId
   ) yield u).list
 
-  def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) = (for (
-    uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-    u <- userTable if (u.id === uc.userId) && (u.id =!= userId)
-  ) yield u).list
+  def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) = {
+    val studentsInClass = (for (
+      uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
+      u <- userTable if (u.id === uc.userId) && (u.id =!= userId)
+    ) yield u)
+
+
+
+    studentsInClass
+  }.list
+
 
   // ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =

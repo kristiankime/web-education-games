@@ -1,6 +1,6 @@
 package models.organization.table
 
-import models.organization.Game
+import models.organization.{GameResponseStatus, Game}
 import models.question.derivative.table._
 import models.support._
 import com.artclod.slick.JodaUTC._
@@ -14,7 +14,7 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def requestDate = column[DateTime]("request_date", O.NotNull)
   def requestor = column[UserId]("requestor", O.NotNull)
   def requestee = column[UserId]("requestee", O.NotNull)
-  def requestAccepted = column[Boolean]("request_accepted", O.NotNull)
+  def response = column[GameResponseStatus]("response", O.NotNull)
   def course = column[Option[CourseId]]("course", O.Nullable)
   def requestorQuiz = column[Option[QuizId]]("requestor_quiz", O.Nullable)
   def requesteeQuiz = column[Option[QuizId]]("requestee_quiz", O.Nullable)
@@ -22,7 +22,7 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def requestorFinished = column[Boolean]("requestor_finished", O.NotNull)
   def finishedDate = column[Option[DateTime]]("finished_date", O.Nullable)
 
-  def * = (id, requestDate, requestor, requestee, requestAccepted, course, requestorQuiz, requesteeQuiz, requesteeFinished, requestorFinished, finishedDate) <> (Game.tupled, Game.unapply _)
+  def * = (id, requestDate, requestor, requestee, response, course, requestorQuiz, requesteeQuiz, requesteeFinished, requestorFinished, finishedDate) <> (Game.tupled, Game.unapply _)
 
   def requestorFK = foreignKey("games_requestor_fk", requestor, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def requesteeFK = foreignKey("games_requestee_fk", requestee, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)

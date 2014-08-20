@@ -24,8 +24,13 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right((organization, course)) => GameRequest.form.bindFromRequest.fold(
         errors => BadRequest(views.html.errors.formErrorPage(errors)),
         form => {
-          Games.request(user.id, form, course.id)
-          Redirect(routes.CoursesController.view(organization.id, course.id))
+          val otherUserId = form
+          if(Games.activeGame(user.id, otherUserId).nonEmpty) {
+            BadRequest(views.html.errors.errorPage(new IllegalStateException("Users already had an active game [" +  user.id + "] [" + otherUserId + "]")))
+          } else {
+            Games.request(user.id, otherUserId, course.id)
+            Redirect(routes.CoursesController.view(organization.id, course.id))
+          }
         })
     }
   }

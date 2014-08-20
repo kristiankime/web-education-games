@@ -1,5 +1,6 @@
 package models
 
+import models.organization.GameResponseStatus
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc._
 import service._
@@ -25,6 +26,13 @@ package object support {
 	implicit def short2Access = MappedColumnType.base[Access, Short](
 		access => Access.toNum(access),
 		short => Access.fromNum(short))
+
+  // ==========================
+  // ResponseStatus
+  // ==========================
+  implicit def short2ResponseStatus = MappedColumnType.base[GameResponseStatus, Short](
+    responseStatus => responseStatus.v,
+    short => GameResponseStatus(short))
 
 	// ==========================
 	// UserId

@@ -1,0 +1,13 @@
+@(organization: models.organization.Organization, course: models.organization.Course, game: models.organization.GameRequested)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.organization.routes.GamesController
+@import controllers.organization.GameRequest
+@import models.user.UserPimped
+
+
+@main("Game Requested") {
+
+    @game.requestor.name requested to play a game with you but you have not yet responded
+
+}

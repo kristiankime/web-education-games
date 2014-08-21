@@ -5,57 +5,13 @@ import models.organization.table._
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import service.User
 import service.table.UsersTable
-
-case class Game(id: GameId = null,
-                requestDate: DateTime,
-                requestorId: UserId,
-                requesteeId: UserId,
-                response: GameResponseStatus = Requested,
-                courseId: Option[CourseId] = None,
-                requestorQuizId: Option[QuizId] = None,
-                requesteeQuizId: Option[QuizId] = None,
-                requesteeFinished: Boolean = false,
-                requestorFinished: Boolean = false,
-                finishedDate: Option[DateTime] = None) {
-
-  def requestor(implicit session: Session) = UsersTable.findById(requestorId).get
-
-  def requestee(implicit session: Session) = UsersTable.findById(requesteeId).get
-
-  def course(implicit session: Session) = courseId.map(Courses(_).get)
-
-  def status(playerId: UserId): GameStatus =
-    playerId match {
-    case `requestorId` =>
-      (response, requesteeQuizId, requestorQuizId, requesteeFinished, requestorFinished, finishedDate) match {
-        case (GameResponseStatus.requested, None, None, false, false, None) => AwaitingReponse
-        case (GameResponseStatus.rejected, None, None, false, false, None) => GameRejected
-        case (GameResponseStatus.accepted, _, None, false, false, None) => CreateQuiz
-        case (GameResponseStatus.accepted, None, Some(torQuiz), false, false, None) => AwaitingQuiz
-        case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), _, false, None) => AnswerQuiz
-        case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), false, true, None) => AwaitingAnswer
-        case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), true, true, Some(done)) => GameDone
-        case _ => throw new IllegalStateException("Game was not in an allowed state programming error " + this)
-      }
-    case `requesteeId` =>
-      (response, requesteeQuizId, requestorQuizId, requesteeFinished, requestorFinished, finishedDate) match {
-        case (GameResponseStatus.requested, None, None, false, false, None) => RespondRequest
-        case (GameResponseStatus.rejected, None, None, false, false, None) => GameRejected
-        case (GameResponseStatus.accepted, None, _, false, false, None) => CreateQuiz
-        case (GameResponseStatus.accepted, Some(eeQuiz), None, false, false, None) => AwaitingQuiz
-        case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), _, false, None) => AnswerQuiz
-        case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), false, true, None) => AwaitingAnswer
-        case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), true, true, Some(done)) => GameDone
-        case _ => throw new IllegalStateException("Game was not in an allowed state programming error " + this)
-      }
-    case _ => throw new IllegalArgumentException("User was not the requestor or the requestee")
-  }
-
-
-}
+import models.organization.GameResponseStatus._
 
 object Games {
+
+  def apply(gameId: GameId)(implicit session: Session) : Option[Game] = gamesTable.where(_.id === gameId).firstOption
 
   // ======= Who to Play a Game with ======
   def studentsToPlayWith(requestorId: UserId, courseId: CourseId)(implicit session: Session) =

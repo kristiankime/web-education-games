@@ -5,6 +5,7 @@ import controllers.support.SecureSocialConsented
 import models.organization._
 import models.support._
 import play.api.data.Form
+import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
 import service.User
@@ -17,9 +18,9 @@ object GamesController extends Controller with SecureSocialConsented {
     Games(gameId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for id=[" + courseId + "]")))
       case Some(game) => game.courseId match {
-          case None => Left(NotFound(views.html.errors.notFoundPage("The game with id=[" + gameId + "] is not associated with any course (including [" + courseId + "]")))
-          case Some(gameId) => CoursesController(organizationId, courseId) + Right(game)
-        }
+        case None => Left(NotFound(views.html.errors.notFoundPage("The game with id=[" + gameId + "] is not associated with any course (including [" + courseId + "]")))
+        case Some(gameId) => CoursesController(organizationId, courseId) + Right(game)
+      }
     }
 
   def findPlayer(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction { implicit request => implicit user => implicit session =>
@@ -49,8 +50,8 @@ object GamesController extends Controller with SecureSocialConsented {
   def game(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(organizationId, courseId, gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((org, course, game)) => game.toState match { 
-        case g : GameRequested => teeVsTor(user, g, Ok(views.html.game.requestedTor(org, course, g)), Ok(views.html.game.requestedTee(org, course, g)))
+      case Right((org, course, game)) => game.toState match {
+        case g: GameRequested => teeVsTor(user, g, Ok(views.html.game.requestedTor(org, course, g)), Ok(views.html.game.requestedTee(org, course, g)))
         case _ => throw new IllegalStateException()
       }
     }
@@ -63,10 +64,29 @@ object GamesController extends Controller with SecureSocialConsented {
       case _ => throw new IllegalStateException("user [" + user + "] was not requestee or requestor for game [" + gameState + "]")
     }
 
-}
+  def respond(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(organizationId, courseId, gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course, game)) => GameResponse.form.bindFromRequest.fold(
+        errors => BadRequest(views.html.errors.formErrorPage(errors)),
+        form => {
+          val accepted = form
+          val gameState = game.toRequested
+          if (accepted) { Games.update(gameState.accept(user).toGame) }
+          else { Games.update(gameState.reject(user).toGame) }
+          Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+        })
+    }
+  }
 
+}
 
 object GameRequest {
   val requestee = "requestee"
   val form = Form(requestee -> userId)
+}
+
+object GameResponse {
+  val response = "reponse"
+  val form = Form(response -> boolean)
 }

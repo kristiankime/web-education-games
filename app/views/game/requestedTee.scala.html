@@ -2,12 +2,18 @@
 
 @import helper._
 @import controllers.organization.routes.GamesController
-@import controllers.organization.GameRequest
+@import controllers.organization.GameResponse
 @import models.user.UserPimped
-
 
 @main("Game Requested") {
 
     @game.requestor.name requested to play a game with you but you have not yet responded
 
+    @form(action = GamesController.respond(organization.id, course.id, game.id)) {
+        <input type="radio" name="@GameResponse.response" value="true" checked> Accept Request <br>
+        <input type="radio" name="@GameResponse.response" value="false"> Reject Request <br>
+        <input type="submit" value="Submit">
+    }
+
 }
+

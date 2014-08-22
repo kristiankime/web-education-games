@@ -54,21 +54,15 @@ object Courses {
 
   def list(organizationId: OrganizationId)(implicit session: Session) = coursesTable.where(_.organization === organizationId).list
 
-  def students(courseId: CourseId)(implicit session: Session) = (for (
-    uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-    u <- userTable if u.id === uc.userId
+  def students(courseId: CourseId)(implicit session: Session) =
+  (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
+        u <- userTable if u.id === uc.userId
   ) yield u).list
 
-  def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) = {
-    val studentsInClass = (for (
-      uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-      u <- userTable if (u.id === uc.userId) && (u.id =!= userId)
-    ) yield u)
-
-
-
-    studentsInClass
-  }.list
+  def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) =
+   (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
+         u <- userTable if (u.id === uc.userId) && (u.id =!= userId)
+   ) yield u).list
 
 
   // ======= AUTHORIZATION ======

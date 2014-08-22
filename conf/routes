@@ -44,6 +44,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers           contro
 GET         /orgs/:o/courses/:c/games/find                                controllers.organization.GamesController.findPlayer(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/games/request                             controllers.organization.GamesController.requestGame(o: OrganizationId, c: CourseId)
 GET         /orgs/:o/courses/:c/games/:g                                  controllers.organization.GamesController.game(o: OrganizationId, c: CourseId, g: GameId)
+POST        /orgs/:o/courses/:c/games/:g/respond                          controllers.organization.GamesController.respond(o: OrganizationId, c: CourseId, g: GameId)
 
 # ======== START DEPRICATED ========
 # Equation pages

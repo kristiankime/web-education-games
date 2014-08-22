@@ -33,6 +33,12 @@ case class Game(id: GameId = null,
     case _ => throw new IllegalStateException("Game was not in an allowed state programming error " + this)
   }
 
+  def toRequested = (response, requestorQuizId, requesteeQuizId, requestorFinished, requesteeFinished, finishedDate) match {
+    case (GameResponseStatus.requested, None, None, false, false, None) => GameRequested(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
+    case _ => throw new IllegalStateException("Game was not in GameRequested state programming error " + this)
+  }
+
+
   //
   //  def accept(requestee: User) = {
   //    c("requestee.id", requesteeId, requestee.id)

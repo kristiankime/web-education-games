@@ -145,4 +145,74 @@ class CoursesSpec extends Specification {
 
 	}
 
+  "studentsExcept" should {
+
+    "return none if there are no other students in the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+
+        val requestingStudent = DBTest.newFakeUser(UserTest())
+        Courses.grantAccess(course, View)(requestingStudent, session)
+
+        val students = Courses.studentsExcept(course.id, requestingStudent.id)
+        students must beEmpty
+      }
+    }
+
+    "return other student in the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+
+        val requestingStudent = DBTest.newFakeUser
+        val student1 = DBTest.newFakeUser
+        val student2 = DBTest.newFakeUser
+
+        Courses.grantAccess(course, View)(requestingStudent, session)
+        Courses.grantAccess(course, View)(student1, session)
+
+        val students = Courses.studentsExcept(course.id, requestingStudent.id).toSet
+        students must beEqualTo(Set(student1))
+      }
+    }
+
+    "return other students in the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+
+        val requestingStudent = DBTest.newFakeUser
+        val student1 = DBTest.newFakeUser
+        val student2 = DBTest.newFakeUser
+
+        Courses.grantAccess(course, View)(requestingStudent, session)
+        Courses.grantAccess(course, View)(student1, session)
+        Courses.grantAccess(course, View)(student2, session)
+
+        val students = Courses.studentsExcept(course.id, requestingStudent.id).toSet
+        students must beEqualTo(Set(student1, student2))
+      }
+    }
+
+    "return only students in the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+        val requestingStudent = DBTest.newFakeUser
+        val student1 = DBTest.newFakeUser
+        val student2 = DBTest.newFakeUser
+        Courses.grantAccess(course, View)(requestingStudent, session)
+        Courses.grantAccess(course, View)(student1, session)
+        Courses.grantAccess(course, View)(student2, session)
+
+        val otherCourse = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+        val otherStudent = DBTest.newFakeUser
+        Courses.grantAccess(otherCourse, View)(otherStudent, session)
+
+        val students = Courses.studentsExcept(course.id, requestingStudent.id).toSet
+        students must beEqualTo(Set(student1, student2))
+      }
+    }
+  }
 }

@@ -14,11 +14,41 @@ import service.{UserTest, _}
 @RunWith(classOf[JUnitRunner])
 class GamesSpec extends Specification {
 
+  "studentsToPlayWith" should {
+
+    "return none if there are no other students in the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+        val requestingStudent = DBTest.newFakeUser
+        Courses.grantAccess(course, View)(requestingStudent, session)
+
+        Games.studentsToPlayWith(requestingStudent.id, course.id)  must beEmpty
+      }
+    }
+
+    "return other students in the class" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val organization = Organizations.create(TestOrganization())
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
+        val requestingStudent = DBTest.newFakeUser(UserTest())
+        val student1 = DBTest.newFakeUser
+        val student2 = DBTest.newFakeUser
+        Courses.grantAccess(course, View)(requestingStudent, session)
+        Courses.grantAccess(course, View)(student1, session)
+        Courses.grantAccess(course, View)(student2, session)
+
+        Games.studentsToPlayWith(requestingStudent.id, course.id).toSet must beEqualTo(Set(student1, student2))
+      }
+    }
+
+  }
+
   "request" should {
     "setup a request associated with the two users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val requestor = DBTest.newFakeUser(UserTest())
-        val requestee = DBTest.newFakeUser(UserTest())
+        val requestor = DBTest.newFakeUser
+        val requestee = DBTest.newFakeUser
 
         Games.request(requestor.id, requestee.id)
 
@@ -36,8 +66,8 @@ class GamesSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val organization = Organizations.create(TestOrganization())
         val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = organization.id))
-        val requestor = DBTest.newFakeUser(UserTest())
-        val requestee = DBTest.newFakeUser(UserTest())
+        val requestor = DBTest.newFakeUser
+        val requestee = DBTest.newFakeUser
 
         Games.request(requestor.id, requestee.id, course.id)
 
@@ -55,23 +85,30 @@ class GamesSpec extends Specification {
 
     "return none if the two users have never started a game" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val requestor = DBTest.newFakeUser(UserTest())
-        val requestee = DBTest.newFakeUser(UserTest())
+        val requestor = DBTest.newFakeUser
+        val requestee = DBTest.newFakeUser
 
-        val activeGame = Games.activeGame(requestor.id, requestee.id)
-        activeGame must beEmpty
+        Games.activeGame(requestor.id, requestee.id) must beEmpty
       }
     }
 
-    "return a game if the users have started one" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+    "return a game if the users have started one (requestor first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val requestor = DBTest.newFakeUser(UserTest())
-        val requestee = DBTest.newFakeUser(UserTest())
-
+        val requestor = DBTest.newFakeUser
+        val requestee = DBTest.newFakeUser
         val game = Games.request(requestor.id, requestee.id)
 
-        val activeGame = Games.activeGame(requestor.id, requestee.id)
-        activeGame.map(_.id) must beSome(game.id)
+        Games.activeGame(requestor.id, requestee.id).map(_.id) must beSome(game.id)
+      }
+    }
+
+    "return a game if the users have started one (requestee first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val requestor = DBTest.newFakeUser
+        val requestee = DBTest.newFakeUser
+        val game = Games.request(requestee.id, requestor.id)
+
+        Games.activeGame(requestor.id, requestee.id).map(_.id) must beSome(game.id)
       }
     }
 

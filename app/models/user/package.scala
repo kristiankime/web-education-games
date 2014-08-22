@@ -1,6 +1,6 @@
 package models
 
-import models.organization.Games
+import models.game.Games
 import models.support.{CourseId, UserId}
 import play.api.db.slick.Config.driver.simple._
 import service.User

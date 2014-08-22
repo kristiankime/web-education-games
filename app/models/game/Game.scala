@@ -1,6 +1,6 @@
-package models.organization
+package models.game
 
-import models.game._
+import models.organization.Courses
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._

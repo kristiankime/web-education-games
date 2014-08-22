@@ -1,4 +1,4 @@
-package models.organization
+package models.game
 
 sealed trait GameResponseStatus {
   val v: Short

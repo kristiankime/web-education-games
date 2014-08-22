@@ -1,12 +1,14 @@
-package models.organization.table
+package models.game.table
 
-import models.organization.{GameResponseStatus, Game}
+import com.artclod.slick.JodaUTC._
+import models.game.{Game, GameResponseStatus}
+import models.organization.table._
 import models.question.derivative.table._
 import models.support._
-import com.artclod.slick.JodaUTC._
-import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
 import service.table.UsersTable
+
 import scala.slick.model.ForeignKeyAction
 
 class GamesTable(tag: Tag) extends Table[Game](tag, "games") {

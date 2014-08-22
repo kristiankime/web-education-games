@@ -1,6 +1,5 @@
 package models.game
 
-import models.organization.{GameResponseStatus, Game}
 import models.support.UserId
 import play.api.db.slick.Config.driver.simple._
 

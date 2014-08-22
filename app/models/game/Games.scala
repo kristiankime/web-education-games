@@ -1,6 +1,7 @@
-package models.organization
+package models.game
 
 import com.artclod.slick.JodaUTC
+import models.organization.Courses
 import models.organization.table._
 import models.support._
 import play.api.db.slick.Config.driver.simple._

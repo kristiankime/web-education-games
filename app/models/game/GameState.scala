@@ -1,7 +1,6 @@
 package models.game
 
 import play.api.db.slick.Config.driver.simple._
-import models.organization.{GameResponseStatus, Game}
 import models.user.Users
 
 sealed trait GameState {

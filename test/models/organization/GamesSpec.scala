@@ -3,7 +3,7 @@ package models.organization
 import models.DBTest
 import models.DBTest.inMemH2
 import models.DBTest.newFakeUser
-import models.game.GameRequested
+import models.game.{Games, GameRequested}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._

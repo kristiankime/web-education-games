@@ -1,6 +1,6 @@
 package models
 
-import models.organization.GameResponseStatus
+import models.game.GameResponseStatus
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc._
 import service._

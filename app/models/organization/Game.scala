@@ -1,5 +1,6 @@
 package models.organization
 
+import models.game._
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
@@ -13,10 +14,18 @@ case class Game(id: GameId = null,
                 response: GameResponseStatus = Requested,
                 courseId: Option[CourseId] = None,
                 requestorQuizId: Option[QuizId] = None,
+                requestorQuizDone: Boolean = false,
                 requesteeQuizId: Option[QuizId] = None,
+                requesteeQuizDone: Boolean = false,
                 requesteeFinished: Boolean = false,
                 requestorFinished: Boolean = false,
                 finishedDate: Option[DateTime] = None) {
+
+  def isRequestor(user: User) = user.id match {
+    case `requestorId` => true
+    case `requesteeId` => false
+    case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
+  }
 
   def requestor(implicit session: Session) = UsersTable.findById(requestorId).get
 
@@ -27,84 +36,58 @@ case class Game(id: GameId = null,
     case `requesteeId` => requestor
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
   }
+
   def course(implicit session: Session) = courseId.map(Courses(_).get)
 
-  def toState: GameState = (response, requestorQuizId, requesteeQuizId, requestorFinished, requesteeFinished, finishedDate) match {
-    case (GameResponseStatus.requested, None, None, false, false, None) => GameRequested(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
-    case (GameResponseStatus.rejected, None, None, false, false, None) => GameRejected(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
-    case (GameResponseStatus.accepted, None, None, false, false, None) => GameAccepted(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
-    case (GameResponseStatus.accepted, Some(torQuiz), None, false, false, None) => GameQuizRequestor(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId, requestorQuizId = torQuiz)
-    case (GameResponseStatus.accepted, None, Some(teeQuiz), false, false, None) => GameQuizRequestee(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId, requesteeQuizId = teeQuiz)
-    case (GameResponseStatus.accepted, Some(torQuiz), Some(teeQuiz), false, false, None) => GameQuizBoth(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId, requestorQuizId = torQuiz, requesteeQuizId = teeQuiz)
+//  case class RequestedNoQuiz(val game: Game) extends GameState with GameRequested with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//  case class RequestedQuiz(val game: Game) extends GameState with  GameRequested with RequestorQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//  case class RequestedQuizDone(val game: Game) extends GameState with GameRequested with RequestorQuiz with RequestorQuizFinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//
+//  case class RejectedNoQuiz(val game: Game) extends GameState with GameRejected with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//  case class RejectedQuiz(val game: Game) extends GameState with GameRejected with RequestorQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//  case class RejectedQuizDone(val game: Game) extends GameState with GameRejected with RequestorQuiz with RequestorQuizFinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//
+
+//  case class AcceptedTorNoQuizTeeNoQuiz(val game: Game) extends GameState with GameAccepted with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//  case class AcceptedTorQuizTeeNoQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+//  case class AcceptedTorQuizDoneTeeNoQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizFinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
+
+//  case class AcceptedTorNoQuizTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizUnfinished { checks }
+//  case class AcceptedTorQuizTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizUnfinished { checks }
+//  case class AcceptedTorQuizDoneTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizFinished with RequesteeQuiz with RequesteeQuizUnfinished { checks }
+
+//  case class AcceptedTorNoQuizTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizFinished { checks }
+//  case class AcceptedTorQuizTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizFinished{ checks }
+//  case class AcceptedTorQuizDoneTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizFinished with RequesteeQuiz with RequesteeQuizFinished { checks }
+
+
+
+  def toState: GameState = (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
+    // Response Requested
+    case (GameResponseStatus.requested, None,    false, None,    false, false, false, None) => RequestedNoQuiz(this)
+    case (GameResponseStatus.requested, Some(_), false, None,    false, false, false, None) => RequestedQuiz(this)
+    case (GameResponseStatus.requested, Some(_), true,  None,    false, false, false, None) => RequestedQuizDone(this)
+    // Game Rejected
+    case (GameResponseStatus.rejected, None,     false, None,    false, false, false, None) => RejectedNoQuiz(this)
+    case (GameResponseStatus.rejected, Some(_),  false, None,    false, false, false, None) => RejectedQuiz(this)
+    case (GameResponseStatus.rejected, Some(_),  true,  None,    false, false, false, None) => RejectedQuizDone(this)
+    // Game Accepted (both making quizzes, Tor == Requestor, Tee == Requestee)
+    case (GameResponseStatus.accepted, None,     false, None,    false, false, false, None) => AcceptedTorNoQuizTeeNoQuiz(this)
+    case (GameResponseStatus.accepted, Some(_),  false, None,    false, false, false, None) => AcceptedTorQuizTeeNoQuiz(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  None,    false, false, false, None) => AcceptedTorQuizDoneTeeNoQuiz(this)
+    case (GameResponseStatus.accepted, None,     false, Some(_), false, false, false, None) => AcceptedTorNoQuizTeeQuiz(this)
+    case (GameResponseStatus.accepted, Some(_),  false, Some(_), false, false, false, None) => AcceptedTorQuizTeeQuiz(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), false, false, false, None) => AcceptedTorQuizDoneTeeQuiz(this)
+    case (GameResponseStatus.accepted, None,     false, Some(_), true,  false, false, None) => AcceptedTorNoQuizTeeQuizDone(this)
+    case (GameResponseStatus.accepted, Some(_),  false, Some(_), true,  false, false, None) => AcceptedTorQuizTeeQuizDone(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  false, false, None) => AcceptedTorQuizDoneTeeQuizDone(this)
+    // Failure == programming error
     case _ => throw new IllegalStateException("Game was not in an allowed state programming error " + this)
   }
 
-  def toRequested = (response, requestorQuizId, requesteeQuizId, requestorFinished, requesteeFinished, finishedDate) match {
-    case (GameResponseStatus.requested, None, None, false, false, None) => GameRequested(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
-    case _ => throw new IllegalStateException("Game was not in GameRequested state programming error " + this)
-  }
-
-
-  //
-  //  def accept(requestee: User) = {
-  //    c("requestee.id", requesteeId, requestee.id)
-  //    c("response", response, requested)
-  //    c("requestorQuizId", requestorQuizId, None)
-  //    c("requesteeQuizId", requesteeQuizId, None)
-  //    c("requesteeFinished", requesteeFinished, false)
-  //    c("requestorFinished", requestorFinished, false)
-  //    c("finishedDate", finishedDate, None)
-  //    this.copy(response = GameResponseStatus.accepted)
-  //  }
-  //
-  //  def reject(requestee: User) = {
-  //    c("requestee.id", requesteeId, requestee.id)
-  //    c("response", response, requested)
-  //    c("requestorQuizId", requestorQuizId, None)
-  //    c("requesteeQuizId", requesteeQuizId, None)
-  //    c("requesteeFinished", requesteeFinished, false)
-  //    c("requestorFinished", requestorFinished, false)
-  //    c("finishedDate", finishedDate, None)
-  //    this.copy(response = GameResponseStatus.rejected)
-  //  }
-  //
-  //  private def checkState(expectedResponse: GameResponseStatus,
-  //                         hasRequestorQuizId: Boolean,
-  //                         hasRequesteeQuizId: Boolean,
-  //                         expectedRequesteeFinished: Boolean,
-  //                         expectedRequestorFinished: Boolean,
-  //                         hasRinishedDate: Boolean): Unit = {
-  //
-  //  }
-  //
-  //
-  //  private def c[T](field: String, v: T, e: T) = if (v != e) throw new IllegalArgumentException(field + " was supposed to be [" + e + "] but was [" + v + "]")
-  //
-  //  def status(playerId: UserId): GameStatus =
-  //    playerId match {
-  //      case `requestorId` =>
-  //        (response, requesteeQuizId, requestorQuizId, requesteeFinished, requestorFinished, finishedDate) match {
-  //          case (GameResponseStatus.requested, None, None, false, false, None) => AwaitingReponseStatus
-  //          case (GameResponseStatus.rejected, None, None, false, false, None) => GameRejectedStatus
-  //          case (GameResponseStatus.accepted, _, None, false, false, None) => CreateQuizStatus
-  //          case (GameResponseStatus.accepted, None, Some(torQuiz), false, false, None) => AwaitingQuizStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), _, false, None) => AnswerQuizStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), false, true, None) => AwaitingAnswerStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), true, true, Some(done)) => GameDoneStatus
-  //          case _ => throw new IllegalStateException("Game was not in an allowed state programming error " + this)
-  //        }
-  //      case `requesteeId` =>
-  //        (response, requesteeQuizId, requestorQuizId, requesteeFinished, requestorFinished, finishedDate) match {
-  //          case (GameResponseStatus.requested, None, None, false, false, None) => RespondRequestStatus
-  //          case (GameResponseStatus.rejected, None, None, false, false, None) => GameRejectedStatus
-  //          case (GameResponseStatus.accepted, None, _, false, false, None) => CreateQuizStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), None, false, false, None) => AwaitingQuizStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), _, false, None) => AnswerQuizStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), false, true, None) => AwaitingAnswerStatus
-  //          case (GameResponseStatus.accepted, Some(eeQuiz), Some(torQuiz), true, true, Some(done)) => GameDoneStatus
-  //          case _ => throw new IllegalStateException("Game was not in an allowed state programming error " + this)
-  //        }
-  //      case _ => throw new IllegalArgumentException("User was not the requestor or the requestee")
-  //    }
+//  def toRequested = (response, requestorQuizId, requesteeQuizId, requestorFinished, requesteeFinished, finishedDate) match {
+//    case (GameResponseStatus.requested, None, None, false, false, None) => GameRequested(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
+//    case _ => throw new IllegalStateException("Game was not in GameRequested state programming error " + this)
+//  }
 
 }

@@ -3,6 +3,7 @@ package models.organization
 import models.DBTest
 import models.DBTest.inMemH2
 import models.DBTest.newFakeUser
+import models.game.GameRequested
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -113,7 +114,7 @@ class GamesSpec extends Specification {
         val (requestor, requestee) = (newFakeUser, newFakeUser)
 
         val gameInProgress = Games.request(requestor.id, requestee.id, course.id)
-        Games.update(gameInProgress.toRequested.accept(requestee).toGame)
+        Games.update(gameInProgress.toState.asInstanceOf[GameRequested].accept(requestee.id))
 
         val gameRequest = Games.active(requestee.id)(session)(0)
 
@@ -130,7 +131,7 @@ class GamesSpec extends Specification {
         val (requestor, requestee) = (newFakeUser, newFakeUser)
 
         val gameDone = Games.request(requestor.id, requestee.id, course.id)
-        Games.update(gameDone.toRequested.reject(requestee).toGame)
+        Games.update(gameDone.toState.asInstanceOf[GameRequested].reject(requestee.id))
 
         Games.active(requestor.id)(session) must beEmpty
         Games.active(requestee.id)(session) must beEmpty

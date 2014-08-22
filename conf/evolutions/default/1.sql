@@ -1,4 +1,4 @@
-# PREVENT AUTO GEN
+# STOP AUTO GEN
 # --- Created by Slick DDL
 # To stop Slick DDL generation, remove this comment and start using Evolutions
 
@@ -17,7 +17,7 @@ create table "derivative_quizzes" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGI
 create table "derivative_quizzes_2_questions" ("quiz_id" BIGINT NOT NULL,"question_id" BIGINT NOT NULL);
 alter table "derivative_quizzes_2_questions" add constraint "derivative_quizzes_2_questions_pk" primary key("question_id","quiz_id");
 create table "equations" ("id" SERIAL NOT NULL PRIMARY KEY,"equation" TEXT NOT NULL);
-create table "games" ("id" SERIAL NOT NULL PRIMARY KEY,"request_date" TIMESTAMP NOT NULL,"requestor" BIGINT NOT NULL,"requestee" BIGINT NOT NULL,"response" SMALLINT NOT NULL,"course" BIGINT,"requestor_quiz" BIGINT,"requestee_quiz" BIGINT,"requestee_finished" BOOLEAN NOT NULL,"requestor_finished" BOOLEAN NOT NULL,"finished_date" TIMESTAMP);
+create table "games" ("id" SERIAL NOT NULL PRIMARY KEY,"request_date" TIMESTAMP NOT NULL,"requestor" BIGINT NOT NULL,"requestee" BIGINT NOT NULL,"response" SMALLINT NOT NULL,"course" BIGINT,"requestor_quiz" BIGINT,"requestor_quiz_done" BOOLEAN NOT NULL,"requestee_quiz" BIGINT,"requestee_quiz_done" BOOLEAN NOT NULL,"requestee_finished" BOOLEAN NOT NULL,"requestor_finished" BOOLEAN NOT NULL,"finished_date" TIMESTAMP);
 create table "organizations" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"creation_Date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "secure_social_tokens" ("uuid" TEXT NOT NULL PRIMARY KEY,"email" TEXT NOT NULL,"creation_time" TIMESTAMP NOT NULL,"expiration_time" TIMESTAMP NOT NULL,"is_sign_up" BOOLEAN NOT NULL);
 create table "secure_social_users" ("id" SERIAL NOT NULL PRIMARY KEY,"user_id" TEXT NOT NULL,"provider_id" TEXT NOT NULL,"first_name" TEXT NOT NULL,"last_name" TEXT NOT NULL,"full_name" TEXT NOT NULL,"email" TEXT,"avatar_url" TEXT,"auth_Method" TEXT NOT NULL,"token" TEXT,"secret" TEXT,"access_token" TEXT,"token_type" TEXT,"expires_in" INTEGER,"refresh_token" TEXT,"hasher" TEXT,"password" TEXT,"salt" TEXT,"creation_date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
@@ -28,8 +28,8 @@ alter table "users_2_derivative_answers" add constraint "users_2_derivative_answ
 create table "users_2_derivative_quizzes" ("user_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL,"access" SMALLINT NOT NULL);
 alter table "users_2_derivative_quizzes" add constraint "users_2_derivative_quizzes_pk" primary key("user_id","quiz_id");
 alter table "application_user_settings" add constraint "application_user_settings_user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
-alter table "courses" add constraint "courses_organization_fk" foreign key("organization") references "organizations"("id") on update NO ACTION on delete CASCADE;
 alter table "courses" add constraint "courses_owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
+alter table "courses" add constraint "courses_organization_fk" foreign key("organization") references "organizations"("id") on update NO ACTION on delete CASCADE;
 alter table "courses_2_derivative_quizzes" add constraint "courses_2_derivative_quizzes_quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "courses_2_derivative_quizzes" add constraint "courses_2_derivative_quizzes_course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_answer_times" add constraint "derivative_answer_times_user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
@@ -55,8 +55,8 @@ alter table "users_2_derivative_quizzes" add constraint "users_2_derivative_quiz
 # --- !Downs
 
 alter table "application_user_settings" drop constraint "application_user_settings_user_fk";
-alter table "courses" drop constraint "courses_organization_fk";
 alter table "courses" drop constraint "courses_owner_fk";
+alter table "courses" drop constraint "courses_organization_fk";
 alter table "courses_2_derivative_quizzes" drop constraint "courses_2_derivative_quizzes_quiz_fk";
 alter table "courses_2_derivative_quizzes" drop constraint "courses_2_derivative_quizzes_course_fk";
 alter table "derivative_answer_times" drop constraint "derivative_answer_times_user_fk";

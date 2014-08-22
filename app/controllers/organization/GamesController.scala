@@ -1,14 +1,16 @@
 package controllers.organization
 
 import com.artclod.util._
-import controllers.support.SecureSocialConsented
+import controllers.support.{RequireAccess, SecureSocialConsented}
+import models.game._
 import models.organization._
+import models.question.derivative.{Quiz, Quizzes}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
-import service.User
+import service.{Edit, User}
 
 import scala.util.Right
 
@@ -50,19 +52,22 @@ object GamesController extends Controller with SecureSocialConsented {
   def game(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(organizationId, courseId, gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) => game.toState match {
-        case g: GameRequested => teeVsTor(user, g, Ok(views.html.game.requestedTor(organization, course, g)), Ok(views.html.game.requestedTee(organization, course, g)))
-        case g: GameAccepted => Ok(views.html.game.accepted(organization, course, g))
-        case _ => throw new IllegalStateException()
-      }
-    }
-  }
+      case Right((organization, course, game)) =>
 
-  def teeVsTor(user: User, gameState: GameState, tor: SimpleResult, tee: SimpleResult) =
-    user.id match {
-      case gameState.requestorId => tor
-      case gameState.requesteeId => tee
-      case _ => throw new IllegalStateException("user [" + user + "] was not requestee or requestor for game [" + gameState + "]")
+        if(game.isRequestor(user)){
+          game.toState match {
+            case gameState: GameState with RequestorQuizUnfinished => Ok(views.html.game.createQuizRequestor(organization, course, gameState))
+            case _ =>  throw new IllegalStateException("Not tor state mach, TODO this should be removeable via sealed")
+          }
+        } else {
+          game.toState match {
+            case gameState: GameState with RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
+            case gameState: GameState with GameRequested => Ok(views.html.game.requestedTee(organization, course, gameState))
+            case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
+          }
+        }
+
+      }
     }
 
   def respond(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
@@ -70,12 +75,13 @@ object GamesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, game)) => GameResponse.form.bindFromRequest.fold(
         errors => BadRequest(views.html.errors.formErrorPage(errors)),
-        form => {
-          val accepted = form
-          val gameState = game.toRequested
-          if (accepted) { Games.update(gameState.accept(user).toGame) }
-          else { Games.update(gameState.reject(user).toGame) }
-
+        accepted => {
+          val gameState = game.toState match {
+            case g : GameRequested => g
+            case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[GameRequested].getName + "] but was " + game.toState)
+          }
+          if (accepted) { Games.update(gameState.accept(user.id)) }
+          else { Games.update(gameState.reject(user.id)) }
           Redirect(routes.GamesController.game(organization.id, course.id, game.id))
         })
     }

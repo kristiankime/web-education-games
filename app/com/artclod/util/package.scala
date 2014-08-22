@@ -2,6 +2,13 @@ package com.artclod
 
 package object util {
 
+  implicit class ThisAnd[O](o : O) {
+    def and(f : (O) => _) = {
+      f(o)
+      this
+    }
+  }
+
   case class BooleanOption(opt: Option[Boolean]){
     def noneFalse = opt match {
       case None => false

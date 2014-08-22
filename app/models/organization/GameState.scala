@@ -1,5 +1,6 @@
 package models.organization
 
+import com.artclod.slick.JodaUTC
 import models.organization.GameResponseStatus._
 import models.question.derivative._
 import models.support._
@@ -38,7 +39,7 @@ case class GameRequested(id: GameId, requestDate: DateTime, requestorId: UserId,
 }
 
 case class GameRejected(id: GameId, requestDate: DateTime, requestorId: UserId, requesteeId: UserId, courseId: Option[CourseId]) extends GameState {
-  def toGame = Game(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, response = rejected, courseId = courseId)
+  def toGame = Game(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, response = rejected, courseId = courseId, finishedDate = Some(JodaUTC.now))
 }
 
 case class GameAccepted(id: GameId, requestDate: DateTime, requestorId: UserId, requesteeId: UserId, courseId: Option[CourseId]) extends GameState {

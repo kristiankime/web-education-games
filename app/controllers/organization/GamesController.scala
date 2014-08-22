@@ -50,8 +50,9 @@ object GamesController extends Controller with SecureSocialConsented {
   def game(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(organizationId, courseId, gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((org, course, game)) => game.toState match {
-        case g: GameRequested => teeVsTor(user, g, Ok(views.html.game.requestedTor(org, course, g)), Ok(views.html.game.requestedTee(org, course, g)))
+      case Right((organization, course, game)) => game.toState match {
+        case g: GameRequested => teeVsTor(user, g, Ok(views.html.game.requestedTor(organization, course, g)), Ok(views.html.game.requestedTee(organization, course, g)))
+        case g: GameAccepted => Ok(views.html.game.accepted(organization, course, g))
         case _ => throw new IllegalStateException()
       }
     }
@@ -74,6 +75,7 @@ object GamesController extends Controller with SecureSocialConsented {
           val gameState = game.toRequested
           if (accepted) { Games.update(gameState.accept(user).toGame) }
           else { Games.update(gameState.reject(user).toGame) }
+
           Redirect(routes.GamesController.game(organization.id, course.id, game.id))
         })
     }

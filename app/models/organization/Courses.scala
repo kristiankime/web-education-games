@@ -69,7 +69,7 @@ object Courses {
 	def otherAccess(course: Course)(implicit user: User, session: Session) =
     usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 
-	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) {
+	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) : User = {
 		if (course.access < access) {
       usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
 				case Some(u2c) if u2c.access < access => usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access))
@@ -77,6 +77,7 @@ object Courses {
 				case _ => {}
 			}
 		}
+    user
 	}
 
 }

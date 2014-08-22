@@ -48,7 +48,7 @@ case class GameAccepted(id: GameId, requestDate: DateTime, requestorId: UserId, 
   def addQuiz(user: User, quiz: Quiz): GameState = user.id match {
     case `requestorId` => GameQuizRequestor(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId, requestorQuizId = quiz.id)
     case `requesteeId` => GameQuizRequestee(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId, requesteeQuizId = quiz.id)
-    case _ => throw new IllegalStateException("user [" + user + "] was no the requestor or the requestee")
+    case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
   }
 }
 

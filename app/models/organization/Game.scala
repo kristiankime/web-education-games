@@ -3,6 +3,7 @@ package models.organization
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import service.User
 import service.table.UsersTable
 
 case class Game(id: GameId = null,
@@ -21,6 +22,11 @@ case class Game(id: GameId = null,
 
   def requestee(implicit session: Session) = UsersTable.findById(requesteeId).get
 
+  def otherPlayer(user: User)(implicit session: Session) = user.id match {
+    case `requestorId` => requestee
+    case `requesteeId` => requestor
+    case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
+  }
   def course(implicit session: Session) = courseId.map(Courses(_).get)
 
   def toState: GameState = (response, requestorQuizId, requesteeQuizId, requestorFinished, requesteeFinished, finishedDate) match {

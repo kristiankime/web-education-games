@@ -26,6 +26,8 @@ package object user {
     def studentsToPlayWith(courseId: CourseId)(implicit session: Session) = Games.studentsToPlayWith(user.id, courseId)
 
     def gameRequests(courseId: CourseId)(implicit session: Session) = Games.requests(user.id, courseId)
+
+    def activeGames(courseId: CourseId)(implicit session: Session) = Games.active(user.id, courseId)
   }
 
 }

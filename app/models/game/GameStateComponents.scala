@@ -58,7 +58,7 @@ sealed trait RequestorQuizDoneStatus {
 }
 
 trait RequestorQuizUnfinished extends RequestorQuizDoneStatus {
-  override def requestorQuizDoneStatusCheck = if(game.requestorQuizDone != true) {throw new IllegalStateException("Game must be in Requestor Quiz done state")}
+  override def requestorQuizDoneStatusCheck = if(game.requestorQuizDone != false) {throw new IllegalStateException("Game must be in Requestor Quiz done state")}
 }
 
 trait RequestorQuizFinished extends RequestorQuizDoneStatus {
@@ -88,7 +88,7 @@ sealed trait RequesteeQuizDoneStatus {
 }
 
 trait RequesteeQuizUnfinished extends RequesteeQuizDoneStatus {
-  override def requesteeQuizDoneStatusCheck = if(game.requesteeQuizDone != true) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
+  override def requesteeQuizDoneStatusCheck = if(game.requesteeQuizDone != false) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
 }
 
 trait RequesteeQuizFinished extends RequesteeQuizDoneStatus {

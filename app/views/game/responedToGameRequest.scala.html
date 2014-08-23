@@ -1,15 +1,14 @@
 @(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+@import controllers.game._
 @import helper._
-@import controllers.organization.routes.GamesController
-@import controllers.organization.GameResponse
 @import models.user.UserPimped
 
 @main("Game Requested") {
 
-    @gameState.game.requestor.name requested to play a game with you but you have not yet responded
+    @gameState.game.requestor.name requested to play a game with you but you have not yet responded <br>
 
-    @form(action = GamesController.respond(organization.id, course.id, gameState.game.id)) {
+    @form(action = routes.GamesController.respond(organization.id, course.id, gameState.game.id)) {
         <input type="radio" name="@GameResponse.response" value="true" checked> Accept Request <br>
         <input type="radio" name="@GameResponse.response" value="false"> Reject Request <br>
         <input type="submit" value="Submit">

@@ -2,7 +2,7 @@
 
 @import helper._
 @import controllers.organization.CourseCreate
-@import controllers.organization.routes._
+@import controllers.organization._
  
 @main("Create a new Course for " + organization.name) {
     
@@ -10,7 +10,7 @@
     
     <h5>Please enter the information about your course:</h5>
     
-    @form(action = CoursesController.createSubmit(organization.id)) {
+    @form(action = routes.CoursesController.createSubmit(organization.id)) {
 		Name: <input type="text" name="@CourseCreate.name" value="course name"> <br>
 	    <input type="submit" value="Submit">
     }

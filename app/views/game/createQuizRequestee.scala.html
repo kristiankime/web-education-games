@@ -1,8 +1,7 @@
-@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequesteeQuizUnfinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import helper._
-@import controllers.organization.routes.GamesController
-@import controllers.organization.GameRequest
+@@import controllers.game.{GameRequest, GamesController}
+import helper._
 @import models.user.UserPimped
 
 

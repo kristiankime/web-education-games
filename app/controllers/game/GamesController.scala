@@ -1,16 +1,15 @@
-package controllers.organization
+package controllers.game
 
 import com.artclod.util._
-import controllers.support.{RequireAccess, SecureSocialConsented}
+import controllers.organization.CoursesController
+import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization._
-import models.question.derivative.{Quiz, Quizzes}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
-import service.{Edit, User}
 
 import scala.util.Right
 
@@ -43,7 +42,7 @@ object GamesController extends Controller with SecureSocialConsented {
             BadRequest(views.html.errors.errorPage(new IllegalStateException("Users already had an active game [" + user.id + "] [" + otherUserId + "]")))
           } else {
             Games.request(user.id, otherUserId, course.id)
-            Redirect(routes.CoursesController.view(organization.id, course.id))
+            Redirect(controllers.organization.routes.CoursesController.view(organization.id, course.id))
           }
         })
     }
@@ -62,7 +61,7 @@ object GamesController extends Controller with SecureSocialConsented {
         } else {
           game.toState match {
             case gameState: GameState with RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
-            case gameState: GameState with GameRequested => Ok(views.html.game.requestedTee(organization, course, gameState))
+            case gameState: GameState with GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, gameState))
             case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
           }
         }

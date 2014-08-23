@@ -1,12 +1,57 @@
 @(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequestorQuizUnfinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@@import controllers.game.{GameRequest, GamesController}
-import helper._
+@import controllers.game._
+@import helper._
 @import models.user.UserPimped
-
+@import views.html.tag._
 
 @main("Game Requested") {
 
-    You are now playing a game with @gameState.game.requestor.name you need to make a quiz
+    You are now playing a game with @gameState.game.requestor.name <br>
+
+    @if(gameState.game.requesteeQuizDone){
+    They have created finished their quiz and are waiting for you to finish yours <br>
+    }
+
+    @for(quiz <- gameState.requestorQuiz){
+    @defining(quiz.questions) { questions =>
+    <table>
+        <th>Question</th> <th> Remove </th>
+        @for(question <- questions){
+            <tr>
+                <td> @mathml.mathmlContent(question) </td>
+                <td> @form(routes.GamesRequestorController.remove(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRequestorRemove.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
+            </tr>
+        }
+    </table>
+    }
+    }
+
+    <h4>Add a new Question</h4>
+
+    <p>
+        Type in an equation and press "Save Question": <br>
+        @mathml.mathmlEditor(editorName = "QUESTION")
+    </p>
+
+    @form(routes.GamesRequestorController.create(course.organizationId, course.id, gameState.game.id), 'id -> "derivativeqForm" ) {
+        <input type="hidden" name="@GameRequestorCreate.mathML" id="derivativeQuestionMathML">
+        <input type="hidden" name="@GameRequestorCreate.rawStr" id="derivativeQuestionRawStr">
+        <input type="button" value="Save Question" onclick="formSubmit()">
+    }
+
+    <script>
+    formSubmit = function() {
+    if(QUESTION.valid){
+    $("#derivativeQuestionMathML").val(QUESTION.mathML);
+    $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+    $("#derivativeqForm").submit();
+    } else {
+    alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
+    }
+    }
+    </script>
+
+
 
 }

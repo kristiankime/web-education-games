@@ -1,5 +1,7 @@
 package models.game
 
+import models.question.derivative.Quizzes
+import models.support.QuizId
 import play.api.db.slick.Config.driver.simple._
 import models.user.Users
 
@@ -9,6 +11,10 @@ sealed trait GameState {
      with RequesteeQuizCreateStatus with RequesteeQuizDoneStatus =>
 
    val game : Game
+
+   def requestorQuiz(implicit session: Session) = game.requestorQuizId.map(Quizzes(_).get)
+
+   def requesteeQuiz(implicit session: Session) = game.requesteeQuizId.map(Quizzes(_).get)
 
    def checks: Unit = {
      responseCheck

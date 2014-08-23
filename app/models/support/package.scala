@@ -171,7 +171,9 @@ package object support {
 	// ==========================
 	// QuestionId
 	// ==========================
-	implicit def long2QuestionId = MappedColumnType.base[QuestionId, Long](
+  implicit def questionId = models.support.form.QuestionIdForm.userId
+
+  implicit def long2QuestionId = MappedColumnType.base[QuestionId, Long](
 		id => id.v,
 		long => QuestionId(long))
 

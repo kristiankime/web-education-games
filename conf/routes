@@ -45,6 +45,8 @@ GET         /orgs/:o/courses/:c/games/find                                contro
 POST        /orgs/:o/courses/:c/games/request                             controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
 GET         /orgs/:o/courses/:c/games/:g                                  controllers.game.GamesController.game(o: OrganizationId, c: CourseId, g: GameId)
 POST        /orgs/:o/courses/:c/games/:g/respond                          controllers.game.GamesController.respond(o: OrganizationId, c: CourseId, g: GameId)
+POST        /orgs/:o/courses/:c/games/:g/requestorCreate                  controllers.game.GamesRequestorController.create(o: OrganizationId, c: CourseId, g: GameId)
+POST        /orgs/:o/courses/:c/games/:g/requestorRemove                  controllers.game.GamesRequestorController.remove(o: OrganizationId, c: CourseId, g: GameId)
 
 # ======== START DEPRICATED ========
 # Equation pages

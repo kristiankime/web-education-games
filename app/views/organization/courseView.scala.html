@@ -1,18 +1,15 @@
 @(organization: models.organization.Organization, course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
-@import controllers.game.GamesController
-@import controllers.game.GamesController
-@import controllers.game.GamesController
 
 @import com.artclod.play._
 @import helper._
 @import service._
 @import views.html.tag._
-@import viewsupport.organization._
 @import viewsupport.organization.AccessName.an
-@import controllers.organization.CourseJoin
-@import controllers.organization.routes._
-@import controllers.question.derivative.routes._
 @import models.user.UserPimped
+@import controllers.organization.CourseJoin
+@import controllers.organization.routes.CoursesController
+@import controllers.question.derivative.routes.QuizzesController
+@import controllers.game.routes.GamesController
 
 @main(course.name) {
     <h2>Welcome to the information page for the course: @course.name</h2>

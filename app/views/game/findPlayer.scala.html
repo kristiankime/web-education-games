@@ -1,6 +1,7 @@
 @(organization: models.organization.Organization, course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game._
+@import controllers.game.routes.GamesController
+@import controllers.game.GameRequest
 @import helper._
 @import models.user.UserPimped
 
@@ -17,7 +18,7 @@
 
     <p>an invitation will be sent to them.</p>
 
-    @form(action = routes.GamesController.requestGame(organization.id, course.id)) {
+    @form(action = GamesController.requestGame(organization.id, course.id)) {
         @for(student <- students){<input type="radio" name="@GameRequest.requestee" value="@student.id.v"> @student.name <br>}
 	    <input type="submit" value="Submit">
     }

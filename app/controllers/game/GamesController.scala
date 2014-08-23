@@ -52,8 +52,17 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(organizationId, courseId, gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, game)) =>
-        if(game.isRequestor(user)){ GamesRequestorController.requestorGameViews(organization, course, game) }
-        else { GamesRequesteeController.requesteeGameViews(organization, course, game) }
+
+        if(game.isRequestor(user)) game.toState match {
+            case gameState: GameState with RequestorQuizUnfinished => Ok(views.html.game.createQuizRequestor(organization, course, gameState))
+            case _ =>  throw new IllegalStateException("Not tor state mach, TODO this should be removeable via sealed")
+          }
+        else game.toState match {
+            case gameState: GameState with RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
+            case gameState: GameState with GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, gameState))
+            case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
+          }
+
       }
     }
 

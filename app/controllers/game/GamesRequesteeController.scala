@@ -10,12 +10,12 @@ import play.api.db.slick.Config.driver.simple.Session
 
 object GamesRequesteeController extends Controller with SecureSocialConsented {
 
-   def requesteeGameViews(organization: Organization, course: Course, game: Game)(implicit user: User, session: Session) = {
-     game.toState match {
-       case gameState: GameState with RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
-       case gameState: GameState with GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, gameState))
-       case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
-     }
-   }
+//   def requesteeGameViews(organization: Organization, course: Course, game: Game)(implicit user: User, session: Session) = {
+//     game.toState match {
+//       case gameState: GameState with RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
+//       case gameState: GameState with GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, gameState))
+//       case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
+//     }
+//   }
 
  }

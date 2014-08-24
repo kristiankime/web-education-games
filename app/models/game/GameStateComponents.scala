@@ -1,5 +1,6 @@
 package models.game
 
+import com.artclod.slick.JodaUTC
 import models.support.UserId
 import play.api.db.slick.Config.driver.simple._
 
@@ -21,7 +22,7 @@ trait GameRequested extends GameResponse {
 
   def reject(requesteeId : UserId)(implicit session: Session) = {
     if (game.requestee.id != requesteeId) throw new IllegalStateException("user [" + game.requestee + "] attempted to accept game but was not requestee [" + game.requestee + "]")
-    game.copy(response = GameResponseStatus.rejected)
+    game.copy(response = GameResponseStatus.rejected, finishedDate = Some(JodaUTC.now))
   }
 }
 
@@ -49,6 +50,8 @@ trait RequestorQuiz extends RequestorQuizCreateStatus {
   override def requestorQuizCreateStatusCheck = if(game.requestorQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestor Quiz")}
 
   def requestorQuizId = game.requesteeQuizId.get
+
+  def finalizeRequestorQuiz = game.copy(requestorQuizDone = true)
 }
 
 sealed trait RequestorQuizDoneStatus {

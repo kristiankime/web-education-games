@@ -40,4 +40,22 @@ class CollectionPackageSpec extends Specification {
     }
   }
 
+
+  "dropOption" should {
+    "should return empty collection if option is None" in {
+      val noList : Option[List[String]] = None[List[String]]
+
+      val emptyList = noList.dropOption
+
+      emptyList must beEmpty
+    }
+
+    "should return collection if option is Some" in {
+      val noList : Option[List[String]] = Some(List("a","b"))
+
+      val emptyList = noList.dropOption
+
+      emptyList must beEqualTo(List("a","b"))
+    }
+  }
 }

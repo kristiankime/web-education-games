@@ -51,6 +51,22 @@ object GamesRequestorController extends Controller with SecureSocialConsented {
     }
   }
 
+  def quizDone(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(organizationId, courseId, gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course, game)) => {
+
+        val gameState = game.toState match {
+          case g : RequestorQuiz => g
+          case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[RequestorQuiz].getName + "] but was " + game.toState)
+        }
+        Games.update(gameState.finalizeRequestorQuiz)
+
+        Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+      }
+    }
+  }
+
 }
 
 object GameRequestorRemove {

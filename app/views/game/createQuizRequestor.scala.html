@@ -1,9 +1,17 @@
 @(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequestorQuizUnfinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game._
+@import controllers.game.routes.GamesRequestorController
+@import controllers.game.GameRequestorCreate
+@import controllers.game.GameRequestorRemove
 @import helper._
 @import models.user.UserPimped
 @import views.html.tag._
+@import com.artclod.collection.PimpedOptionList
+@import models.game.GameState.numberOfQuestions
+
+@defining(gameState.requestorQuiz) { quizOp =>
+@defining(quizOp.map(_.questions).dropOption) { questions =>
+@defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
 @main("Game Requested") {
 
@@ -13,28 +21,29 @@
     They have created finished their quiz and are waiting for you to finish yours <br>
     }
 
-    @for(quiz <- gameState.requestorQuiz){
-    @defining(quiz.questions) { questions =>
+    @for(quiz <- quizOp){
     <table>
         <th>Question</th> <th> Remove </th>
         @for(question <- questions){
             <tr>
                 <td> @mathml.mathmlContent(question) </td>
-                <td> @form(routes.GamesRequestorController.remove(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRequestorRemove.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
+                <td> @form(GamesRequestorController.remove(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRequestorRemove.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
             </tr>
         }
     </table>
     }
-    }
 
-    <h4>Add a new Question</h4>
+    @if(numQuestionRemaining == 0){
+    <h4> Your quiz has all the questions it needs. You can finalize the quiz if you want. Or remove a question and add another if you don't like one.</h4>
+    } else {
+    <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
 
     <p>
         Type in an equation and press "Save Question": <br>
         @mathml.mathmlEditor(editorName = "QUESTION")
     </p>
 
-    @form(routes.GamesRequestorController.create(course.organizationId, course.id, gameState.game.id), 'id -> "derivativeqForm" ) {
+    @form(GamesRequestorController.create(course.organizationId, course.id, gameState.game.id), 'id -> "derivativeqForm" ) {
         <input type="hidden" name="@GameRequestorCreate.mathML" id="derivativeQuestionMathML">
         <input type="hidden" name="@GameRequestorCreate.rawStr" id="derivativeQuestionRawStr">
         <input type="button" value="Save Question" onclick="formSubmit()">
@@ -51,7 +60,14 @@
     }
     }
     </script>
+    }
 
+    @if(numQuestionRemaining == 0){
+    @form(GamesRequestorController.quizDone(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
+    }
 
+}
 
+}
+}
 }

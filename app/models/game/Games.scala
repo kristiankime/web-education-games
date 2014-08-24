@@ -41,7 +41,7 @@ object Games {
   def active(userId: UserId)(implicit session: Session): List[Game] =
     gamesTable.where(
       g => (g.requestee === userId || g.requestor === userId) &&
-        g.response === GameResponseStatus.accepted &&
+//        g.response === GameResponseStatus.accepted &&
         (g.finishedDate isNull)
     ).sortBy(_.requestDate).list
 
@@ -49,7 +49,7 @@ object Games {
     gamesTable.where(
       g => (g.requestee === userId || g.requestor === userId) &&
         g.course === courseId &&
-        g.response === GameResponseStatus.accepted &&
+//        g.response === GameResponseStatus.accepted &&
         (g.finishedDate isNull)
     ).sortBy(_.requestDate).list
 

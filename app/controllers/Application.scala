@@ -14,7 +14,7 @@ object Application extends Controller {
 	}
 
   /**
-   * If the bath is not valid backtrack to an earlier "/"
+   * If the path is not valid backtrack to an earlier "/"
    */
   def backTrack(path: String) = Action {
     Redirect(("/" + path).substring(0, ("/" + path).lastIndexOf("/") + 1))

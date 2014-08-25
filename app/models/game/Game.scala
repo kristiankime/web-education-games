@@ -25,8 +25,12 @@ case class Game(id: GameId = null,
 
   def isRequestor(user: User) = user.id match {
     case `requestorId` => true
-    case `requesteeId` => false
-    case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
+    case _ => false
+  }
+
+  def isRequestee(user: User) = user.id match {
+    case `requesteeId` => true
+    case _ => false
   }
 
   def requestor(implicit session: Session) = UsersTable.findById(requestorId).get

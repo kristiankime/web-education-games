@@ -83,6 +83,8 @@ trait RequesteeQuiz extends RequesteeQuizCreateStatus {
   override def requesteeQuizCreateStatusCheck = if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestee Quiz")}
 
   def requesteeQuizId = game.requesteeQuizId.get
+
+  def finalizeRequesteeQuiz = game.copy(requesteeQuizDone = true)
 }
 
 sealed trait RequesteeQuizDoneStatus {

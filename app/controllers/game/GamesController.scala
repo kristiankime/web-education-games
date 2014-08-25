@@ -52,17 +52,20 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(organizationId, courseId, gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, game)) =>
-
+        // -------------------------------------------------------------------------------------
         if(game.isRequestor(user)) game.toState match {
-            case gameState: GameState with RequestorQuizUnfinished => Ok(views.html.game.createQuizRequestor(organization, course, gameState))
-            case _ =>  throw new IllegalStateException("Not tor state mach, TODO this should be removeable via sealed")
-          }
-        else game.toState match {
-            case gameState: GameState with RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
-            case gameState: GameState with GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, gameState))
-            case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
-          }
-
+          case gameState: RequestorQuizUnfinished => Ok(views.html.game.createQuizRequestor(organization, course, gameState))
+          case gameState: RequestorQuizFinished with RequesteeQuizUnfinished => Ok(views.html.game.awaitingQuizRequestor(organization, course, gameState))
+          case _ =>  throw new IllegalStateException("Not tor state mach, TODO this should be removeable via sealed")
+        }
+        else if(game.isRequestee(user)) game.toState match {
+          case gameState: GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, gameState))
+          case gameState: RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, gameState))
+          case gameState: RequesteeQuizFinished with RequestorQuizUnfinished => Ok(views.html.game.awaitingQuizRequestee(organization, course, gameState))
+          case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
+        }
+        else throw new IllegalStateException("TODO code up teacher view")
+      // ---------------------------------------------------------------------------------------
       }
     }
 

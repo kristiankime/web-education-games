@@ -1,0 +1,17 @@
+@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game._
+@import helper._
+@import models.user.UserPimped
+@import models.game.GameResponseStatus
+
+@main("Awaiting Quiz") {
+
+    @if(gameState.game.response == GameResponseStatus.accepted){
+        You finished your quiz but @gameState.game.requestee.name hasn't yet built theirs <br>
+    } else {
+        You finished your quiz for @gameState.game.requestee.name but they haven't yet agreed to play a game with you  <br>
+    }
+
+}
+

@@ -1,0 +1,13 @@
+@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game._
+@import helper._
+@import models.user.UserPimped
+@import models.game.GameResponseStatus
+
+@main("Awaiting Quiz") {
+
+    You finished your quiz but @gameState.game.requestor.name hasn't yet built theirs <br>
+
+}
+

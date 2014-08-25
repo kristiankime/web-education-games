@@ -15,13 +15,6 @@ import service.User
 
 object GamesRequestorController extends Controller with SecureSocialConsented {
 
-//  def requestorGameViews(organization: Organization, course: Course, game: Game)(implicit user: User, session: Session) = {
-//    game.toState match {
-//      case gameState: GameState with RequestorQuizUnfinished => Ok(views.html.game.createQuizRequestor(organization, course, gameState))
-//      case _ =>  throw new IllegalStateException("Not tor state mach, TODO this should be removeable via sealed")
-//    }
-//  }
-
   def create(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(organizationId, courseId, gameId) match {
       case Left(notFoundResult) => notFoundResult

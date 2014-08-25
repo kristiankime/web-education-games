@@ -1,12 +1,73 @@
 @(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequesteeQuizUnfinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.{GameRequest, GamesController}
+@import controllers.game.routes.GamesRequesteeController
+@import controllers.game.GameRequesteeCreate
+@import controllers.game.GameRequesteeRemove
 @import helper._
 @import models.user.UserPimped
+@import views.html.tag._
+@import com.artclod.collection.PimpedOptionList
+@import models.game.GameState.numberOfQuestions
 
+@defining(gameState.requesteeQuiz) { quizOp =>
+@defining(quizOp.map(_.questions).dropOption) { questions =>
+@defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
-@main("Game Requested") {
+@main("Create Quiz") {
 
-    You are now playing a game with @gameState.game.requestor.name you need to make a quiz
+    You are now playing a game with @gameState.game.requestor.name <br>
 
+    @if(gameState.game.requestorQuizDone){
+    They have created finished their quiz and are waiting for you to finish yours <br>
+    }
+
+    @for(quiz <- quizOp){
+    <table>
+        <th>Question</th> <th> Remove </th>
+        @for(question <- questions){
+        <tr>
+            <td> @mathml.mathmlContent(question) </td>
+            <td> @form(GamesRequesteeController.remove(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRequesteeRemove.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
+        </tr>
+        }
+    </table>
+    }
+
+    @if(numQuestionRemaining == 0){
+    <h4> Your quiz has all the questions it needs. You can finalize the quiz if you want. Or remove a question and add another if you don't like one.</h4>
+    } else {
+    <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
+
+    <p>
+        Type in an equation and press "Save Question": <br>
+        @mathml.mathmlEditor(editorName = "QUESTION")
+    </p>
+
+    @form(GamesRequesteeController.create(course.organizationId, course.id, gameState.game.id), 'id -> "derivativeqForm" ) {
+        <input type="hidden" name="@GameRequesteeCreate.mathML" id="derivativeQuestionMathML">
+        <input type="hidden" name="@GameRequesteeCreate.rawStr" id="derivativeQuestionRawStr">
+        <input type="button" value="Save Question" onclick="formSubmit()">
+    }
+
+    <script>
+    formSubmit = function() {
+    if(QUESTION.valid){
+    $("#derivativeQuestionMathML").val(QUESTION.mathML);
+    $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+    $("#derivativeqForm").submit();
+    } else {
+    alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
+    }
+    }
+    </script>
+    }
+
+    @if(numQuestionRemaining == 0){
+    @form(GamesRequesteeController.quizDone(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
+    }
+
+}
+
+}
+}
 }

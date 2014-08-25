@@ -1,5 +1,6 @@
 @(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequestorQuizUnfinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+@import models.game.GameResponseStatus
 @import controllers.game.routes.GamesRequestorController
 @import controllers.game.GameRequestorCreate
 @import controllers.game.GameRequestorRemove
@@ -13,9 +14,13 @@
 @defining(quizOp.map(_.questions).dropOption) { questions =>
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
-@main("Game Requested") {
+@main("Create Quiz") {
 
-    You are now playing a game with @gameState.game.requestor.name <br>
+    @if(gameState.game.response == GameResponseStatus.accepted){
+    You are now playing a game with @gameState.game.requestee.name <br>
+    } else {
+    You have requested to play with @gameState.game.requestee.name but they haven't yet replied <br>
+    }
 
     @if(gameState.game.requesteeQuizDone){
     They have created finished their quiz and are waiting for you to finish yours <br>

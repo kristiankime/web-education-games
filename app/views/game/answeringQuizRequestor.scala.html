@@ -1,13 +1,29 @@
-@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequesteeQuiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game._
 @import helper._
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
 
+@defining(gameState.requesteeQuiz) { quiz =>
+@defining(quiz.results(user)) { quizResults =>
+
 @main("Answering Quiz") {
 
-    TODO
+    <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
+
+    <table>
+        <th>Question</th> <th>Details</th> <th>Status</th>
+        @for(result <- quizResults.results) {
+            <tr>
+                <td> @mathml.mathmlContent(result.question) </td>
+                <td> TODO view question @*<a href="@QuestionsController.view(course.organizationId, course.id, quizResults.quiz.id, result.question.id)">view</a> *@ </td>
+                <td> @views.html.question.status(result.status) </td>
+            </tr>
+        }
+    </table>
 
 }
 
+}
+}

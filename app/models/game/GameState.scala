@@ -16,10 +16,6 @@ sealed trait GameState {
 
    val game : Game
 
-   def requestorQuiz(implicit session: Session) = game.requestorQuizId.map(Quizzes(_).get)
-
-   def requesteeQuiz(implicit session: Session) = game.requesteeQuizId.map(Quizzes(_).get)
-
    def checks: Unit = {
      responseCheck
      requestorQuizCreateStatusCheck

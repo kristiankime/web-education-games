@@ -9,7 +9,7 @@
 @import com.artclod.collection.PimpedOptionList
 @import models.game.GameState.numberOfQuestions
 
-@defining(gameState.requesteeQuiz) { quizOp =>
+@defining(gameState.game.requesteeQuiz) { quizOp =>
 @defining(quizOp.map(_.questions).dropOption) { questions =>
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 

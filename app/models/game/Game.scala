@@ -37,6 +37,10 @@ case class Game(id: GameId = null,
 
   def requestee(implicit session: Session) = UsersTable.findById(requesteeId).get
 
+  def requestorQuiz(implicit session: Session) = requestorQuizId.flatMap(Quizzes(_))
+
+  def requesteeQuiz(implicit session: Session) = requesteeQuizId.flatMap(Quizzes(_))
+
   def otherPlayer(user: User)(implicit session: Session) = user.id match {
     case `requestorId` => requestee
     case `requesteeId` => requestor

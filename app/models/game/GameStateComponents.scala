@@ -2,7 +2,7 @@ package models.game
 
 import com.artclod.slick.JodaUTC
 import models.support.UserId
-import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick.Config.driver.simple.Session
 
 // ============================
 // ====== Request states ======
@@ -49,7 +49,9 @@ trait RequestorNoQuiz extends RequestorQuizCreateStatus {
 trait RequestorQuiz extends RequestorQuizCreateStatus {
   override def requestorQuizCreateStatusCheck = if(game.requestorQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestor Quiz")}
 
-  def requestorQuizId = game.requesteeQuizId.get
+  def requestorQuizId = game.requestorQuizId.get
+
+  def requestorQuiz(implicit session: Session) = game.requestorQuiz.get
 
   def finalizeRequestorQuiz = game.copy(requestorQuizDone = true)
 }
@@ -60,11 +62,11 @@ sealed trait RequestorQuizDoneStatus {
   def requestorQuizDoneStatusCheck : Unit
 }
 
-trait RequestorQuizUnfinished extends RequestorQuizDoneStatus {
+trait RequestorQuizUnfinished extends RequestorQuizDoneStatus with RequestorQuiz{
   override def requestorQuizDoneStatusCheck = if(game.requestorQuizDone != false) {throw new IllegalStateException("Game must be in Requestor Quiz done state")}
 }
 
-trait RequestorQuizFinished extends RequestorQuizDoneStatus {
+trait RequestorQuizFinished extends RequestorQuizDoneStatus with RequestorQuiz {
   override def requestorQuizDoneStatusCheck = if(game.requestorQuizDone != true) {throw new IllegalStateException("Game must be in Requestor Quiz done state")}
 }
 
@@ -84,6 +86,8 @@ trait RequesteeQuiz extends RequesteeQuizCreateStatus {
 
   def requesteeQuizId = game.requesteeQuizId.get
 
+  def requesteeQuiz(implicit session: Session) = game.requesteeQuiz.get
+
   def finalizeRequesteeQuiz = game.copy(requesteeQuizDone = true)
 }
 
@@ -92,11 +96,11 @@ sealed trait RequesteeQuizDoneStatus {
   def requesteeQuizDoneStatusCheck : Unit
 }
 
-trait RequesteeQuizUnfinished extends RequesteeQuizDoneStatus {
+trait RequesteeQuizUnfinished extends RequesteeQuizDoneStatus with RequesteeQuiz {
   override def requesteeQuizDoneStatusCheck = if(game.requesteeQuizDone != false) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
 }
 
-trait RequesteeQuizFinished extends RequesteeQuizDoneStatus {
+trait RequesteeQuizFinished extends RequesteeQuizDoneStatus with RequesteeQuiz{
   override def requesteeQuizDoneStatusCheck = if(game.requesteeQuizDone != true) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
 }
 

@@ -33,74 +33,100 @@ trait GameRejected extends GameResponse {
 trait GameAccepted extends GameResponse {
   override def responseCheck = if(game.response != GameResponseStatus.accepted) {throw new IllegalStateException("Game must be in accepted state")}
 }
+// =====================================
+
 
 // ===================================
 // ====== Requestor Quiz States ======
-sealed trait RequestorQuizCreateStatus {
+sealed trait RequestorQuizStatus {
   val game : Game
 
-  def requestorQuizCreateStatusCheck : Unit
+  def requestorQuizStatusCheck : Unit
 }
 
-trait RequestorNoQuiz extends RequestorQuizCreateStatus {
-  override def requestorQuizCreateStatusCheck = if(game.requestorQuizId.nonEmpty) {throw new IllegalStateException("Game must not have Requestor Quiz")}
+trait RequestorQuiz extends RequestorQuizStatus {
+  override def requestorQuizStatusCheck =  if(game.requestorQuizDone != false) {throw new IllegalStateException("Game must be in Requestor Quiz not done state")}
+
+  def finalizeRequestorQuiz = {
+    if(game.requestorQuizId.isEmpty) {throw new IllegalStateException("Game must have a requestor quiz to finalize")}
+    game.copy(requestorQuizDone = true)
+  }
 }
 
-trait RequestorQuiz extends RequestorQuizCreateStatus {
-  override def requestorQuizCreateStatusCheck = if(game.requestorQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestor Quiz")}
-
-  def requestorQuizId = game.requestorQuizId.get
+trait RequestorQuizFinished extends RequestorQuizStatus {
+  override def requestorQuizStatusCheck = {
+    if(game.requestorQuizId.isEmpty) {throw new IllegalStateException("Game must have a requestor quiz")}
+    if(game.requestorQuizDone != true) {throw new IllegalStateException("Game must be in requestor Quiz done state")}
+  }
 
   def requestorQuiz(implicit session: Session) = game.requestorQuiz.get
-
-  def finalizeRequestorQuiz = game.copy(requestorQuizDone = true)
-}
-
-sealed trait RequestorQuizDoneStatus {
-  val game : Game
-
-  def requestorQuizDoneStatusCheck : Unit
-}
-
-trait RequestorQuizUnfinished extends RequestorQuizDoneStatus with RequestorQuiz{
-  override def requestorQuizDoneStatusCheck = if(game.requestorQuizDone != false) {throw new IllegalStateException("Game must be in Requestor Quiz done state")}
-}
-
-trait RequestorQuizFinished extends RequestorQuizDoneStatus with RequestorQuiz {
-  override def requestorQuizDoneStatusCheck = if(game.requestorQuizDone != true) {throw new IllegalStateException("Game must be in Requestor Quiz done state")}
 }
 
 // ====== Requestee Quiz States ======
-sealed trait RequesteeQuizCreateStatus {
+sealed trait RequesteeQuizStatus {
   val game : Game
 
-  def requesteeQuizCreateStatusCheck : Unit
+  def requesteeQuizStatusCheck : Unit
 }
 
-trait RequesteeNoQuiz extends RequesteeQuizCreateStatus {
-  override def requesteeQuizCreateStatusCheck = if(game.requesteeQuizId.nonEmpty) {throw new IllegalStateException("Game must not have Requestee Quiz")}
+trait RequesteeQuiz extends RequesteeQuizStatus {
+  override def requesteeQuizStatusCheck = if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestee Quiz")}
+
+  def finalizeRequesteeQuiz = {
+    if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have a Requestee quiz")}
+    game.copy(requesteeQuizDone = true)
+  }
 }
 
-trait RequesteeQuiz extends RequesteeQuizCreateStatus {
-  override def requesteeQuizCreateStatusCheck = if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestee Quiz")}
-
-  def requesteeQuizId = game.requesteeQuizId.get
+trait RequesteeQuizFinished extends RequesteeQuizStatus {
+  override def requesteeQuizStatusCheck = {
+    if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have a Requestee quiz")}
+    if(game.requesteeQuizDone != true) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
+  }
 
   def requesteeQuiz(implicit session: Session) = game.requesteeQuiz.get
-
-  def finalizeRequesteeQuiz = game.copy(requesteeQuizDone = true)
 }
 
-sealed trait RequesteeQuizDoneStatus {
+// =====================================
+trait BothQuizzesDone extends RequesteeQuizFinished with RequestorQuizFinished
+// =====================================
+
+
+// =====================================
+// ====== Requestor Answer States ======
+trait RequestorAnswerStatus {
   val game : Game
-  def requesteeQuizDoneStatusCheck : Unit
+
+  def requestorAnswerStatusCheck : Unit
 }
 
-trait RequesteeQuizUnfinished extends RequesteeQuizDoneStatus with RequesteeQuiz {
-  override def requesteeQuizDoneStatusCheck = if(game.requesteeQuizDone != false) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
+trait RequestorStillAnswering extends RequestorAnswerStatus with BothQuizzesDone {
+  override def requestorAnswerStatusCheck = if (game.requestorFinished != false) { throw new IllegalStateException("Requestor cannot be done answering")  }
+
+  def requestorDoneAnswering = game.copy(requestorFinished = true)
 }
 
-trait RequesteeQuizFinished extends RequesteeQuizDoneStatus with RequesteeQuiz{
-  override def requesteeQuizDoneStatusCheck = if(game.requesteeQuizDone != true) {throw new IllegalStateException("Game must be in Requestee Quiz done state")}
+trait RequestorDoneAnswering extends RequestorAnswerStatus with BothQuizzesDone {
+  override def requestorAnswerStatusCheck = if (game.requestorFinished != true) { throw new IllegalStateException("Requestor must be done answering")  }
+}
+// ====== Requestee Answer States ======
+trait RequesteeAnswerStatus {
+  val game : Game
+
+  def requesteeAnswerStatusCheck : Unit
 }
 
+trait RequesteeStillAnswering extends RequesteeAnswerStatus with BothQuizzesDone {
+  override def requesteeAnswerStatusCheck = if (game.requesteeFinished != false) { throw new IllegalStateException("Requestee cannot be done answering")  }
+
+  def requesteeDoneAnswering = game.copy(requesteeFinished = true)
+}
+
+trait RequesteeDoneAnswering extends RequesteeAnswerStatus with BothQuizzesDone {
+  override def requesteeAnswerStatusCheck = if (game.requesteeFinished != true) { throw new IllegalStateException("Requestee must be done answering")  }
+}
+// =====================================
+trait BothStillAnswering extends RequesteeStillAnswering with RequestorStillAnswering
+
+trait GameDone extends RequesteeDoneAnswering with RequestorDoneAnswering
+// =====================================

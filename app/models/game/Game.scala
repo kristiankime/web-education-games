@@ -51,32 +51,23 @@ case class Game(id: GameId = null,
 
   def toState: GameState = (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
     // Response Requested
-    case (GameResponseStatus.requested, None,    false, None,    false, false, false, None) => RequestedNoQuiz(this)
-    case (GameResponseStatus.requested, Some(_), false, None,    false, false, false, None) => RequestedQuiz(this)
+    case (GameResponseStatus.requested, _,       false, None,    false, false, false, None) => RequestedQuiz(this)
     case (GameResponseStatus.requested, Some(_), true,  None,    false, false, false, None) => RequestedQuizDone(this)
     // Game Rejected
-    case (GameResponseStatus.rejected, None,     false, None,    false, false, false, None) => RejectedNoQuiz(this)
-    case (GameResponseStatus.rejected, Some(_),  false, None,    false, false, false, None) => RejectedQuiz(this)
+    case (GameResponseStatus.rejected, _,        false, None,    false, false, false, None) => RejectedQuiz(this)
     case (GameResponseStatus.rejected, Some(_),  true,  None,    false, false, false, None) => RejectedQuizDone(this)
     // Game Accepted (both making quizzes, Tor == Requestor, Tee == Requestee)
-    case (GameResponseStatus.accepted, None,     false, None,    false, false, false, None) => AcceptedTorNoQuizTeeNoQuiz(this)
-    case (GameResponseStatus.accepted, Some(_),  false, None,    false, false, false, None) => AcceptedTorQuizTeeNoQuiz(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  None,    false, false, false, None) => AcceptedTorQuizDoneTeeNoQuiz(this)
-    case (GameResponseStatus.accepted, None,     false, Some(_), false, false, false, None) => AcceptedTorNoQuizTeeQuiz(this)
-    case (GameResponseStatus.accepted, Some(_),  false, Some(_), false, false, false, None) => AcceptedTorQuizTeeQuiz(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), false, false, false, None) => AcceptedTorQuizDoneTeeQuiz(this)
-    case (GameResponseStatus.accepted, None,     false, Some(_), true,  false, false, None) => AcceptedTorNoQuizTeeQuizDone(this)
-    case (GameResponseStatus.accepted, Some(_),  false, Some(_), true,  false, false, None) => AcceptedTorQuizTeeQuizDone(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  false, false, None) => AcceptedTorQuizDoneTeeQuizDone(this)
+    case (GameResponseStatus.accepted, _,        false, None,    false, false, false, None) => AcceptedTorQuizTeeQuiz(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  None,    false, false, false, None) => AcceptedTorQuizDoneTeeQuiz(this)
+    case (GameResponseStatus.accepted, _,        false, Some(_), true,  false, false, None) => AcceptedTorQuizTeeQuizDone(this)
+    // Game Answering
+    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  false, false, None) => QuizzesDoneTorAnsTeeAns(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  false, true,  None) => QuizzesDoneTorAnsTeeDone(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  true,  false, None) => QuizzesDoneTorDoneTeeAnd(this)
+    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  true,  true,  None) => QuizzesDoneTorDoneTeeDone(this)
     // Failure == programming error
     case _ => throw new IllegalStateException("Game was not in an allowed state, probably programming error " + this)
   }
-
-//  def toRequested = (response, requestorQuizId, requesteeQuizId, requestorFinished, requesteeFinished, finishedDate) match {
-//    case (GameResponseStatus.requested, None, None, false, false, None) => GameRequested(id = id, requestDate = requestDate, requestorId = requestorId, requesteeId = requesteeId, courseId = courseId)
-//    case _ => throw new IllegalStateException("Game was not in GameRequested state programming error " + this)
-//  }
-
 
   def ensureRequestorQuiz(implicit user: User, session: Session) : (Game, Quiz) = requestorQuizId match {
     case Some(quizId) => (this, Quizzes(quizId).get)

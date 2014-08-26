@@ -10,35 +10,32 @@ object GameState {
 }
 
 sealed trait GameState {
-    self: GameResponse
-     with RequestorQuizCreateStatus with RequestorQuizDoneStatus
-     with RequesteeQuizCreateStatus with RequesteeQuizDoneStatus =>
+    self: GameResponse with RequestorQuizStatus with RequesteeQuizStatus with RequestorAnswerStatus with RequesteeAnswerStatus =>
 
    val game : Game
 
    def checks: Unit = {
      responseCheck
-     requestorQuizCreateStatusCheck
-     requestorQuizDoneStatusCheck
-     requesteeQuizCreateStatusCheck
-     requesteeQuizDoneStatusCheck
+     requestorQuizStatusCheck
+     requesteeQuizStatusCheck
+     requestorAnswerStatusCheck
+     requesteeAnswerStatusCheck
    }
 }
 
-case class RequestedNoQuiz(val game: Game) extends GameState with GameRequested with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class RequestedQuiz(val game: Game) extends GameState with  GameRequested with RequestorQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class RequestedQuizDone(val game: Game) extends GameState with GameRequested with RequestorQuiz with RequestorQuizFinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-
-case class RejectedNoQuiz(val game: Game) extends GameState with GameRejected with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class RejectedQuiz(val game: Game) extends GameState with GameRejected with RequestorQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class RejectedQuizDone(val game: Game) extends GameState with GameRejected with RequestorQuiz with RequestorQuizFinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-
-case class AcceptedTorNoQuizTeeNoQuiz(val game: Game) extends GameState with GameAccepted with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class AcceptedTorQuizTeeNoQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizUnfinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class AcceptedTorQuizDoneTeeNoQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizFinished with RequesteeNoQuiz with RequesteeQuizUnfinished { checks }
-case class AcceptedTorNoQuizTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizUnfinished { checks }
-case class AcceptedTorQuizTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizUnfinished { checks }
-case class AcceptedTorQuizDoneTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizFinished with RequesteeQuiz with RequesteeQuizUnfinished { checks }
-case class AcceptedTorNoQuizTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorNoQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizFinished { checks }
-case class AcceptedTorQuizTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizUnfinished with RequesteeQuiz with RequesteeQuizFinished{ checks }
-case class AcceptedTorQuizDoneTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequestorQuizFinished with RequesteeQuiz with RequesteeQuizFinished { checks }
+// Game in requested state (requestor can still create a quiz while waiting)
+case class RequestedQuiz(val game: Game) extends GameState with  GameRequested with RequestorQuiz with RequesteeQuiz with BothStillAnswering { checks }
+case class RequestedQuizDone(val game: Game) extends GameState with GameRequested with RequestorQuizFinished with RequesteeQuiz with BothStillAnswering { checks }
+// Game was rejected (but requestor could have made a quiz before it was rejected)
+case class RejectedQuiz(val game: Game) extends GameState with GameRejected with RequestorQuiz with RequesteeQuiz with BothStillAnswering { checks }
+case class RejectedQuizDone(val game: Game) extends GameState with GameRejected with RequestorQuizFinished with RequesteeQuiz with BothStillAnswering { checks }
+// Game is in progress both players are making quizzes
+case class AcceptedTorQuizTeeQuiz(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequesteeQuiz with BothStillAnswering { checks }
+case class AcceptedTorQuizDoneTeeQuiz(val game: Game) extends GameState with GameAccepted with  RequestorQuizFinished with RequesteeQuiz with BothStillAnswering { checks }
+case class AcceptedTorQuizTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorQuiz with RequesteeQuizFinished with BothStillAnswering { checks }
+//case class AcceptedTorQuizDoneTeeQuizDone(val game: Game) extends GameState with GameAccepted with RequestorQuizFinished with RequesteeQuizFinished with BothStillAnswering { checks }
+// Game is in progress both quizzes have been made and players are answering
+case class QuizzesDoneTorAnsTeeAns(val game: Game) extends GameState with GameAccepted with BothQuizzesDone with BothStillAnswering { checks }
+case class QuizzesDoneTorAnsTeeDone(val game: Game) extends GameState with GameAccepted with BothQuizzesDone with RequestorStillAnswering with RequesteeDoneAnswering { checks }
+case class QuizzesDoneTorDoneTeeAnd(val game: Game) extends GameState with GameAccepted with  BothQuizzesDone with RequestorDoneAnswering with RequesteeStillAnswering { checks }
+case class QuizzesDoneTorDoneTeeDone(val game: Game) extends GameState with GameAccepted with BothQuizzesDone with GameDone { checks }

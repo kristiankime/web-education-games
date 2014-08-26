@@ -54,15 +54,15 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right((organization, course, game)) =>
         // -------------------------------------------------------------------------------------
         if(game.isRequestor(user)) game.toState match {
-          case state: RequestorQuizUnfinished => Ok(views.html.game.createQuizRequestor(organization, course, state))
-          case state: RequestorQuizFinished with RequesteeQuizUnfinished => Ok(views.html.game.awaitingQuizRequestor(organization, course, state))
+          case state: RequestorQuiz => Ok(views.html.game.createQuizRequestor(organization, course, state))
+          case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.awaitingQuizRequestor(organization, course, state))
           case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.answeringQuizRequestor(organization, course, state))
           case _ =>  throw new IllegalStateException("Not tor state mach, TODO this should be removeable via sealed")
         }
         else if(game.isRequestee(user)) game.toState match {
           case state: GameRequested => Ok(views.html.game.responedToGameRequest(organization, course, state))
-          case state: RequesteeQuizUnfinished => Ok(views.html.game.createQuizRequestee(organization, course, state))
-          case state: RequesteeQuizFinished with RequestorQuizUnfinished => Ok(views.html.game.awaitingQuizRequestee(organization, course, state))
+          case state: RequesteeQuiz => Ok(views.html.game.createQuizRequestee(organization, course, state))
+          case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.awaitingQuizRequestee(organization, course, state))
           case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.answeringQuizRequestee(organization, course, state))
           case _ =>  throw new IllegalStateException("Not tee state mach, TODO this should be removeable via sealed")
         }

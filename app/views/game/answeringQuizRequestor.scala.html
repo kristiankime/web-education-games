@@ -1,6 +1,6 @@
 @(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequesteeQuizFinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game._
+@import controllers.game.routes.GamesRequestorController
 @import helper._
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
@@ -22,6 +22,8 @@
             </tr>
         }
     </table>
+
+    @form(GamesRequestorController.answeringDone(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Answers" > }
 
 }
 

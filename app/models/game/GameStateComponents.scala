@@ -100,13 +100,13 @@ trait RequestorAnswerStatus {
   def requestorAnswerStatusCheck : Unit
 }
 
-trait RequestorStillAnswering extends RequestorAnswerStatus with BothQuizzesDone {
+trait RequestorStillAnswering extends RequestorAnswerStatus {
   override def requestorAnswerStatusCheck = if (game.requestorFinished != false) { throw new IllegalStateException("Requestor cannot be done answering")  }
 
   def requestorDoneAnswering = game.copy(requestorFinished = true)
 }
 
-trait RequestorDoneAnswering extends RequestorAnswerStatus with BothQuizzesDone {
+trait RequestorDoneAnswering extends RequestorAnswerStatus {
   override def requestorAnswerStatusCheck = if (game.requestorFinished != true) { throw new IllegalStateException("Requestor must be done answering")  }
 }
 // ====== Requestee Answer States ======
@@ -116,13 +116,13 @@ trait RequesteeAnswerStatus {
   def requesteeAnswerStatusCheck : Unit
 }
 
-trait RequesteeStillAnswering extends RequesteeAnswerStatus with BothQuizzesDone {
+trait RequesteeStillAnswering extends RequesteeAnswerStatus {
   override def requesteeAnswerStatusCheck = if (game.requesteeFinished != false) { throw new IllegalStateException("Requestee cannot be done answering")  }
 
   def requesteeDoneAnswering = game.copy(requesteeFinished = true)
 }
 
-trait RequesteeDoneAnswering extends RequesteeAnswerStatus with BothQuizzesDone {
+trait RequesteeDoneAnswering extends RequesteeAnswerStatus {
   override def requesteeAnswerStatusCheck = if (game.requesteeFinished != true) { throw new IllegalStateException("Requestee must be done answering")  }
 }
 // =====================================

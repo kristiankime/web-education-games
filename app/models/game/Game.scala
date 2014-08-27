@@ -51,20 +51,20 @@ case class Game(id: GameId = null,
 
   def toState: GameState = (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
     // Response Requested
-    case (GameResponseStatus.requested, _,       false, None,    false, false, false, None) => RequestedQuiz(this)
-    case (GameResponseStatus.requested, Some(_), true,  None,    false, false, false, None) => RequestedQuizDone(this)
+    case (GameResponseStatus.requested, _,       false, None,    false, false, false, None)    => RequestedNoQuiz(this)
+    case (GameResponseStatus.requested, Some(_), true,  None,    false, false, false, None)    => RequestedQuizDone(this)
     // Game Rejected
-    case (GameResponseStatus.rejected, _,        false, None,    false, false, false, None) => RejectedQuiz(this)
-    case (GameResponseStatus.rejected, Some(_),  true,  None,    false, false, false, None) => RejectedQuizDone(this)
+    case (GameResponseStatus.rejected,  _,       false, None,    false, false, false, None)    => RejectedNoQuiz(this)
+    case (GameResponseStatus.rejected,  Some(_), true,  None,    false, false, false, None)    => RejectedQuizDone(this)
     // Game Accepted (both making quizzes, Tor == Requestor, Tee == Requestee)
-    case (GameResponseStatus.accepted, _,        false, None,    false, false, false, None) => AcceptedTorQuizTeeQuiz(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  None,    false, false, false, None) => AcceptedTorQuizDoneTeeQuiz(this)
-    case (GameResponseStatus.accepted, _,        false, Some(_), true,  false, false, None) => AcceptedTorQuizTeeQuizDone(this)
+    case (GameResponseStatus.accepted,  _,       false, _,       false, false, false, None)    => AcceptedTorNoQuizTeeNoQuiz(this)
+    case (GameResponseStatus.accepted,  Some(_), true,  _,       false, false, false, None)    => AcceptedTorQuizDoneTeeNoQuiz(this)
+    case (GameResponseStatus.accepted,  _,       false, Some(_), true,  false, false, None)    => AcceptedNoTorQuizTeeQuizDone(this)
     // Game Answering
-    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  false, false, None) => QuizzesDoneTorAnsTeeAns(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  false, true,  None) => QuizzesDoneTorAnsTeeDone(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  true,  false, None) => QuizzesDoneTorDoneTeeAnd(this)
-    case (GameResponseStatus.accepted, Some(_),  true,  Some(_), true,  true,  true,  None) => QuizzesDoneTorDoneTeeDone(this)
+    case (GameResponseStatus.accepted,  Some(_), true,  Some(_), true,  false, false, None)    => QuizzesDoneTorAnsTeeAns(this)
+    case (GameResponseStatus.accepted,  Some(_), true,  Some(_), true,  false, true,  None)    => QuizzesDoneTorAnsTeeDone(this)
+    case (GameResponseStatus.accepted,  Some(_), true,  Some(_), true,  true,  false, None)    => QuizzesDoneTorDoneTeeAnd(this)
+    case (GameResponseStatus.accepted,  Some(_), true,  Some(_), true,  true,  true,  Some(_)) => GameDone(this)
     // Failure == programming error
     case _ => throw new IllegalStateException("Game was not in an allowed state, probably programming error " + this)
   }
@@ -89,8 +89,14 @@ case class Game(id: GameId = null,
     }
   }
 
-  def blankQuiz(user: User)(implicit session: Session): Quiz = {
+  private def blankQuiz(user: User)(implicit session: Session): Quiz = {
     val now = JodaUTC.now
     Quizzes.create(Quiz(null, user.id, "Game Quiz", now, now))
   }
+
+  def maybeUpdateForGameDone =
+    if(requesteeFinished && requestorFinished) this.copy(finishedDate = Some(JodaUTC.now))
+    else this
+
+  def gameDone = finishedDate.nonEmpty
 }

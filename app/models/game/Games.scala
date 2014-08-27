@@ -53,6 +53,13 @@ object Games {
         (g.finishedDate isNull)
     ).sortBy(_.requestDate).list
 
+  def finished(userId: UserId, courseId: CourseId)(implicit session: Session): List[Game] =
+    gamesTable.where(
+      g => (g.requestee === userId || g.requestor === userId) &&
+        g.course === courseId &&
+        (g.finishedDate isNotNull)
+    ).sortBy(_.requestDate).list
+
   // ======= Update ======
   def update(game: Game)(implicit session: Session) = gamesTable.where(_.id === game.id).update(game)
 

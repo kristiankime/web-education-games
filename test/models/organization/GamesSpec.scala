@@ -1,5 +1,6 @@
 package models.organization
 
+import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest.inMemH2
 import models.DBTest.newFakeUser
@@ -125,13 +126,27 @@ class GamesSpec extends Specification {
       }
     }
 
-    "ignore finished games" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+    "ignore rejected games" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val (organization, course) = organizationAndCourse
         val (requestor, requestee) = (newFakeUser, newFakeUser)
 
         val gameDone = Games.request(requestor.id, requestee.id, course.id)
         Games.update(gameDone.toState.asInstanceOf[GameRequested].reject(requestee.id))
+
+        Games.active(requestor.id)(session) must beEmpty
+        Games.active(requestee.id)(session) must beEmpty
+      }
+    }
+
+    "ignore finished games" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val (organization, course) = organizationAndCourse
+        val (requestor, requestee) = (newFakeUser, newFakeUser)
+
+        val gameDone = Games.request(requestor.id, requestee.id, course.id)
+        // NOTE: This update puts the game in an illegal state (i.e. calling toState will fail) and should just used for testing
+        Games.update(gameDone.copy(finishedDate = Some(JodaUTC.now)))
 
         Games.active(requestor.id)(session) must beEmpty
         Games.active(requestee.id)(session) must beEmpty

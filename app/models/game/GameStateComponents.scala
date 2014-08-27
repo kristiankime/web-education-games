@@ -70,7 +70,7 @@ sealed trait RequesteeQuizStatus {
 }
 
 trait RequesteeQuiz extends RequesteeQuizStatus {
-  override def requesteeQuizStatusCheck = if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have Requestee Quiz")}
+  override def requesteeQuizStatusCheck =  if(game.requesteeQuizDone != false) {throw new IllegalStateException("Game must be in Requestor Quiz not done state")}
 
   def finalizeRequesteeQuiz = {
     if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have a Requestee quiz")}
@@ -103,7 +103,7 @@ trait RequestorAnswerStatus {
 trait RequestorStillAnswering extends RequestorAnswerStatus {
   override def requestorAnswerStatusCheck = if (game.requestorFinished != false) { throw new IllegalStateException("Requestor cannot be done answering")  }
 
-  def requestorDoneAnswering = game.copy(requestorFinished = true)
+  def requestorDoneAnswering = game.copy(requestorFinished = true).maybeUpdateForGameDone
 }
 
 trait RequestorDoneAnswering extends RequestorAnswerStatus {
@@ -119,7 +119,7 @@ trait RequesteeAnswerStatus {
 trait RequesteeStillAnswering extends RequesteeAnswerStatus {
   override def requesteeAnswerStatusCheck = if (game.requesteeFinished != false) { throw new IllegalStateException("Requestee cannot be done answering")  }
 
-  def requesteeDoneAnswering = game.copy(requesteeFinished = true)
+  def requesteeDoneAnswering = game.copy(requesteeFinished = true).maybeUpdateForGameDone
 }
 
 trait RequesteeDoneAnswering extends RequesteeAnswerStatus {
@@ -128,5 +128,5 @@ trait RequesteeDoneAnswering extends RequesteeAnswerStatus {
 // =====================================
 trait BothStillAnswering extends RequesteeStillAnswering with RequestorStillAnswering
 
-trait GameDone extends RequesteeDoneAnswering with RequestorDoneAnswering
+trait BothDoneAnswering extends RequesteeDoneAnswering with RequestorDoneAnswering
 // =====================================

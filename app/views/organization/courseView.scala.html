@@ -86,6 +86,19 @@
     }
     }
 
+    @defining(user.finishedGames(course.id)) { games =>
+    @if(games.nonEmpty) {
+    <section>
+        <h5> You have completed the following games </h5>
+        <ul>
+        @for(game <- games) {
+            <li>[ <a href="@GamesController.game(organization.id, course.id, game.id)">@game.otherPlayer(user).name</a> ]</li>
+        }
+        </ul>
+    </section>
+    }
+    }
+
     } @* <<<<< Close Access > Non *@
 }
 

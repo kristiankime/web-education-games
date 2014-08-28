@@ -5,15 +5,20 @@
         question: models.question.derivative.Question,
         currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.routes.GamesRequesteeController
+@import controllers.game.routes.{GamesRequesteeController, GamesController}
 @import controllers.game.RequesteeAnswerForm
 @import helper._
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
 @import com.artclod.collection.PimpedOptionList
 @import com.artclod.play.s
+@import views.html.tag._
 
 @main("Answering Question") {
+    <h2>You are answering Question for a game with @gameState.game.requestor.name </h2>
+
+    This is a quiz for the course [ @courseLink(course) ] <br>
+    Back to the [ @gameLink("game", gameState.game) ] <br>
 
     <h2>What is the Derivative of</h2> @mathml.mathmlContent(question)
 
@@ -54,6 +59,22 @@
     }
     }
     </script>
+
+
+    @* ===== Question Navigation ===== *@
+    @defining(quiz.previousQuestion(question)){ previousOp =>
+        @for(previous <- previousOp) {Go to the [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, previous.id)">previous question</a>]<br>}
+    }
+
+    @defining(quiz.firstUnfinishedQuestion(user)){ unfinishedOp =>
+        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, unfinished.question.id)">unfinished question</a>]<br>}
+    }
+
+    @defining(quiz.nextQuestion(question)){ nextOp =>
+        @for(next <- nextOp) {Go to the [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, next.id)">next question</a>]}
+        @if(nextOp.isEmpty) {This is the last question, back to the quiz [ @courseQuizLink(course, quiz) ]}
+    }
+    <br>
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results =>

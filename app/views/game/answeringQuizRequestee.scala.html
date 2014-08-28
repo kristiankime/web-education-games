@@ -1,4 +1,4 @@
-@(organization: models.organization.Organization, course: models.organization.Course, gameState: models.game.GameState with models.game.RequestorQuizFinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequestorQuizFinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesController, GamesRequesteeController}
 @import helper._
@@ -18,13 +18,13 @@
         @for(result <- quizResults.results){
             <tr>
                 <td> @mathml.mathmlContent(result.question) </td>
-                <td> [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, result.question.id)">answer</a>] </td>
+                <td> [<a href="@GamesController.question(gameState.game.id, result.question.id)">answer</a>] </td>
                 <td> @views.html.question.status(result.status) </td>
             </tr>
         }
     </table>
 
-    @form(GamesRequesteeController.answeringDone(course.organizationId, course.id, gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Answers" > }
+    @form(GamesRequesteeController.answeringDone(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Answers" > }
 
 }
 

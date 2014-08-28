@@ -34,39 +34,39 @@ object GamesRequesteeController extends Controller with SecureSocialConsented {
       }
     }
 
-  def create(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def create(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) =>
+      case Right(game) =>
         GameRequesteeCreate.form.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = game.ensureRequesteeQuiz
             val mathML = MathML(form._1).get // TODO better handle on error
             Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
-            Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+            Redirect(routes.GamesController.game(game.id))
           })
     }
   }
 
-  def remove(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def remove(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) =>
+      case Right(game) =>
         GameRequesteeRemove.form.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           questionId => {
             val (updatedGame, quiz) = game.ensureRequesteeQuiz
             for(question <- Questions(questionId)) { quiz.remove(question) }
-            Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+            Redirect(routes.GamesController.game(game.id))
           })
     }
   }
 
-  def quizDone(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def quizDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) => {
+      case Right(game) => {
 
         val gameState = game.toState match {
           case g : RequesteeQuiz => g
@@ -74,16 +74,16 @@ object GamesRequesteeController extends Controller with SecureSocialConsented {
         }
         Games.update(gameState.finalizeRequesteeQuiz)
 
-        Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+        Redirect(routes.GamesController.game(game.id))
       }
     }
   }
 
 
-  def answeringDone(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def answeringDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) => {
+      case Right(game) => {
 
         val gameState = game.toState match {
           case g : RequestorQuizFinished with RequesteeStillAnswering => g
@@ -91,17 +91,15 @@ object GamesRequesteeController extends Controller with SecureSocialConsented {
         }
         Games.update(gameState.requesteeDoneAnswering)
 
-        Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+        Redirect(routes.GamesController.game(game.id))
       }
     }
   }
 
-  def answer(organizationId: OrganizationId, courseId: CourseId, gameId: GameId, questionId: QuestionId)= ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
-      case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) => GamesRequestorController(gameId, questionId) match {
+  def answer(gameId: GameId, questionId: QuestionId)= ConsentedAction { implicit request => implicit user => implicit session =>
+   GamesRequestorController(gameId, questionId) match {
         case Left(notFoundResult) => notFoundResult
-        case Right((g, quiz, question)) => {
+        case Right((game, quiz, question)) => {
 
           RequesteeAnswerForm.values.bindFromRequest.fold(
             errors => BadRequest(views.html.errors.formErrorPage(errors)),
@@ -110,16 +108,16 @@ object GamesRequesteeController extends Controller with SecureSocialConsented {
               val rawStr = form._2
               val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
               Answers.correct(question, math) match {
-                case Yes => Redirect(routes.GamesController.answer(course.organizationId, course.id, game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-                case No => Redirect(routes.GamesController.answer(course.organizationId, course.id, game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
-                case Inconclusive => Ok(views.html.game.answeringQuestionRequestor(organization, course, quiz, question, Some(Left(unfinishedAnswer(false)))))
+                case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+                case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
+                case Inconclusive => Ok(views.html.game.answeringQuestionRequestor(quiz, question, Some(Left(unfinishedAnswer(false)))))
               }
             })
 
         }
       }
     }
-  }
+
 
 }
 

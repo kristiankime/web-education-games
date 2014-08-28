@@ -29,39 +29,39 @@ object GamesRequestorController extends Controller with SecureSocialConsented {
       }
     }
 
-  def create(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def create(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) =>
+      case Right(game) =>
         GameRequestorCreate.form.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = game.ensureRequestorQuiz
             val mathML = MathML(form._1).get // TODO better handle on error
             Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
-            Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+            Redirect(routes.GamesController.game(game.id))
           })
     }
   }
 
-  def remove(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def remove(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) =>
+      case Right(game) =>
         GameRequestorRemove.form.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           questionId => {
             val (updatedGame, quiz) = game.ensureRequestorQuiz
             for(question <- Questions(questionId)) { quiz.remove(question) }
-            Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+            Redirect(routes.GamesController.game(game.id))
           })
     }
   }
 
-  def quizDone(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def quizDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) => {
+      case Right(game) => {
 
         val gameState = game.toState match {
           case g : RequestorQuiz => g
@@ -69,15 +69,15 @@ object GamesRequestorController extends Controller with SecureSocialConsented {
         }
         Games.update(gameState.finalizeRequestorQuiz)
 
-        Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+        Redirect(routes.GamesController.game(game.id))
       }
     }
   }
 
-  def answeringDone(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(organizationId, courseId, gameId) match {
+  def answeringDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, game)) => {
+      case Right(game) => {
 
         val gameState = game.toState match {
           case g : RequesteeQuizFinished with RequestorStillAnswering => g
@@ -85,14 +85,14 @@ object GamesRequestorController extends Controller with SecureSocialConsented {
         }
         Games.update(gameState.requestorDoneAnswering)
 
-        Redirect(routes.GamesController.game(organization.id, course.id, game.id))
+        Redirect(routes.GamesController.game(game.id))
       }
     }
   }
 
 }
 
-object GameRequestorRemove {
+object GameRequestorRemove { // TODO rename to remove question
   val removeId = "removeId"
   val form = Form(removeId -> questionId)
 }

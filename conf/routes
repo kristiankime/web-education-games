@@ -40,23 +40,25 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove            contro
 GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:n        controllers.question.derivative.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, n: AnswerId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers           controllers.question.derivative.AnswersController.create(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
-# Course Games
+# Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/games/request                             controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
-GET         /orgs/:o/courses/:c/games/:g                                  controllers.game.GamesController.game(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/respond                          controllers.game.GamesController.respond(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requestorCreate                  controllers.game.GamesRequestorController.create(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requestorRemove                  controllers.game.GamesRequestorController.remove(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requestorQuizDone                controllers.game.GamesRequestorController.quizDone(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requestorAnswered                controllers.game.GamesRequestorController.answeringDone(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requesteeCreate                  controllers.game.GamesRequesteeController.create(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requesteeRemove                  controllers.game.GamesRequesteeController.remove(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requesteeQuizDone                controllers.game.GamesRequesteeController.quizDone(o: OrganizationId, c: CourseId, g: GameId)
-POST        /orgs/:o/courses/:c/games/:g/requesteeAnswered                controllers.game.GamesRequesteeController.answeringDone(o: OrganizationId, c: CourseId, g: GameId)
+
+# Games
+GET         /games/:g                                  controllers.game.GamesController.game(g: GameId)
+POST        /games/:g/respond                          controllers.game.GamesController.respond(g: GameId)
+POST        /games/:g/requestorCreate                  controllers.game.GamesRequestorController.create(g: GameId)
+POST        /games/:g/requestorRemove                  controllers.game.GamesRequestorController.remove(g: GameId)
+POST        /games/:g/requestorQuizDone                controllers.game.GamesRequestorController.quizDone(g: GameId)
+POST        /games/:g/requestorAnswered                controllers.game.GamesRequestorController.answeringDone(g: GameId)
+POST        /games/:g/requesteeCreate                  controllers.game.GamesRequesteeController.create(g: GameId)
+POST        /games/:g/requesteeRemove                  controllers.game.GamesRequesteeController.remove(g: GameId)
+POST        /games/:g/requesteeQuizDone                controllers.game.GamesRequesteeController.quizDone(g: GameId)
+POST        /games/:g/requesteeAnswered                controllers.game.GamesRequesteeController.answeringDone(g: GameId)
 # Games Questions
-GET         /orgs/:o/courses/:c/games/:g/questions/:q                     controllers.game.GamesController.question(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
-GET         /orgs/:o/courses/:c/games/:g/questions/:q/:a                  controllers.game.GamesController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId, a: AnswerId)
-POST        /orgs/:o/courses/:c/games/:g/questions/:q/requestee           controllers.game.GamesRequesteeController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
+GET         /games/:g/questions/:q                     controllers.game.GamesController.question(g: GameId, q: QuestionId)
+GET         /games/:g/questions/:q/:a                  controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
+POST        /games/:g/questions/:q/requestee           controllers.game.GamesRequesteeController.answer(g: GameId, q: QuestionId)
 # POST        /orgs/:o/courses/:c/games/:g/questions/:q/requestor           controllers.game.GamesRequestorController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
 
 # ======== START DEPRICATED ========

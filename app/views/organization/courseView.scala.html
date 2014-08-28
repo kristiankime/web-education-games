@@ -66,7 +66,7 @@
         <h5> The Following users have requested to play a game with you</h5>
         <ul>
         @for(request <- requests) {
-            <li>[ <a href="@GamesController.game(organization.id, course.id, request.id)">@request.requestor.name</a> ]</li>
+            <li>[ <a href="@GamesController.game(request.id)">@request.requestor.name</a> ]</li>
         }
         </ul>
     </section>
@@ -79,7 +79,7 @@
         <h5> You are currently playing a game with the following users </h5>
         <ul>
         @for(game <- games) {
-            <li>[ <a href="@GamesController.game(organization.id, course.id, game.id)">@game.otherPlayer(user).name</a> ]</li>
+            <li>[ <a href="@GamesController.game(game.id)">@game.otherPlayer(user).name</a> ]</li>
         }
         </ul>
     </section>
@@ -92,7 +92,7 @@
         <h5> You have completed the following games </h5>
         <ul>
         @for(game <- games) {
-            <li>[ <a href="@GamesController.game(organization.id, course.id, game.id)">@game.otherPlayer(user).name</a> ]</li>
+            <li>[ <a href="@GamesController.game(game.id)">@game.otherPlayer(user).name</a> ]</li>
         }
         </ul>
     </section>

@@ -1,6 +1,4 @@
-@(organization: models.organization.Organization,
-        course: models.organization.Course,
-        gameState: models.game.GameState,
+@(gameState: models.game.GameState,
         quiz: models.question.derivative.Quiz,
         question: models.question.derivative.Question,
         currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
@@ -17,7 +15,7 @@
 @main("Answering Question") {
     <h2>You are answering Question for a game with @gameState.game.requestor.name </h2>
 
-    This is a quiz for the course [ @courseLink(course) ] <br>
+    @for(course <- gameState.game.course){This is a quiz for the course [ @courseLink(course) ] <br>}
     Back to the [ @gameLink("game", gameState.game) ] <br>
 
     <h2>What is the Derivative of</h2> @mathml.mathmlContent(question)
@@ -41,7 +39,7 @@
     </section>
 
     <section>
-    @form(GamesRequesteeController.answer(course.organizationId, course.id, gameState.game.id, question.id), 'id -> "answerForm") {
+    @form(GamesRequesteeController.answer(gameState.game.id, question.id), 'id -> "answerForm") {
         <input type="hidden" name="@RequesteeAnswerForm.mathML" id="answerMathML">
         <input type="hidden" name="@RequesteeAnswerForm.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">
@@ -63,16 +61,16 @@
 
     @* ===== Question Navigation ===== *@
     @defining(quiz.previousQuestion(question)){ previousOp =>
-        @for(previous <- previousOp) {Go to the [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, previous.id)">previous question</a>]<br>}
+        @for(previous <- previousOp) {Go to the [<a href="@GamesController.question(gameState.game.id, previous.id)">previous question</a>]<br>}
     }
 
     @defining(quiz.firstUnfinishedQuestion(user)){ unfinishedOp =>
-        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, unfinished.question.id)">unfinished question</a>]<br>}
+        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@GamesController.question(gameState.game.id, unfinished.question.id)">unfinished question</a>]<br>}
     }
 
     @defining(quiz.nextQuestion(question)){ nextOp =>
-        @for(next <- nextOp) {Go to the [<a href="@GamesController.question(course.organizationId, course.id, gameState.game.id, next.id)">next question</a>]}
-        @if(nextOp.isEmpty) {This is the last question, back to the quiz [ @courseQuizLink(course, quiz) ]}
+        @for(next <- nextOp) {Go to the [<a href="@GamesController.question(gameState.game.id, next.id)">next question</a>]}
+        @if(nextOp.isEmpty) {This is the last question, back to the [ @gameLink("quiz", gameState.game) ]}
     }
     <br>
 

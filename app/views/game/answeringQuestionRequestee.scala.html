@@ -1,16 +1,72 @@
 @(organization: models.organization.Organization,
         course: models.organization.Course,
+        gameState: models.game.GameState,
         quiz: models.question.derivative.Quiz,
         question: models.question.derivative.Question,
         currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesRequesteeController
+@import controllers.game.RequesteeAnswerForm
 @import helper._
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
 @import com.artclod.collection.PimpedOptionList
+@import com.artclod.play.s
 
 @main("Answering Question") {
 
-    TODO
+    <h2>What is the Derivative of</h2> @mathml.mathmlContent(question)
+
+    @for(answerEither <- currentAnswer) {
+    <section align="center">
+        <h4>
+        @answerEither match {
+            case Right(answer) => {You answered @mathml.mathmlContent(answer) that answer was @mathml.correct(answer.correct)}
+            case Left(answerTmp) => {You answered @mathml.mathmlContent(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+        }
+        </h4>
+    </section>
+    }
+
+    <section>
+        <p>
+            Type in your answer, and then hit the submit button <br>
+            @mathml.mathmlEditor("ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
+        </p>
+    </section>
+
+    <section>
+    @form(GamesRequesteeController.answer(course.organizationId, course.id, gameState.game.id, question.id), 'id -> "answerForm") {
+        <input type="hidden" name="@RequesteeAnswerForm.mathML" id="answerMathML">
+        <input type="hidden" name="@RequesteeAnswerForm.rawStr" id="answerRawStr">
+        <input type="button" value="Submit" onclick="answerFormSubmit()">
+        }
+    </section>
+
+    <script>
+    var answerFormSubmit = function ( ) {
+    if ( ANSWER.valid ) {
+    $ ( "#answerMathML" ).val ( ANSWER.mathML ) ;
+    $ ( "#answerRawStr" ).val ( ANSWER.rawStr ) ;
+    $ ( "#answerForm" ).submit ( ) ;
+    } else {
+    alert("The answer is not in a valid format so it cannot be submitted")
+    }
+    }
+    </script>
+
+    @* ===== Results ===== *@
+    @defining(question.results(user)) { results =>
+    @if(results.answers.nonEmpty) {
+    <section>
+        <h4>You have answered this questions @results.answers.size time@s(results.answers)</h4>
+        <ul>
+        @for(answer <- results.answers) {
+            <li> @mathml.mathmlContent(answer) this answer was @mathml.correct(answer.correct) </li>
+        }
+        </ul>
+    </section>
+    }
+    }
+
 }

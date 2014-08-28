@@ -1,15 +1,18 @@
 package controllers.game
 
+import com.artclod.mathml.Match._
+import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.util._
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.game.GamesController._
 import controllers.organization.CoursesController
-import controllers.question.derivative.{QuestionsController, QuizzesController}
+import controllers.question.derivative.AnswersController._
+import controllers.question.derivative.{AnswersController, QuestionsController, QuizzesController}
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization.{Course, Organization}
-import models.question.derivative.{Quiz, Question, Questions}
+import models.question.derivative._
 import models.support.{GameId, CourseId, OrganizationId}
 import play.api.data.Form
 import play.api.data.Forms._
@@ -18,7 +21,7 @@ import service.User
 import play.api.db.slick.Config.driver.simple.Session
 import models.support._
 
-import scala.util.Right
+import scala.util.{Left, Right}
 
 object GamesRequesteeController extends Controller with SecureSocialConsented {
 
@@ -92,7 +95,33 @@ object GamesRequesteeController extends Controller with SecureSocialConsented {
       }
     }
   }
- }
+
+  def answer(organizationId: OrganizationId, courseId: CourseId, gameId: GameId, questionId: QuestionId)= ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(organizationId, courseId, gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course, game)) => GamesRequestorController(gameId, questionId) match {
+        case Left(notFoundResult) => notFoundResult
+        case Right((g, quiz, question)) => {
+
+          RequesteeAnswerForm.values.bindFromRequest.fold(
+            errors => BadRequest(views.html.errors.formErrorPage(errors)),
+            form => {
+              val math : MathMLElem = MathML(form._1).get // TODO better error handling
+              val rawStr = form._2
+              val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
+              Answers.correct(question, math) match {
+                case Yes => Redirect(routes.GamesController.answer(course.organizationId, course.id, game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+                case No => Redirect(routes.GamesController.answer(course.organizationId, course.id, game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
+                case Inconclusive => Ok(views.html.game.answeringQuestionRequestor(organization, course, quiz, question, Some(Left(unfinishedAnswer(false)))))
+              }
+            })
+
+        }
+      }
+    }
+  }
+
+}
 
 object GameRequesteeRemove {
   val removeId = "removeId"
@@ -103,4 +132,10 @@ object GameRequesteeCreate {
   val mathML = "mathML"
   val rawStr = "rawStr"
   val form = Form(tuple(mathML -> text, rawStr -> text))
+}
+
+object RequesteeAnswerForm {
+  val mathML = "mathML"
+  val rawStr = "rawStr"
+  val values = Form(tuple(mathML -> text, rawStr -> text))
 }

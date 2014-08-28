@@ -55,7 +55,8 @@ POST        /orgs/:o/courses/:c/games/:g/requesteeQuizDone                contro
 POST        /orgs/:o/courses/:c/games/:g/requesteeAnswered                controllers.game.GamesRequesteeController.answeringDone(o: OrganizationId, c: CourseId, g: GameId)
 # Games Questions
 GET         /orgs/:o/courses/:c/games/:g/questions/:q                     controllers.game.GamesController.question(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
-# POST        /orgs/:o/courses/:c/games/:g/questions/:q/requestee           controllers.game.GamesRequesteeController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
+GET         /orgs/:o/courses/:c/games/:g/questions/:q/:a                  controllers.game.GamesController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId, a: AnswerId)
+POST        /orgs/:o/courses/:c/games/:g/questions/:q/requestee           controllers.game.GamesRequesteeController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
 # POST        /orgs/:o/courses/:c/games/:g/questions/:q/requestor           controllers.game.GamesRequestorController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
 
 # ======== START DEPRICATED ========

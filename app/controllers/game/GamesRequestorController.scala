@@ -1,19 +1,33 @@
 package controllers.game
 
+import com.artclod.util._
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
+import controllers.game.GamesRequesteeController._
+import controllers.question.derivative.QuestionsController
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization._
-import models.question.derivative.{Question, Questions}
+import models.question.derivative.{Quiz, Question, Questions}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.Controller
+import play.api.mvc.{Result, Controller}
 import play.api.db.slick.Config.driver.simple.Session
 import service.User
 
+import scala.util.Right
+
 object GamesRequestorController extends Controller with SecureSocialConsented {
+
+  def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
+    Games(gameId) match {
+      case None => Left(NotFound(views.html.errors.notFoundPage("There was no game for id=[" + gameId + "]")))
+      case Some(game) => game.requestorQuiz match {
+        case None => Left(NotFound(views.html.errors.notFoundPage("The game with id=[" + gameId + "] is does not have a Requestee Quiz")))
+        case Some(quiz) => Right[Result, (Game, Quiz)]((game, quiz)) + QuestionsController(quiz.id, questionId)
+      }
+    }
 
   def create(organizationId: OrganizationId, courseId: CourseId, gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(organizationId, courseId, gameId) match {

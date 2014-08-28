@@ -1,0 +1,15 @@
+@(organization: models.organization.Organization,
+        course: models.organization.Course,
+        quiz: models.question.derivative.Quiz,
+        question: models.question.derivative.Question,
+        currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.GamesRequestorController
+@import helper._
+@import models.user.UserPimped
+@import models.game.GameResponseStatus
+
+@main("Answering Question") {
+
+    TODO
+}

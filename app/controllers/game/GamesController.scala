@@ -5,6 +5,7 @@ import controllers.organization.CoursesController
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization._
+import models.question.derivative.{Quiz, Question}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -17,10 +18,11 @@ object GamesController extends Controller with SecureSocialConsented {
 
   def apply(organizationId: OrganizationId, courseId: CourseId, gameId: GameId)(implicit session: Session): Either[Result, (Organization, Course, Game)] =
     Games(gameId) match {
-      case None => Left(NotFound(views.html.errors.notFoundPage("There was no course for id=[" + courseId + "]")))
+      case None => Left(NotFound(views.html.errors.notFoundPage("There was no gameId for id=[" + gameId + "]")))
       case Some(game) => game.courseId match {
         case None => Left(NotFound(views.html.errors.notFoundPage("The game with id=[" + gameId + "] is not associated with any course (including [" + courseId + "]")))
-        case Some(gameId) => CoursesController(organizationId, courseId) + Right(game)
+        case Some(`courseId`) => CoursesController(organizationId, courseId) + Right(game)
+        case Some(otherCourseId) => Left(NotFound(views.html.errors.notFoundPage("The game with id=[" + gameId + "] was for course[" + courseId + "] not for [" + otherCourseId + "]")))
       }
     }
 
@@ -87,6 +89,27 @@ object GamesController extends Controller with SecureSocialConsented {
           else { Games.update(gameState.reject(user.id)) }
           Redirect(routes.GamesController.game(organization.id, course.id, game.id))
         })
+    }
+  }
+
+  def question(organizationId: OrganizationId, courseId: CourseId, gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(organizationId, courseId, gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course, game)) => {
+
+        if(game.isRequestor(user))
+          GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
+            case Left(notFoundResult) => notFoundResult
+            case Right((game, quiz, question)) => Ok(views.html.game.answeringQuestionRequestor(organization, course, quiz, question, None))
+          }
+
+        else if(game.isRequestee(user))
+          GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
+            case Left(notFoundResult) => notFoundResult
+            case Right((game, quiz, question)) => Ok(views.html.game.answeringQuestionRequestee(organization, course, quiz, question, None))
+          }
+        else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
+      }
     }
   }
 

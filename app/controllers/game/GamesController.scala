@@ -106,7 +106,7 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => Ok(views.html.game.answeringQuestionRequestor(quiz, question, None))
+            case Right((game, quiz, question)) => Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, None))
           }
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
@@ -126,7 +126,7 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) + AnswersController(questionId, answerId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) => Ok(views.html.game.answeringQuestionRequestor(quiz, question, Some(Right(answer))))
+            case Right((game, quiz, question, answer)) => Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, Some(Right(answer))))
           }
 
         else if(game.isRequestee(user))

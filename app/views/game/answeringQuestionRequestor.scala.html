@@ -1,11 +1,92 @@
-@(quiz: models.question.derivative.Quiz, question: models.question.derivative.Question, currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState,
+        quiz: models.question.derivative.Quiz,
+        question: models.question.derivative.Question,
+        currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.routes.GamesRequestorController
+@import controllers.game.routes.{GamesRequestorController, GamesController}
+@import controllers.game.GameAnswerQuestion
 @import helper._
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
+@import com.artclod.collection.PimpedOptionList
+@import com.artclod.play.s
+@import views.html.tag._
 
 @main("Answering Question") {
 
-    TODO
+    <h2>You are answering Question for a game with @gameState.game.requestor.name </h2>
+
+    @for(course <- gameState.game.course){This is a quiz for the course [ @courseLink(course) ] <br>}
+    Back to the [ @gameLink("game", gameState.game) ] <br>
+
+    <h2>What is the Derivative of</h2> @mathml.mathmlContent(question)
+
+    @for(answerEither <- currentAnswer) {
+        <section align="center">
+            <h4>
+            @answerEither match {
+                case Right(answer) => {You answered @mathml.mathmlContent(answer) that answer was @mathml.correct(answer.correct)}
+                case Left(answerTmp) => {You answered @mathml.mathmlContent(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+            }
+            </h4>
+        </section>
+    }
+
+    <section>
+        <p>
+            Type in your answer, and then hit the submit button <br>
+            @mathml.mathmlEditor("ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
+        </p>
+    </section>
+
+    <section>
+    @form(GamesRequestorController.answer(gameState.game.id, question.id), 'id -> "answerForm") {
+        <input type="hidden" name="@GameAnswerQuestion.mathML" id="answerMathML">
+        <input type="hidden" name="@GameAnswerQuestion.rawStr" id="answerRawStr">
+        <input type="button" value="Submit" onclick="answerFormSubmit()">
+        }
+    </section>
+
+    <script>
+    var answerFormSubmit = function ( ) {
+    if ( ANSWER.valid ) {
+    $ ( "#answerMathML" ).val ( ANSWER.mathML ) ;
+    $ ( "#answerRawStr" ).val ( ANSWER.rawStr ) ;
+    $ ( "#answerForm" ).submit ( ) ;
+    } else {
+    alert("The answer is not in a valid format so it cannot be submitted")
+    }
+    }
+    </script>
+
+
+    @* ===== Question Navigation ===== *@
+    @defining(quiz.previousQuestion(question)){ previousOp =>
+        @for(previous <- previousOp) {Go to the [<a href="@GamesController.question(gameState.game.id, previous.id)">previous question</a>]<br>}
+    }
+
+    @defining(quiz.firstUnfinishedQuestion(user)){ unfinishedOp =>
+        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@GamesController.question(gameState.game.id, unfinished.question.id)">unfinished question</a>]<br>}
+    }
+
+    @defining(quiz.nextQuestion(question)){ nextOp =>
+        @for(next <- nextOp) {Go to the [<a href="@GamesController.question(gameState.game.id, next.id)">next question</a>]}
+        @if(nextOp.isEmpty) {This is the last question, back to the [ @gameLink("quiz", gameState.game) ]}
+    }
+    <br>
+
+    @* ===== Results ===== *@
+    @defining(question.results(user)) { results =>
+        @if(results.answers.nonEmpty) {
+            <section>
+                <h4>You have answered this questions @results.answers.size time@s(results.answers)</h4>
+                <ul>
+                @for(answer <- results.answers) {
+                    <li> @mathml.mathmlContent(answer) this answer was @mathml.correct(answer.correct) </li>
+                }
+                </ul>
+            </section>
+        }
+    }
+
 }

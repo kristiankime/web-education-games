@@ -59,7 +59,7 @@ POST        /games/:g/requesteeAnswered                controllers.game.GamesReq
 GET         /games/:g/questions/:q                     controllers.game.GamesController.question(g: GameId, q: QuestionId)
 GET         /games/:g/questions/:q/:a                  controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
 POST        /games/:g/questions/:q/requestee           controllers.game.GamesRequesteeController.answer(g: GameId, q: QuestionId)
-# POST        /orgs/:o/courses/:c/games/:g/questions/:q/requestor           controllers.game.GamesRequestorController.answer(o: OrganizationId, c: CourseId, g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor           controllers.game.GamesRequestorController.answer(g: GameId, q: QuestionId)
 
 # ======== START DEPRICATED ========
 # Equation pages

@@ -119,7 +119,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
                 case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
                 case Inconclusive => {
                   if(game.isRequestee(user)) Ok(views.html.game.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
-                  else if(game.isRequestor(user)) Ok(views.html.game.answeringQuestionRequestor(quiz, question, Some(Left(unfinishedAnswer(false)))))
+                  else if(game.isRequestor(user)) Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
                   else throw new IllegalStateException("User [" + user + "] wasn't Requestee or Requestor")
                 }
               }

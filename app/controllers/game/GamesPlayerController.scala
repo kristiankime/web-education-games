@@ -1,53 +1,39 @@
 package controllers.game
 
 import com.artclod.mathml.Match._
-import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.util._
 import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
-import controllers.game.GamesController._
-import controllers.organization.CoursesController
-import controllers.question.derivative.AnswersController._
-import controllers.question.derivative.{AnswersController, QuestionsController, QuizzesController}
+import com.artclod.util._
+import controllers.question.derivative.QuestionsController
 import controllers.support.SecureSocialConsented
 import models.game._
-import models.organization.{Course, Organization}
 import models.question.derivative._
-import models.support.{GameId, CourseId, OrganizationId}
+import models.support.{GameId, _}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Result, Controller}
-import service.User
 import play.api.db.slick.Config.driver.simple.Session
-import models.support._
+import play.api.mvc.{Controller, Result}
+import service.User
 
 import scala.util.{Left, Right}
 
 trait GamesPlayerController extends Controller with SecureSocialConsented {
 
-  val playerType : String
+  // ===== Abstract "To Implement" =====
+  protected val playerType: String
 
-  def createdQuiz(game: Game)(implicit session: Session) : Option[Quiz] // game.requesteeQuiz
+  protected def createdQuiz(game: Game)(implicit session: Session): Option[Quiz]
 
-  def createdQuizEnsured(game: Game)(implicit user: User, session: Session) : (Game, Quiz) // game.ensureRequesteeQuiz
+  protected def createdQuizEnsured(game: Game)(implicit user: User, session: Session): (Game, Quiz)
 
-  def quizToAnswer(game: Game)(implicit session: Session) : Option[Quiz] // game.requestorQuiz
+  protected def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz]
 
-  def finalizeQuiz(game: Game)(implicit session: Session) /*
-          val gameState = game.toState match {
-          case g : RequesteeQuiz => g
-          case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[RequesteeQuiz].getName + "] but was " + game.toState)
-        }
-        Games.update(gameState.finalizeRequesteeQuiz)
-        */
+  protected def finalizeQuizInternal(game: Game)(implicit session: Session)
 
-  def finalizeAnswers(game: Game)(implicit session: Session) /*
-          val gameState = game.toState match {
-            case g : RequestorQuizFinished with RequesteeStillAnswering => g
-            case _ =>  throw new IllegalStateException("State should have been subclass of RequestorQuizFinished with RequesteeStillAnswering but was " + game.toState)
-          }
-          Games.update(gameState.requesteeDoneAnswering) */
+  protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
+  // ===== Concrete =====
   def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     Games(gameId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no game for id=[" + gameId + "]")))
@@ -57,7 +43,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       }
     }
 
-  def create(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def createQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -72,7 +58,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def remove(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def removeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -80,67 +66,55 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           questionId => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            for(question <- Questions(questionId)) { quiz.remove(question) }
+            for (question <- Questions(questionId)) {
+              quiz.remove(question)
+            }
             Redirect(routes.GamesController.game(game.id))
           })
     }
   }
 
-  def quizDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
-
-        finalizeQuiz(game)
-        //        val gameState = game.toState match {
-        //          case g : RequesteeQuiz => g
-        //          case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[RequesteeQuiz].getName + "] but was " + game.toState)
-        //        }
-        //        Games.update(gameState.finalizeRequesteeQuiz)
-
+        finalizeQuizInternal(game)
         Redirect(routes.GamesController.game(game.id))
       }
     }
   }
 
-  def answer(gameId: GameId, questionId: QuestionId)= ConsentedAction { implicit request => implicit user => implicit session =>
-   GamesRequestorController(gameId, questionId) match {
-        case Left(notFoundResult) => notFoundResult
-        case Right((game, quiz, question)) => {
+  def answerQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesRequestorController(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question)) => {
 
-          GameAnswerQuestion.values.bindFromRequest.fold(
-            errors => BadRequest(views.html.errors.formErrorPage(errors)),
-            form => {
-              val math : MathMLElem = MathML(form._1).get // TODO better error handling
-              val rawStr = form._2
-              val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
-              Answers.correct(question, math) match {
-                case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-                case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
-                case Inconclusive => {
-                  if(game.isRequestee(user)) Ok(views.html.game.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
-                  else if(game.isRequestor(user)) Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
-                  else throw new IllegalStateException("User [" + user + "] wasn't Requestee or Requestor")
-                }
+        GameAnswerQuestion.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val math: MathMLElem = MathML(form._1).get // TODO better error handling
+            val rawStr = form._2
+            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now) _
+            Answers.correct(question, math) match {
+              case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+              case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
+              case Inconclusive => {
+                if (game.isRequestee(user)) Ok(views.html.game.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
+                else if (game.isRequestor(user)) Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
+                else throw new IllegalStateException("User [" + user + "] wasn't Requestee or Requestor")
               }
-            })
+            }
+          })
 
-        }
       }
     }
+  }
 
-  def answeringDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def finalizeAnswers(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
-
-        finalizeAnswers(game)
-        //        val gameState = game.toState match {
-        //          case g : RequestorQuizFinished with RequesteeStillAnswering => g
-        //          case _ =>  throw new IllegalStateException("State should have been subclass of RequestorQuizFinished with RequesteeStillAnswering but was " + game.toState)
-        //        }
-        //        Games.update(gameState.requesteeDoneAnswering)
-
+        finalizeAnswersInternal(game)
         Redirect(routes.GamesController.game(game.id))
       }
     }

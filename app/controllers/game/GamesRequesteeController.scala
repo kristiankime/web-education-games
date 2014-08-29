@@ -7,15 +7,15 @@ import service.User
 
 object GamesRequesteeController extends GamesPlayerController {
 
-  val playerType: String = "Requestee"
+  protected val playerType: String = "Requestee"
 
-  def createdQuiz(game: Game)(implicit session: Session): Option[Quiz] = game.requesteeQuiz
+  protected def createdQuiz(game: Game)(implicit session: Session): Option[Quiz] = game.requesteeQuiz
 
-  def createdQuizEnsured(game: Game)(implicit user: User, session: Session): (Game, Quiz) = game.ensureRequesteeQuiz
+  protected def createdQuizEnsured(game: Game)(implicit user: User, session: Session): (Game, Quiz) = game.ensureRequesteeQuiz
 
-  def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz] = game.requestorQuiz
+  protected def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz] = game.requestorQuiz
 
-  def finalizeQuiz(game: Game)(implicit session: Session) {
+  protected def finalizeQuizInternal(game: Game)(implicit session: Session) {
     val gameState = game.toState match {
       case g: RequesteeQuiz => g
       case _ => throw new IllegalStateException("State should have been subclass of [" + classOf[RequesteeQuiz].getName + "] but was " + game.toState)
@@ -23,7 +23,7 @@ object GamesRequesteeController extends GamesPlayerController {
     Games.update(gameState.finalizeRequesteeQuiz)
   }
 
-  def finalizeAnswers(game: Game)(implicit session: Session) {
+  protected def finalizeAnswersInternal(game: Game)(implicit session: Session) {
     val gameState = game.toState match {
       case g: RequestorQuizFinished with RequesteeStillAnswering => g
       case _ => throw new IllegalStateException("State should have been subclass of RequestorQuizFinished with RequesteeStillAnswering but was " + game.toState)
@@ -31,115 +31,4 @@ object GamesRequesteeController extends GamesPlayerController {
     Games.update(gameState.requesteeDoneAnswering)
   }
 
-  //  def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
-  //    Games(gameId) match {
-  //      case None => Left(NotFound(views.html.errors.notFoundPage("There was no game for id=[" + gameId + "]")))
-  //      case Some(game) => game.requesteeQuiz match {
-  //        case None => Left(NotFound(views.html.errors.notFoundPage("The game with id=[" + gameId + "] is does not have a Requestee Quiz")))
-  //        case Some(quiz) => Right[Result, (Game, Quiz)]((game, quiz)) + QuestionsController(quiz.id, questionId)
-  //      }
-  //    }
-  //
-  //  def create(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-  //    GamesController(gameId) match {
-  //      case Left(notFoundResult) => notFoundResult
-  //      case Right(game) =>
-  //        GameRequesteeCreate.form.bindFromRequest.fold(
-  //          errors => BadRequest(views.html.errors.formErrorPage(errors)),
-  //          form => {
-  //            val (updatedGame, quiz) = game.ensureRequesteeQuiz
-  //            val mathML = MathML(form._1).get // TODO better handle on error
-  //            Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
-  //            Redirect(routes.GamesController.game(game.id))
-  //          })
-  //    }
-  //  }
-  //
-  //  def remove(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-  //    GamesController(gameId) match {
-  //      case Left(notFoundResult) => notFoundResult
-  //      case Right(game) =>
-  //        GameRequesteeRemove.form.bindFromRequest.fold(
-  //          errors => BadRequest(views.html.errors.formErrorPage(errors)),
-  //          questionId => {
-  //            val (updatedGame, quiz) = game.ensureRequesteeQuiz
-  //            for(question <- Questions(questionId)) { quiz.remove(question) }
-  //            Redirect(routes.GamesController.game(game.id))
-  //          })
-  //    }
-  //  }
-  //
-  //  def quizDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-  //    GamesController(gameId) match {
-  //      case Left(notFoundResult) => notFoundResult
-  //      case Right(game) => {
-  //
-  //        val gameState = game.toState match {
-  //          case g : RequesteeQuiz => g
-  //          case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[RequesteeQuiz].getName + "] but was " + game.toState)
-  //        }
-  //        Games.update(gameState.finalizeRequesteeQuiz)
-  //
-  //        Redirect(routes.GamesController.game(game.id))
-  //      }
-  //    }
-  //  }
-  //
-  //
-  //  def answeringDone(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
-  //    GamesController(gameId) match {
-  //      case Left(notFoundResult) => notFoundResult
-  //      case Right(game) => {
-  //
-  //        val gameState = game.toState match {
-  //          case g : RequestorQuizFinished with RequesteeStillAnswering => g
-  //          case _ =>  throw new IllegalStateException("State should have been subclass of RequestorQuizFinished with RequesteeStillAnswering but was " + game.toState)
-  //        }
-  //        Games.update(gameState.requesteeDoneAnswering)
-  //
-  //        Redirect(routes.GamesController.game(game.id))
-  //      }
-  //    }
-  //  }
-  //
-  //  def answer(gameId: GameId, questionId: QuestionId)= ConsentedAction { implicit request => implicit user => implicit session =>
-  //   GamesRequestorController(gameId, questionId) match {
-  //        case Left(notFoundResult) => notFoundResult
-  //        case Right((game, quiz, question)) => {
-  //
-  //          RequesteeAnswerForm.values.bindFromRequest.fold(
-  //            errors => BadRequest(views.html.errors.formErrorPage(errors)),
-  //            form => {
-  //              val math : MathMLElem = MathML(form._1).get // TODO better error handling
-  //              val rawStr = form._2
-  //              val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
-  //              Answers.correct(question, math) match {
-  //                case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-  //                case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
-  //                case Inconclusive => Ok(views.html.game.answeringQuestionRequestor(quiz, question, Some(Left(unfinishedAnswer(false)))))
-  //              }
-  //            })
-  //
-  //        }
-  //      }
-  //    }
-
-
 }
-
-//object GameRequesteeRemove {
-//  val removeId = "removeId"
-//  val form = Form(removeId -> questionId)
-//}
-//
-//object GameRequesteeCreate {
-//  val mathML = "mathML"
-//  val rawStr = "rawStr"
-//  val form = Form(tuple(mathML -> text, rawStr -> text))
-//}
-//
-//object RequesteeAnswerForm {
-//  val mathML = "mathML"
-//  val rawStr = "rawStr"
-//  val values = Form(tuple(mathML -> text, rawStr -> text))
-//}

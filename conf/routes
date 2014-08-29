@@ -45,21 +45,21 @@ GET         /orgs/:o/courses/:c/games/find                                contro
 POST        /orgs/:o/courses/:c/games/request                             controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
 
 # Games
-GET         /games/:g                                  controllers.game.GamesController.game(g: GameId)
-POST        /games/:g/respond                          controllers.game.GamesController.respond(g: GameId)
-POST        /games/:g/requestorCreate                  controllers.game.GamesRequestorController.create(g: GameId)
-POST        /games/:g/requestorRemove                  controllers.game.GamesRequestorController.remove(g: GameId)
-POST        /games/:g/requestorQuizDone                controllers.game.GamesRequestorController.quizDone(g: GameId)
-POST        /games/:g/requestorAnswered                controllers.game.GamesRequestorController.answeringDone(g: GameId)
-POST        /games/:g/requesteeCreate                  controllers.game.GamesRequesteeController.create(g: GameId)
-POST        /games/:g/requesteeRemove                  controllers.game.GamesRequesteeController.remove(g: GameId)
-POST        /games/:g/requesteeQuizDone                controllers.game.GamesRequesteeController.quizDone(g: GameId)
-POST        /games/:g/requesteeAnswered                controllers.game.GamesRequesteeController.answeringDone(g: GameId)
+GET         /games/:g                                                     controllers.game.GamesController.game(g: GameId)
+POST        /games/:g/respond                                             controllers.game.GamesController.respond(g: GameId)
+POST        /games/:g/questions/createRequestor                           controllers.game.GamesRequestorController.createQuestion(g: GameId)
+POST        /games/:g/questions/removeRequestor                           controllers.game.GamesRequestorController.removeQuestion(g: GameId)
+POST        /games/:g/finalizeQuizRequestor                               controllers.game.GamesRequestorController.finalizeCreatedQuiz(g: GameId)
+POST        /games/:g/finalizeAnswersRequestor                            controllers.game.GamesRequestorController.finalizeAnswers(g: GameId)
+POST        /games/:g/questions/createRequestee                           controllers.game.GamesRequesteeController.createQuestion(g: GameId)
+POST        /games/:g/questions/removeRequestee                           controllers.game.GamesRequesteeController.removeQuestion(g: GameId)
+POST        /games/:g/finalizeQuizRequestee                               controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
+POST        /games/:g/finalizeAnswersRequestee                            controllers.game.GamesRequesteeController.finalizeAnswers(g: GameId)
 # Games Questions
-GET         /games/:g/questions/:q                     controllers.game.GamesController.question(g: GameId, q: QuestionId)
-GET         /games/:g/questions/:q/:a                  controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
-POST        /games/:g/questions/:q/requestee           controllers.game.GamesRequesteeController.answer(g: GameId, q: QuestionId)
-POST        /games/:g/questions/:q/requestor           controllers.game.GamesRequestorController.answer(g: GameId, q: QuestionId)
+GET         /games/:g/questions/:q                                        controllers.game.GamesController.question(g: GameId, q: QuestionId)
+GET         /games/:g/questions/:q/:a                                     controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
+POST        /games/:g/questions/:q/requestee                              controllers.game.GamesRequesteeController.answerQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor                              controllers.game.GamesRequestorController.answerQuestion(g: GameId, q: QuestionId)
 
 # ======== START DEPRICATED ========
 # Equation pages

@@ -23,7 +23,7 @@
         }
     </table>
 
-    @form(GamesRequestorController.answeringDone(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Answers" > }
+    @form(GamesRequestorController.finalizeAnswers(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Answers" > }
 
 }
 

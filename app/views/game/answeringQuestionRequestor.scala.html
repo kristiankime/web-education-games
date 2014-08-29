@@ -40,7 +40,7 @@
     </section>
 
     <section>
-    @form(GamesRequestorController.answer(gameState.game.id, question.id), 'id -> "answerForm") {
+    @form(GamesRequestorController.answerQuestion(gameState.game.id, question.id), 'id -> "answerForm") {
         <input type="hidden" name="@GameAnswerQuestion.mathML" id="answerMathML">
         <input type="hidden" name="@GameAnswerQuestion.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">

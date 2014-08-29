@@ -27,7 +27,7 @@
         @for(question <- questions){
         <tr>
             <td> @mathml.mathmlContent(question) </td>
-            <td> @form(GamesRequesteeController.remove(gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
+            <td> @form(GamesRequesteeController.removeQuestion(gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
         </tr>
         }
     </table>
@@ -43,7 +43,7 @@
         @mathml.mathmlEditor(editorName = "QUESTION")
     </p>
 
-    @form(GamesRequesteeController.create(gameState.game.id), 'id -> "derivativeqForm" ) {
+    @form(GamesRequesteeController.createQuestion(gameState.game.id), 'id -> "derivativeqForm" ) {
         <input type="hidden" name="@GameCreateQuestion.mathML" id="derivativeQuestionMathML">
         <input type="hidden" name="@GameCreateQuestion.rawStr" id="derivativeQuestionRawStr">
         <input type="button" value="Save Question" onclick="formSubmit()">
@@ -63,7 +63,7 @@
     }
 
     @if(numQuestionRemaining == 0){
-    @form(GamesRequesteeController.quizDone(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
+    @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
     }
 
 }

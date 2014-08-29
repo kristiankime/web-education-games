@@ -4,7 +4,7 @@
         currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesRequesteeController, GamesController}
-@import controllers.game.RequesteeAnswerForm
+@import controllers.game.GameAnswerQuestion
 @import helper._
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
@@ -40,8 +40,8 @@
 
     <section>
     @form(GamesRequesteeController.answer(gameState.game.id, question.id), 'id -> "answerForm") {
-        <input type="hidden" name="@RequesteeAnswerForm.mathML" id="answerMathML">
-        <input type="hidden" name="@RequesteeAnswerForm.rawStr" id="answerRawStr">
+        <input type="hidden" name="@GameAnswerQuestion.mathML" id="answerMathML">
+        <input type="hidden" name="@GameAnswerQuestion.rawStr" id="answerRawStr">
         <input type="button" value="Submit" onclick="answerFormSubmit()">
         }
     </section>

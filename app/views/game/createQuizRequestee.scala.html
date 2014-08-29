@@ -1,8 +1,8 @@
 @(gameState: models.game.GameState with models.game.RequesteeQuiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesRequesteeController
-@import controllers.game.GameRequesteeCreate
-@import controllers.game.GameRequesteeRemove
+@import controllers.game.GameCreateQuestion
+@import controllers.game.GameRemoveQuestion
 @import helper._
 @import models.user.UserPimped
 @import views.html.tag._
@@ -27,7 +27,7 @@
         @for(question <- questions){
         <tr>
             <td> @mathml.mathmlContent(question) </td>
-            <td> @form(GamesRequesteeController.remove(gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRequesteeRemove.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
+            <td> @form(GamesRequesteeController.remove(gameState.game.id), 'class -> "inline-block") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" value="remove" > } </td>
         </tr>
         }
     </table>
@@ -44,8 +44,8 @@
     </p>
 
     @form(GamesRequesteeController.create(gameState.game.id), 'id -> "derivativeqForm" ) {
-        <input type="hidden" name="@GameRequesteeCreate.mathML" id="derivativeQuestionMathML">
-        <input type="hidden" name="@GameRequesteeCreate.rawStr" id="derivativeQuestionRawStr">
+        <input type="hidden" name="@GameCreateQuestion.mathML" id="derivativeQuestionMathML">
+        <input type="hidden" name="@GameCreateQuestion.rawStr" id="derivativeQuestionRawStr">
         <input type="button" value="Save Question" onclick="formSubmit()">
     }
 

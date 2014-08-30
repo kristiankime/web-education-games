@@ -1,8 +1,10 @@
 package controllers.game
 
 import models.game._
-import models.question.derivative.Quiz
+import models.question.derivative._
+import models.support.{QuestionId, GameId}
 import play.api.db.slick.Config.driver.simple.Session
+import play.api.mvc.Result
 import service.User
 
 object GamesRequestorController extends GamesPlayerController {
@@ -30,5 +32,11 @@ object GamesRequestorController extends GamesPlayerController {
     }
     Games.update(gameState.requestorDoneAnswering)
   }
+
+  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: (Boolean) => Answer )(implicit user: User,session: Session) : Result =
+    Ok(views.html.game.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
+
+  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
+    GamesRequesteeController(gameId, questionId)
 
 }

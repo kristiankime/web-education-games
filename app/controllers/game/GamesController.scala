@@ -6,7 +6,6 @@ import controllers.question.derivative.AnswersController
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization._
-import models.question.derivative.{Quiz, Question, Answers}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -105,11 +104,13 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right(game) => {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
+//          GamesRequestorController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
             case Right((game, quiz, question)) => Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, None))
           }
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
+//          GamesRequesteeController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
             case Right((game, quiz, question)) => Ok(views.html.game.answeringQuestionRequestee(game.toState, quiz, question, None))
           }

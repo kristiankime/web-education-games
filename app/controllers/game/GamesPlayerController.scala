@@ -9,7 +9,7 @@ import controllers.question.derivative.QuestionsController
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.question.derivative._
-import models.support.{GameId, _}
+import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -33,6 +33,10 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
+  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: (Boolean) => Answer )(implicit user: User,session: Session) : Result
+
+  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
+
   // ===== Concrete =====
   def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     Games(gameId) match {
@@ -53,7 +57,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             val mathML = MathML(form._1).get // TODO better handle on error
             Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
-            Redirect(routes.GamesController.game(game.id))
+            Redirect(routes.GamesController.game(updatedGame.id))
           })
     }
   }
@@ -66,10 +70,8 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           questionId => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            for (question <- Questions(questionId)) {
-              quiz.remove(question)
-            }
-            Redirect(routes.GamesController.game(game.id))
+            for (question <- Questions(questionId)) { quiz.remove(question) }
+            Redirect(routes.GamesController.game(updatedGame.id))
           })
     }
   }
@@ -85,7 +87,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
   }
 
   def answerQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesRequestorController(gameId, questionId) match {
+    questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question)) => {
 
@@ -98,11 +100,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             Answers.correct(question, math) match {
               case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => {
-                if (game.isRequestee(user)) Ok(views.html.game.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
-                else if (game.isRequestor(user)) Ok(views.html.game.answeringQuestionRequestor(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
-                else throw new IllegalStateException("User [" + user + "] wasn't Requestee or Requestor")
-              }
+              case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer)
             }
           })
 

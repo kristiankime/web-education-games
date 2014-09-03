@@ -28,7 +28,6 @@ trait SecureSocialConsented extends SecureSocial {
       }
     }
 
-
     def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
       DB.withSession { session: Session =>
         val user = User(request)

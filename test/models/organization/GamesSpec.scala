@@ -30,7 +30,7 @@ class GamesSpec extends Specification {
         val requestingStudent = newFakeUser
         Courses.grantAccess(course, View)(requestingStudent, session)
 
-        Games.studentsToPlayWith(requestingStudent.id, course.id)  must beEmpty
+        Games.studentsToPlayWith(requestingStudent.id, course.id) must beEmpty
       }
     }
 
@@ -43,6 +43,20 @@ class GamesSpec extends Specification {
         Courses.grantAccess(course, View)(student2, session)
 
         Games.studentsToPlayWith(requestingStudent.id, course.id).toSet must beEqualTo(Set(student1, student2))
+      }
+    }
+
+    "exclude student if they are already in a game with the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val (organization, course) = organizationAndCourse
+        val (requestingStudent, student1, student2) = (newFakeUser, newFakeUser, newFakeUser)
+        Courses.grantAccess(course, View)(requestingStudent, session)
+        Courses.grantAccess(course, View)(student1, session)
+        Courses.grantAccess(course, View)(student2, session)
+
+        Games.request(requestingStudent.id, student2.id)
+
+        Games.studentsToPlayWith(requestingStudent.id, course.id).toSet must beEqualTo(Set(student1))
       }
     }
   }
@@ -100,10 +114,32 @@ class GamesSpec extends Specification {
 
     "return a game if the users have started one (requestee first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val (requestor, requestee) = (newFakeUser, newFakeUser)
-        val game = Games.request(requestee.id, requestor.id)
+        val (requestee, requestor) = (newFakeUser, newFakeUser)
+        val game = Games.request(requestor.id, requestee.id)
 
         Games.activeGame(requestor.id, requestee.id).map(_.id) must beSome(game.id)
+      }
+    }
+
+    "return none if the users have finished a game (requestor first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val (requestor, requestee) = (newFakeUser, newFakeUser)
+        val game = Games.request(requestor.id, requestee.id)
+
+        TestGame.finish(game)
+
+        Games.activeGame(requestor.id, requestee.id).map(_.id) must beNone
+      }
+    }
+
+    "return none if the users have finished a game (requestee first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val (requestee, requestor) = (newFakeUser, newFakeUser)
+        val game = Games.request(requestor.id, requestee.id)
+
+        TestGame.finish(game)
+
+        Games.activeGame(requestor.id, requestee.id).map(_.id) must beNone
       }
     }
   }
@@ -144,13 +180,13 @@ class GamesSpec extends Specification {
         val (organization, course) = organizationAndCourse
         val (requestor, requestee) = (newFakeUser, newFakeUser)
 
-        val gameDone = Games.request(requestor.id, requestee.id, course.id)
-        // NOTE: This update puts the game in an illegal state (i.e. calling toState will fail) and should just used for testing
-        Games.update(gameDone.copy(finishedDate = Some(JodaUTC.now)))
+        val game = Games.request(requestor.id, requestee.id, course.id)
+        TestGame.finish(game)
 
         Games.active(requestor.id)(session) must beEmpty
         Games.active(requestee.id)(session) must beEmpty
       }
     }
   }
+
 }

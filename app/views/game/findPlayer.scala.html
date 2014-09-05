@@ -12,7 +12,7 @@
     <h1>Invite another player in the course @course.name to play with you</h1>
 
     @if(students.isEmpty){
-    <h5>There are no students currently enrolled in the course</h5>
+    <h5>There are currently no students available to play with in the course</h5>
     } else {
     <h5>Please select a player you want to play with:</h5>
 
@@ -23,7 +23,13 @@
 	    <input type="submit" value="Submit">
     }
     }
-    
+
+    <h5>students except</h5>
+    <ul>
+    @for(student <- models.organization.Courses.studentsExcept(course.id, user.id)){
+        <li>@student.name * @models.game.Games.activeGame(user.id, student.id).isEmpty * @models.game.Games.activeGame(user.id, student.id)</li>
+    }
+    </ul>
 }
 
 }

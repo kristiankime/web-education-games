@@ -6,9 +6,9 @@ import play.api.mvc.Controller
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-
+import service.User
 import scala.util.Failure
-
+import play.api.db.slick.Config.driver.simple.Session
 
 object Consent extends Controller with SecureSocialDB {
 
@@ -26,13 +26,11 @@ object Consent extends Controller with SecureSocialDB {
         Logger("consent").info("error" + errors)
         BadRequest(views.html.errors.formErrorPage(errors))
       },
-      consentedForm => {
-
-        val consented = consentedForm
+      consented => {
 
         val settings = (UserSettings(user.id) match {
           case Some(setting) => UserSettings.update(setting.copy(consented = consented))
-          case None => UserSettings.create(UserSetting(userId = user.id, consented = consented, name = UserSettings.validName(user.fullName), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
+          case None => UserSettings.create(UserSetting(userId = user.id, consented = consented, name = defaultName(user), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
         })
 
         (settings, consented, goTo) match {
@@ -44,6 +42,9 @@ object Consent extends Controller with SecureSocialDB {
 
       })
   }
+
+  private def defaultName(user: User)(implicit session: Session) =
+    UserSettings.validName(user.fullName)
 
 }
 

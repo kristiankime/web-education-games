@@ -10,6 +10,7 @@
 @import controllers.organization.routes.CoursesController
 @import controllers.question.derivative.routes.QuizzesController
 @import controllers.game.routes.GamesController
+@import views.html.game.tag._
 
 @main(course.name) {
     <h2>Welcome to the information page for the course: @course.name</h2>
@@ -59,7 +60,16 @@
         <h5> Start a game with another student in the course </h5>
         [ <a href="@GamesController.findPlayer(course.organizationId, course.id)">new game</a> ]
     </section>
-    @* ======= Course Game Requests ======= *@
+    @* ======= Course Games ======= *@
+    @requestedGames(Some(course))
+
+    @awaitingGames(Some(course))
+
+    @activeAcceptedGames(Some(course))
+
+    @finishedGames(Some(course))
+
+    @*
     @defining(user.gameRequests(course.id)) { requests =>
     @if(requests.nonEmpty) {
     <section>
@@ -98,6 +108,7 @@
     </section>
     }
     }
+    *@
 
     } @* <<<<< Close Access > Non *@
 }

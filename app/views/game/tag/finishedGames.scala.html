@@ -1,0 +1,17 @@
+@(courseOp: Option[models.organization.Course] = None)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.game.Games
+@import models.user.UserPimped
+@import views.html.tag.{gameLink, datetime}
+
+@defining(courseOp match { case Some(course) => Games.finished(user.id, course.id); case None => Games.finished(user.id)}) { games =>
+
+<section>
+    @if(games.isEmpty){<h5>You don't have any completed games</h5>} else {<h5>You have completed games with the following players</h5>
+    <ul>
+        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).name, game) on @datetime(game.finishedDate.get) </li>}
+    </ul>
+    }
+</section>
+
+}

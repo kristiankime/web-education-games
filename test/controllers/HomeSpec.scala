@@ -1,11 +1,5 @@
 package controllers
 
-//import org.junit.runner._
-//import org.specs2.mutable._
-//import org.specs2.runner._
-//import play.api.db.slick.DB
-//import play.api.test._
-
 import com.artclod.securesocial.TestUtils._
 import models.DBTest._
 import org.junit.runner._

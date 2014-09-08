@@ -1,5 +1,6 @@
 package controllers
 
+import com.google.common.annotations.VisibleForTesting
 import controllers.support.SecureSocialDB
 import models.user.{UserSetting, UserSettings}
 import play.api.mvc.Controller
@@ -11,6 +12,7 @@ import scala.util.Failure
 import play.api.db.slick.Config.driver.simple.Session
 
 object Consent extends Controller with SecureSocialDB {
+  val splitEmailOnAt = """([^@]+)@([^@]+)""".r
 
   def consent(goTo: Option[String], error : Option[String]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
     Ok(views.html.user.consent(goTo, error))
@@ -44,7 +46,14 @@ object Consent extends Controller with SecureSocialDB {
   }
 
   private def defaultName(user: User)(implicit session: Session) =
-    UserSettings.validName(user.fullName)
+    UserSettings.validName(startingName(user))
+
+  @VisibleForTesting
+  def startingName(user: User) =
+    user.email match {
+      case Some(splitEmailOnAt(before, after)) => before
+      case _ => user.fullName
+    }
 
 }
 

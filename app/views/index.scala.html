@@ -1,6 +1,7 @@
 @()(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.organization.routes._
+@import controllers.organization.routes.OrganizationsController
+@import views.html.game.tag.gamesStatus
 
 @main("EdTech Welcome Page") {
     
@@ -8,4 +9,5 @@
 
     Too see a list of all of the organizations click [ <a href="@OrganizationsController.list">here</a> ]
 
+    @gamesStatus(None)
 }

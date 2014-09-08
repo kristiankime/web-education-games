@@ -3,13 +3,15 @@
 @import models.game.Games
 @import models.user.UserPimped
 @import views.html.tag.gameLink
+@import views.html.game.tag.maybeLinkCourse
 
 @defining(courseOp match { case Some(course) => Games.activeAccepted(user.id, course.id); case None => Games.activeAccepted(user.id)}) { games =>
 
 <section>
-    @if(games.isEmpty){<h5>You are currently not in the middle of a game with anyone</h5>} else {<h5>You are in the middle of a game with</h5>
+    <h5>Games in Progress</h5>
+    @if(games.isEmpty){<h6>You are currently not in the middle of a game with anyone</h6>} else {<h6>You are in the middle of a game with</h6>
     <ul>
-        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).name, game) </li>}
+        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).name, game) @maybeLinkCourse(courseOp, game)  </li>}
     </ul>
     }
 </section>

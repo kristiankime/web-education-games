@@ -10,7 +10,7 @@
 @import controllers.organization.routes.CoursesController
 @import controllers.question.derivative.routes.QuizzesController
 @import controllers.game.routes.GamesController
-@import views.html.game.tag._
+@import views.html.game.tag.gamesStatus
 
 @main(course.name) {
     <h2>Welcome to the information page for the course: @course.name</h2>
@@ -61,54 +61,7 @@
         [ <a href="@GamesController.findPlayer(course.organizationId, course.id)">new game</a> ]
     </section>
     @* ======= Course Games ======= *@
-    @requestedGames(Some(course))
-
-    @awaitingGames(Some(course))
-
-    @activeAcceptedGames(Some(course))
-
-    @finishedGames(Some(course))
-
-    @*
-    @defining(user.gameRequests(course.id)) { requests =>
-    @if(requests.nonEmpty) {
-    <section>
-        <h5> The Following users have requested to play a game with you</h5>
-        <ul>
-        @for(request <- requests) {
-            <li>[ <a href="@GamesController.game(request.id)">@request.requestor.name</a> ]</li>
-        }
-        </ul>
-    </section>
-    }
-    }
-
-    @defining(user.activeGames(course.id)) { games =>
-    @if(games.nonEmpty) {
-    <section>
-        <h5> You are currently playing a game with the following users </h5>
-        <ul>
-        @for(game <- games) {
-            <li>[ <a href="@GamesController.game(game.id)">@game.otherPlayer(user).name</a> ]</li>
-        }
-        </ul>
-    </section>
-    }
-    }
-
-    @defining(user.finishedGames(course.id)) { games =>
-    @if(games.nonEmpty) {
-    <section>
-        <h5> You have completed the following games </h5>
-        <ul>
-        @for(game <- games) {
-            <li>[ <a href="@GamesController.game(game.id)">@game.otherPlayer(user).name</a> ]</li>
-        }
-        </ul>
-    </section>
-    }
-    }
-    *@
+    @gamesStatus(Some(course))
 
     } @* <<<<< Close Access > Non *@
 }

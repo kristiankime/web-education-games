@@ -1,0 +1,17 @@
+@(courseOp: Option[models.organization.Course] = None)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import views.html.game.tag.{requestedGames, awaitingGames, activeAcceptedGames, finishedGames}
+
+<section>
+
+    <h4>Games Status</h4>
+
+    @requestedGames(courseOp)
+
+    @awaitingGames(courseOp)
+
+    @activeAcceptedGames(courseOp)
+
+    @finishedGames(courseOp)
+
+</section>

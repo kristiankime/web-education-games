@@ -2,12 +2,30 @@
 
 @import controllers.organization.routes.OrganizationsController
 @import views.html.game.tag.gamesStatus
+@import models.user.UserPimped
+@import views.html.tag.{courseLink, accessName}
 
 @main("EdTech Welcome Page") {
     
     <h1>@viewsupport.ViewText.welcome</h1>
 
-    Too see a list of all of the organizations click [ <a href="@OrganizationsController.list">here</a> ]
+    <section>
+        <h2>Courses</h2>
+        @defining(user.courses){ courses =>
+        @if(user.courses.isEmpty) {
+            You are not currently associated with any courses.
+        } else {
+            <ul>
+                @for(course <- courses) {<li> [ @courseLink(course) ] @accessName(course.access) </li>}
+            </ul>
+        }
+    </section>
+    }
+
+    <section>
+        <h2>Organizations</h2>
+        Too see a list of all of the organizations click [ <a href="@OrganizationsController.list">here</a> ]
+    </section>
 
     @gamesStatus(None)
 }

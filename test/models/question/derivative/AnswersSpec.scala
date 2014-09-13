@@ -41,6 +41,54 @@ class AnswersSpec extends Specification {
       }
     }
 
+    "collapse all answers for one question into a row" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id))
+
+        val user = DBTest.newFakeUser
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+
+        Answers.summary(user) must beEqualTo(List(AnswersSummary(question1.id, 2, true, JodaUTC(1))))
+      }
+    }
+
+    "not count answers from other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id))
+
+        val user = DBTest.newFakeUser
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+
+        val user2 = DBTest.newFakeUser
+        val answer = Answers.createAnswer(TestAnswer(owner = user2.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+
+        Answers.summary(user) must beEqualTo(List(AnswersSummary(question1.id, 2, true, JodaUTC(1))))
+      }
+    }
+
+    "return one row per question" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id))
+        val question2 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id))
+
+        val user = DBTest.newFakeUser
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(3)))
+
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(2)))
+
+        Answers.summary(user) must beEqualTo(List(
+          AnswersSummary(question1.id, 2, true, JodaUTC(1)),
+          AnswersSummary(question2.id, 1, false, JodaUTC(2))
+        ))
+      }
+    }
+
   }
 
 }

@@ -27,7 +27,11 @@ class QuestionDifficultySpec extends Specification {
 
     "be 1 for variable" in { x.difficulty must beEqualTo(1) }
 
-    "be 2 for x^n" in { (x ^ `3`).difficulty must beEqualTo(2) }
+    "be 2 for x^n" in { (x ^ 3).difficulty must beEqualTo(2) }
+
+    "be 2 for x * n" in { (x * 3).difficulty must beEqualTo(2) }
+
+    "be 2 for x * x" in { (x * x).difficulty must beEqualTo(2) }
   }
 
 }

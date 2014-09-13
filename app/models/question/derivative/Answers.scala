@@ -3,7 +3,7 @@ package models.question.derivative
 import com.artclod.mathml._
 import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
-import com.artclod.slick.JodaUTC._
+import com.artclod.slick.JodaUTC.timestamp2DateTime
 import models.question.AsciiMathML
 import models.question.derivative.table._
 import models.support._
@@ -19,6 +19,8 @@ object UnfinishedAnswer {
 }
 
 object Answers {
+
+  def all(implicit session: Session) = answersTable.list()
 
   def correct(question: Question, mathML: MathMLElem) = MathMLEq.checkEq("x", question.mathML.d("x"), mathML)
 
@@ -69,5 +71,6 @@ object Answers {
     case None => JodaUTC.zero
     case Some(v) => v
   }
+
 }
 

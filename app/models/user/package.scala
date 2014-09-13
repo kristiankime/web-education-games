@@ -2,6 +2,7 @@ package models
 
 import models.game.Games
 import models.organization.Courses
+import models.question.derivative.Questions
 import models.support.{CourseId, UserId}
 import play.api.db.slick.Config.driver.simple._
 import service.User
@@ -33,6 +34,8 @@ package object user {
     def finishedGames(courseId: CourseId)(implicit session: Session) = Games.finished(user.id, courseId)
 
     def courses()(implicit session: Session) = Courses(user.id)
+
+//    def skillLevel()(implicit session: Session) = Questions.
   }
 
 }

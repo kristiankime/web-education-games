@@ -47,6 +47,11 @@ object Questions {
     info.copy(id = questionId)
   }
 
+  def create(info: Question)(implicit session: Session): Question = {
+    val questionId = (questionsTable returning questionsTable.map(_.id)) += info
+    info.copy(id = questionId)
+  }
+
   // ======= FIND ======
   def list()(implicit session: Session) = questionsTable.list
 

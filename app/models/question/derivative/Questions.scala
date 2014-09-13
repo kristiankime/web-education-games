@@ -1,34 +1,37 @@
 package models.question.derivative
 
-import models.organization.Course
-import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
-import com.artclod.util._
-import models.support._
+import models.organization.Course
 import models.question.AsciiMathML
 import models.question.derivative.table._
+import models.support._
+import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
 import service.table.UsersTable
 import viewsupport.question.derivative.QuestionResults
+import com.artclod.slick.JodaUTC.timestamp2DateTime
+import models.question.derivative.table.MathMLMapper.string2mathML
+import com.artclod.mathml.scalar.MathMLElem
+import scala.slick.lifted
 
 case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends AsciiMathML with Owned {
-
-  def answers(user: User)(implicit session: Session) = Questions(id, user)
-
-  def results(user: User)(implicit session: Session) = QuestionResults(user, this, answers(user), start(user))
-
-  def start(user: User)(implicit session: Session) = Answers.startedWork(user, id).map(_.time)
 
   def quiz(implicit session: Session) = Questions.quizFor(id)
 
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
 
-  def difficulty(implicit session: Session) : Option[Double] = {
+  def difficulty(implicit session: Session): Option[Double] = {
     val difficulties = Questions.answerers(id).flatMap(results(_).score).map(1d - _)
     if (difficulties.isEmpty) None
     else Some(difficulties.sum / difficulties.size)
   }
+
+  def results(user: User)(implicit session: Session) = QuestionResults(user, this, answers(user), start(user))
+
+  def answers(user: User)(implicit session: Session) = Questions(id, user)
+
+  def start(user: User)(implicit session: Session) = Answers.startedWork(user, id).map(_.time)
 
   def access(course: Course)(implicit user: User, session: Session) = {
     val cAccess = course.access
@@ -83,4 +86,16 @@ object Questions {
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
 
+  // ======= Summary ======
+  case class QuestionSummary(questionId: QuestionId, attempts: Int, mathMl: MathMLElem,  correct: Boolean, firstAttempt: DateTime)
+
+  def summary(user: User)(implicit session: Session) = {
+    val q: lifted.Query[(QuestionsTable, AnswersTable), (Question, Answer)] =
+      (for {q <- questionsTable;
+            a <- answersTable if q.id === a.questionId && a.ownerId === user.id} yield (q, a))
+    val q2 = q.groupBy(_._1.id)
+    val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
+    q3.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, r._5.get))
+  }
 }
+

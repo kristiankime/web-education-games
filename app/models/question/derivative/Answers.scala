@@ -53,23 +53,13 @@ object Answers {
     answerTimesTable.where(r => r.userId === user.id && r.questionId === questionId).sortBy(_.time).firstOption
 
   // ======= ATTEMPTS SUMMARY ======
+  case class AnswersSummary(questionId: QuestionId, attempts : Int, correct: Boolean, firstAttempt: DateTime)
+
   def summary(user: User)(implicit session: Session) = {
     val q = answersTable.where(_.ownerId === user.id).groupBy(a => a.questionId)
     val q2 = q.map { case (questionId, v) => (questionId, v.length, v.map(_.correct).max, v.map(_.creationDate).min) }
     val q3 = q2.sortBy(_._4)
-    q2.list.map(e => AnswersSummary(e._1, e._2, toBoolean(e._3), toDatetime(e._4)))
-  }
-
-  case class AnswersSummary(questionId: QuestionId, attempts : Int, correct: Boolean, firstAttempt: DateTime)
-
-  private def toBoolean(v : Option[Boolean]) = v match {
-    case None => false
-    case Some(v) => v
-  }
-
-  private def toDatetime(v : Option[DateTime]) = v match {
-    case None => JodaUTC.zero
-    case Some(v) => v
+    q2.list.map(e => AnswersSummary(e._1, e._2, e._3.get, e._4.get))
   }
 
 }

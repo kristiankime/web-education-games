@@ -2,6 +2,8 @@ package models.question.derivative
 
 import com.artclod.slick.JodaUTC
 import models.organization._
+import models.question.derivative.Answers.AnswersSummary
+import models.question.derivative.Questions.QuestionSummary
 import org.joda.time.{DateTimeZone, DateTime}
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -132,4 +134,74 @@ class QuestionsSpec extends Specification {
 
   }
 
+  "summary" should {
+
+    "be empty if the user has never answers a question" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser
+
+        Questions.summary(user) must beEmpty
+      }
+    }
+
+    "return answer if there is one" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+
+        val user = DBTest.newFakeUser
+        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 1, x, false, JodaUTC(1))))
+      }
+    }
+
+    "collapse all answers for one question into a row" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+
+        val user = DBTest.newFakeUser
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, x, true, JodaUTC(1))))
+      }
+    }
+
+    "not count answers from other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+
+        val user = DBTest.newFakeUser
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+
+        val user2 = DBTest.newFakeUser
+        val answer = Answers.createAnswer(TestAnswer(owner = user2.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, x, true, JodaUTC(1))))
+      }
+    }
+
+    "return one row per question" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+        val question2 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+
+        val user = DBTest.newFakeUser
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(3)))
+
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(2)))
+
+        Questions.summary(user) must beEqualTo(List(
+          QuestionSummary(question1.id, 2, x, true, JodaUTC(1)),
+          QuestionSummary(question2.id, 1, x, false, JodaUTC(2))
+        ))
+      }
+    }
+  }
 }

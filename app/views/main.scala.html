@@ -1,6 +1,7 @@
 @(title: String, headers: Html*)(content: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.user.UserPimped
+@import views.html.tag.skillLevel
 
 <!DOCTYPE html>
 
@@ -34,6 +35,7 @@
                 Version: @controllers.Application.version.toString
                 [<a href="@routes.Home.userInfo">@user.name</a>]
                 [<a href="@securesocial.controllers.routes.LoginPage.logout">logout</a>]
+                Skill Level: @skillLevel(user)
             </div>
         </header>
         <hr class="header-end">

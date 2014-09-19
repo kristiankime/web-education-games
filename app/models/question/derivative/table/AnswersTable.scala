@@ -1,13 +1,14 @@
 package models.question.derivative.table
 
-import org.joda.time.DateTime
+import com.artclod.slick.NumericBoolean.boolean2DBNumber
 import com.artclod.mathml.scalar._
 import com.artclod.slick.JodaUTC._
-import play.api.db.slick.Config.driver.simple._
-import scala.slick.model.ForeignKeyAction
 import models.question.derivative.table.MathMLMapper._
 import models.question.derivative._
 import models.support._
+import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple.{booleanColumnType => _, _}
+import scala.slick.model.ForeignKeyAction
 import service.table.UsersTable
 
 class AnswersTable(tag: Tag) extends Table[Answer](tag, "derivative_answers") {
@@ -16,7 +17,7 @@ class AnswersTable(tag: Tag) extends Table[Answer](tag, "derivative_answers") {
 	def ownerId = column[UserId]("owner", O.NotNull)
 	def mathML = column[MathMLElem]("mathml", O.NotNull)
 	def rawStr = column[String]("rawstr", O.NotNull)
-	def correct = column[Boolean]("correct", O.NotNull)
+	def correct = column[Boolean]("correct", O.NotNull) // Note the import com.artclod.slick.NumericBoolean.boolean2DBNumber this is represented in the DB as a number
 	def creationDate = column[DateTime]("creation_date", O.NotNull)
 
 	def * = (id, ownerId, questionId, mathML, rawStr, correct, creationDate) <> (Answer.tupled, Answer.unapply _)

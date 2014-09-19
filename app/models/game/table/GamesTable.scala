@@ -15,7 +15,9 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def id = column[GameId]("id", O.PrimaryKey, O.AutoInc)
   def requestDate = column[DateTime]("request_date")
   def requestor = column[UserId]("requestor")
+  def requestorSkill = column[Double]("requestorSkill")
   def requestee = column[UserId]("requestee")
+  def requesteeSkill = column[Double]("requesteeSkill")
   def response = column[GameResponseStatus]("response")
   def course = column[Option[CourseId]]("course")
   def requestorQuiz = column[Option[QuizId]]("requestor_quiz")
@@ -24,9 +26,15 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def requesteeQuizDone = column[Boolean]("requestee_quiz_done")
   def requesteeFinished = column[Boolean]("requestee_finished")
   def requestorFinished = column[Boolean]("requestor_finished")
+  def requesteeStudentPoints = column[Option[Double]]("requestee_student_points")
+  def requesteeTeacherPoints = column[Option[Double]]("requestee_teacher_points")
+  def requestorStudentPoints = column[Option[Double]]("requestor_student_points")
+  def requestorTeacherPoints = column[Option[Double]]("requestor_teacher_points")
   def finishedDate = column[Option[DateTime]]("finished_date")
 
-  def * = (id, requestDate, requestor, requestee, response, course, requestorQuiz, requestorQuizDone, requesteeQuiz, requesteeQuizDone, requesteeFinished, requestorFinished, finishedDate) <> (Game.tupled, Game.unapply _)
+  def * = (id, requestDate, requestor, requestorSkill, requestee, requesteeSkill, response, course,
+    requestorQuiz, requestorQuizDone, requesteeQuiz, requesteeQuizDone,
+    requesteeFinished, requestorFinished, requesteeStudentPoints, requesteeTeacherPoints, requestorStudentPoints, requestorTeacherPoints, finishedDate) <> (Game.tupled, Game.unapply _)
 
   def requestorFK = foreignKey("games_requestor_fk", requestor, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def requesteeFK = foreignKey("games_requestee_fk", requestee, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)

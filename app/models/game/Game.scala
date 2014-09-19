@@ -12,7 +12,9 @@ import service.table.UsersTable
 case class Game(id: GameId = null,
                 requestDate: DateTime,
                 requestorId: UserId,
+                requestorSkill: Double = 0,
                 requesteeId: UserId,
+                requesteeSkill: Double = 0,
                 response: GameResponseStatus = Requested,
                 courseId: Option[CourseId] = None,
                 requestorQuizId: Option[QuizId] = None,
@@ -21,6 +23,10 @@ case class Game(id: GameId = null,
                 requesteeQuizDone: Boolean = false,
                 requesteeFinished: Boolean = false,
                 requestorFinished: Boolean = false,
+                requesteeStudentPoints: Option[Double] = None,
+                requesteeTeacherPoints: Option[Double] = None,
+                requestorStudentPoints: Option[Double] = None,
+                requestorTeacherPoints: Option[Double] = None,
                 finishedDate: Option[DateTime] = None) {
 
   def isRequestor(user: User) = user.id match {

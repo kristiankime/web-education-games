@@ -16,6 +16,10 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def results(student: User)(implicit session: Session) = StudentQuizResults(student, this, questions.map(v => v.results(student)))
 
+  def summary(student: User)(implicit session: Session) = Questions.summary(student, this)
+
+  def summary(student: User, asOf: DateTime)(implicit session: Session) = Questions.summary(student, asOf, this)
+
   def questions(implicit session: Session) = Quizzes.questions(id)
 
   def previousQuestion(question: Question)(implicit session: Session) = questions.elementBefore(question)

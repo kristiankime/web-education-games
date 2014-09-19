@@ -46,5 +46,5 @@ case class QuestionResults(answerer: User, question: Question, answers: List[Ans
     }
   }
 
-  def teacherScore(implicit session: Session): Option[Double] = question.difficulty.map(d => if (correct) d else 1.0 - d)
+  def teacherScore(implicit session: Session): Option[Double] = Some(0) // question.difficulty.map(d => if (correct) d else 1.0 - d)
 }

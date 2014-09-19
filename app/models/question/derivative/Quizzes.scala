@@ -10,6 +10,7 @@ import models.organization.table._
 import models.question.derivative.table._
 import viewsupport.question.derivative._
 import com.google.common.annotations.VisibleForTesting
+import models.user.UserPimped
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
@@ -36,6 +37,15 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
     (courseAccess :+ directAccess) max
   }
 
+  def studentScore(student: User)(implicit session: Session) = {
+    val summaries = Questions.summary(student, this)
+    summaries.map(_.studentScore).sum / summaries.size.toDouble
+  }
+
+  def teacherScore(student: User, studentSkillLevel: Double)(implicit session: Session) = {
+    val summaries = Questions.summary(student, this)
+    summaries.map(_.teacherScore(studentSkillLevel)).sum / summaries.size.toDouble
+  }
 }
 
 object Quizzes {
@@ -92,5 +102,10 @@ object Quizzes {
   // ======= AUTHORIZATION ======
   def linkAccess(quiz: Quiz)(implicit user: User, session: Session) =
     usersQuizzesTable.where(uq => uq.userId === user.id && uq.quizId === quiz.id).firstOption.map(_.access).toAccess
+
+  // ======= Scoring ======
+  def studentScore(quiz: Quiz, user: User)(implicit session: Session) = {
+    quiz.questions.map( _.results(user))
+  }
 
 }

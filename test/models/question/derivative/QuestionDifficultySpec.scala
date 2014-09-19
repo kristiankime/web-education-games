@@ -18,7 +18,7 @@ import com.artclod.mathml.scalar._
 class QuestionDifficultySpec extends Specification {
 
   private implicit class QD(eq: MathMLElem){
-    def difficulty = QuestionDifficulty.d(eq)
+    def difficulty = QuestionDifficulty(eq)
   }
 
 	"difficulty" should {

@@ -9,8 +9,6 @@ import com.google.common.annotations.VisibleForTesting
 object QuestionDifficulty {
   private val chainRulePoints = 13
 
-  def apply(question: Question): Int = d(question.mathML)
-
   object MathType extends Enumeration {
     type MathType = Value
     val Con, Var, Fun = Value
@@ -24,9 +22,8 @@ object QuestionDifficulty {
 
   import MathType._
 
-  @VisibleForTesting
-  def d(e: MathMLElem): Int = e match {
-      case m: Math => d(m.value)
+  def apply(e: MathMLElem): Int = e match {
+      case m: Math => apply(m.value)
 
       case m: Constant => 1
 
@@ -35,113 +32,113 @@ object QuestionDifficulty {
       case m : UnaryFunction => MathType(m.v) match {
         case Con => 1
         case Var => 8
-        case Fun => 8 + chainRulePoints + d(m.v)
+        case Fun => 8 + chainRulePoints + apply(m.v)
       }
 
       case ApplyPlus(first, second) => (MathType(first), MathType(second)) match {
         case (Con, Con) => 2
         case (Con, Var) => 2
-        case (Con, Fun) => 1 + d(second)
+        case (Con, Fun) => 1 + apply(second)
 
         case (Var, Con) => 2
         case (Var, Var) => 2
-        case (Var, Fun) => 1 + d(second)
+        case (Var, Fun) => 1 + apply(second)
 
-        case (Fun, Con) => d(first) + 1
-        case (Fun, Var) => d(first) + 1
-        case (Fun, Fun) => d(first) + 3 + d(second)
+        case (Fun, Con) => apply(first) + 1
+        case (Fun, Var) => apply(first) + 1
+        case (Fun, Fun) => apply(first) + 3 + apply(second)
       }
 
       case ApplyMinusB(first, second) => (MathType(first), MathType(second)) match {
         case (Con, Con) => 2
         case (Con, Var) => 2
-        case (Con, Fun) => 1 + d(second)
+        case (Con, Fun) => 1 + apply(second)
 
         case (Var, Con) => 2
         case (Var, Var) => 2
-        case (Var, Fun) => 1 + d(second)
+        case (Var, Fun) => 1 + apply(second)
 
-        case (Fun, Con) => d(first) + 1
-        case (Fun, Var) => d(first) + 1
-        case (Fun, Fun) => d(first) + 3 + d(second)
+        case (Fun, Con) => apply(first) + 1
+        case (Fun, Var) => apply(first) + 1
+        case (Fun, Fun) => apply(first) + 3 + apply(second)
       }
 
       case ApplyMinusU(value) => MathType(value) match {
         case Con => 1
         case Var => 2
-        case Fun => 1 + d(value)
+        case Fun => 1 + apply(value)
       }
 
       case ApplyPower(base, exp) => (MathType(base), MathType(exp)) match {
         case (Con, Con) => 2
         case (Con, Var) => 10
-        case (Con, Fun) => 10 + d(exp)
+        case (Con, Fun) => 10 + apply(exp)
 
         case (Var, Con) => 2
         case (Var, Var) => 21
-        case (Var, Fun) => 21 + d(exp)
+        case (Var, Fun) => 21 + apply(exp)
 
-        case (Fun, Con) => 2 + chainRulePoints + d(base)
-        case (Fun, Var) => 21 + chainRulePoints + d(base)
-        case (Fun, Fun) => 21 + chainRulePoints + d(base) + d(exp)
+        case (Fun, Con) => 2 + chainRulePoints + apply(base)
+        case (Fun, Var) => 21 + chainRulePoints + apply(base)
+        case (Fun, Fun) => 21 + chainRulePoints + apply(base) + apply(exp)
       }
 
       case ApplyTimes(first, second) => (MathType(first), MathType(second)) match {
         case (Con, Con) => 2
         case (Con, Var) => 2
-        case (Con, Fun) => 1 + d(second)
+        case (Con, Fun) => 1 + apply(second)
 
         case (Var, Con) => 2
         case (Var, Var) => 2
-        case (Var, Fun) => 5 + d(second)
+        case (Var, Fun) => 5 + apply(second)
 
-        case (Fun, Con) => d(first) + 1
-        case (Fun, Var) => d(first) + 5
-        case (Fun, Fun) => d(first) + 5 + d(second)
+        case (Fun, Con) => apply(first) + 1
+        case (Fun, Var) => apply(first) + 5
+        case (Fun, Fun) => apply(first) + 5 + apply(second)
       }
 
       case ApplyDivide(numerator, denominator) => (MathType(numerator), MathType(denominator)) match {
         case (Con, Con) => 2
         case (Con, Var) => 3
-        case (Con, Fun) => 8 + d(denominator)
+        case (Con, Fun) => 8 + apply(denominator)
 
         case (Var, Con) => 2
         case (Var, Var) => 2
-        case (Var, Fun) => 1 + 8 + d(denominator)
+        case (Var, Fun) => 1 + 8 + apply(denominator)
 
-        case (Fun, Con) => d(numerator) + 1
-        case (Fun, Var) => d(numerator) + 8 + 1
-        case (Fun, Fun) => d(numerator) + 8 + d(denominator)
+        case (Fun, Con) => apply(numerator) + 1
+        case (Fun, Var) => apply(numerator) + 8 + 1
+        case (Fun, Fun) => apply(numerator) + 8 + apply(denominator)
       }
 
       case m: ApplyLn => MathType(m.v) match {
         case Con => 2
         case Var => 8
-        case Fun => 8 + chainRulePoints + d(m.v)
+        case Fun => 8 + chainRulePoints + apply(m.v)
       }
 
       case m: ApplyLog10 => MathType(m.v) match {
         case Con => 2
         case Var => 10
-        case Fun => 10 + chainRulePoints + d(m.v)
+        case Fun => 10 + chainRulePoints + apply(m.v)
       }
 
       case m: ApplyLog => MathType(m.v) match {
         case Con => 2
         case Var => 10
-        case Fun => 10 + chainRulePoints + d(m.v)
+        case Fun => 10 + chainRulePoints + apply(m.v)
       }
 
       case m: ApplySqrt => MathType(m.v) match {
         case Con => 2
         case Var => 4
-        case Fun => 4 + chainRulePoints + d(m.v)
+        case Fun => 4 + chainRulePoints + apply(m.v)
       }
 
       case m: NthRoot => MathType(m.v) match {
         case Con => 3
         case Var => 5
-        case Fun => 5 + chainRulePoints + d(m.v)
+        case Fun => 5 + chainRulePoints + apply(m.v)
       }
 
       case _ => throw new IllegalStateException("Could not find difficulty, type not recognized [" + e + "]")

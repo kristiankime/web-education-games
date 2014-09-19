@@ -7,6 +7,7 @@ import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick.Config.driver.simple.Query
 import service._
 import service.table.UsersTable
 import viewsupport.question.derivative.QuestionResults
@@ -21,11 +22,7 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
 
   def answersAndOwners(implicit session: Session) = Questions.answersAndOwners(id)
 
-  def difficulty(implicit session: Session): Option[Double] = {
-    val difficulties = Questions.answerers(id).flatMap(results(_).score).map(1d - _)
-    if (difficulties.isEmpty) None
-    else Some(difficulties.sum / difficulties.size)
-  }
+  def difficulty : Double = QuestionDifficulty(mathML)
 
   def results(user: User)(implicit session: Session) = QuestionResults(user, this, answers(user), start(user))
 
@@ -37,6 +34,23 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
     val cAccess = course.access
     val qAccess = Access(user, ownerId)
     Seq(cAccess, qAccess).max
+  }
+
+}
+
+case class QuestionSummary(questionId: QuestionId, attempts: Int, mathMl: MathMLElem, correct: Boolean, firstAttempt: DateTime) {
+
+  def difficulty : Double = QuestionDifficulty(mathMl)
+
+  def studentScore = if(correct) 1d else 0d
+
+  def teacherScore(studentSkillLevel: Double) = {
+    val l = studentSkillLevel
+    val d = difficulty
+    val z = l * 1.25 // zoneOfProximalDevelopment
+    val s = math.min(d, z) / z // Scoring
+
+    if(correct) s else 1d - s
   }
 
 }
@@ -87,15 +101,36 @@ object Questions {
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
 
   // ======= Summary ======
-  case class QuestionSummary(questionId: QuestionId, attempts: Int, mathMl: MathMLElem,  correct: Boolean, firstAttempt: DateTime)
-
   def summary(user: User)(implicit session: Session) = {
-    val q: lifted.Query[(QuestionsTable, AnswersTable), (Question, Answer)] =
-      (for {q <- questionsTable;
-            a <- answersTable if q.id === a.questionId && a.ownerId === user.id} yield (q, a))
-    val q2 = q.groupBy(_._1.id)
+    val q: Query[(QuestionsTable, AnswersTable), (Question, Answer)] =
+      (for {q <- questionsTable; a <- answersTable if q.id === a.questionId && a.ownerId === user.id} yield (q, a))
+    summaryFor(q)
+  }
+
+  def summary(user: User, asOf: DateTime)(implicit session: Session) = {
+    val q: Query[(QuestionsTable, AnswersTable), (Question, Answer)] =
+      (for {q <- questionsTable; a <- answersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf} yield (q, a))
+    summaryFor(q)
+  }
+
+  def summary(user: User, quiz: Quiz)(implicit session: Session) = {
+    val q: Query[(QuestionsTable, AnswersTable), (Question, Answer)] =
+      (for {z <- quizzesQuestionsTable if z.quizId === quiz.id; q <- questionsTable if z.questionId === q.id; a <- answersTable if q.id === a.questionId && a.ownerId === user.id} yield (q, a))
+    summaryFor(q)
+  }
+
+  def summary(user: User, asOf: DateTime, quiz: Quiz)(implicit session: Session) = {
+    val q: Query[(QuestionsTable, AnswersTable), (Question, Answer)] =
+      (for {z <- quizzesQuestionsTable if z.quizId === quiz.id; q <- questionsTable if z.questionId === q.id;  a <- answersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf} yield (q, a))
+    summaryFor(q)
+  }
+
+  private def summaryFor(q: Query[(QuestionsTable, AnswersTable), (Question, Answer)])(implicit session: Session) : List[QuestionSummary] = {
+    // This line is mostly type information for the IDE
+    val q2 : Query[(Column[QuestionId], Query[(QuestionsTable, AnswersTable),(Question, Answer)]),(QuestionId, Query[(QuestionsTable, AnswersTable),(Question, Answer)])] = q.groupBy(_._1.id)
     val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
     q3.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, r._5.get))
   }
+
 }
 

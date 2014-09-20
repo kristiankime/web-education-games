@@ -3,7 +3,7 @@ package models.question.derivative
 import com.artclod.slick.JodaUTC
 import models.organization._
 import models.question.derivative.Answers.AnswersSummary
-import models.question.derivative.Questions.QuestionSummary
+import models.question.derivative.QuestionSummary
 import org.joda.time.{DateTimeZone, DateTime}
 import org.specs2.mutable._
 import org.specs2.runner._

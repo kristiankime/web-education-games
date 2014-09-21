@@ -1,21 +1,18 @@
 package models.question.derivative
 
-import com.artclod.slick.JodaUTC
-import models.organization._
-import models.question.derivative.Answers.AnswersSummary
-import models.question.derivative.QuestionSummary
-import org.joda.time.{DateTimeZone, DateTime}
-import org.specs2.mutable._
-import org.specs2.runner._
-import org.junit.runner._
-import play.api.test._
 import com.artclod.mathml.scalar._
-import models.support._
+import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest._
-import service._
-import play.api.db.slick.DB
+import models.support.QuestionId
+import org.joda.time.{DateTimeZone, DateTime}
+import org.junit.runner._
+import org.specs2.mutable._
+import org.specs2.runner._
 import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick.DB
+import play.api.test._
+import service._
 import viewsupport.question.derivative.QuestionResults
 
 @RunWith(classOf[JUnitRunner])
@@ -203,5 +200,115 @@ class QuestionsSpec extends Specification {
         ))
       }
     }
+  }
+
+  "summary" should {
+
+    "find nothing if user has never answered any questions " in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+
+        Questions.summary(user) must beEmpty
+      }
+    }
+
+    "find one answer if that's all the user has done" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question = Questions.create(TestQuestion(owner = user.id))
+        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
+
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question.id, 1, question.mathML, false, answer1.creationDate)))
+      }
+    }
+
+    "find multiple answers to multiple questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question1 = Questions.create(TestQuestion(owner = user.id))
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = Questions.create(TestQuestion(owner = user.id))
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        Questions.summary(user) must beEqualTo(List(
+          QuestionSummary(question1.id, 2, question1.mathML, true, answer1_1.creationDate),
+          QuestionSummary(question2.id, 1, question2.mathML, false, answer2_1.creationDate)
+        ))
+      }
+    }
+
+    "ignore answers other users have made" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question1 = Questions.create(TestQuestion(owner = user.id))
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = Questions.create(TestQuestion(owner = user.id))
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        Questions.summary(user) must beEqualTo(List(
+          QuestionSummary(question1.id, 2, question1.mathML, true, answer1_1.creationDate),
+          QuestionSummary(question2.id, 1, question1.mathML, false, answer2_1.creationDate)
+        ))
+      }
+    }
+
+    "summarize answers from the specified quiz only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val quiz = Quizzes.create(TestQuiz(owner = user.id)) // NOTE: In the quiz
+        val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = Questions.create(TestQuestion(owner = user.id)) // NOTE: Not in quiz
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        Questions.summary(user, quiz) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, true, answer1_1.creationDate)))
+      }
+    }
+
+    "summarize answers before asOf date only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question1 = Questions.create(TestQuestion(owner = user.id))
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = Questions.create(TestQuestion(owner = user.id))
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        Questions.summary(user, JodaUTC(1)) must beEqualTo(List(
+          QuestionSummary(question1.id, 1, question1.mathML, false, answer1_1.creationDate),
+          QuestionSummary(question2.id, 1, question1.mathML, false, answer2_1.creationDate)
+        ))
+      }
+    }
+
+    "summarize answers from the specified quiz and before asOf date only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val quiz = Quizzes.create(TestQuiz(owner = user.id)) // NOTE: In the quiz
+        val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
+        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = Questions.create(TestQuestion(owner = user.id)) // NOTE: Not in quiz
+        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        Questions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, false, answer1_1.creationDate)))
+      }
+    }
+
   }
 }

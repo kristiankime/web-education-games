@@ -129,7 +129,8 @@ object Questions {
     // This line is mostly type information for the IDE
     val q2 : Query[(Column[QuestionId], Query[(QuestionsTable, AnswersTable),(Question, Answer)]),(QuestionId, Query[(QuestionsTable, AnswersTable),(Question, Answer)])] = q.groupBy(_._1.id)
     val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
-    q3.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, r._5.get))
+    val q4 = q3.sortBy(_._5)
+    q4.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, r._5.get))
   }
 
 }

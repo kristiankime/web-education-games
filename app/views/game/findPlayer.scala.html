@@ -23,13 +23,6 @@
 	    <input type="submit" value="Submit">
     }
     }
-
-    <h5>students except</h5>
-    <ul>
-    @for(student <- models.organization.Courses.studentsExcept(course.id, user.id)){
-        <li>@student.name * @models.game.Games.activeGame(user.id, student.id).isEmpty * @models.game.Games.activeGame(user.id, student.id)</li>
-    }
-    </ul>
 }
 
 }

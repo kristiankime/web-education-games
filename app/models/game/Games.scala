@@ -1,10 +1,12 @@
 package models.game
 
 import com.artclod.slick.JodaUTC
-import models.organization.Courses
+import models.organization.{Course, Courses}
 import models.organization.table._
 import models.support._
 import play.api.db.slick.Config.driver.simple._
+import service.User
+import models.user.UserPimped
 
 object Games {
 
@@ -15,11 +17,19 @@ object Games {
     Courses.studentsExcept(courseId, requestorId).filter(u => activeGame(requestorId, u.id).isEmpty)
 
   // ====== Request Game ======
-  def request(requestorId: UserId, requesteeId: UserId, courseId: CourseId)(implicit session: Session): Game =
-    request(Game(requestDate = JodaUTC.now, requestorId = requestorId, requesteeId = requesteeId, courseId = Some(courseId)))
+  def request(requestor: User, requestee: User, course: Course)(implicit session: Session): Game = {
+    val now = JodaUTC.now
+    request(Game(requestDate = now, courseId = Some(course.id),
+      requestorId = requestor.id, requestorSkill = requestor.skillLevel(now),
+      requesteeId = requestee.id, requesteeSkill = requestee.skillLevel(now)))
+  }
 
-  def request(requestorId: UserId, requesteeId: UserId)(implicit session: Session): Game =
-    request(Game(requestDate = JodaUTC.now, requestorId = requestorId, requesteeId = requesteeId))
+  def request(requestor: User, requestee: User)(implicit session: Session): Game = {
+    val now = JodaUTC.now
+    request(Game(requestDate = now,
+      requestorId = requestor.id, requestorSkill = requestor.skillLevel(now),
+      requesteeId = requestee.id, requesteeSkill = requestee.skillLevel(now)))
+  }
 
   private def request(game: Game)(implicit session: Session): Game = {
     val gameId = (gamesTable returning gamesTable.map(_.id)) += game

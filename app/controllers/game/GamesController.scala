@@ -7,6 +7,7 @@ import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization._
 import models.support._
+import models.user.Users
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -44,12 +45,11 @@ object GamesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) => GameRequest.form.bindFromRequest.fold(
         errors => BadRequest(views.html.errors.formErrorPage(errors)),
-        form => {
-          val otherUserId = form
+        otherUserId => {
           if (Games.activeGame(user.id, otherUserId).nonEmpty) {
             BadRequest(views.html.errors.errorPage(new IllegalStateException("Users already had an active game [" + user.id + "] [" + otherUserId + "]")))
           } else {
-            Games.request(user.id, otherUserId, course.id)
+            Games.request(user, Users(otherUserId).get, course)
             Redirect(controllers.organization.routes.CoursesController.view(organization.id, course.id))
           }
         })

@@ -5,6 +5,7 @@ import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest._
 import models.question.derivative.Answers.AnswersSummary
+import models.question.derivative.result.QuestionResults
 import models.support._
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.runner._
@@ -14,7 +15,6 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test._
 import service._
-import viewsupport.question.derivative.QuestionResults
 
 @RunWith(classOf[JUnitRunner])
 class AnswersSpec extends Specification {

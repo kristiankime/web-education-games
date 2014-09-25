@@ -26,9 +26,9 @@
     @for(requesteeQuiz <- gameState.game.requesteeQuiz ) {
     @defining(gameState.game.requestor) { requestor =>
     @defining(UserPimped(requestor).skillLevel) { requestorSkill =>
-        <section>
-            Your score as a teacher was @percentDisplay(requesteeQuiz.teacherScore(requestor, requestorSkill))
-        </section>
+    <section>
+        Your score as a teacher was @percentDisplay(requesteeQuiz.teacherScore(requestor, requestorSkill))
+    </section>
     }
     }
     }

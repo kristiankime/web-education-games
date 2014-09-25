@@ -3,6 +3,7 @@ package models.question.derivative
 import com.artclod.mathml.scalar._
 import models.organization.Course
 import models.question.AsciiMathML
+import models.question.derivative.result.QuestionResults
 import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime
@@ -10,7 +11,7 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.Config.driver.simple.Query
 import service._
 import service.table.UsersTable
-import viewsupport.question.derivative.QuestionResults
+import models.question.derivative.result.QuestionResults
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import models.question.derivative.table.MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem

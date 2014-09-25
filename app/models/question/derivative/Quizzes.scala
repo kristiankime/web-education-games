@@ -1,6 +1,7 @@
 package models.question.derivative
 
 import com.artclod.collection._
+import models.question.derivative.result.StudentQuizResults
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
 import service._

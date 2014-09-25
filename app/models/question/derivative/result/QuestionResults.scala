@@ -1,11 +1,11 @@
-package viewsupport.question.derivative
+package models.question.derivative.result
 
-import play.api.db.slick.Config.driver.simple._
 import models.question.Status
 import models.question.derivative.{Answer, Question}
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple.Session
 import service.User
-
+import viewsupport.question.derivative.{Correct, Ongoing, Unstarted}
 
 case class QuestionResults(answerer: User, question: Question, answers: List[Answer], startTime: Option[DateTime]) {
   require(answers.forall(_.ownerId == answerer.id), "All the answers must be from the same user")

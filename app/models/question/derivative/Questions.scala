@@ -77,13 +77,13 @@ object Questions {
 
   def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(a => a.questionId === qid && a.ownerId === owner.id).sortBy(_.creationDate).list
 
-  def answers(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).list
+  def answers(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).sortBy(_.creationDate).list
 
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- answersTable if a.questionId === qid;
       u <- UsersTable.userTable if u.id === a.ownerId
-    ) yield (a, u)).sortBy(_._2.lastName).list
+    ) yield (a, u)).sortBy( aU => (aU._2.email, aU._1.creationDate)).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) = {
     (for (
@@ -94,7 +94,7 @@ object Questions {
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = answersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
-    val users = service.table.UsersTable.userTable.where(_.id in userIds).sortBy(_.lastName)
+    val users = service.table.UsersTable.userTable.where(_.id in userIds).sortBy(_.email)
     users.list
   }
 

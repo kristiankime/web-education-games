@@ -1,0 +1,4 @@
+@(scoreOp: Option[Double])@scoreOp match {
+    case None => { NA }
+    case Some(score) => { @tag.percentDisplay(score) }
+}

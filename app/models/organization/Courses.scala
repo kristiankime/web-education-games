@@ -57,12 +57,12 @@ object Courses {
   def students(courseId: CourseId)(implicit session: Session) =
   (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
         u <- userTable if u.id === uc.userId
-  ) yield u).list
+  ) yield u).sortBy(_.email).list
 
   def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) =
    (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
          u <- userTable if (u.id === uc.userId) && (u.id =!= userId)
-   ) yield u).list
+   ) yield u).sortBy(_.email).list
 
 
   // ======= AUTHORIZATION ======
@@ -72,8 +72,8 @@ object Courses {
 	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) : User = {
 		if (course.access < access) {
       usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
-				case Some(u2c) if u2c.access < access => usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access))
-				case None => usersCoursesTable.insert(User2Course(user.id, course.id, access))
+				case Some(u2c) if u2c.access < access => usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access, 1))
+				case None => usersCoursesTable.insert(User2Course(user.id, course.id, access, 1))
 				case _ => {}
 			}
 		}

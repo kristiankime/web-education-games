@@ -33,18 +33,21 @@ case class QuestionResults(answerer: User, question: Question, answers: List[Ans
     if (num == -1) None else Some(num + 1)
   }
 
-  val score: Option[Double] = if (!attempted) None
-  else {
-    numAttemptsToCorrect match {
-      case None => Some(0.0) // No correct answers is a 0
-      case Some(1) => Some(1.0)
-      case Some(2) => Some(1.0) // First error free
-      case Some(3) => Some(0.8) // all others -.2
-      case Some(4) => Some(0.6)
-      case Some(5) => Some(0.4)
-      case Some(_) => Some(0.2) // Always get at least .2 if you get it right
-    }
-  }
+  val score: Option[Double] =
+    if (!attempted) None
+    else if(correct) Some(1d)
+    else Some(0d)
+//  else {
+//    numAttemptsToCorrect match {
+//      case None => Some(0.0) // No correct answers is a 0
+//      case Some(1) => Some(1.0)
+//      case Some(2) => Some(1.0) // First error free
+//      case Some(3) => Some(0.8) // all others -.2
+//      case Some(4) => Some(0.6)
+//      case Some(5) => Some(0.4)
+//      case Some(_) => Some(0.2) // Always get at least .2 if you get it right
+//    }
+//  }
 
   def teacherScore(implicit session: Session): Option[Double] = Some(0) // question.difficulty.map(d => if (correct) d else 1.0 - d)
 }

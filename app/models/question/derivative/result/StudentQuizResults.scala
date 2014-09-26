@@ -9,6 +9,6 @@ case class StudentQuizResults(student: User, quiz: Quiz, results: List[QuestionR
   val score = {
     val scores = results.flatMap(_.score)
     if (scores.isEmpty) None
-    else Some(scores.sum / scores.size)
+    else Some(scores.sum / results.size)
   }
 }

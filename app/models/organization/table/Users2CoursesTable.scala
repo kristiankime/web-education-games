@@ -7,13 +7,14 @@ import service._
 import models.support._
 import models.support.table.{UserLinkRow, UserLink}
 
-case class User2Course(userId: UserId, courseId: CourseId, access: Access) extends UserLinkRow
+case class User2Course(userId: UserId, courseId: CourseId, access: Access, section: Int) extends UserLinkRow
 
 class Users2CoursesTable(tag: Tag) extends Table[User2Course](tag, "users_2_courses") with UserLink[User2Course, CourseId] {
-	def userId = column[UserId]("user_id", O.NotNull)
-	def id = column[CourseId]("course_id", O.NotNull)
-	def access = column[Access]("access", O.NotNull)
-	def * = (userId, id, access) <> (User2Course.tupled, User2Course.unapply _)
+	def userId = column[UserId]("user_id")
+	def id = column[CourseId]("course_id")
+	def access = column[Access]("access")
+  def section = column[Int]("section")
+	def * = (userId, id, access, section) <> (User2Course.tupled, User2Course.unapply _)
 
 	def pk = primaryKey("users_2_courses_pk", (userId, id))
 

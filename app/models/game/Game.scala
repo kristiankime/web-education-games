@@ -54,15 +54,15 @@ case class Game(id: GameId = null,
 
   def requesteeQuiz(implicit session: Session) = requesteeQuizId.flatMap(Quizzes(_))
 
-  def requestorQuiz(quizId: QuizId)(implicit session: Session) = requestorQuizId match {
-      case Some(`quizId`) => Quizzes(quizId)
+  def requestorQuizIfDone(quizId: QuizId)(implicit session: Session) = (requestorQuizDone, requestorQuizId) match {
+      case (true, Some(`quizId`)) => Quizzes(quizId)
       case _ => None
     }
 
-  def requesteeQuiz(quizId: QuizId)(implicit session: Session) = requesteeQuizId match {
-    case Some(`quizId`) => Quizzes(quizId)
-    case _ => None
-  }
+  def requesteeQuizIfDone(quizId: QuizId)(implicit session: Session) = (requesteeQuizDone, requesteeQuizId) match {
+      case (true, Some(`quizId`)) => Quizzes(quizId)
+      case _ => None
+    }
 
   def otherPlayer(user: User)(implicit session: Session) = user.id match {
     case `requestorId` => requestee

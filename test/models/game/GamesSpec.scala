@@ -1,17 +1,15 @@
-package models.organization
+package models.game
 
-import com.artclod.slick.JodaUTC
-import models.DBTest
-import models.DBTest.inMemH2
-import models.DBTest.newFakeUser
-import models.game.{Games, GameRequested}
+import models.DBTest.{inMemH2, newFakeUser}
+import models.game.GameRole._
+import models.organization._
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test.{FakeApplication, _}
-import service.{UserTest, _}
+import service._
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
@@ -77,7 +75,7 @@ class GamesSpec extends Specification {
     }
   }
 
-	"request (course)" should {
+  "request (course)" should {
     "setup a request associated with the two users and the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val (organization, course) = organizationAndCourse
@@ -187,6 +185,21 @@ class GamesSpec extends Specification {
         Games.active(requestee.id)(session) must beEmpty
       }
     }
+  }
+
+  "gameRole" should {
+
+    "return correct role" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val (requestor, requestee, other) = (newFakeUser, newFakeUser, newFakeUser)
+        val game = Games.request(requestor, requestee)
+
+        game.gameRole(requestor) must beEqualTo(Requestor)
+        game.gameRole(requestee) must beEqualTo(Requestee)
+        game.gameRole(other) must beEqualTo(Unrelated)
+      }
+    }
+
   }
 
 }

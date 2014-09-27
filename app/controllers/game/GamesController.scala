@@ -139,13 +139,13 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
-        (game.notFinished, game.gameRole(user), game.requesteeQuiz(quizId), game.requestorQuiz(quizId)) match {
-          case (true, _, _, _) => BadRequest(views.html.errors.notFoundPage("The game with id=[" + gameId + "] was not finished so it's quizzes cannot be reviewed"))
-          case (false, Unrelated, _, _) => throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
-          case (false, Requestor, Some(requesteeQuiz), None) => Ok(views.html.game.review.teacherReview(game, requesteeQuiz, game.requestee))
-          case (false, Requestor, None, Some(requestorQuiz)) => Ok(views.html.game.review.studentReview(game, requestorQuiz, game.requestee))
-          case (false, Requestee, Some(requesteeQuiz), None) => Ok(views.html.game.review.studentReview(game, requesteeQuiz, game.requestor))
-          case (false, Requestee, None, Some(requestorQuiz)) => Ok(views.html.game.review.teacherReview(game, requestorQuiz, game.requestor))
+        (game.gameRole(user), game.requesteeQuizIfDone(quizId), game.requestorQuizIfDone(quizId)) match {
+//          case (true, _, _, _) => BadRequest(views.html.errors.notFoundPage("The game with id=[" + gameId + "] was not finished so it's quizzes cannot be reviewed"))
+          case (Unrelated, _, _) => throw new IllegalStateException("user was not requestee or requestor (user = [" + user + "] game = [" + game + "])")
+          case (Requestor, Some(requesteeQuiz), None) => Ok(views.html.game.review.studentReview(game, requesteeQuiz, game.requestee))
+          case (Requestor, None, Some(requestorQuiz)) => Ok(views.html.game.review.teacherReview(game, requestorQuiz, game.requestee))
+          case (Requestee, Some(requesteeQuiz), None) => Ok(views.html.game.review.teacherReview(game, requesteeQuiz, game.requestor))
+          case (Requestee, None, Some(requestorQuiz)) => Ok(views.html.game.review.studentReview(game, requestorQuiz, game.requestor))
           case error => throw new IllegalStateException("This case should not be possible programing error " + error)
         }
       }

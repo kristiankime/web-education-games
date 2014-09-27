@@ -1,0 +1,4 @@
+@(datetimeOp: Option[org.joda.time.DateTime])@datetimeOp match {
+    case Some(datetime) => {@views.html.tag.datetime(datetime)}
+    case None => {NA}
+}

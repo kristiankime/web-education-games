@@ -1,0 +1,34 @@
+@(game: models.game.Game, quiz: models.question.derivative.Quiz, teacher: service.User)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.GamesController
+@import controllers.game.GameRequest
+@import helper._
+@import models.user.UserPimped
+@import views.html.tag.percentDisplay
+@import views.html.tag.gameLink
+@import views.html.tag.datetimeOp
+
+@main("Student Game Score") {
+
+    <h2> Student Game Score </h2>
+
+    <section>
+        You played a @tag.gameLink("game", game) with @teacher.name on @tag.datetimeOp(game.finishedDate)
+    </section>
+
+    <section>
+        Your results for each question:<br>
+        @defining(quiz.results(user)) { results =>
+        <table>
+            <tr><th>question</th><th>correct</th></tr>
+            @for(result <- results.results) {
+            <tr>
+                <td> @mathml.mathmlContent(result.question) </td>
+                <td> @mathml.correct(result.correct) </td>
+            </tr>
+            }
+        </table>
+        }
+        Your score for this quiz: @tag.percentDisplay(quiz.studentScore(user))<br>
+    </section>
+}

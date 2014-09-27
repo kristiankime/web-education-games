@@ -12,24 +12,19 @@
     <h1>You have finished but @gameState.game.requestor.name still needs to finish your quiz.</h1>
     } else {
     <h1>Congratulations you finished a game with @gameState.game.requestor.name</h1>
-
-    TODO scoring        
     }
-
 
     @for(requestorQuiz <- gameState.game.requestorQuiz ) {
     <section>
-        Your score as a student was @percentDisplay(requestorQuiz.studentScore(user))
+        Your score as a student was @percentDisplay(requestorQuiz.studentScore(user)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>]
     </section>
     }
 
     @for(requesteeQuiz <- gameState.game.requesteeQuiz ) {
     @defining(gameState.game.requestor) { requestor =>
-    @defining(UserPimped(requestor).skillLevel) { requestorSkill =>
     <section>
-        Your score as a teacher was @percentDisplay(requesteeQuiz.teacherScore(requestor, requestorSkill))
+        Your score as a teacher was @percentDisplay(requesteeQuiz.teacherScore(requestor, gameState.game.requestorSkill))
     </section>
-    }
     }
     }
 

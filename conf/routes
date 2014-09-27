@@ -60,6 +60,8 @@ GET         /games/:g/questions/:q                                        contro
 GET         /games/:g/questions/:q/:a                                     controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
 POST        /games/:g/questions/:q/requestee                              controllers.game.GamesRequesteeController.answerQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor                              controllers.game.GamesRequestorController.answerQuestion(g: GameId, q: QuestionId)
+# Review A Game when completed
+GET         /games/:g/quizzes/:z                                          controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
 # ======== START DEPRICATED ========
 # Equation pages

@@ -46,12 +46,12 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def studentScore(student: User)(implicit session: Session) = {
     val summaries = Questions.summary(student, this)
-    summaries.map(_.studentScore).sum / summaries.size.toDouble
+    summaries.map(_.studentScore).sum / questions.size.toDouble
   }
 
   def teacherScore(student: User, studentSkillLevel: Double)(implicit session: Session) = {
     val summaries = Questions.summary(student, this)
-    summaries.map(_.teacherScore(studentSkillLevel)).sum / summaries.size.toDouble
+    summaries.map(_.teacherScore(studentSkillLevel)).sum / questions.size.toDouble
   }
 }
 

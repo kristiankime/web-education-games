@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.User
 import service.table.UsersTable
+import models.game.GameRole._
 
 case class Game(id: GameId = null,
                 requestDate: DateTime,
@@ -39,6 +40,12 @@ case class Game(id: GameId = null,
     case _ => false
   }
 
+  def gameRole(user: User) = user.id match {
+    case `requesteeId` => Requestee
+    case `requestorId` => Requestor
+    case _ => Unrelated
+  }
+
   def requestor(implicit session: Session) = UsersTable.findById(requestorId).get
 
   def requestee(implicit session: Session) = UsersTable.findById(requesteeId).get
@@ -46,6 +53,16 @@ case class Game(id: GameId = null,
   def requestorQuiz(implicit session: Session) = requestorQuizId.flatMap(Quizzes(_))
 
   def requesteeQuiz(implicit session: Session) = requesteeQuizId.flatMap(Quizzes(_))
+
+  def requestorQuiz(quizId: QuizId)(implicit session: Session) = requestorQuizId match {
+      case Some(`quizId`) => Quizzes(quizId)
+      case _ => None
+    }
+
+  def requesteeQuiz(quizId: QuizId)(implicit session: Session) = requesteeQuizId match {
+    case Some(`quizId`) => Quizzes(quizId)
+    case _ => None
+  }
 
   def otherPlayer(user: User)(implicit session: Session) = user.id match {
     case `requestorId` => requestee
@@ -105,4 +122,9 @@ case class Game(id: GameId = null,
     else this
 
   def gameDone = finishedDate.nonEmpty
+
+  def isFinished = finishedDate.nonEmpty
+
+  def notFinished = finishedDate.isEmpty
+
 }

@@ -42,7 +42,7 @@ package object user {
     def skillLevel(asOf: DateTime)(implicit session: Session) : Double = skillLevelPrivate(Questions.summary(user, asOf))
 
     private def skillLevelPrivate(questionSummaries: List[QuestionSummary]) : Double = {
-      val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathMl)).sortWith( _ > _).take(5)
+      val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)
       if(top5.isEmpty) 0
       else top5.sum.toDouble / top5.size.toDouble
     }

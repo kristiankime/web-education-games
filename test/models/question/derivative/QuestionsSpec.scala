@@ -144,32 +144,32 @@ class QuestionsSpec extends Specification {
     "return answer if there is one" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
         val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 1, x, false, JodaUTC(1))))
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, JodaUTC(1))))
       }
     }
 
     "collapse all answers for one question into a row" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
         val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
         val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, x, true, JodaUTC(1))))
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
       }
     }
 
     "not count answers from other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
         val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
@@ -178,15 +178,15 @@ class QuestionsSpec extends Specification {
         val user2 = DBTest.newFakeUser
         val answer = Answers.createAnswer(TestAnswer(owner = user2.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, x, true, JodaUTC(1))))
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
       }
     }
 
     "return one row per question" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
-        val question2 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x))
+        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
+        val question2 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
         val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
@@ -195,8 +195,8 @@ class QuestionsSpec extends Specification {
         val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(2)))
 
         Questions.summary(user) must beEqualTo(List(
-          QuestionSummary(question1.id, 2, x, true, JodaUTC(1)),
-          QuestionSummary(question2.id, 1, x, false, JodaUTC(2))
+          QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1)),
+          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, JodaUTC(2))
         ))
       }
     }
@@ -218,7 +218,7 @@ class QuestionsSpec extends Specification {
         val question = Questions.create(TestQuestion(owner = user.id))
         val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question.id, 1, question.mathML, false, answer1.creationDate)))
+        Questions.summary(user) must beEqualTo(List(QuestionSummary(question.id, 1, question.mathML, question.rawStr, false, answer1.creationDate)))
       }
     }
 
@@ -232,8 +232,8 @@ class QuestionsSpec extends Specification {
         val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
         Questions.summary(user) must beEqualTo(List(
-          QuestionSummary(question1.id, 2, question1.mathML, true, answer1_1.creationDate),
-          QuestionSummary(question2.id, 1, question2.mathML, false, answer2_1.creationDate)
+          QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
+          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr,false, answer2_1.creationDate)
         ))
       }
     }
@@ -251,8 +251,8 @@ class QuestionsSpec extends Specification {
         val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
         Questions.summary(user) must beEqualTo(List(
-          QuestionSummary(question1.id, 2, question1.mathML, true, answer1_1.creationDate),
-          QuestionSummary(question2.id, 1, question1.mathML, false, answer2_1.creationDate)
+          QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
+          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
       }
     }
@@ -270,7 +270,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        Questions.summary(user, quiz) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, true, answer1_1.creationDate)))
+        Questions.summary(user, quiz) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
       }
     }
 
@@ -287,8 +287,8 @@ class QuestionsSpec extends Specification {
         val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
         Questions.summary(user, JodaUTC(1)) must beEqualTo(List(
-          QuestionSummary(question1.id, 1, question1.mathML, false, answer1_1.creationDate),
-          QuestionSummary(question2.id, 1, question1.mathML, false, answer2_1.creationDate)
+          QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate),
+          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
       }
     }
@@ -306,7 +306,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        Questions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, false, answer1_1.creationDate)))
+        Questions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
       }
     }
 

@@ -39,13 +39,11 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
 
 }
 
-case class QuestionSummary(questionId: QuestionId, attempts: Int, mathMl: MathMLElem, correct: Boolean, firstAttempt: DateTime) {
+object QuestionScore {
 
-  def difficulty : Double = QuestionDifficulty(mathMl)
+  def teacherScore(question: Question, correct: Boolean, studentSkillLevel: Double) : Double = teacherScore(QuestionDifficulty(question.mathML), correct, studentSkillLevel)
 
-  def studentScore = if(correct) 1d else 0d
-
-  def teacherScore(studentSkillLevel: Double) = {
+  def teacherScore(difficulty : Double, correct: Boolean, studentSkillLevel: Double) : Double = {
     val l = studentSkillLevel
     val d = difficulty
     val z = l * 1.25 // zoneOfProximalDevelopment
@@ -53,6 +51,16 @@ case class QuestionSummary(questionId: QuestionId, attempts: Int, mathMl: MathML
 
     if(correct) s else 1d - s
   }
+
+}
+
+case class QuestionSummary(questionId: QuestionId, attempts: Int, mathML: MathMLElem, rawStr: String, correct: Boolean, firstAttempt: DateTime) extends AsciiMathML {
+
+  def difficulty : Double = QuestionDifficulty(mathML)
+
+  def studentScore = if(correct) 1d else 0d
+
+  def teacherScore(studentSkillLevel: Double) = QuestionScore.teacherScore(difficulty, correct, studentSkillLevel)
 
 }
 
@@ -129,9 +137,9 @@ object Questions {
   private def summaryFor(q: Query[(QuestionsTable, AnswersTable), (Question, Answer)])(implicit session: Session) : List[QuestionSummary] = {
     // This line is mostly type information for the IDE
     val q2 : Query[(Column[QuestionId], Query[(QuestionsTable, AnswersTable),(Question, Answer)]),(QuestionId, Query[(QuestionsTable, AnswersTable),(Question, Answer)])] = q.groupBy(_._1.id)
-    val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
-    val q4 = q3.sortBy(_._5)
-    q4.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, r._5.get))
+    val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._1.rawStr).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
+    val q4 = q3.sortBy(_._6)
+    q4.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, r._5.get, r._6.get))
   }
 
 }

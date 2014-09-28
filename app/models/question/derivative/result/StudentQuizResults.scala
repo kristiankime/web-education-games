@@ -11,4 +11,9 @@ case class StudentQuizResults(student: User, quiz: Quiz, results: List[QuestionR
     if (scores.isEmpty) None
     else Some(scores.sum / results.size)
   }
+
+  val studentScore = results.map(_.studentScore).sum / results.size
+
+  def teacherScore(studentSkill: Double) = results.map(_.teacherScore(studentSkill)).sum / results.size
+
 }

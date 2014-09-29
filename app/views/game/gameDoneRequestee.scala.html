@@ -23,7 +23,7 @@
     @for(requesteeQuiz <- gameState.game.requesteeQuiz ) {
     @defining(gameState.game.requestor) { requestor =>
     <section>
-        Your score as a teacher was @percentDisplay(requesteeQuiz.teacherScore(requestor, gameState.game.requestorSkill))
+        Your score as a teacher was @percentDisplay(requesteeQuiz.teacherScore(requestor, gameState.game.requestorSkill)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>]
     </section>
     }
     }

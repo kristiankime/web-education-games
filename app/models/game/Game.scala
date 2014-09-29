@@ -46,6 +46,12 @@ case class Game(id: GameId = null,
     case _ => Unrelated
   }
 
+  def skillLevel(user: User) = user.id match {
+    case `requesteeId` => requesteeSkill
+    case `requestorId` => requestorSkill
+    case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
+  }
+
   def requestor(implicit session: Session) = UsersTable.findById(requestorId).get
 
   def requestee(implicit session: Session) = UsersTable.findById(requesteeId).get

@@ -43,8 +43,10 @@ package object user {
 
     private def skillLevelPrivate(questionSummaries: List[QuestionSummary]) : Double = {
       val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)
-      if(top5.isEmpty) 0
-      else top5.sum.toDouble / top5.size.toDouble
+      math.max(1d,
+        if(top5.isEmpty) 1d
+        else top5.sum.toDouble / top5.size.toDouble
+      )
     }
   }
 

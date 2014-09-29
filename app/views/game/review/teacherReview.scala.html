@@ -6,10 +6,34 @@
 @import models.user.UserPimped
 @import views.html.tag.percentDisplay
 
+@defining(student.name){ studentName =>
+@defining(game.skillLevel(student)){ studentSkillLevel =>
+
 @main("Teacher Game Score") {
 
     <section>
-        You played a @tag.gameLink("game", game) with @student.name on @tag.datetimeOp(game.finishedDate)
+        You played a [@tag.gameLink("game", game)] with @studentName on @tag.datetimeOp(game.finishedDate)
     </section>
 
+    <section>
+        When you played the game @studentName had a skill level of @tag.percentDisplay(studentSkillLevel)<br>
+        @defining(quiz.results(user)) { quizResults =>
+        <table>
+            <tr><th>question</th><th>correct</th><th>difficulty</th><th>score</th></tr>
+            @for(result <- quizResults.results) {
+            <tr>
+                <td> @mathml.mathmlContent(result.question) </td>
+                <td> @mathml.correct(result.correct) </td>
+                <td> @tag.percentDisplay(result.question.difficulty)</td>
+                <td> @tag.percentDisplay(result.teacherScore(studentSkillLevel)) </td>
+            </tr>
+            }
+        </table>
+
+        Your score for this quiz: @tag.percentDisplay(quizResults.teacherScore(studentSkillLevel))<br>
+        }
+    </section>
+}
+
+}
 }

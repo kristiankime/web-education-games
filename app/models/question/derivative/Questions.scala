@@ -1,6 +1,7 @@
 package models.question.derivative
 
 import com.artclod.mathml.scalar._
+import com.google.common.annotations.VisibleForTesting
 import models.organization.Course
 import models.question.AsciiMathML
 import models.question.derivative.result.QuestionResults
@@ -40,13 +41,15 @@ case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr:
 }
 
 object QuestionScore {
-
+  @VisibleForTesting
+  val zoneOfProximalDevelopmentFactor = 1.25
+  
   def teacherScore(question: Question, correct: Boolean, studentSkillLevel: Double) : Double = teacherScore(QuestionDifficulty(question.mathML), correct, studentSkillLevel)
 
   def teacherScore(difficulty : Double, correct: Boolean, studentSkillLevel: Double) : Double = {
     val l = studentSkillLevel
     val d = difficulty
-    val z = l * 1.25 // zoneOfProximalDevelopment
+    val z = l * zoneOfProximalDevelopmentFactor // zoneOfProximalDevelopment
     val s = math.min(d, z) / z // Scoring
 
     if(correct) s else 1d - s

@@ -1,10 +1,12 @@
 package models.question.derivative
 
-import com.artclod.mathml.Math
+import com.artclod.mathml.{MathML, Math}
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.concept.{UnaryFunction, NthRoot, Logarithm, Constant}
-import com.artclod.mathml.scalar.{Ci => Variable, MathMLElem}
+import com.artclod.mathml.scalar.{Ci => Variable, Cn, MathMLElem}
 import com.google.common.annotations.VisibleForTesting
+
+import scala.util.Failure
 
 object QuestionDifficulty {
   private val chainRulePoints = 13
@@ -22,7 +24,9 @@ object QuestionDifficulty {
 
   import MathType._
 
-  def apply(e: MathMLElem): Int = e match {
+  def apply(e: MathMLElem): Double = e match {
+      case m: Diff => m.diff // This object is designed for testing
+
       case m: Math => apply(m.value)
 
       case m: Constant => 1
@@ -144,4 +148,22 @@ object QuestionDifficulty {
       case _ => throw new IllegalStateException("Could not find difficulty, type not recognized [" + e + "]")
     }
 
+  /**
+   * Should only be used for testing when a desired difficulty level is needed
+   *
+   * @param diff difficulty value
+   */
+  case class Diff(diff: Double) extends MathMLElem(MathML.h.prefix, "Diff", MathML.h.attributes, MathML.h.scope, true, Seq(): _*) {
+
+    def eval(boundVariables: Map[String, Double]) = Failure(new UnsupportedOperationException())
+
+    def constant: Option[Constant] = None
+
+    def simplifyStep() = this
+
+    def variables: Set[String] = Set()
+
+    def derivative(wrt: String) = Cn(0)
+
+  }
 }

@@ -12,7 +12,7 @@
 @import controllers.game.routes.GamesController
 @import views.html.game.tag.gamesStatus
 
-@main(course.name) {
+@main(course.name, tag.organizationLink(organization, "[ ", " ]")) {
     <h2>Welcome to the information page for the course: @course.name</h2>
     @* ======= Role ======= *@
     @if(course.access > Non) {

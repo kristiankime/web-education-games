@@ -4,7 +4,7 @@
 @import controllers.organization.CourseCreate
 @import controllers.organization._
  
-@main("Create a new Course for " + organization.name) {
+@main("Create a new Course for " + organization.name, tag.organizationLink(organization, "[ ", " ]")) {
     
     <h1>Welcome to the create a course page for @organization.name</h1>
     

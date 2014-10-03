@@ -17,7 +17,7 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def results(student: User)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
 
-  def results(course: Course)(implicit sessquizVieion: Session) : List[QuizResults] = course.students.map(results(_))
+  def results(course: Course)(implicit session: Session) : List[QuizResults] = course.students.map(results(_))
 
   def summary(student: User)(implicit session: Session) = Questions.summary(student, this)
 

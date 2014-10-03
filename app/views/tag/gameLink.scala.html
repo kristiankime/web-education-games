@@ -1,1 +1,1 @@
-@(text: String, game: models.game.Game)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.game.routes.GamesController.game(game.id)">@text</a>
+@(text: String, game: models.game.Game, pre : String = "", post : String = "")(implicit session: play.api.db.slick.Config.driver.simple.Session)@pre<a href="@controllers.game.routes.GamesController.game(game.id)">@text</a>@post

@@ -1,8 +1,9 @@
 @(organization: models.organization.Organization, courses: List[models.organization.Course])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import views.html.tag._
+@import play.api.templates.Html
 
-@main("Courses for " + organization.name) {
+@main("Courses for " + organization.name, tag.organizationLink(organization, "[ ", " ]") ) {
 
     <h1> Welcome to the Course Catalog for @organization.name</h1>
 

@@ -9,7 +9,7 @@
 @defining(student.name){ studentName =>
 @defining(game.skillLevel(student)){ studentSkillLevel =>
 
-@main("Teacher Game Score") {
+@main("Teacher Game Score", tag.courseOpLink(game.course, "[ ", " ]")) {
 
     <section>
         You played a [@tag.gameLink("game", game)] with @studentName on @tag.datetimeOp(game.finishedDate)

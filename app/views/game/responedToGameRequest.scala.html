@@ -4,7 +4,7 @@
 @import helper._
 @import models.user.UserPimped
 
-@main("Game Requested") {
+@main("Game Requested",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
 
     @gameState.game.requestor.name requested to play a game with you but you have not yet responded <br>
 

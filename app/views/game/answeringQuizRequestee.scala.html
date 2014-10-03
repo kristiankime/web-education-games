@@ -9,7 +9,7 @@
 @defining(gameState.requestorQuiz) { quiz =>
 @defining(quiz.results(user)) { quizResults =>
 
-@main("Answering Quiz") {
+@main("Answering Quiz",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
 
     <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
 

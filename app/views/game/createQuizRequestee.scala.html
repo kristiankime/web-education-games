@@ -13,7 +13,7 @@
 @defining(quizOp.map(_.questions).dropOption) { questions =>
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
-@main("Create Quiz") {
+@main("Create Game Quiz",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
 
     You are now playing a game with @gameState.game.requestor.name <br>
 

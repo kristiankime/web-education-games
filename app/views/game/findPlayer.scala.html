@@ -7,7 +7,7 @@
 
 @defining(user.studentsToPlayWith(course.id)) { students =>
 
-@main("Find a player for a game in course " + course.name) {
+@main("Find a player for a game in course " + course.name,  views.html.tag.courseLink(course, "[ ", " ]")) {
 
     <h1>Invite another player in the course @course.name to play with you</h1>
 

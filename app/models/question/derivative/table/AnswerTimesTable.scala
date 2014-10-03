@@ -13,9 +13,9 @@ case class AnswerTime(userId: UserId, questionId: QuestionId, time: DateTime)
  * Indicates when a user was working on a question.
  */
 class AnswerTimesTable(tag: Tag) extends Table[AnswerTime](tag, "derivative_answer_times") {
-  def userId = column[UserId]("user_id", O.NotNull)
-  def questionId = column[QuestionId]("question_id", O.NotNull)
-  def time = column[DateTime]("time", O.NotNull)
+  def userId = column[UserId]("user_id")
+  def questionId = column[QuestionId]("question_id")
+  def time = column[DateTime]("time")
 
   def * = (userId, questionId, time) <> (AnswerTime.tupled, AnswerTime.unapply _)
 

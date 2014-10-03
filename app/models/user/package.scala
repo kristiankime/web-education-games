@@ -21,7 +21,7 @@ package object user {
     }
 
     def name(implicit session: Session) = settings match {
-      case None => throw new IllegalStateException("Programming error, name() should only be called if the user has settings")
+      case None => throw new IllegalStateException("Programming error, name method should only be called if the user has settings")
       case Some(setting) => setting.name
     }
 
@@ -37,11 +37,11 @@ package object user {
 
     def courses()(implicit session: Session) = Courses(user.id)
 
-    def skillLevel(implicit session: Session) : Double = skillLevelPrivate(Questions.summary(user))
+    def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(Questions.summary(user))
 
-    def skillLevel(asOf: DateTime)(implicit session: Session) : Double = skillLevelPrivate(Questions.summary(user, asOf))
+    def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(Questions.summary(user, asOf))
 
-    private def skillLevelPrivate(questionSummaries: List[QuestionSummary]) : Double = {
+    private def studentSkillLevelPrivate(questionSummaries: List[QuestionSummary]) : Double = {
       val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)
       math.max(1d,
         if(top5.isEmpty) 1d

@@ -1,7 +1,7 @@
 package models.question.derivative
 
 import com.artclod.slick.JodaUTC
-import models.question.derivative.result.{StudentQuizResults, QuestionResults}
+import models.question.derivative.result.{QuizResults, QuestionResults}
 import models.support.CourseId
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -29,7 +29,7 @@ class QuizzesSpec extends Specification {
 				val answer2 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 
 				val sqr1 = QuestionResults(student, question1, List(answer1, answer2), Some(startTime))
-				val sr = StudentQuizResults(student, quiz, List(sqr1))
+				val sr = QuizResults(student, quiz, List(sqr1))
 				quiz.results(student) must beEqualTo(sr)
 			}
 		}
@@ -46,7 +46,7 @@ class QuizzesSpec extends Specification {
 
 				val sqr1 = QuestionResults(student, question1, List(answer), Some(startTime))
 				val sqr2 = QuestionResults(student, question2, List(), None)
-				val sr = StudentQuizResults(student, quiz, List(sqr1, sqr2))
+				val sr = QuizResults(student, quiz, List(sqr1, sqr2))
 				quiz.results(student) must beEqualTo(sr)
 			}
 		}

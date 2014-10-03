@@ -16,8 +16,8 @@
     </section>
 
     <section>
-        When you played the game @studentName had a skill level of @tag.percentDisplay(studentSkillLevel)<br>
-        @defining(quiz.results(user)) { quizResults =>
+        When you played the game @studentName had a skill level of @studentSkillLevel<br>
+        @defining(quiz.results(student)) { quizResults =>
         <table>
             <tr><th>question</th><th>correct</th><th>difficulty</th><th>score</th></tr>
             @for(result <- quizResults.results) {

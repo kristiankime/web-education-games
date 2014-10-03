@@ -1,7 +1,7 @@
 package models.question.derivative
 
 import com.artclod.collection._
-import models.question.derivative.result.StudentQuizResults
+import models.question.derivative.result.QuizResults
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
 import service._
@@ -15,9 +15,9 @@ import models.user.UserPimped
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
-  def results(student: User)(implicit session: Session) = StudentQuizResults(student, this, questions.map(v => v.results(student)))
+  def results(student: User)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
 
-  def results(course: Course)(implicit session: Session) : List[StudentQuizResults] = course.students.map(results(_))
+  def results(course: Course)(implicit sessquizVieion: Session) : List[QuizResults] = course.students.map(results(_))
 
   def summary(student: User)(implicit session: Session) = Questions.summary(student, this)
 

@@ -12,10 +12,10 @@ import scala.slick.model.ForeignKeyAction
 
 class QuestionsTable(tag: Tag) extends Table[Question](tag, "derivative_questions") {
 	def id = column[QuestionId]("id", O.PrimaryKey, O.AutoInc)
-	def ownerId = column[UserId]("owner", O.NotNull)
-	def mathML = column[MathMLElem]("mathml", O.NotNull)
-	def rawStr = column[String]("rawstr", O.NotNull)
-	def creationDate = column[DateTime]("creation_date", O.NotNull)
+	def ownerId = column[UserId]("owner")
+	def mathML = column[MathMLElem]("mathml")
+	def rawStr = column[String]("rawstr")
+	def creationDate = column[DateTime]("creation_date")
 
 	def * = (id, ownerId, mathML, rawStr, creationDate) <> (Question.tupled, Question.unapply _)
 

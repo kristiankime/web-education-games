@@ -11,13 +11,13 @@ import models.support.table.IdentifiedAndOwned
 
 class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") with IdentifiedAndOwned[Course, CourseId] {
 	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)
-	def name = column[String]("name", O.NotNull)
-  def organization = column[OrganizationId]("organization", O.NotNull)
-	def owner = column[UserId]("owner", O.NotNull)
-	def editCode = column[String]("edit_code", O.NotNull)
-	def viewCode = column[String]("view_code", O.NotNull)
-	def creationDate = column[DateTime]("creation_Date", O.NotNull)
-	def updateDate = column[DateTime]("update_date", O.NotNull)
+	def name = column[String]("name")
+  def organization = column[OrganizationId]("organization")
+	def owner = column[UserId]("owner")
+	def editCode = column[String]("edit_code")
+	def viewCode = column[String]("view_code")
+	def creationDate = column[DateTime]("creation_Date")
+	def updateDate = column[DateTime]("update_date")
 
 	def * = (id, name, organization, owner, editCode, viewCode, creationDate, updateDate) <> (Course.tupled, Course.unapply _)
 

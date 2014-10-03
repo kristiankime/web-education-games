@@ -7,8 +7,8 @@ import models.support._
 case class Quiz2Question(quizId: QuizId, questionId: QuestionId)
 
 class Quizzes2QuestionsTable(tag: Tag) extends Table[Quiz2Question](tag, "derivative_quizzes_2_questions") {
-	def quizId = column[QuizId]("quiz_id", O.NotNull)
-	def questionId = column[QuestionId]("question_id", O.NotNull)
+	def quizId = column[QuizId]("quiz_id")
+	def questionId = column[QuestionId]("question_id")
 	def * = (quizId, questionId) <> (Quiz2Question.tupled, Quiz2Question.unapply _)
 
 	def pk = primaryKey("derivative_quizzes_2_questions_pk", (questionId, quizId))

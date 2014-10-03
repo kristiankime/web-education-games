@@ -10,9 +10,9 @@ import models.support.table.{UserLinkRow, UserLink}
 case class User2Quiz(userId: UserId, quizId: QuizId, access: Access) extends UserLinkRow
 
 class Users2QuizzesTable(tag: Tag) extends Table[User2Quiz](tag, "users_2_derivative_quizzes") {
-	def userId = column[UserId]("user_id", O.NotNull)
-	def quizId = column[QuizId]("quiz_id", O.NotNull)
-	def access = column[Access]("access", O.NotNull) 
+	def userId = column[UserId]("user_id")
+	def quizId = column[QuizId]("quiz_id")
+	def access = column[Access]("access")
 	def * = (userId, quizId, access) <> (User2Quiz.tupled, User2Quiz.unapply _)
 
 	def pk = primaryKey("users_2_derivative_quizzes_pk", (userId, quizId))

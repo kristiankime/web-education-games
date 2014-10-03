@@ -9,9 +9,9 @@ import org.joda.time.DateTime
 
 class OrganizationsTable(tag: Tag) extends Table[Organization](tag, "organizations") { //with IdentifiedAndOwned[Course, CourseId] {
 	def id = column[OrganizationId]("id", O.PrimaryKey, O.AutoInc)
-	def name = column[String]("name", O.NotNull)
-	def creationDate = column[DateTime]("creation_Date", O.NotNull)
-	def updateDate = column[DateTime]("update_date", O.NotNull)
+	def name = column[String]("name")
+	def creationDate = column[DateTime]("creation_Date")
+	def updateDate = column[DateTime]("update_date")
 
 	def * = (id, name, creationDate, updateDate) <> (Organization.tupled, Organization.unapply _)
 }

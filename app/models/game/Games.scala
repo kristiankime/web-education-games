@@ -2,7 +2,7 @@ package models.game
 
 import com.artclod.slick.JodaUTC
 import models.organization.{Course, Courses}
-import models.organization.table._
+import models.game.table.gamesTable
 import models.support._
 import play.api.db.slick.Config.driver.simple._
 import service.User
@@ -20,15 +20,15 @@ object Games {
   def request(requestor: User, requestee: User, course: Course)(implicit session: Session): Game = {
     val now = JodaUTC.now
     request(Game(requestDate = now, courseId = Some(course.id),
-      requestorId = requestor.id, requestorSkill = requestor.skillLevel(now),
-      requesteeId = requestee.id, requesteeSkill = requestee.skillLevel(now)))
+      requestorId = requestor.id, requestorSkill = requestor.studentSkillLevel(now),
+      requesteeId = requestee.id, requesteeSkill = requestee.studentSkillLevel(now)))
   }
 
   def request(requestor: User, requestee: User)(implicit session: Session): Game = {
     val now = JodaUTC.now
     request(Game(requestDate = now,
-      requestorId = requestor.id, requestorSkill = requestor.skillLevel(now),
-      requesteeId = requestee.id, requesteeSkill = requestee.skillLevel(now)))
+      requestorId = requestor.id, requestorSkill = requestor.studentSkillLevel(now),
+      requesteeId = requestee.id, requesteeSkill = requestee.studentSkillLevel(now)))
   }
 
   private def request(game: Game)(implicit session: Session): Game = {

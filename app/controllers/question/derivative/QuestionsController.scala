@@ -6,11 +6,13 @@ import com.artclod.mathml.MathML
 import com.artclod.util._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Result, Controller}
+import play.api.libs.json.{JsError, Json}
+import play.api.mvc.{Action, Result, Controller}
 import controllers.support.{SecureSocialConsented, SecureSocialDB}
 import models.question.derivative._
 import models.support._
 import models.organization.Course
+import scala.util.{Failure, Success}
 
 object QuestionsController extends Controller with SecureSocialConsented {
 
@@ -64,6 +66,27 @@ object QuestionsController extends Controller with SecureSocialConsented {
       }
     }
 	}
+
+  case class DifficultyRequest(rawStr: String)
+
+  case class DifficultyResponse(rawStr: String, difficulty: Double)
+
+  implicit val formatDifficultyRequest = Json.format[DifficultyRequest]
+
+  implicit val formatDifficultyResponse = Json.format[DifficultyResponse]
+
+  def difficulty = Action { request =>
+    request.body.asJson.map { configJson =>
+      configJson.validate[DifficultyRequest]
+        .map { difficultyRequest =>
+          MathML(difficultyRequest.rawStr) match {
+            case Failure(e) => BadRequest("Could not parse [" + difficultyRequest.rawStr + "] as mathml\n" + e.getStackTraceString)
+            case Success(mathml) => Ok(Json.toJson(DifficultyResponse(difficultyRequest.rawStr, QuestionDifficulty(mathml))))
+          }
+      }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
+    }.getOrElse(BadRequest("Expecting Json data"))
+  }
+
 }
 
 object QuestionForm {
@@ -71,3 +94,4 @@ object QuestionForm {
 	val rawStr = "rawStr"
 	val values = Form(tuple(mathML -> text, rawStr -> text))
 }
+

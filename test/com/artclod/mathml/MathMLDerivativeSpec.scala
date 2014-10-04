@@ -1,5 +1,10 @@
 package com.artclod.mathml
 
+import com.artclod.mathml.Match._
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
+import org.specs2.mutable._
+import com.artclod.mathml.scalar._
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import scala.xml._
@@ -8,14 +13,15 @@ import play.api.test.Helpers._
 import org.specs2.mutable._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.apply._
-import com.artclod.mathml.scalar.apply.{ ApplyLn => ln }
-import com.artclod.mathml.scalar.apply.{ ApplyLog => log }
+import com.artclod.mathml.scalar.apply.{ ApplyLn => ln, ApplyLog => log }
+import com.artclod.mathml.scalar.apply.trig.{ ApplySin => sin, ApplyCot => cot, ApplyTan => tan, ApplySec => sec, ApplyCos => cos, ApplyCsc => csc }
+import com.artclod.mathml.Match._
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
 class MathMLDerivativeSpec extends Specification {
 
-	"Checking symbolic differentiaton and manual derivative " should {
+	"Checking symbolic differentiation and manual derivative " should {
 
 		"confirm ln(x)' = 1 / x" in {
 			(ln(x) dx) must beEqualTo(`1` / x)

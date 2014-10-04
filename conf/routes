@@ -63,6 +63,9 @@ POST        /games/:g/questions/:q/requestor                              contro
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                          controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
+
+POST        /questiondifficulty                                           controllers.question.derivative.QuestionsController.difficulty
+
 # ======== START DEPRICATED ========
 # Equation pages
 GET         /equation                                                     controllers.EquationController.equations

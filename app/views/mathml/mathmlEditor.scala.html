@@ -22,12 +22,10 @@
             result.rawStr = mathMLStr;
             var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
             if (mathMLStatus.success) {
-
                 result.mathML = mathMLStatus.value;
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
                 ARTC.updateInnerAsciiMath("@{editorName+"View"}", result.rawStr);
-
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();

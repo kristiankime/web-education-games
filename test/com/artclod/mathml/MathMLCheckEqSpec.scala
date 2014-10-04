@@ -86,7 +86,14 @@ class MathMLCheckEqSpec extends Specification {
 
       ((f dx) ?= g) must beEqualTo(Yes)
     }
-	}
+
+    "confirm (sin(x)^2 + cos(x)^2 - 1)/(1 + ln(x*e^x/(1+tan(x)^7)))' = 0" in {
+      val f = ( (sin(x)^2) + (cos(x)^2) - 1)/(1 + ln(x * (e^x) /(1+ (tan(x)^7) )))
+      val g = `0`
+
+      ((f dx) ?= g) must beEqualTo(Yes)
+    }
+  }
 
 	"Check that multiplying top and bottom of a quotient by the same thing " should {
 

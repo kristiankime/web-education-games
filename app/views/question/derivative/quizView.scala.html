@@ -44,7 +44,7 @@
 
         <p>
             Enter a function (of x) to differentiate. When you are done hit "Save Question": <br>
-            @mathml.mathmlEditor(editorName = "QUESTION")
+            @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40))
         </p>
 
         @form(QuestionsController.create(course.organizationId, course.id, quiz.id), 'id -> "derivativeqForm" ) {

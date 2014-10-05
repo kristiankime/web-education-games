@@ -40,7 +40,7 @@
 
     <p>
         Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
-        @mathml.mathmlEditor(editorName = "QUESTION")
+        @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40))
     </p>
 
     @form(GamesRequesteeController.createQuestion(gameState.game.id), 'id -> "derivativeqForm" ) {
@@ -52,11 +52,11 @@
     <script>
     formSubmit = function() {
     if(QUESTION.valid){
-    $("#derivativeQuestionMathML").val(QUESTION.mathML);
-    $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
-    $("#derivativeqForm").submit();
+        $("#derivativeQuestionMathML").val(QUESTION.mathML);
+        $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+        $("#derivativeqForm").submit();
     } else {
-    alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
+        alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
     }
     }
     </script>

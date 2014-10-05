@@ -1,16 +1,25 @@
-@(editorName: String, initialAnswerOption: Option[String] = None)
+@(editorName: String, initialAnswerOp: Option[String] = None, characterLimitOp: Option[Int] = None)
 
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
     @mathml.mathmlEditorHelp(editorName)
 
     <span id="@editorName">
         @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
-        <input id="mathMLInput" size="80" onkeyup="@{editorName + ".updateAnswer(this.value)"}" onpaste="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
+        <input id="mathMLInput" type="text" size="@characterLimitOp.getOrElse(80)" @for(lim <- characterLimitOp){maxlength="@lim"} onkeyup="@{editorName + ".updateAnswer(this.value)"}" onpaste="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
         <font style:visibility="hidden" id="@{editorName+"Indicator"}" color="red"> * </font>
         <span id="@{editorName+"View"}"> `` </span>
     </span>
 
     <script>
+    @if(characterLimitOp.nonEmpty){
+    function limitText(limitField, limitNum) {
+        if (limitField.value.length > limitNum) {
+            limitField.value = limitField.value.substring(0, limitNum);
+            return limitNum;
+        }
+    }
+    }
+
     var @{editorName} = (function() {
         var result = {
                 mathML : "",
@@ -19,7 +28,9 @@
              };
 
         result.updateAnswer = function(mathMLStr) {
+
             result.rawStr = mathMLStr;
+
             var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
             if (mathMLStatus.success) {
                 result.mathML = mathMLStatus.value;
@@ -32,7 +43,7 @@
             }
         };
 
-        @for(initialAnswer <- initialAnswerOption){
+        @for(initialAnswer <- initialAnswerOp){
         $("#@{editorName} #mathMLInput").val("@initialAnswer")
         result.updateAnswer("@initialAnswer")
         }

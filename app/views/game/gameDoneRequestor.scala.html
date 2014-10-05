@@ -20,11 +20,10 @@
     </section>
     }
 
-    @for(requestorQuiz <- gameState.game.requestorQuiz ) {
-    @defining(gameState.game.requestee) { requestee =>
+    @for(requestorQuiz <- gameState.game.requestorQuizIfAnswered ) {
     <section>
-        Your score as a teacher was @percentDisplay(requestorQuiz.teacherScore(requestee, gameState.game.requesteeSkill)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>]
+        Your score as a teacher was @percentDisplay(requestorQuiz.teacherScore(gameState.game.requestee, gameState.game.requesteeSkill)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>]
     </section>
     }
-    }
+    
 }

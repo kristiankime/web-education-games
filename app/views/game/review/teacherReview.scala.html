@@ -24,7 +24,7 @@
             <tr>
                 <td> @mathml.mathmlContent(result.question) </td>
                 <td> @mathml.correct(result.correct) </td>
-                <td> @tag.percentDisplay(result.question.difficulty)</td>
+                <td> @tag.difficultyLevel(result.question.difficulty)</td>
                 <td> @tag.percentDisplay(result.teacherScore(studentSkillLevel)) </td>
             </tr>
             }

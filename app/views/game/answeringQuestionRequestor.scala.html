@@ -72,8 +72,10 @@
     @defining(quiz.nextQuestion(question)){ nextOp =>
         @for(next <- nextOp) {Go to the [<a href="@GamesController.question(gameState.game.id, next.id)">next question</a>]}
         @if(nextOp.isEmpty) {This is the last question, back to the [ @gameLink("quiz", gameState.game) ]}
-    }
-    <br>
+    }<br>
+
+    If you are done answering questions for this quiz you can
+    @form(GamesRequestorController.finalizeAnswers(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize All Answers" > }<br>
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results =>

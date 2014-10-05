@@ -230,10 +230,17 @@ kill the process       || kill -9 <PID>
 
 ##### Git Tagging
 http://git-scm.com/book/en/Git-Basics-Tagging
-For Major x Minor y and Build z
 
-git tag -a vx.y.z -m 'my version x.y.z'
-git push origin vx.y.x
+To create a tag for Major x Minor y and Build z
+
+first check to see what tags you already have:
+    git tag
+
+next create a tag with the next version:
+    git tag -a vx.y.z -m 'my version x.y.z'
+
+tags need to be push explicity
+    git push origin vx.y.x
 
 ##### SBT clean
 Heroku will keep left over build files. If you get errors due to files that shouldn't exist try turning on clean

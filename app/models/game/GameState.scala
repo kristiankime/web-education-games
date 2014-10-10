@@ -6,7 +6,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.user.Users
 
 object GameState {
-  val numberOfQuestions = 5
+  val numberOfQuestions = 3
 }
 
 sealed trait GameState {

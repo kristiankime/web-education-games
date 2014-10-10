@@ -3,6 +3,7 @@
 @import controllers.game.routes.GamesRequesteeController
 @import controllers.game.GameCreateQuestion
 @import controllers.game.GameRemoveQuestion
+@import controllers.question.derivative.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
 @import helper._
 @import models.user.UserPimped
 @import views.html.tag._
@@ -40,7 +41,41 @@
 
     <p>
         Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
-        @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40))
+
+        @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp = Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
+
+        Difficulty: <span id="editorSuccessDifficulty">NA</span>
+        Correct: <span id="editorSuccessCorrect">NA</span>
+        Incorrect: <span id="editorSuccessIncorrect">NA</span>
+        <script>
+            var editorSuccess = function ( result ) {
+
+            var ajaxData = {
+                @rawStr : result.rawStr,
+                @mathML : result.mathML,
+                @partnerSkill : @gameState.game.requestorSkill
+            };
+
+            var ajaxSuccess = function( data ) {
+                var diff = data.@{difficulty}.toFixed(0);
+                var corr = ARTC.fmtPercent(data.@{correctPoints});
+                var inco = ARTC.fmtPercent(data.@{incorrectPoints});
+                $("#editorSuccessDifficulty").text(data.@{difficulty}.toFixed(0));
+                $("#editorSuccessCorrect").text(ARTC.fmtPercent(data.@{correctPoints}));
+                $("#editorSuccessIncorrect").text(ARTC.fmtPercent(data.@{incorrectPoints}));
+            };
+
+            $.ajax({
+                type : "POST",
+                url : "/questiondifficulty",
+                dataType : "json",
+                data : JSON.stringify(ajaxData),
+                contentType: "application/json",
+                success : ajaxSuccess,
+                processData: false
+                });
+            }
+        </script>
     </p>
 
     @form(GamesRequesteeController.createQuestion(gameState.game.id), 'id -> "derivativeqForm" ) {

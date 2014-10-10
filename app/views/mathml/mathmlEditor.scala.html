@@ -1,4 +1,8 @@
-@(editorName: String, initialAnswerOp: Option[String] = None, characterLimitOp: Option[Int] = None)
+@(editorName: String,
+  initialAnswerOp: Option[String] = None,
+  characterLimitOp: Option[Int] = None,
+  callbackSuccessOp : Option[String] = None,
+  callbackfailureOp : Option[String] = None)
 
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
     @mathml.mathmlEditorHelp(editorName)
@@ -37,9 +41,11 @@
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
                 ARTC.updateInnerAsciiMath("@{editorName+"View"}", result.rawStr);
+                @for(callbackSuccess <- callbackSuccessOp){@{callbackSuccess}(result)}
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();
+                @for(callbackfailure <- callbackfailureOp){@{callbackfailure}(result)}
             }
         };
 

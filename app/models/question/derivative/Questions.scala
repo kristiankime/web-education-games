@@ -54,7 +54,6 @@ object QuestionScore {
 
     if(correct) s else 1d - s
   }
-
 }
 
 case class QuestionSummary(questionId: QuestionId, attempts: Int, mathML: MathMLElem, rawStr: String, correct: Boolean, firstAttempt: DateTime) extends AsciiMathML {

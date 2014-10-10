@@ -243,7 +243,9 @@ tags need to be push explicity
     git push origin vx.y.x
 
 to push that branch to heoku
-    git push heroku vx.y.z:master
+    git push heroku +vx.y.z^{commit}:master
+    
+see http://stackoverflow.com/questions/4061481/how-do-you-push-a-git-tag-to-a-branch-using-a-refspec
 
 ##### SBT clean
 Heroku will keep left over build files. If you get errors due to files that shouldn't exist try turning on clean

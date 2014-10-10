@@ -1,0 +1,36 @@
+@(name: String, skillLevel: Double)
+
+@import controllers.question.derivative.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
+
+    <!-- ========= MATH SCORING STARTS HERE ======= -->
+    Difficulty: <span id="@{name}Difficulty">NA</span>
+    Correct: <span id="@{name}Correct">NA</span>
+    Incorrect: <span id="@{name}Incorrect">NA</span>
+
+    <script>
+        var @name = function ( result ) {
+
+        var ajaxData = {
+            @rawStr : result.rawStr,
+            @mathML : result.mathML,
+            @partnerSkill : @skillLevel
+        };
+
+        var ajaxSuccess = function( data ) {
+            $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
+            $("#@{name}Correct").text(ARTC.fmtPercent(data.@{correctPoints}));
+            $("#@{name}Incorrect").text(ARTC.fmtPercent(data.@{incorrectPoints}));
+        };
+
+        $.ajax({
+            type : "POST",
+            url : "/questiondifficulty",
+            dataType : "json",
+            data : JSON.stringify(ajaxData),
+            contentType: "application/json",
+            success : ajaxSuccess,
+            processData: false
+            });
+        }
+    </script>
+    <!-- ========= MATH SCORING ENDS HERE ======= -->

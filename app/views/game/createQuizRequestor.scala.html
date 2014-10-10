@@ -45,7 +45,8 @@
 
     <p>
         Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
-        @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40))
+        @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
+        @mathml.mathmlScoring("editorSuccess", gameState.game.requesteeSkill)
     </p>
 
     @form(GamesRequestorController.createQuestion(gameState.game.id), 'id -> "derivativeqForm" ) {

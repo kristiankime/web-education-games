@@ -55,10 +55,18 @@ object Consent extends Controller with SecureSocialDB {
       case _ => user.fullName
     }
 
+  def revokeConsent() = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+    val settings = (UserSettings(user.id) match {
+      case Some(setting) => UserSettings.update(setting.copy(consented = false))
+      case None => throw new IllegalStateException("Attempted to revoke consent for [" + user.id + "] but user had no settings")
+    })
+    Ok(views.html.user.noConsent())
+  }
+
 }
 
 object ConsentForm {
   val agree = "agree"
 
-    val values = Form(agree -> boolean)
+  val values = Form(agree -> boolean)
 }

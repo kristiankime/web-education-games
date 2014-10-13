@@ -9,6 +9,7 @@ GET         /*path/                                                       contro
 GET         /consent                                                      controllers.Consent.consent(goTo: Option[String], error: Option[String])
 POST        /consent                                                      controllers.Consent.consentSubmit(goTo: Option[String])
 GET         /noconsent                                                    controllers.Consent.noConsent
+POST        /revokeconsent                                                controllers.Consent.revokeConsent
 
 # Home page
 GET         /                                                             controllers.Home.index

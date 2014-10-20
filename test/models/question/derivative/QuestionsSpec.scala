@@ -311,4 +311,113 @@ class QuestionsSpec extends Specification {
     }
 
   }
+
+  "correct" should {
+    "find nothing if user has never answered any questions (even if other users have)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        questionAndAnswers(otherUser, (true, d(0)))
+
+        Questions.correct(user.id) must beEmpty
+      }
+    }
+
+    "find nothing if user has never answered a question correctly" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        questionAndAnswers(user, (false, d(0)))
+
+        Questions.correct(user.id) must beEmpty
+      }
+    }
+
+    "find correct question if user has answered it" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val q1 = questionAndAnswers(user, (true, d(0)))
+
+        Questions.correct(user.id) must beEqualTo(List((q1.id, d(0))))
+      }
+    }
+
+    "find correct question and time if user has answered multiple times" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val q1 = questionAndAnswers(user, (false, d(0)), (true, d(1)), (false, d(2)), (true, d(3)) )
+
+        Questions.correct(user.id) must beEqualTo(List((q1.id, d(1))))
+      }
+    }
+
+    "find correct questions if user has answered multiple (ordered by most recent first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val q1 = questionAndAnswers(user, (true, d(4)) )
+        val q2 = questionAndAnswers(user, (false, d(0)), (true, d(1)), (false, d(2)), (true, d(7)) )
+
+        Questions.correct(user.id) must beEqualTo(List((q1.id, d(4)), (q2.id, d(1))))
+      }
+    }
+  }
+
+  "incorrect" should {
+    "find nothing if user has never answered any questions (even if other users have)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        questionAndAnswers(otherUser, (true, d(0)))
+
+        Questions.incorrect(user.id) must beEmpty
+      }
+    }
+
+    "find result if user has only answered a question incorrectly" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val q1 = questionAndAnswers(user, (false, d(0)))
+
+        Questions.incorrect(user.id) must beEqualTo(List((q1.id, d(0))))
+      }
+    }
+
+    "find nothing if user has ever answered it correctly" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        questionAndAnswers(user, (false, d(0)), (true, d(1)))
+
+        Questions.incorrect(user.id) must beEmpty
+      }
+    }
+
+    "date should be most recent if user has answered incorrectly multiple times" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val q1 = questionAndAnswers(user, (false, d(0)), (false, d(1)), (false, d(2)), (false, d(3)) )
+
+        Questions.incorrect(user.id) must beEqualTo(List((q1.id, d(3))))
+      }
+    }
+
+    "find correct questions if user has answered multiple (ordered by most recent first)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val q1 = questionAndAnswers(user, (false, d(4)) )
+        val q2 = questionAndAnswers(user, (false, d(0)), (false, d(1)), (false, d(2)), (false, d(7)) )
+
+        Questions.incorrect(user.id) must beEqualTo(List((q2.id, d(7)), (q1.id, d(4))))
+      }
+    }
+  }
+
+  private def d(l: Long) = JodaUTC(l)
+
+  private def questionAndAnswers(user: User, answers: (Boolean, DateTime)* )(implicit session: Session) = {
+    val question = Questions.create(TestQuestion(owner = user.id))
+    for(answer <- answers) { Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = answer._1, creationDate = answer._2)) }
+    question
+  }
+
 }

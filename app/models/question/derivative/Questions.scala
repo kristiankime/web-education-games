@@ -108,6 +108,23 @@ object Questions {
     users.list
   }
 
+  def correct(userId: UserId)(implicit session: Session) = { // Type information provided here to help IDE
+    val query1 : Query[(QuestionsTable, AnswersTable), (Question, Answer)] = for(q <- questionsTable; a <- answersTable if a.ownerId === userId && q.id === a.questionId && a.correct === true) yield (q, a)
+    val query2 : Query[(Column[QuestionId], Query[(QuestionsTable, AnswersTable), (Question, Answer)]), (QuestionId, Query[(QuestionsTable, AnswersTable), (Question, Answer)])] = query1.groupBy(_._1.id)
+    val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.creationDate).min) }
+    val query4 = query3.sortBy(_._2.desc)
+    query4.list.map(r => (r._1, r._2.get))
+  }
+
+  def incorrect(userId: UserId)(implicit session: Session) = { // Type information provided here to help IDE
+    val query1 : Query[(QuestionsTable, AnswersTable), (Question, Answer)] = for(q <- questionsTable; a <- answersTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
+    val query2 : Query[(Column[QuestionId], Query[(QuestionsTable, AnswersTable), (Question, Answer)]), (QuestionId, Query[(QuestionsTable, AnswersTable), (Question, Answer)])] = query1.groupBy(_._1.id)
+    val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).max) }
+    val query4 = query3.filter(_._2 === false) // Only include question that have no correct answer
+    val query5 = query4.sortBy(_._3.desc)
+    query5.list.map(r => (r._1, r._3.get))
+  }
+
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
 

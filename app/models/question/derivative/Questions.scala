@@ -116,6 +116,8 @@ object Questions {
     query4.list.map(r => (r._1, r._2.get))
   }
 
+  def correctResults(user: User, num: Int)(implicit session: Session) = correct(user.id).take(num).map(e => apply(e._1).get.results(user))
+
   def incorrect(userId: UserId)(implicit session: Session) = { // Type information provided here to help IDE
     val query1 : Query[(QuestionsTable, AnswersTable), (Question, Answer)] = for(q <- questionsTable; a <- answersTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(QuestionsTable, AnswersTable), (Question, Answer)]), (QuestionId, Query[(QuestionsTable, AnswersTable), (Question, Answer)])] = query1.groupBy(_._1.id)
@@ -124,6 +126,9 @@ object Questions {
     val query5 = query4.sortBy(_._3.desc)
     query5.list.map(r => (r._1, r._3.get))
   }
+
+  def incorrectResults(user: User, num: Int)(implicit session: Session) = incorrect(user.id).take(num).map(e => apply(e._1).get.results(user))
+
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete

@@ -1,1 +1,1 @@
-@(questionResults: models.question.derivative.result.QuestionResults)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)@mathml.mathmlContent(questionResults.question) @mathml.correct(questionResults.correct)
+@(questionResults: models.question.derivative.result.QuestionResults)@mathml.mathmlContent(questionResults.question) @mathml.correct(questionResults.correct)

@@ -11,11 +11,36 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.User
 
-case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correct: Boolean, creationDate: DateTime) extends AsciiMathML with Owned
+object Correct2Short {
+  val T : Short = 1
+  val F : Short = 0
+
+  def apply(s: Short) = s match {
+    case 0 => false
+    case 1 => true
+    case _ => throw new IllegalStateException("Converting short to correct value was [" + s + "] must be in { 0 -> false, 1 -> true }, coding error")
+  }
+
+  def apply(b: Boolean) : Short = if(b) 1 else 0
+
+}
+
+case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correctNum: Short, creationDate: DateTime) extends AsciiMathML with Owned {
+  // We need to count number of correct answers in the db, so we store correct as a number with { 0 -> false, 1 -> true }
+  if(correctNum != 0 && correctNum != 1) { correctNumError }
+
+  def correct : Boolean = correctNum match {
+    case 0 => false
+    case 1 => true
+    case _ => correctNumError
+  }
+
+  private def correctNumError = throw new IllegalStateException("In " + this + " correctNum was [" + correctNum + "] can only be in { 0 -> false, 1 -> true }, coding error")
+}
 
 object UnfinishedAnswer {
   def apply(ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean): Answer =
-    Answer(null, ownerId, questionId, mathML, rawStr, correct, creationDate)
+    Answer(null, ownerId, questionId, mathML, rawStr, if(correct) 1 else 0, creationDate)
 }
 
 object Answers {
@@ -59,7 +84,7 @@ object Answers {
     val q = answersTable.where(_.ownerId === user.id).groupBy(a => a.questionId)
     val q2 = q.map { case (questionId, v) => (questionId, v.length, v.map(_.correct).max, v.map(_.creationDate).min) }
     val q3 = q2.sortBy(_._4)
-    q2.list.map(e => AnswersSummary(e._1, e._2, e._3.get, e._4.get))
+    q2.list.map(e => AnswersSummary(e._1, e._2, Correct2Short(e._3.get), e._4.get))
   }
 
 }

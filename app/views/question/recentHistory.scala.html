@@ -1,0 +1,35 @@
+@(user: service.User)(implicit session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.user.UserPimped
+
+@defining(models.question.derivative.Questions.incorrectResults(user, 5)) { incorrectQuestions: List[models.question.derivative.result.QuestionResults] =>
+@defining(models.question.derivative.Questions.correctResults(user, 5)) { correctQuestions: List[models.question.derivative.result.QuestionResults] =>
+
+    <section>
+    @if(incorrectQuestions.isEmpty) {
+        @user.name hasn't answered any questions incorrectly
+    } else {
+        Here are the questions @user.name answered incorrectly recently:
+        <ol>
+        @for(incorrectQuestion <- incorrectQuestions) {
+            <li> @tag.questionSummary(incorrectQuestion) </li>
+        }
+        </ol>
+    }
+    </section>
+
+    <section>
+    @if(correctQuestions.isEmpty) {
+        @user.name hasn't answered any questions correctly
+    } else {
+        Here are the questions @user.name answered correctly recently:
+        <ol>
+        @for(correctQuestion <- correctQuestions) {
+            <li> @tag.questionSummary(correctQuestion) </li>
+        }
+        </ol>
+    }
+    </section>
+
+}
+}

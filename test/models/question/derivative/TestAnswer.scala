@@ -13,5 +13,5 @@ object TestAnswer {
 		rawStr: String = "7",
 		correct: Boolean = false,
 		creationDate: DateTime = JodaUTC.zero) =
-		Answer(null, owner, questionId, mathML, rawStr, correct, creationDate)
+		Answer(null, owner, questionId, mathML, rawStr, Correct2Short(correct), creationDate)
 }

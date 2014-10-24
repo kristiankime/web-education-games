@@ -67,6 +67,7 @@
     @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
     }
 
+    @views.html.question.recentHistory(gameState.game.requestor)
 }
 
 }

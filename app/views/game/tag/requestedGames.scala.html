@@ -10,7 +10,7 @@
     <h5>Game Requests</h5>
     @if(games.isEmpty){<h6>You have no outstanding game requests</h6>} else {<h6>The following players have requested a game</h6>
     <ul>
-        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).name, game) @tag.maybeLinkCourse(courseOp, game) </li>}
+        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).name, game) @tag.gameCourseLink(courseOp, game) </li>}
     </ul>
     }
 </section>

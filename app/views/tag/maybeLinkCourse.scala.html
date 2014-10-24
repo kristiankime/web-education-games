@@ -1,2 +1,0 @@
-@(courseOp: Option[models.organization.Course], game: models.game.Game)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session) @if(courseOp.isEmpty){ @for(course <- game.course){ for course @views.html.tag.courseLink(course) } }
-

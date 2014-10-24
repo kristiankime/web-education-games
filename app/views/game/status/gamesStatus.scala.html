@@ -1,6 +1,6 @@
 @(courseOp: Option[models.organization.Course] = None)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import views.html.game.tag.{requestedGames, awaitingGames, activeAcceptedGames, finishedGames}
+@import views.html.game.status.{requestedGames, awaitingGames, activeAcceptedGames, finishedGames}
 
 <section>
 

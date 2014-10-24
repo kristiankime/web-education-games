@@ -1,1 +1,1 @@
-@(questionResults: models.question.derivative.result.QuestionResults)@mathml.mathmlContent(questionResults.question) @mathml.correct(questionResults.correct)
+@(questionResults: (models.question.derivative.result.QuestionResults, org.joda.time.DateTime), showCorrect : Boolean  = false)@mathml.mathmlContent(questionResults._1.question) @if(showCorrect){ @mathml.correct(questionResults._1.correct) } on @tag.datetime(questionResults._2)

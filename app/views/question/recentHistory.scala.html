@@ -2,8 +2,8 @@
 
 @import models.user.UserPimped
 
-@defining(models.question.derivative.Questions.incorrectResults(user, 5)) { incorrectQuestions: List[models.question.derivative.result.QuestionResults] =>
-@defining(models.question.derivative.Questions.correctResults(user, 5)) { correctQuestions: List[models.question.derivative.result.QuestionResults] =>
+@defining(models.question.derivative.Questions.incorrectResults(user, 5)) { incorrectQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
+@defining(models.question.derivative.Questions.correctResults(user, 5)) { correctQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
 
     <section>
     @if(incorrectQuestions.isEmpty) {

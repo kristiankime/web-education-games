@@ -116,7 +116,7 @@ object Questions {
     query4.list.map(r => (r._1, r._2.get))
   }
 
-  def correctResults(user: User, num: Int)(implicit session: Session) = correct(user.id).take(num).map(e => apply(e._1).get.results(user))
+  def correctResults(user: User, num: Int)(implicit session: Session) = correct(user.id).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
   def incorrect(userId: UserId)(implicit session: Session) = { // Type information provided here to help IDE
     val query1 : Query[(QuestionsTable, AnswersTable), (Question, Answer)] = for(q <- questionsTable; a <- answersTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
@@ -127,7 +127,7 @@ object Questions {
     query5.list.map(r => (r._1, r._3.get))
   }
 
-  def incorrectResults(user: User, num: Int)(implicit session: Session) = incorrect(user.id).take(num).map(e => apply(e._1).get.results(user))
+  def incorrectResults(user: User, num: Int)(implicit session: Session) = incorrect(user.id).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = quizzesQuestionsTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete

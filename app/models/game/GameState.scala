@@ -24,7 +24,7 @@ sealed trait GameState {
 }
 
 // Game in requested state (requestor can still create a quiz while waiting)
-case class RequestedNoQuiz(val game: Game) extends GameState with  GameRequested with RequestorQuiz with RequesteeQuiz with BothStillAnswering { checks }
+case class RequestedNoQuiz(val game: Game) extends GameState with GameRequested with RequestorQuiz with RequesteeQuiz with BothStillAnswering { checks }
 case class RequestedQuizDone(val game: Game) extends GameState with GameRequested with RequestorQuizFinished with RequesteeQuiz with BothStillAnswering { checks }
 // Game was rejected (but requestor could have made a quiz before it was rejected)
 case class RejectedNoQuiz(val game: Game) extends GameState with GameRejected with RequestorQuiz with RequesteeQuiz with BothStillAnswering { checks }

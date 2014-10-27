@@ -3,9 +3,21 @@
 @import controllers.question.derivative.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
 
     <!-- ========= MATH SCORING STARTS HERE ======= -->
-    Difficulty: <span id="@{name}Difficulty">NA</span>
-    Correct: <span id="@{name}Correct">NA</span>
-    Incorrect: <span id="@{name}Incorrect">NA</span>
+    <section>
+    <h4>Scoring Information</h4>
+    In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br>
+    A hard question is a question whose difficulty is above the skill level of the other player <br>
+    An easy question is a question whose difficulty is greatly below the skill level of the other player <br>
+    The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong<br>
+    <table>
+        <tr><th>Skill</th><th>Difficulty</th><th>Correct</th><th>Incorrect</th></tr>
+        <tr>
+            <td> @tag.skillLevel(skillLevel) </td>
+            <td> <span id="@{name}Difficulty">NA</span> </td>
+            <td> <span id="@{name}Correct">NA</span> </td>
+            <td> <span id="@{name}Incorrect">NA</span> </td>
+        </tr>
+    </table>
 
     <script>
         var @name = function ( result ) {
@@ -33,4 +45,5 @@
             });
         }
     </script>
+    </section>
     <!-- ========= MATH SCORING ENDS HERE ======= -->

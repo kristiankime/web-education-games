@@ -6,19 +6,14 @@
 @defining(models.question.derivative.Questions.correctResults(user, 5)) { correctQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
 
     <section>
-    @if(incorrectQuestions.isEmpty) {
-        @user.name hasn't answered any questions incorrectly
-    } else {
-        Here are the questions @user.name answered incorrectly recently:
-        <ol>
-        @for(incorrectQuestion <- incorrectQuestions) {
-            <li> @tag.questionSummary(incorrectQuestion) </li>
-        }
-        </ol>
-    }
-    </section>
+    <h4> Other Player's History </h4>
 
-    <section>
+    <p>
+        When creating your questions it may help you to know what the other player has done recently.
+        Below is a quick summary of the recent history of what questions they've answered correctly and incorrectly.
+    </p>
+
+    <h5> Correct </h5>
     @if(correctQuestions.isEmpty) {
         @user.name hasn't answered any questions correctly
     } else {
@@ -29,6 +24,20 @@
         }
         </ol>
     }
+
+    <h5> Incorrect </h5>
+    @if(incorrectQuestions.isEmpty) {
+        @user.name hasn't answered any questions incorrectly
+    } else {
+        Here are the questions @user.name answered incorrectly recently:
+        <ol>
+        @for(incorrectQuestion <- incorrectQuestions) {
+            <li> @tag.questionSummary(incorrectQuestion) </li>
+        }
+        </ol>
+    }
+
+
     </section>
 
 }

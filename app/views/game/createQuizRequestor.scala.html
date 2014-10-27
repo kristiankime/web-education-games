@@ -6,7 +6,6 @@
 @import controllers.game.GameRemoveQuestion
 @import helper._
 @import models.user.UserPimped
-@import views.html.tag._
 @import com.artclod.collection.PimpedOptionList
 @import models.game.GameState.numberOfQuestions
 
@@ -14,12 +13,14 @@
 @defining(quizOp.map(_.questions).dropOption) { questions =>
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
-@main("Create Game Quiz",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
+@main("Create Game Quiz", tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
+
+    <h1>Create a Game Quiz</h1>
 
     @if(gameState.game.response == GameResponseStatus.accepted){
-    You are now playing a game with @gameState.game.requestee.name <br>
+    You are now playing a game with @gameState.game.requestee.name, and need to create a Quiz for them. <br>
     } else {
-    You have requested to play with @gameState.game.requestee.name but they haven't yet replied <br>
+    You have requested to play with @gameState.game.requestee.name but they haven't yet replied. If you want you can create a Quiz for that will be waiting when the accept.  <br>
     }
 
     @if(gameState.game.requesteeQuizDone){
@@ -46,7 +47,6 @@
     <p>
         Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
         @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
-        @mathml.mathmlScoring("editorSuccess", gameState.game.requesteeSkill)
     </p>
 
     @form(GamesRequestorController.createQuestion(gameState.game.id), 'id -> "derivativeqForm" ) {
@@ -71,6 +71,8 @@
     @if(numQuestionRemaining == 0){
     @form(GamesRequestorController.finalizeCreatedQuiz(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
     }
+
+    @mathml.mathmlScoring("editorSuccess", gameState.game.requesteeSkill)
 
     @views.html.question.recentHistory(gameState.game.requestee)
 }

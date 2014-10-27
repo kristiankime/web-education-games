@@ -5,7 +5,6 @@
 @import controllers.game.GameRemoveQuestion
 @import helper._
 @import models.user.UserPimped
-@import views.html.tag._
 @import com.artclod.collection.PimpedOptionList
 @import models.game.GameState.numberOfQuestions
 
@@ -13,9 +12,11 @@
 @defining(quizOp.map(_.questions).dropOption) { questions =>
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
-@main("Create Game Quiz",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
+@main("Create Game Quiz", tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
 
-    You are now playing a game with @gameState.game.requestor.name <br>
+    <h1>Create a Game Quiz</h1>
+
+    You are now playing a game with @gameState.game.requestor.name, and need to create a Quiz for them. <br>
 
     @if(gameState.game.requestorQuizDone){
     They have finished creating their quiz and are waiting for you to finish yours <br>
@@ -41,7 +42,6 @@
     <p>
         Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
         @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp = Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
-        @mathml.mathmlScoring("editorSuccess", gameState.game.requestorSkill)
     </p>
 
     @form(GamesRequesteeController.createQuestion(gameState.game.id), 'id -> "derivativeqForm" ) {
@@ -66,6 +66,8 @@
     @if(numQuestionRemaining == 0){
     @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Quiz" > }
     }
+
+    @mathml.mathmlScoring("editorSuccess", gameState.game.requestorSkill)
 
     @views.html.question.recentHistory(gameState.game.requestor)
 }

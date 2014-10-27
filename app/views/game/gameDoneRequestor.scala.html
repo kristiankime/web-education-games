@@ -5,6 +5,7 @@
 @import helper._
 @import models.user.UserPimped
 @import views.html.tag.percentDisplay
+@import models.organization.Courses
 
 @main("Game Done",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
 
@@ -26,4 +27,13 @@
     </section>
     }
 
+    <section>
+    Play another round with @gameState.game.requestee.name
+    @for(course <- gameState.game.courseId.flatMap(Courses(_))){
+    @form(action = GamesController.requestGame(course.organizationId, course.id), 'class -> "inline-block") {
+        <input type="hidden" name="@GameRequest.requestee" value="@gameState.game.requesteeId.v">
+        <input type="submit" value="Play Again">
+        }
+    }
+    </section>
 }

@@ -1,0 +1,82 @@
+@import "flexbox/flexbox.less";
+
+@white: #FFFFFF;
+@light: #0086C2;
+@medium: #3E95CD;
+@dark: #17699D;
+
+.inline-block {
+  display: inline-block;
+}
+
+.main {
+  .flex-display;
+  .flex-direction(column);
+  min-height: 100%;
+}
+
+.content {
+  .flex(1);
+}
+
+
+
+.header {
+  .flex-display;
+  .flex-direction(row);
+  .align-items(center);
+  .justify-content(space-between);
+  background: @medium;
+  height: 3em;
+}
+
+.header-links {
+  .flex(1);
+}
+
+.header-info {
+  .flex(1);
+}
+
+
+
+
+.footer {
+  .flex-display;
+  .flex-direction(row);
+  .align-items(center);
+  .justify-content(flex-end);
+  background: @dark;
+  height: 2em;
+}
+
+
+
+
+.game-status {
+  .flex-display;
+  .flex-direction(column);
+  .align-items(center);
+  .justify-content(flex-start);
+  background: @light;
+}
+
+
+
+.row-layout {
+  .flex-display;
+  .flex-direction(row);
+}
+
+.column-layout {
+  .flex-display;
+  .flex-direction(column);
+}
+
+.major-content {
+  .flex(7);
+}
+
+.minor-content {
+  .flex(3);
+}

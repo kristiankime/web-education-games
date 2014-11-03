@@ -7,9 +7,19 @@
 
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main-flex.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/purebuild/skin.css")">
+        @* <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css"> *@
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/pure/0.5.0/pure-min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/opentip.css")" type="text/css" />
+
         <script src="@routes.Assets.at("javascripts/jquery-2.0.3.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/mathml.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/artclod_txt2mathml.js")" type="text/javascript"></script>
@@ -19,29 +29,35 @@
         <script src="@routes.Assets.at("javascripts/artclod_localize.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/artclod_percent.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/opentip-jquery.min.js")" type="text/javascript"></script>
-        <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
-        <link href="@routes.Assets.at("stylesheets/opentip.css")" rel="stylesheet" type="text/css" />
+        <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full" type="text/javascript"></script>
     </head>
-    <body>
-        <header>
+    <body class="main pure-skin-calctutor">
+
+        <header class="header">
             <div class="header-links">
-                [<a href="@routes.Home.index">Home</a>]
-                [<a href="@controllers.organization.routes.OrganizationsController.list">Organizations</a>]
+                <a href="@routes.Home.index" class="pure-button">Home</a>
+                <a href="@controllers.organization.routes.OrganizationsController.list" class="pure-button">Organizations</a>
                 @for(header <- headers) {
                     @header
                 }
             </div>
             <div class="header-info">
-                This site is in Beta. If you have any feedback please <a href="mailto:edutech.brandeis@@gmail.com?subject=EduTech Calculus CoTutor">email us</a>.
-                Version: @controllers.Application.version.toString
                 [<a href="@routes.Home.userInfo">@user.name</a>]
                 [<a href="@securesocial.controllers.routes.LoginPage.logout">logout</a>]
                 Skill Level: @studentSkillLevel(user)
             </div>
         </header>
-        <hr class="header-end">
-        <section>
+
+        <section class="content">
             @content
         </section>
+
+        <footer class="footer">
+            <div>
+                This site is in Beta. If you have any feedback please <a href="mailto:edutech.brandeis@@gmail.com?subject=EduTech Calculus CoTutor">email us</a>.
+                Version: @controllers.Application.version.toString
+            </div>
+        </footer>
+
     </body>
 </html>

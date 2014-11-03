@@ -8,6 +8,9 @@ This project is intended to be a working play web application that demonstrates 
 
 This readme is intended as documentation for all the steps that were taking in setting up this project. The idea being that, if the reader has the appropriate background in software development, they could they could replicate the steps just reading the document. And even find links to learn about the technologies as they go. As such the readme seem a little overly detail. I will, for example, cover he fact that this project is using Git and Github, which may seem a bit obvious. As a heads up I use a Mac so some of the "nice to have" things on this page will be Mac only. But the majority will be multi platform and free.
 
+## General helpful hints
+Here is a generally helpful post about [what technical details should a web developer know](http://programmers.stackexchange.com/questions/46716/what-technical-details-should-a-programmer-of-a-web-application-consider-before)
+
 ## Tools and Tutorials
 
 The following Tools, Techniques, Services, Infrastructure etc were used in creating this application. These are listed in the expected order of usage. So reading through each section and installing them in order should make sense.
@@ -19,8 +22,9 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Web Hosting: [Heroku](https://www.heroku.com/)
 * Database: [Slick](http://slick.typesafe.com/) for accessing [H2](http://www.h2database.com/) for development & [PostgreSQL](http://www.postgresql.org/) for production
 * Authentication (TDB): [SecureSocial.ws](http://securesocial.ws/)
-* HTML UI: [Twitter Bootstrap](http://getbootstrap.com/)
 * Profanity Filter: [PurgoMalum](http://www.purgomalum.com/)
+* HTML UI: [Twitter Bootstrap](http://getbootstrap.com/) 
+* HTML UI: [Purecss](http://purecss.io/)
 
 ### [Git](http://git-scm.com/)
 This project is using Git as a version control system. If you are new to Git you can find an [install guide and crash course here](http://git-scm.com/book/en/Getting-Started-Git-Basics). 
@@ -85,6 +89,9 @@ https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
 
 ### [Twitter Bootstrap](http://getbootstrap.com/)
 http://stackoverflow.com/questions/10436815/how-to-use-twitter-bootstrap-2-with-play-framework-2-x
+
+### [Purecss](http://purecss.io/)
+Naming conventions: http://smacss.com/
 
 #### mailer
 https://github.com/typesafehub/play-plugins/tree/master/mailer

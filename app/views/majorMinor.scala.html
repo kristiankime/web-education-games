@@ -1,0 +1,14 @@
+@(title: String)(major: Html)(minor: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@views.html.main(title) {
+<div class="row-layout">
+
+    <div class="major-content">
+    @major
+    </div>
+
+    <div class="minor-content">
+    @minor
+    </div>
+
+</div>
+}

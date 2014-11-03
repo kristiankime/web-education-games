@@ -6,35 +6,25 @@
 
 @defining(user.courses) { courses =>
 
-@main("EdTech Welcome Page") {
+@majorMinor("EdTech Welcome Page") {
+    <h1>@viewsupport.ViewText.welcome</h1>
 
-    <div class="row-layout">
+    <section>
+        <h2>Courses</h2>
+        @if(user.courses.isEmpty) {
+        You are not currently associated with any courses.
+        } else {
+        <ul>
+            @for(course <- courses) {<li> [ @tag.courseLink(course) ] @tag.accessName(course.access) </li>}
+        </ul>
+        }
+    </section>
 
-        <div class="major-content">
-            <h1>@viewsupport.ViewText.welcome</h1>
-
-            <section>
-                <h2>Courses</h2>
-                @if(user.courses.isEmpty) {
-                You are not currently associated with any courses.
-                } else {
-                <ul>
-                @for(course <- courses) {<li> [ @tag.courseLink(course) ] @tag.accessName(course.access) </li>}
-                </ul>
-                }
-            </section>
-
-            <section>
-                <h2>Organizations</h2>
-                Too see a list of all of the organizations click [ <a href="@OrganizationsController.list">here</a> ]
-            </section>
-        </div>
-
-        <div class="minor-content">
-            @gamesStatus(None)
-        </div>
-
-    </div>
-}
-
+    <section>
+        <h2>Organizations</h2>
+        Too see a list of all of the organizations click [ <a href="@OrganizationsController.list">here</a> ]
+    </section>
+    } {
+        @gamesStatus(None)
+    }
 }

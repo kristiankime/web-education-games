@@ -1,12 +1,12 @@
 @(title: String)(major: Html)(minor: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 @views.html.main(title) {
-<div class="row-layout">
+<div class="major-minor-layout border1">
 
-    <div class="major-content">
+    <div class="major-content border2">
     @major
     </div>
 
-    <div class="minor-content">
+    <div class="minor-content border2">
     @minor
     </div>
 

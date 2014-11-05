@@ -25,6 +25,7 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * Profanity Filter: [PurgoMalum](http://www.purgomalum.com/)
 * HTML UI: [Twitter Bootstrap](http://getbootstrap.com/) 
 * HTML UI: [Purecss](http://purecss.io/)
+* HTML UI: [Flexbox](http://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 
 ### [Git](http://git-scm.com/)
 This project is using Git as a version control system. If you are new to Git you can find an [install guide and crash course here](http://git-scm.com/book/en/Getting-Started-Git-Basics). 
@@ -92,6 +93,12 @@ http://stackoverflow.com/questions/10436815/how-to-use-twitter-bootstrap-2-with-
 
 ### [Purecss](http://purecss.io/)
 Naming conventions: http://smacss.com/
+Based on: http://necolas.github.io/normalize.css/
+Skin Builder: http://yui.github.io/skinbuilder/index.html?opt=calctutor,045FE7,FFFFFF,1,1,10,1.5&h=0,-30,60&n=0,-30,75&l=0,-30,80&b=0,-30,90&mode=pure
+
+### [Flexbox](http://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+http://philipwalton.github.io/solved-by-flexbox/
+http://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
 
 #### mailer
 https://github.com/typesafehub/play-plugins/tree/master/mailer

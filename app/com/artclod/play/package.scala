@@ -16,5 +16,6 @@ package object play {
 
   def are(v: TraversableOnce[_]) = alternate(v)(Html("is"), Html("are"))
 
-  def asAtt(symbol: scala.Symbol) = symbol.toString.substring(1)
+  def asAtt(symbol: scala.Symbol) = symbol.toString.replace('_', '-').substring(1)
+
 }

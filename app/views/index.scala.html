@@ -3,7 +3,7 @@
 @import controllers.organization.routes.OrganizationsController
 @import views.html.game.status.gamesStatus
 @import models.user.UserPimped
-@import viewsupport.organization.AccessName
+@import viewsupport.organization.AccessName.an
 @import com.artclod.play.s
 
 @defining(user.courses) { courses =>
@@ -12,38 +12,28 @@
     <h1>@viewsupport.ViewText.welcome</h1>
 
     <section>
-        @tag.tooltip("test", "Test of tooltip")
-        <h2>Courses @tag.icon("icon-user7", 'id -> "test")</h2>
+        <h2>General Information</h2>
+        This site is a experiment using new software and learning theories to improve how people learn. You must be enrolled in a course to make use of the system.
+        Please select a course you are enrolled in to continue.<P>
+        If you have been given a code to join a course navigate to it by selecting the appropriate organization below<P>
+        We plan on opening up the system later but it is currently invite only, and there is no way to request access to courses inside the system.
+    </section>
+
+    <section>
+        <h2>Courses</h2>
         @if(courses.isEmpty) {
         You are not currently associated with any courses.
         } else {
         You are currently associated with the following course@s(courses):
-
-
         <ul class="pure-list">
-            @for(course <- courses) {<li> @tag.courseLink(course, extra=Some(tag.icon("icon-user7")))  </li>}
+            @for(course <- courses) {<li> @tag.courseAccessLink(course) </li>}
         </ul>
-
-        <table class="pure-table pure-table-striped">
-            <tr><th>Course</th><th>Association</th><th>Organization</th></tr>
-            @for(course <- courses) {
-            <tr>
-                <td>@tag.courseLink(course)</td>
-                <td>@tag.accessName(course.access)</td>
-                <td>@tag.organizationLink(course.organization)</td>
-            </tr>
-            }
-        </table>
-
-
-
         }
     </section>
 
     <section>
         <h2>Organizations</h2>
-        To enroll in more courses...
-        To see a list of all of the organizations click <a href="@OrganizationsController.list" class="pure-button">here</a>
+        If you have a code you can navigate to the course by picking the correct organization in the list <a href="@OrganizationsController.list" class="pure-button">here</a>
     </section>
     } {
         @gamesStatus()

@@ -1,1 +1,1 @@
-@(course: models.organization.Course, extra : Option[Html] = None)<a href="@controllers.organization.routes.CoursesController.view(course.organizationId, course.id)" class="pure-button">@course.name@for(e <- extra){ @e}</a>
+@(course: models.organization.Course, atts : (Symbol, String)*)<a href="@controllers.organization.routes.CoursesController.view(course.organizationId, course.id)" class="pure-button"@tag.atts(atts)>@course.name</a>

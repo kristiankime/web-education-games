@@ -26,6 +26,7 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * HTML UI: [Twitter Bootstrap](http://getbootstrap.com/) 
 * HTML UI: [Purecss](http://purecss.io/)
 * HTML UI: [Flexbox](http://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+* Icon Fonts: [IcoMoon](https://icomoon.io/)
 
 ### [Git](http://git-scm.com/)
 This project is using Git as a version control system. If you are new to Git you can find an [install guide and crash course here](http://git-scm.com/book/en/Getting-Started-Git-Basics). 
@@ -99,6 +100,9 @@ Skin Builder: http://yui.github.io/skinbuilder/index.html?opt=calctutor,045FE7,F
 ### [Flexbox](http://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 http://philipwalton.github.io/solved-by-flexbox/
 http://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
+
+### [IcoMoon](https://icomoon.io/)
+http://gomakethings.com/icon-fonts/
 
 #### mailer
 https://github.com/typesafehub/play-plugins/tree/master/mailer

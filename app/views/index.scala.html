@@ -3,6 +3,8 @@
 @import controllers.organization.routes.OrganizationsController
 @import views.html.game.status.gamesStatus
 @import models.user.UserPimped
+@import viewsupport.organization.AccessName
+@import com.artclod.play.s
 
 @defining(user.courses) { courses =>
 
@@ -11,18 +13,36 @@
 
     <section>
         <h2>Courses</h2>
-        @if(user.courses.isEmpty) {
+        @if(courses.isEmpty) {
         You are not currently associated with any courses.
         } else {
-        <ul>
-            @for(course <- courses) {<li> [ @tag.courseLink(course) ] @tag.accessName(course.access) </li>}
+        You are currently associated with the following course@s(courses):
+
+
+        <ul class="pure-list">
+            @for(course <- courses) {<li> @tag.courseLink(course, extra=Some(tag.icon("icon-user7")))  </li>}
         </ul>
+
+        <table class="pure-table pure-table-striped">
+            <tr><th>Course</th><th>Association</th><th>Organization</th></tr>
+            @for(course <- courses) {
+            <tr>
+                <td>@tag.courseLink(course)</td>
+                <td>@tag.accessName(course.access)</td>
+                <td>@tag.organizationLink(course.organization)</td>
+            </tr>
+            }
+        </table>
+
+
+
         }
     </section>
 
     <section>
         <h2>Organizations</h2>
-        Too see a list of all of the organizations click [ <a href="@OrganizationsController.list">here</a> ]
+        To enroll in more courses...
+        To see a list of all of the organizations click <a href="@OrganizationsController.list" class="pure-button">here</a>
     </section>
     } {
         @gamesStatus(None)

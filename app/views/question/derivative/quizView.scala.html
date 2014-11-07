@@ -9,11 +9,11 @@
 @import controllers.question.derivative.{ QuizForm, QuestionForm }
 @import models.user.UserPimped
 
-@main("Quiz " + quiz.name, tag.courseLink(course, "[ ", " ]")) {
+@main("Quiz " + quiz.name, tag.courseLink(course)) {
 
     <h2>Welcome to the page for quiz: @quiz.name </h2>
 
-    This is a quiz for the course [ @courseLink(course) ] <br>
+    This is a quiz for the course @courseLink(course) <br>
 
     @if(access.write){
     @form(QuizzesController.rename(course.organizationId, course.id, quiz.id), 'class -> "inline-block") {

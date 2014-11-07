@@ -12,7 +12,7 @@
 @import controllers.game.routes.GamesController
 @import views.html.game.status.gamesStatus
 
-@main(course.name, tag.organizationLink(organization, "[ ", " ]")) {
+@majorMinor(course.name, tag.organizationLink(organization)) {
     <h2>Welcome to the information page for the course: @course.name</h2>
     @* ======= Role ======= *@
     @if(course.access > Non) {
@@ -40,29 +40,35 @@
 
     @* >>>>> Start Access > Non *@
     @if(course.access > Non) {
+        @if(course.name == "Pilot"){ @views.html.organization.pilotInfo()}
 
-    @* ======= Quizzes ======= *@
-    @defining(course.quizzes) { quizzes =>
-    <section>
-        @if(quizzes.isEmpty) {
-        <h5> There are no quizzes for this course </h5>
-        } else {
-        <h5> The course has the following quiz@zes(quizzes): </h5>
-        <ul>
-            @for(quiz <- quizzes) { <li> [ <a href="@QuizzesController.view(course.organizationId, course.id, quiz.id)">@quiz.name</a> ] </li>}
-        </ul>
+        @* ======= Quizzes ======= *@
+        @defining(course.quizzes) { quizzes =>
+            <section>
+                @if(quizzes.isEmpty) {
+                    <h5> There are no quizzes for this course </h5>
+                } else {
+                    <h5> The course has the following quiz@zes(quizzes): </h5>
+                    <ul>
+                    @for(quiz <- quizzes) {
+                        <li> [ <a href="@QuizzesController.view(course.organizationId, course.id, quiz.id)">@quiz.name</a>
+                            ] </li>
+                    }
+                    </ul>
+                }
+                @if(course.access.write) { [ <a href="@QuizzesController.createForm(course.organizationId, course.id)">
+                    add a quiz</a> ] }
+            </section>
         }
-         @if(course.access.write) { [ <a href="@QuizzesController.createForm(course.organizationId, course.id)"> add a quiz</a> ] }
-    </section>
+        @* ======= Start a Game ======= *@
+        <section>
+            <h5> Start a game with another student in the course </h5>
+            [ <a href="@GamesController.findPlayer(course.organizationId, course.id)">new game</a> ]
+        </section>
+        @* <<<<< Close Access > Non *@
     }
-    @* ======= Start a Game ======= *@
-    <section>
-        <h5> Start a game with another student in the course </h5>
-        [ <a href="@GamesController.findPlayer(course.organizationId, course.id)">new game</a> ]
-    </section>
-    @* ======= Course Games ======= *@
-    @gamesStatus(Some(course))
-
-    } @* <<<<< Close Access > Non *@
-}
+    } {
+        @* ======= Course Games ======= *@
+        @gamesStatus(Some(course))
+    }
 

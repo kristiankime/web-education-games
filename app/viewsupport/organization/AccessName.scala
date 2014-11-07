@@ -3,6 +3,11 @@ package viewsupport.organization
 import service._
 
 object AccessName {
+  def op(access: Access, pre : Option[String] = Some(" ")) : Option[String] = access match {
+    case Non => None
+    case other => Some(pre.getOrElse("") + apply(other))
+  }
+
 	def apply(access: Access) = access match {
 		case Own => "Administrator"
 		case Edit => "Teacher"

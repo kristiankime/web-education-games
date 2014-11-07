@@ -4,7 +4,7 @@
 @import controllers.game.GameRequest
 @import helper._
 @import models.user.UserPimped
-@import views.html.tag.percentDisplay
+@import views.html.tag.percent
 @import views.html.tag.gameLink
 @import views.html.tag.datetimeOp
 
@@ -29,7 +29,7 @@
             }
         </table>
 
-        Your score for this quiz: @tag.percentDisplay(quizResults.studentScore)<br>
+        Your score for this quiz: @tag.percent(quizResults.studentScore)<br>
         }
     </section>
 }

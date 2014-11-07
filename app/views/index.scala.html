@@ -12,7 +12,8 @@
     <h1>@viewsupport.ViewText.welcome</h1>
 
     <section>
-        <h2>Courses</h2>
+        @tag.tooltip("test", "Test of tooltip")
+        <h2>Courses @tag.icon("icon-user7", 'id -> "test")</h2>
         @if(courses.isEmpty) {
         You are not currently associated with any courses.
         } else {

@@ -1,0 +1,6 @@
+@(access: service.Access) @access match {
+    case service.Non => {}
+    case service.View => {@tag.icon("icon-user7")}
+    case service.Edit => {@tag.icon("icon-user-add")}
+    case service.Own => {}
+}

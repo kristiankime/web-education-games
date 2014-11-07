@@ -4,7 +4,7 @@
 @import controllers.game.GameRequest
 @import helper._
 @import models.user.UserPimped
-@import views.html.tag.percentDisplay
+@import views.html.tag.percent
 
 @defining(student.name){ studentName =>
 @defining(game.skillLevel(student)){ studentSkillLevel =>
@@ -25,12 +25,12 @@
                 <td> @mathml.mathmlContent(result.question) </td>
                 <td> @mathml.correct(result.correct) </td>
                 <td> @tag.difficultyLevel(result.question.difficulty)</td>
-                <td> @tag.percentDisplay(result.teacherScore(studentSkillLevel)) </td>
+                <td> @tag.percent(result.teacherScore(studentSkillLevel)) </td>
             </tr>
             }
         </table>
 
-        Your score for this quiz: @tag.percentDisplay(quizResults.teacherScore(studentSkillLevel))<br>
+        Your score for this quiz: @tag.percent(quizResults.teacherScore(studentSkillLevel))<br>
         }
     </section>
 }

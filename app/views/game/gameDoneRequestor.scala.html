@@ -4,7 +4,6 @@
 @import controllers.game.GameRequest
 @import helper._
 @import models.user.UserPimped
-@import views.html.tag.percentDisplay
 @import models.organization.Courses
 
 @main("Game Done",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
@@ -17,13 +16,13 @@
 
     @for(requesteeQuiz <- gameState.game.requesteeQuiz ) {
     <section>
-        Your score as a student was @percentDisplay(requesteeQuiz.studentScore(user)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>]
+        Your score as a student was @tag.percent(requesteeQuiz.studentScore(user)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>]
     </section>
     }
 
     @for(requestorQuiz <- gameState.game.requestorQuizIfAnswered ) {
     <section>
-        Your score as a teacher was @percentDisplay(requestorQuiz.teacherScore(gameState.game.requestee, gameState.game.requesteeSkill)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>]
+        Your score as a teacher was @tag.percent(requestorQuiz.teacherScore(gameState.game.requestee, gameState.game.requesteeSkill)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>]
     </section>
     }
 

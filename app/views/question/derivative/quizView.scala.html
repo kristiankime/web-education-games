@@ -71,7 +71,7 @@
         <h4>Summary of student results</h4>
         <ul>
         @for(result <- quizResults) {
-            <li> @{result.student.name}'s score was @tag.percentOption(result.score)</li>
+            <li> @{result.student.name}'s score was @tag.percentOp(result.score)</li>
         }
         </ul>
     </section>

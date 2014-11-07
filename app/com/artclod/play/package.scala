@@ -15,4 +15,6 @@ package object play {
   def zes(v: TraversableOnce[_]) = plural(v)(Html("zes"))
 
   def are(v: TraversableOnce[_]) = alternate(v)(Html("is"), Html("are"))
+
+  def asAtt(symbol: scala.Symbol) = symbol.toString.substring(1)
 }

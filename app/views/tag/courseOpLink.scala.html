@@ -1,1 +1,1 @@
-@(courseOp: Option[models.organization.Course], pre : String = "", post : String = "")@for(course <- courseOp){@pre<a href="@controllers.organization.routes.CoursesController.view(course.organizationId, course.id)">@course.name</a>@post}
+@(courseOp: Option[models.organization.Course])@for(course <- courseOp){@tag.courseLink(course)}

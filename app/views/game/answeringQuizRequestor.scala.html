@@ -8,7 +8,7 @@
 @defining(gameState.requesteeQuiz) { quiz =>
 @defining(quiz.results(user)) { quizResults =>
 
-@main("Answering Quiz", views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
+@main("Answering Quiz", tag.courseOpLink(gameState.game.course)) {
 
     <h4>Answer the quiz your partner created</h4>
 

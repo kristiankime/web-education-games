@@ -5,7 +5,7 @@
 @import models.user.UserPimped
 @import models.game.GameResponseStatus
 
-@main("Awaiting Quiz",  views.html.tag.courseOpLink(gameState.game.course, "[ ", " ]")) {
+@main("Awaiting Quiz", tag.courseOpLink(gameState.game.course)) {
 
     @if(gameState.game.response == GameResponseStatus.accepted){
         You finished your quiz but @gameState.game.requestee.name hasn't yet built theirs <br>

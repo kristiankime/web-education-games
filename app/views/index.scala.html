@@ -3,19 +3,18 @@
 @import controllers.organization.routes.OrganizationsController
 @import views.html.game.status.gamesStatus
 @import models.user.UserPimped
-@import viewsupport.organization.AccessName.an
 @import com.artclod.play.s
 
 @defining(user.courses) { courses =>
 
-@majorMinor("EdTech Welcome Page") {
+@mainWithStatus("EdTech Welcome Page")(None){
     <h1>@viewsupport.ViewText.welcome</h1>
 
     <section>
         <h2>General Information</h2>
-        This site is a experiment using new software and learning theories to improve how people learn. You must be enrolled in a course to make use of the system.
-        Please select a course you are enrolled in to continue.<P>
-        If you have been given a code to join a course navigate to it by selecting the appropriate organization below<P>
+        This site is a experiment using new software and theories about education to improve how people learn. You must be enrolled in a course to make use of the system.
+        If you are already enrolled please select a course from the list below.<P>
+        If you have been given a code to join a course navigate to it by selecting the appropriate organization below.<P>
         We plan on opening up the system later but it is currently invite only, and there is no way to request access to courses inside the system.
     </section>
 
@@ -35,7 +34,5 @@
         <h2>Organizations</h2>
         If you have a code you can navigate to the course by picking the correct organization in the list <a href="@OrganizationsController.list" class="pure-button">here</a>
     </section>
-    } {
-        @gamesStatus()
     }
 }

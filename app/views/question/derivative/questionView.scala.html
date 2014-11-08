@@ -11,7 +11,7 @@
 
 @defining(quiz.access){ access =>
 
-@main("Question Page", tag.courseQuizLink(course, quiz)) {
+@mainWithBorder("Question Page", tag.courseQuizLink(course, quiz)) {
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
     This is a quiz for the course [ @courseLink(course) ] <br>

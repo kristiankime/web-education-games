@@ -6,7 +6,7 @@
 @import models.user.UserPimped
 @import models.organization.Courses
 
-@main("Game Done", tag.courseOpLink(gameState.game.course)) {
+@mainWithBorder("Game Done", tag.courseOpLink(gameState.game.course)) {
 
     @if(!gameState.game.requesteeFinished){
     <h1>You have finished but @gameState.game.requestee.name still needs to finish your quiz.</h1>

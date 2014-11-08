@@ -1,9 +1,8 @@
 @(organization: models.organization.Organization, courses: List[models.organization.Course])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import views.html.tag._
 @import play.api.templates.Html
 
-@main("Courses for " + organization.name, tag.organizationLink(organization) ) {
+@mainWithStatus("Courses for " + organization.name, tag.organizationLink(organization))(None) {
 
     <h1> Welcome to the Course Catalog for @organization.name</h1>
 
@@ -15,7 +14,7 @@
         There are currently no available courses
     } else {
         <ul>
-            @for(course <- courses) {<li> [ @courseLink(course) ] @accessName(course.access) </li>}
+            @for(course <- courses) {<li> [ @tag.courseLink(course) ] @tag.accessName(course.access) </li>}
         </ul>
     }
     </section>

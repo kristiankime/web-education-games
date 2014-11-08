@@ -12,7 +12,7 @@
 @import controllers.game.routes.GamesController
 @import views.html.game.status.gamesStatus
 
-@majorMinor(course.name, tag.organizationLink(organization)) {
+@mainWithStatus(course.name, tag.organizationLink(organization))(Some(course)) {
     <h2>Welcome to the information page for the course: @course.name</h2>
     @* ======= Role ======= *@
     @if(course.access > Non) {
@@ -67,8 +67,5 @@
         </section>
         @* <<<<< Close Access > Non *@
     }
-    } {
-        @* ======= Course Games ======= *@
-        @gamesStatus(Some(course))
-    }
+}
 

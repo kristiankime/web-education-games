@@ -1,0 +1,8 @@
+@(title: String, headers: Html*)(courseOp: Option[models.organization.Course] = None)(major: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@views.html.majorMinor(title, headers: _*) {
+    <section class="primary-content">
+        @major
+    </section>
+}{
+    @views.html.game.status.gamesStatus(courseOp)
+}

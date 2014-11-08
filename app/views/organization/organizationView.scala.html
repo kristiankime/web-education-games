@@ -5,7 +5,7 @@
 
 @defining(organization.courses) { courses =>
 
-@main(organization.name) {
+@mainWithStatus(organization.name)(None) {
     <h2>Welcome to the information page for the organization: @organization.name</h2>
 
     <h3>The following course@s(courses) @are(courses) available:</h3>

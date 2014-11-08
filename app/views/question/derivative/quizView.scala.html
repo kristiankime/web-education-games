@@ -9,7 +9,7 @@
 @import controllers.question.derivative.{ QuizForm, QuestionForm }
 @import models.user.UserPimped
 
-@main("Quiz " + quiz.name, tag.courseLink(course)) {
+@mainWithBorder("Quiz " + quiz.name, tag.courseLink(course)) {
 
     <h2>Welcome to the page for quiz: @quiz.name </h2>
 

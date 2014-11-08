@@ -14,8 +14,8 @@
 @mainWithBorder("Question Page", tag.courseQuizLink(course, quiz)) {
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
-    This is a quiz for the course [ @courseLink(course) ] <br>
-    Back to the quiz [ @courseQuizLink(course, quiz) ] <br>
+    This is a quiz for the course @courseLink(course) <br>
+    Back to the quiz @courseQuizLink(course, quiz) <br>
 
     <h2>What is the Derivative of</h2> @mathml.mathmlContent(results.question)
 
@@ -68,7 +68,7 @@
 
     @defining(quiz.nextQuestion(results.question)){ nextOp =>
         @for(next <- nextOp) {Go to the [<a href="@QuestionsController.view(course.organizationId, course.id, quiz.id, next.id)">next question</a>]}
-        @if(nextOp.isEmpty) {This is the last question, back to the quiz [ @courseQuizLink(course, quiz) ]}
+        @if(nextOp.isEmpty) {This is the last question, back to the quiz @courseQuizLink(course, quiz)}
     }
     <br>
 

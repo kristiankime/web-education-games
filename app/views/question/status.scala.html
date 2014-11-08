@@ -1,8 +1,6 @@
-@(correct: models.question.Status)
-@import models.question._
-@{correct match {
-	case Correct => <font color="green"> correct </font>
-	case Incorrect => <font color="red"> incorrect </font>
-	case Unanswered => <font color="blue"> unanswered </font>
+@(correct: models.question.Status)@{correct match {
+	case models.question.Correct => <font color="green"> correct </font>
+	case models.question.Incorrect => <font color="red"> incorrect </font>
+	case models.question.Unanswered => <font color="blue"> unanswered </font>
 }}
 

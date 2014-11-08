@@ -9,7 +9,7 @@
 
     <h2>Please enter the information about your quiz:</h2>
 
-    This quiz is for the course [ @courseLink(course) ] <br>
+    This quiz is for the course @courseLink(course)<br>
 
     @form(action = QuizzesController.createSubmit(course.organizationId, course.id)) {
         Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>

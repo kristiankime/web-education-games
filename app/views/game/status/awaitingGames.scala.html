@@ -9,7 +9,7 @@
 <section>
     <h5>Awaiting Replies</h5>
     @if(games.isEmpty){<h6>You are not waiting for anyone to accept a request</h6>} else {<h6>You are waiting for the following players to accept a game</h6>
-    <ul>
+    <ul class="pure-list">
         @for(game <- games) {<li> @gameLink(game.otherPlayer(user).name, game) @tag.gameCourseLink(courseOp, game) </li>}
     </ul>
     }

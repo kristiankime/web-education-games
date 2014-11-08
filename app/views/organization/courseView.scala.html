@@ -49,21 +49,17 @@
                     <h5> There are no quizzes for this course </h5>
                 } else {
                     <h5> The course has the following quiz@zes(quizzes): </h5>
-                    <ul>
-                    @for(quiz <- quizzes) {
-                        <li> [ <a href="@QuizzesController.view(course.organizationId, course.id, quiz.id)">@quiz.name</a>
-                            ] </li>
-                    }
+                    <ul class="pure-list">
+                    @for(quiz <- quizzes) {<li>  <a href="@QuizzesController.view(course.organizationId, course.id, quiz.id)" class="pure-button">@quiz.name</a> </li> }
                     </ul>
                 }
-                @if(course.access.write) { [ <a href="@QuizzesController.createForm(course.organizationId, course.id)">
-                    add a quiz</a> ] }
+                @if(course.access.write) { <a href="@QuizzesController.createForm(course.organizationId, course.id)" class="pure-button"> add a quiz</a> }
             </section>
         }
         @* ======= Start a Game ======= *@
         <section>
             <h5> Start a game with another student in the course </h5>
-            [ <a href="@GamesController.findPlayer(course.organizationId, course.id)">new game</a> ]
+            <a href="@GamesController.findPlayer(course.organizationId, course.id)" class="pure-button">new game</a>
         </section>
         @* <<<<< Close Access > Non *@
     }

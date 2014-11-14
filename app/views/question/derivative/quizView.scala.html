@@ -2,40 +2,39 @@
 	course: models.organization.Course,
     quiz: models.question.derivative.Quiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import models.question.derivative.result.QuizResults
 @import helper._
-@import views.html.tag._
 @import controllers.question.derivative.routes.{ QuestionsController, QuizzesController}
 @import controllers.question.derivative.{ QuizForm, QuestionForm }
 @import models.user.UserPimped
+@import com.artclod.play.{are, s}
 
 @mainWithBorder("Quiz " + quiz.name, tag.courseLink(course)) {
 
     <h2>Welcome to the page for quiz: @quiz.name </h2>
 
-    This is a quiz for the course @courseLink(course) <br>
-
     @if(access.write){
-    @form(QuizzesController.rename(course.organizationId, course.id, quiz.id), 'class -> "inline-block") {
+    @form(QuizzesController.rename(course.organizationId, course.id, quiz.id), 'class -> "pure-form") {
         To rename type a new name here <input type="text" name="@QuizForm.name" value="@quiz.name">
-        and click <input type="submit" value="rename" >
+        and click <input class="pure-button" type="submit" value="rename" >
     }
     }
 
-    @defining(quiz.results(user)){ quizResults =>
-    <h4>There are @quizResults.questions.size Question(s) in the quiz</h4>
+    @defining(quiz.results(user)){ results =>
+    @defining(results.questions){ questions =>
 
-    <table>
-    	<th>Question</th> <th>Details</th> <th>Status</th> @if(access.write){ <th> Remove </th> }
-        @for(result <- quizResults.results){
+    <h4>There @are(questions) @questions.size Question@s(questions) in the quiz @tag.icon("icon-help", 'data_ot -> "Click a question to answer it")</h4>
+
+    <table class="pure-table pure-table-striped">
+    	<th>Question</th> <th>Status</th> @if(access.write){ <th> Remove </th> }
+        @for(result <- results.results){
         <tr>
-            <td> @mathml.mathmlContent(result.question) </td>
-            <td> <a href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)">view</a> </td>
+            <td> <a class="pure-button" href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)"> @mathml.mathmlContent(result.question) </a></td>
             <td> @views.html.question.status(result.status) </td>
-            @if(access.write){ <td> @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "inline-block") { <input type="submit" value="remove" > } </td> }
+            @if(access.write){ <td> @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "inline-block") { <input class="pure-button" type="submit" value="remove" > } </td> }
         </tr>
         }
     </table>
+    }
     }
 
     @if(access.write){
@@ -47,10 +46,10 @@
             @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40))
         </p>
 
-        @form(QuestionsController.create(course.organizationId, course.id, quiz.id), 'id -> "derivativeqForm" ) {
+        @form(QuestionsController.create(course.organizationId, course.id, quiz.id), 'id -> "derivativeqForm", 'class -> "pure-form") {
             <input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
             <input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
-            <input type="button" value="Save Question" onclick="formSubmit()">
+            <input class="pure-button" type="button" value="Save Question" onclick="formSubmit()">
         }
 
         <script>
@@ -60,7 +59,7 @@
                 $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
                 $("#derivativeqForm").submit();
             } else {
-                alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
+                alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
             }
         }
         </script>

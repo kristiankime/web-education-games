@@ -1,1 +1,1 @@
-@(name: String, atts: (scala.Symbol, String)*)<i class="@name"@tag.atts(atts)></i>
+@(name: String, atts: (scala.Symbol, String)*)<i@tag.atts(('class -> name) +: atts)></i>

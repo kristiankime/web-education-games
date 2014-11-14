@@ -1,14 +1,1 @@
-@(editorName: String)
-<script>
-    $(function(){
-        var myInput = $("#@{editorName + "Help"}");
-        var nl = "<br>";
-        var content = "Equations can contain numbers, X, parentheses, operators and functions" + nl +
-        "The operators are: +, -, *, /, ^" + nl +
-        "The functions are: sin, cos, tan, sqrt(x), root(n)(x), ln, exp(base,pow), log_base(pow) or log(base,pow) " + nl +
-        "the base for log and n for root must be a number." + nl +
-        "If there is a red * next to the entry box that means that the equation couldn't be parsed.";
-        var inputOpentip = new Opentip(myInput, content, { });
-    });
-</script>
-<img id="@{editorName + "Help"}" src="@routes.Assets.at("images/help.png")"/>
+@()@tag.icon("icon-help", 'data_ot -> "Equations can contain numbers, X, parentheses, operators and functions.<br><br>The operators and functions are: +, -, *, /, ^\\, sin, cos, tan, sqrt(x), root(n)(x), ln, exp(base,pow), log_base(pow) or log(base,pow). Note the base for log and n for root must be a number.<br><br> If there is a red icon next to the entry box that means that the equation couldn't be parsed.")

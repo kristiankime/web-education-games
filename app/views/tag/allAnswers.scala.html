@@ -6,14 +6,11 @@
 @defining(question.answersAndOwners) { allAnswers =>
 <section>
     <h4>There have been @allAnswers.size Answer@s(allAnswers) to this question</h4>
-    <table>
-        <tr> <th> User Name </th> @* <th> Last Name </th> <th> First Name </th> <th> Email </th> *@ <th> Answer </th> <th> Correct </th> <th> Time </th> </tr>
+    <table class="pure-table pure-table-striped">
+        <tr> <th> User Name </th> <th> Answer </th> <th> Result </th> <th> Time </th> </tr>
         @for(answer <- allAnswers) {
         <tr>
             <td> @answer._2.name </td>
-            @*<td> @answer._2.lastName </td>*@
-            @*<td> @answer._2.firstName </td>*@
-            @*<td> @answer._2.email </td>*@
             <td> @mathml.mathmlContent(answer._1) </td>
             <td> @mathml.correct(answer._1.correct) </td>
             <td> @views.html.tag.datetime(answer._1.creationDate) </td>

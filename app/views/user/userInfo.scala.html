@@ -19,14 +19,14 @@
     @if(courses.isEmpty){
     <h5> You are not signed up for any courses </h5>
     } else {
-    <h5> Your are associated with the following course@s(courses)</h5>
-    <ul>
-        @for(course <- courses) {<li> [ @courseLink(course) ] </li>}
+    <h5> Your are associated with the following course@s(courses):</h5>
+    <ul class="pure-list">
+        @for(course <- courses) {<li> @courseLink(course) </li>}
     </ul>
     }
     }
 
-    @form(action = routes.Consent.revokeConsent) {
-        I no longer want to take part in this study <input type="submit" value="Revoke Consent">
+    @form(action = routes.Consent.revokeConsent, 'class -> "pure-form") {
+        I no longer want to take part in this study <input class="pure-button" type="submit" value="Revoke Consent">
     }
 }

@@ -8,9 +8,11 @@
 @mainWithBorder("Awaiting Quiz", tag.courseOpLink(gameState.game.course)) {
 
     @if(gameState.game.response == GameResponseStatus.accepted){
-        You finished your quiz but @gameState.game.requestee.name hasn't yet built theirs <br>
+        You finished your quiz but @gameState.game.requestee.name hasn't yet built theirs.
+        Please wait for the other player to finish their game (you will need to reload the page).<br>
     } else {
-        You finished your quiz for @gameState.game.requestee.name but they haven't yet agreed to play a game with you  <br>
+        You finished your quiz for @gameState.game.requestee.name but they haven't yet agreed to play a game with you.
+        Please wait for the other player to accept their game (you will need to reload the page).<br>
     }
 
 }

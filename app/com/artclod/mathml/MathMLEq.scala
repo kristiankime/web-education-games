@@ -16,7 +16,7 @@ object MathMLEq {
 	private val tooSmall = 1E-154 // LATER figure out how small is too small :( i.e. 1e-312 works for most tests...
 	private val tooBig = 1E154 // LATER figure out how big is too big
 	private val ε = .00001d
-  private val closeEnoughTo0 = 1E-16
+  private val closeEnoughTo0 = 1E-15
 
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = checkEval(variableName, eq1, eq2, vals)
 

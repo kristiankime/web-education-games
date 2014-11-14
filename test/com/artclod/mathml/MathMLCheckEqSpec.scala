@@ -93,6 +93,12 @@ class MathMLCheckEqSpec extends Specification {
 
       ((f dx) ?= g) must beEqualTo(Yes)
     }
+
+    "confirm (ln(exp(x))-x)' = 0" in {
+      val f = (ln(e ^ x) - x)
+      val g = `0`
+      ((f dx) ?= g) must beEqualTo(Yes)
+    }
   }
 
 	"Check that multiplying top and bottom of a quotient by the same thing " should {

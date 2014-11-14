@@ -26,6 +26,7 @@ The following Tools, Techniques, Services, Infrastructure etc were used in creat
 * HTML UI: [Twitter Bootstrap](http://getbootstrap.com/) 
 * HTML UI: [Purecss](http://purecss.io/)
 * HTML UI: [Flexbox](http://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+* Icon Fonts: [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
 * Icon Fonts: [IcoMoon](https://icomoon.io/)
 
 ### [Git](http://git-scm.com/)

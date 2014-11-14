@@ -1,1 +1,1 @@
-@(course: models.organization.Course, atts : (Symbol, String)*)<a href="@controllers.organization.routes.CoursesController.view(course.organizationId, course.id)" class="pure-button"@tag.atts(atts)>@course.name</a>
+@(course: models.organization.Course, atts : (Symbol, String)*)<a href="@controllers.organization.routes.CoursesController.view(course.organizationId, course.id)"@tag.atts(('class -> "pure-button") +: atts)>@course.name</a>

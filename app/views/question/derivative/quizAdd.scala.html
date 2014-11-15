@@ -9,11 +9,15 @@
 
     <h2>Please enter the information about your quiz:</h2>
 
-    This quiz is for the course @courseLink(course)<br>
+    <p>
+        This quiz is for the course @courseLink(course)
+    </p>
 
-    @form(action = QuizzesController.createSubmit(course.organizationId, course.id)) {
-        Name: <input type="text" name="@QuizForm.name" value="quiz name"> <br>
-        <input type="submit" value="Submit">
+    @form(action = QuizzesController.createSubmit(course.organizationId, course.id), 'class -> "pure-form") {
+        <fieldset>
+            <label for="@QuizForm.name">Name: <input type="text" name="@QuizForm.name" value="quiz name"></label>
+            <input type="submit" class="pure-button pure-button-primary" value="Submit">
+        </fieldset>
     }
 
 }

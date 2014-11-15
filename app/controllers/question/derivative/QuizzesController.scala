@@ -32,7 +32,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
   def createForm(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course)) => Ok(views.html.question.derivative.quizAdd(course))
+      case Right((organization, course)) => Ok(views.html.question.derivative.quizCreate(course))
     }
   }
 

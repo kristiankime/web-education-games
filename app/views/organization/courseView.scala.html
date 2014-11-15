@@ -3,7 +3,6 @@
 @import com.artclod.play._
 @import helper._
 @import service._
-@import views.html.tag._
 @import viewsupport.organization.AccessName.an
 @import models.user.UserPimped
 @import controllers.organization.CourseJoin
@@ -31,10 +30,10 @@
     @if(course.access <= Non) {
     <section>
         <h5> If you need to sign up please input your code here: </h5>
-        @form(action = CoursesController.join(course.organizationId, course.id)) {
-            <input type="text" name="@CourseJoin.code" placeholder="code goes here"> <br>
-            <input type="submit" value="Submit">
-            }
+        @form(action = CoursesController.join(course.organizationId, course.id), 'class -> "pure-form") {
+            <input type="text" name="@CourseJoin.code" placeholder="code goes here">
+            <input type="submit" class="pure-button pure-button-primary" value="Submit">
+        }
     </section>
     }
 

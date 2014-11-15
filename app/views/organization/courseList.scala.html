@@ -13,7 +13,7 @@
     @if(courses.isEmpty) {
         There are currently no available courses
     } else {
-        <ul>
+        <ul class="pure-list">
             @for(course <- courses) {<li> @tag.courseAccessLink(course) </li>}
         </ul>
     }

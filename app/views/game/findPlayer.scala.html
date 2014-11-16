@@ -14,13 +14,16 @@
     @if(students.isEmpty){
     <h5>There are currently no students available to play with in the course</h5>
     } else {
-    <h5>Please select a player you want to play with:</h5>
+    <h5>Please select the player you want to play with (an invitation will be sent to them):</h5>
 
-    <p>an invitation will be sent to them.</p>
-
-    @form(action = GamesController.requestGame(organization.id, course.id)) {
-        @for(student <- students){<input type="radio" name="@GameRequest.requestee" value="@student.id.v"> @student.name <br>}
-	    <input type="submit" value="Submit">
+    @form(action = GamesController.requestGame(organization.id, course.id), 'class -> "pure-form") {
+        @for(student <- students.zipWithIndex){
+        <label for="@student._1.id.v" class="pure-checkbox">
+            <input id="@student._1.id.v" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
+            @student._1.name
+        </label>
+        }
+	    <input type="submit" class="pure-button pure-button-primary" value="Submit">
     }
     }
 }

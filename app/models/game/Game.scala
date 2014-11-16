@@ -87,8 +87,8 @@ case class Game(id: GameId = null,
     case (GameResponseStatus.requested, _,       false, None,    false, false, false, None)    => RequestedNoQuiz(this)
     case (GameResponseStatus.requested, Some(_), true,  None,    false, false, false, None)    => RequestedQuizDone(this)
     // Game Rejected
-    case (GameResponseStatus.rejected,  _,       false, None,    false, false, false, None)    => RejectedNoQuiz(this)
-    case (GameResponseStatus.rejected,  Some(_), true,  None,    false, false, false, None)    => RejectedQuizDone(this)
+    case (GameResponseStatus.rejected,  _,       false, None,    false, false, false, Some(_)) => RejectedNoQuiz(this)
+    case (GameResponseStatus.rejected,  Some(_), true,  None,    false, false, false, Some(_)) => RejectedQuizDone(this)
     // Game Accepted (both making quizzes, Tor == Requestor, Tee == Requestee)
     case (GameResponseStatus.accepted,  _,       false, _,       false, false, false, None)    => AcceptedTorNoQuizTeeNoQuiz(this)
     case (GameResponseStatus.accepted,  Some(_), true,  _,       false, false, false, None)    => AcceptedTorQuizDoneTeeNoQuiz(this)

@@ -19,12 +19,15 @@ object GameResponseStatus extends (Short => GameResponseStatus) {
 
 object Requested extends GameResponseStatus {
   val v: Short = 0
+  override val toString = "Requested"
 }
 
 object Accepted extends GameResponseStatus {
   val v: Short = 1
+  override val toString = "Accepted"
 }
 
 object Rejected extends GameResponseStatus {
   val v: Short = 2
+  override val toString = "Rejected"
 }

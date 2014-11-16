@@ -8,10 +8,17 @@
 
     @gameState.game.requestor.name requested to play a game with you but you have not yet responded <br>
 
-    @form(action = routes.GamesController.respond(gameState.game.id)) {
-        <input type="radio" name="@GameResponse.response" value="true" checked> Accept Request <br>
-        <input type="radio" name="@GameResponse.response" value="false"> Reject Request <br>
-        <input type="submit" value="Submit">
+    @form(action = routes.GamesController.respond(gameState.game.id), 'class -> "pure-form") {
+
+        <label for="accept" class="pure-radio">
+            <input id="accept" type="radio" name="@GameResponse.response" value="true" checked>
+            Accept Request
+        </label>
+        <label for="reject" class="pure-radio">
+            <input id="reject" type="radio" name="@GameResponse.response" value="false">
+            Reject Request
+        </label>
+        <input type="submit" class="pure-button pure-button-primary" value="Submit">
     }
 
 }

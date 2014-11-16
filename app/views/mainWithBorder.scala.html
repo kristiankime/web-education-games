@@ -1,6 +1,6 @@
-@(title: String, headers: Html*)(major: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(title: String, headers: Html*)(content: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 @views.html.main(title, headers: _*) {
     <section class="primary-content">
-        @major
+        @content
     </section>
 }

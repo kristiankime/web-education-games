@@ -12,7 +12,7 @@
 @defining(quizOp.map(_.questions).dropOption) { questions =>
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
-@mainWithBorder("Create Game Quiz", tag.courseOpLink(gameState.game.course)) {
+@majorMinor("Create Game Quiz", tag.courseOpLink(gameState.game.course)) {
 
     <h1>Create a Game Quiz</h1>
 
@@ -70,7 +70,7 @@
     }
 
     @mathml.mathmlScoring("editorSuccess", gameState.game.requestorSkill)
-
+}{ @* ===== Minor Content Here ==== *@
     @views.html.question.recentHistory(gameState.game.requestor)
 }
 

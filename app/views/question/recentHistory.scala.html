@@ -5,38 +5,37 @@
 @defining(models.question.derivative.Questions.incorrectResults(user, 5)) { incorrectQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
 @defining(models.question.derivative.Questions.correctResults(user, 5)) { correctQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
 
-    <section>
-    <h4> Other Player's History </h4>
+    <section class="game-status secondary-content">
+        <h4> Other Player's History </h4>
 
-    <p>
-        When creating your questions it may help you to know what the other player has done recently.
-        Below is a quick summary of the recent history of what questions they've answered correctly and incorrectly.
-    </p>
+        <p>
+            When creating your questions it may help you to know what the other player has done recently.
+            Below is a quick summary of the recent history of what questions they've answered correctly and incorrectly.
+        </p>
 
-    <h5> Correct </h5>
-    @if(correctQuestions.isEmpty) {
-        @user.name hasn't answered any questions correctly
-    } else {
-        Here are the questions @user.name answered correctly recently:
-        <ol>
-        @for(correctQuestion <- correctQuestions) {
-            <li> @tag.questionSummary(correctQuestion) </li>
+        <h5> Correct </h5>
+        @if(correctQuestions.isEmpty) {
+            @user.name hasn't answered any questions correctly
+        } else {
+            Here are the questions @user.name answered correctly recently:
+            <ol>
+            @for(correctQuestion <- correctQuestions) {
+                <li> @tag.questionSummary(correctQuestion) </li>
+            }
+            </ol>
         }
-        </ol>
-    }
 
-    <h5> Incorrect </h5>
-    @if(incorrectQuestions.isEmpty) {
-        @user.name hasn't answered any questions incorrectly
-    } else {
-        Here are the questions @user.name answered incorrectly recently:
-        <ol>
-        @for(incorrectQuestion <- incorrectQuestions) {
-            <li> @tag.questionSummary(incorrectQuestion) </li>
+        <h5> Incorrect </h5>
+        @if(incorrectQuestions.isEmpty) {
+            @user.name hasn't answered any questions incorrectly
+        } else {
+            Here are the questions @user.name answered incorrectly recently:
+            <ol>
+            @for(incorrectQuestion <- incorrectQuestions) {
+                <li> @tag.questionSummary(incorrectQuestion) </li>
+            }
+            </ol>
         }
-        </ol>
-    }
-
     </section>
 
 }

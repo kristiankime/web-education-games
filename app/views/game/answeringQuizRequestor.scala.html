@@ -14,18 +14,20 @@
 
     There are @quizResults.questions.size Question(s) in the quiz <br>
 
-    <table>
-        <th>Question</th> <th>Details</th> <th>Status</th>
+    <table class="pure-table pure-table-striped">
+        <tr>
+            <th>Question</th>
+            <th>Status</th>
+        </tr>
         @for(result <- quizResults.results) {
-            <tr>
-                <td> @mathml.mathmlContent(result.question) </td>
-                <td> [<a href="@GamesController.question(gameState.game.id, result.question.id)">answer</a>] </td>
-                <td> @views.html.question.status(result.status) </td>
-            </tr>
+        <tr>
+            <td> <a class="pure-button" href="@GamesController.question(gameState.game.id, result.question.id)"> @mathml.mathmlContent(result.question) </a> </td>
+            <td> @views.html.question.status(result.status) </td>
+        </tr>
         }
     </table>
 
-    @form(GamesRequestorController.finalizeAnswers(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize Answers" > }
+    @form(GamesRequestorController.finalizeAnswers(gameState.game.id), 'class -> "pure-form") {<input type="submit" class="pure-button" value="Finalize Answers" >}
 
 }
 

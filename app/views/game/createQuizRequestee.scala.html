@@ -13,64 +13,65 @@
 @defining(numberOfQuestions - questions.size) { numQuestionRemaining =>
 
 @majorMinor("Create Game Quiz", tag.courseOpLink(gameState.game.course)) {
+    <section class="primary-content">
+        <h1>Create a Game Quiz</h1>
 
-    <h1>Create a Game Quiz</h1>
+        You are now playing a game with @gameState.game.requestor.name, and need to create a Quiz for them. <br>
 
-    You are now playing a game with @gameState.game.requestor.name, and need to create a Quiz for them. <br>
-
-    @if(gameState.game.requestorQuizDone){
-    They have finished creating their quiz and are waiting for you to finish yours <br>
-    }
-
-    @for(quiz <- quizOp){
-    <table>
-        <th>Question</th> <th> Remove </th>
-        @for(question <- questions){
-        <tr>
-            <td> @mathml.mathmlContent(question) </td>
-            <td> @form(GamesRequesteeController.removeQuestion(gameState.game.id), 'class -> "pure-form") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" class="pure-button" value="remove" > } </td>
-        </tr>
+        @if(gameState.game.requestorQuizDone){
+        They have finished creating their quiz and are waiting for you to finish yours <br>
         }
-    </table>
-    }
 
-    @if(numQuestionRemaining == 0){
-    <h4> Your quiz has all the questions it needs. You can finalize the quiz if you want. Or remove a question and add another if you don't like one.</h4>
-    } else {
-    <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
+        @for(quiz <- quizOp){
+        <table>
+            <th>Question</th> <th> Remove </th>
+            @for(question <- questions){
+            <tr>
+                <td> @mathml.mathmlContent(question) </td>
+                <td> @form(GamesRequesteeController.removeQuestion(gameState.game.id), 'class -> "pure-form") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" class="pure-button" value="remove" > } </td>
+            </tr>
+            }
+        </table>
+        }
 
-    <p>
-        Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
-        @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp = Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
-    </p>
+        @if(numQuestionRemaining == 0){
+        <h4> Your quiz has all the questions it needs. You can finalize the quiz if you want. Or remove a question and add another if you don't like one.</h4>
+        } else {
+        <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
 
-    @form(GamesRequesteeController.createQuestion(gameState.game.id), 'id -> "derivativeqForm", 'class -> "pure-form" ) {
-        <input type="hidden" name="@GameCreateQuestion.mathML" id="derivativeQuestionMathML">
-        <input type="hidden" name="@GameCreateQuestion.rawStr" id="derivativeQuestionRawStr">
-        <input type="button" class="pure-button pure-button-primary" value="Save Question" onclick="formSubmit()">
-    }
+        <p>
+            Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
+            @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp = Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
+        </p>
 
-    <script>
-    formSubmit = function() {
-    if(QUESTION.valid){
-        $("#derivativeQuestionMathML").val(QUESTION.mathML);
-        $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
-        $("#derivativeqForm").submit();
-    } else {
-        alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
-    }
-    }
-    </script>
-    }
+        @form(GamesRequesteeController.createQuestion(gameState.game.id), 'id -> "derivativeqForm", 'class -> "pure-form" ) {
+            <input type="hidden" name="@GameCreateQuestion.mathML" id="derivativeQuestionMathML">
+            <input type="hidden" name="@GameCreateQuestion.rawStr" id="derivativeQuestionRawStr">
+            <input type="button" class="pure-button pure-button-primary" value="Save Question" onclick="formSubmit()">
+        }
 
-    @if(numQuestionRemaining == 0){
-    @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "pure-form") {
-        <input type="submit" class="pure-buttom pure-button-primary" value="Finalize Quiz" >
-    }
-    }
+        <script>
+        formSubmit = function() {
+        if(QUESTION.valid){
+            $("#derivativeQuestionMathML").val(QUESTION.mathML);
+            $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
+            $("#derivativeqForm").submit();
+        } else {
+            alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
+        }
+        }
+        </script>
+        }
 
-    @mathml.mathmlScoring("editorSuccess", gameState.game.requestorSkill)
-}{ @* ===== Minor Content Here ==== *@
+        @if(numQuestionRemaining == 0){
+        @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "pure-form") {
+            <input type="submit" class="pure-button pure-button-primary" value="Finalize Quiz" >
+        }
+        } else {
+        @mathml.mathmlScoring("editorSuccess", gameState.game.requestorSkill)
+        }
+    </section>
+}{  @* ===== Minor Content Here ==== *@
     @views.html.question.recentHistory(gameState.game.requestor)
 }
 

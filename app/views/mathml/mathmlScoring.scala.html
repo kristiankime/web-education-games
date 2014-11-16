@@ -1,16 +1,18 @@
 @(name: String, skillLevel: Double)
-
 @import controllers.question.derivative.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
+@defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 
     <!-- ========= MATH SCORING STARTS HERE ======= -->
     <section>
-    <h4>Scoring Information</h4>
-    In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br>
-    A hard question is a question whose difficulty is above the skill level of the other player <br>
-    An easy question is a question whose difficulty is greatly below the skill level of the other player <br>
-    The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong<br>
-    <table>
-        <tr><th>Skill</th><th>Difficulty</th><th>Correct</th><th>Incorrect</th></tr>
+    <h4>Scoring Information @tag.icon("icon-help", 'data_ot -> infoText)</h4>
+
+    <table class="pure-table">
+        <tr>
+            <th>Skill Level @tag.icon("icon-help", 'data_ot -> "The other player's skill level") </th>
+            <th>Difficulty  @tag.icon("icon-help", 'data_ot -> "The difficulty of the question you are creating")</th>
+            <th>Correct     @tag.icon("icon-help", 'data_ot -> "The points you will get if they get it correct")</th>
+            <th>Incorrect   @tag.icon("icon-help", 'data_ot -> "The points you will get if they get it incorrect")</th>
+        </tr>
         <tr>
             <td> @tag.skillLevel(skillLevel) </td>
             <td> <span id="@{name}Difficulty">NA</span> </td>
@@ -47,3 +49,4 @@
     </script>
     </section>
     <!-- ========= MATH SCORING ENDS HERE ======= -->
+}

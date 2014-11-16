@@ -61,11 +61,19 @@
     @* ===== Results ===== *@
     @if(results.answers.nonEmpty) {
         <section>
-            <h4>You answered this questions @results.answers.size time@s(results.answers)</h4>
+            <h4>You answered this question @results.answers.size time@s(results.answers)</h4>
             @if(results.answers.nonEmpty) {
             <table class="pure-table pure-table-striped">
-                <tr><th>Answer</th><th>Result</th></tr>
-                @for(answer <- results.answers) {<tr><td>@mathml.mathmlContent(answer)</td><td>@mathml.correct(answer.correct)</td></tr>}
+                <tr>
+                    <th>Answer</th>
+                    <th>Result</th>
+                </tr>
+                @for(answer <- results.answers) {
+                <tr>
+                    <td>@mathml.mathmlContent(answer)</td>
+                    <td>@mathml.correct(answer.correct)</td>
+                </tr>
+                }
             </table>
             }
         </section>

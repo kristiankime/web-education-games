@@ -5,7 +5,7 @@
 
 @defining(question.answersAndOwners) { allAnswers =>
 <section>
-    <h4>There have been @allAnswers.size Answer@s(allAnswers) to this question</h4>
+    <h4>This question has been answered @allAnswers.size time@s(allAnswers)</h4>
     <table class="pure-table pure-table-striped">
         <tr> <th> User Name </th> <th> Answer </th> <th> Result </th> <th> Time </th> </tr>
         @for(answer <- allAnswers) {

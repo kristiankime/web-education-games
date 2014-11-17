@@ -1,26 +1,23 @@
 @(game: models.game.Game, quiz: models.question.derivative.Quiz, teacher: service.User)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.routes.GamesController
-@import controllers.game.GameRequest
-@import helper._
 @import models.user.UserPimped
-@import views.html.tag.percent
-@import views.html.tag.gameLink
-@import views.html.tag.datetimeOp
 
-@mainWithBorder("Student Game Score", tag.courseOpLink(game.course)) {
+@mainWithBorder("Student Game Score", tag.courseOpLink(game.course), tag.gameLink("game", game)) {
 
-    <h2> Student Game Score </h2>
+    <h2> Student Game Score @tag.icon("icon-help", 'data_ot -> "Players get two scores. One as a Student and one as a teacher. Your student score is based on how many questions you got right.")</h2>
 
     <section>
-        You played a [@tag.gameLink("game", game)] with @teacher.name on @tag.datetimeOp(game.finishedDate)
+        You played a @tag.gameLink("game", game) with @teacher.name on @tag.datetimeOp(game.finishedDate)
     </section>
 
     <section>
         Your results for each question:<br>
         @defining(quiz.results(user)) { quizResults =>
-        <table>
-            <tr><th>question</th><th>correct</th></tr>
+        <table class="pure-table pure-table-striped extra-border">
+            <tr>
+                <th>question</th>
+                <th>correct</th>
+            </tr>
             @for(result <- quizResults.results) {
             <tr>
                 <td> @mathml.mathmlContent(result.question) </td>

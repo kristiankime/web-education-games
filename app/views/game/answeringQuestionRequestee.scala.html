@@ -7,18 +7,16 @@
 @import controllers.game.GameAnswerQuestion
 @import helper._
 @import models.user.UserPimped
-@import models.game.GameResponseStatus
-@import com.artclod.collection.PimpedOptionList
 @import com.artclod.play.s
 @import views.html.tag._
 
-@main("Answering Question", tag.courseOpLink(gameState.game.course)) {
+@mainWithBorder("Answering Question", tag.courseOpLink(gameState.game.course), gameLink("game", gameState.game)) {
+
     <h2>You are answering Question for a game with @gameState.game.requestor.name </h2>
 
-    @for(course <- gameState.game.course){This is a quiz for the course [ @courseLink(course) ] <br>}
-    Back to the [ @gameLink("game", gameState.game) ] <br>
+    <h4>What is the Derivative of:</h4>
 
-    <h2>What is the Derivative of</h2> @mathml.mathmlContent(question)
+    @mathml.mathmlContent(question)
 
     @for(answerEither <- currentAnswer) {
     <section align="center">
@@ -39,10 +37,11 @@
     </section>
 
     <section>
-    @form(GamesRequesteeController.answerQuestion(gameState.game.id, question.id), 'id -> "answerForm") {
-        <input type="hidden" name="@GameAnswerQuestion.mathML" id="answerMathML">
-        <input type="hidden" name="@GameAnswerQuestion.rawStr" id="answerRawStr">
-        <input type="button" value="Submit" onclick="answerFormSubmit()">
+        @form(GamesRequesteeController.answerQuestion(gameState.game.id, question.id), 'id -> "answerForm", 'class -> "pure-form") {
+            <input type="hidden" name="@GameAnswerQuestion.mathML" id="answerMathML">
+            <input type="hidden" name="@GameAnswerQuestion.rawStr" id="answerRawStr">
+            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="answerFormSubmit()">
+            @gameLink("Back to the Quiz", gameState.game)
         }
     </section>
 
@@ -57,24 +56,6 @@
     }
     }
     </script>
-
-
-    @* ===== Question Navigation ===== *@
-    @defining(quiz.previousQuestion(question)){ previousOp =>
-        @for(previous <- previousOp) {Go to the [<a href="@GamesController.question(gameState.game.id, previous.id)">previous question</a>]<br>}
-    }
-
-    @defining(quiz.firstUnfinishedQuestion(user)){ unfinishedOp =>
-        @for(unfinished <- unfinishedOp) {Go to my first [<a href="@GamesController.question(gameState.game.id, unfinished.question.id)">unfinished question</a>]<br>}
-    }
-
-    @defining(quiz.nextQuestion(question)){ nextOp =>
-        @for(next <- nextOp) {Go to the [<a href="@GamesController.question(gameState.game.id, next.id)">next question</a>]}
-        @if(nextOp.isEmpty) {This is the last question, back to the [ @gameLink("quiz", gameState.game) ]}
-    }<br>
-
-    If you are done answering questions for this quiz you can
-    @form(GamesRequesteeController.finalizeAnswers(gameState.game.id), 'class -> "inline-block") {<input type="submit" value="Finalize All Answers" > }<br>
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results =>

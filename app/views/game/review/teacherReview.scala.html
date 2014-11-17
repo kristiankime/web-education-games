@@ -1,25 +1,28 @@
 @(game: models.game.Game, quiz: models.question.derivative.Quiz, student: service.User)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.routes.GamesController
-@import controllers.game.GameRequest
-@import helper._
 @import models.user.UserPimped
-@import views.html.tag.percent
 
 @defining(student.name){ studentName =>
 @defining(game.skillLevel(student)){ studentSkillLevel =>
 
-@mainWithBorder("Teacher Game Score", tag.courseOpLink(game.course)) {
+@mainWithBorder("Teacher Game Score", tag.courseOpLink(game.course), tag.gameLink("game", game)) {
+
+    <h2> Teacher Game Score @tag.icon("icon-help", 'data_ot -> "Players get two scores. One as a Student and one as a teacher. Your teacher score is based on the difficulty of the questions you asked and if the other player got them correct.")</h2>
 
     <section>
-        You played a [@tag.gameLink("game", game)] with @studentName on @tag.datetimeOp(game.finishedDate)
+        You played a @tag.gameLink("game", game) with @studentName on @tag.datetimeOp(game.finishedDate)
     </section>
 
     <section>
-        When you played the game @studentName had a skill level of @studentSkillLevel<br>
+        When you played the game @studentName had a skill level of @studentSkillLevel @tag.icon("icon-help", 'data_ot -> "This skill level is compared to the difficulty of the questions you asked to determine your teacher score.")<br>
         @defining(quiz.results(student)) { quizResults =>
-        <table>
-            <tr><th>question</th><th>correct</th><th>difficulty</th><th>score</th></tr>
+        <table class="table pure-table-striped extra-border">
+            <tr>
+                <th>question @tag.icon("icon-help", 'data_ot -> "The question you asked")</th>
+                <th>correct @tag.icon("icon-help", 'data_ot -> "Did the other player get your question correct")</th>
+                <th>difficulty @tag.icon("icon-help", 'data_ot -> "How difficult the system considers your question") </th>
+                <th>score @tag.icon("icon-help", 'data_ot -> "You get a high score for asking hard questions (difficulty > skill) the other player gets right and easy questions (difficulty << skill) the other player gets wrong.")</th>
+            </tr>
             @for(result <- quizResults.results) {
             <tr>
                 <td> @mathml.mathmlContent(result.question) </td>

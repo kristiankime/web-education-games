@@ -15,24 +15,24 @@
     }
 
     @for(requesteeQuiz <- gameState.game.requesteeQuiz ) {
-    <section>
-        Your score as a student was @tag.percent(requesteeQuiz.studentScore(user)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>]
+    <section class="extra-border">
+        Your score as a student was @tag.percent(requesteeQuiz.studentScore(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>
     </section>
     }
 
     @for(requestorQuiz <- gameState.game.requestorQuizIfAnswered ) {
-    <section>
-        Your score as a teacher was @tag.percent(requestorQuiz.teacherScore(gameState.game.requestee, gameState.game.requesteeSkill)) [<a href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>]
+    <section class="extra-border">
+        Your score as a teacher was @tag.percent(requestorQuiz.teacherScore(gameState.game.requestee, gameState.game.requesteeSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>
     </section>
     }
 
-    <section>
-    Play another round with @gameState.game.requestee.name
+    <section class="extra-border">
     @for(course <- gameState.game.courseId.flatMap(Courses(_))){
-    @form(action = GamesController.requestGame(course.organizationId, course.id), 'class -> "inline-block") {
+    @form(action = GamesController.requestGame(course.organizationId, course.id), 'class -> "pure-form") {
+        Play another round with @gameState.game.requestee.name
         <input type="hidden" name="@GameRequest.requestee" value="@gameState.game.requesteeId.v">
-        <input type="submit" value="Play Again">
-        }
+        <input type="submit" class="pure-button pure-button-primary" value="Play Again">
+    }
     }
     </section>
 }

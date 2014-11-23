@@ -59,6 +59,7 @@ object GamesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
         if(game.isRequestor(user)) game.toState match {
+          case state: GameRejected => Ok(views.html.game.request.rejectedRequestor(state))
           case state: RequestorDoneAnswering => Ok(views.html.game.play.gameDoneRequestor(state))
           case state: RequestorQuiz => Ok(views.html.game.play.createQuizRequestor(state))
           case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.awaitingQuizRequestor(state))
@@ -66,6 +67,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
         }
         else if(game.isRequestee(user)) game.toState match {
+          case state: GameRejected => Ok(views.html.game.request.rejectedRequestee(state))
           case state: RequesteeDoneAnswering => Ok(views.html.game.play.gameDoneRequestee(state))
           case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
           case state: RequesteeQuiz => Ok(views.html.game.play.createQuizRequestee(state))

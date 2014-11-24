@@ -50,7 +50,7 @@ object QuestionsController extends Controller with SecureSocialConsented {
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
             Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quizId)
-            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
+            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
     }
@@ -62,7 +62,7 @@ object QuestionsController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz, question)) => {
         quiz.remove(question)
-        Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
+        Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
       }
     }
 	}

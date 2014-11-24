@@ -29,7 +29,7 @@ POST        /orgs/:o/courses/:c/join                                      contro
 # Course Quizzes
 GET         /orgs/:o/courses/:c/quizzes/create                            controllers.question.derivative.QuizzesController.createForm(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/quizzes                                   controllers.question.derivative.QuizzesController.createSubmit(o: OrganizationId, c: CourseId)
-GET         /orgs/:o/courses/:c/quizzes/:z                                controllers.question.derivative.QuizzesController.view(o: OrganizationId, c: CourseId, z: QuizId)
+GET         /orgs/:o/courses/:c/quizzes/:z                                controllers.question.derivative.QuizzesController.view(o: OrganizationId, c: CourseId, z: QuizId, a: Option[AnswerId])
 POST        /orgs/:o/courses/:c/quizzes/:z/rename                         controllers.question.derivative.QuizzesController.rename(o: OrganizationId, c: CourseId, z: QuizId)
 
 # Course Quizzes Questions

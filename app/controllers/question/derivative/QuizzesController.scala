@@ -45,17 +45,17 @@ object QuizzesController extends Controller with SecureSocialConsented {
           form => {
               val now = JodaUTC.now
               val quiz = Quizzes.create(Quiz(null, user.id, form, now, now), course.id)
-              Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
+              Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
             })
     }
   }
 
-  def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
+  def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, answerIdOp: Option[AnswerId]) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         val access = course.access
-        Ok(views.html.question.derivative.quizView(access, course, quiz))
+        Ok(views.html.question.derivative.quizView(access, course, quiz, answerIdOp.flatMap(id => Answers(id))))
       }
     }
   }
@@ -68,7 +68,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             Quizzes.rename(quizId, form)
-            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id))
+            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
     }
   }

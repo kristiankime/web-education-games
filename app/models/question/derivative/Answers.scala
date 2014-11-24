@@ -56,7 +56,7 @@ object Answers {
   }
 
   // ======= FIND ======
-  def apply(aid: AnswerId)(implicit session: Session) = answersTable.where(_.id === aid).firstOption
+  def apply(aid: AnswerId)(implicit session: Session) : Option[Answer] = answersTable.where(_.id === aid).firstOption
 
   def apply(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).sortBy(_.creationDate).list
 

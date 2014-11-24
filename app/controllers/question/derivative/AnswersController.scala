@@ -49,7 +49,8 @@ object AnswersController extends Controller with SecureSocialConsented {
             val quizOp : Option[Quiz] = Quizzes(quizId)
             val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
             Answers.correct(question, math) match {
-              case Yes => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+//              case Yes => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+              case Yes => Redirect(routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(Answers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => questionView(course, quiz, question, Some(Left(unfinishedAnswer(false))))
             }

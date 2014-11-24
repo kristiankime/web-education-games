@@ -57,7 +57,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             val mathML = MathML(form._1).get // TODO better handle on error
             Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
-            Redirect(routes.GamesController.game(updatedGame.id))
+            Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }
   }
@@ -71,7 +71,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           questionId => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             for (question <- Questions(questionId)) { quiz.remove(question) }
-            Redirect(routes.GamesController.game(updatedGame.id))
+            Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }
   }
@@ -81,7 +81,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeQuizInternal(game)
-        Redirect(routes.GamesController.game(game.id))
+        Redirect(routes.GamesController.game(game.id, None))
       }
     }
   }
@@ -98,7 +98,8 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             val rawStr = form._2
             val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now) _
             Answers.correct(question, math) match {
-              case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+//              case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
+              case Yes => Redirect(routes.GamesController.game(game.id, Some(Answers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer)
             }
@@ -113,7 +114,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeAnswersInternal(game)
-        Redirect(routes.GamesController.game(game.id))
+        Redirect(routes.GamesController.game(game.id, None))
       }
     }
   }

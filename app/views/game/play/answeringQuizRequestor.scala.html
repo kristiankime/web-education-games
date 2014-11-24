@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState with models.game.RequesteeQuizFinished)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequesteeQuizFinished, answerOp: Option[models.question.derivative.Answer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesController, GamesRequestorController}
 @import helper._
@@ -21,8 +21,12 @@
         </tr>
         @for(result <- quizResults.results) {
         <tr>
-            <td> <a class="pure-button" href="@GamesController.question(gameState.game.id, result.question.id)"> @mathml.mathmlContent(result.question) </a> </td>
-            <td> @views.html.question.status(result.status) </td>
+            <td>
+                <a class="pure-button" href="@GamesController.question(gameState.game.id, result.question.id)"> @mathml.mathmlContent(result.question) </a>
+            </td>
+            <td>
+                @views.html.question.status(result.status) @tag.maybeIndicateCorrect(result.question, answerOp)
+            </td>
         </tr>
         }
     </table>

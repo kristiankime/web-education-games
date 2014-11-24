@@ -37,11 +37,7 @@
                 <a class="pure-button" href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)"> @mathml.mathmlContent(result.question) </a>
             </td>
             <td>
-                @views.html.question.status(result.status)
-                @for(answer <- answerOp){ @if(result.question.id == answer.questionId){
-                    @tag.icon("icon-checkmark3", 'class -> "indicate-correct", 'data_ot -> "This icon indicates you just answered this question correctly!")
-                    Your answer: @mathml.mathmlContent(answer)
-                }}
+                @views.html.question.status(result.status) @tag.maybeIndicateCorrect(result.question, answerOp)
             </td>
             @if(access.write){<td>
                 @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "inline-block") { <input class="pure-button" type="submit" value="remove" > }

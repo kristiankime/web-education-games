@@ -6,6 +6,7 @@ import controllers.question.derivative.AnswersController
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.organization._
+import models.question.derivative.Answers
 import models.support._
 import models.user.Users
 import play.api.data.Form
@@ -45,16 +46,16 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right((organization, course)) => GameRequest.form.bindFromRequest.fold(
         errors => BadRequest(views.html.errors.formErrorPage(errors)),
         otherUserId => Games.activeGame(user.id, otherUserId) match {
-          case Some(game) => Redirect(controllers.game.routes.GamesController.game(game.id)) // TODO accept game if in awaiting state
+          case Some(game) => Redirect(controllers.game.routes.GamesController.game(game.id, None)) // TODO accept game if in awaiting state
           case None => {
             val game = Games.request(user, Users(otherUserId).get, course)
-            Redirect(controllers.game.routes.GamesController.game(game.id))
+            Redirect(controllers.game.routes.GamesController.game(game.id, None))
           }
         })
     }
   }
 
-  def game(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -63,7 +64,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: RequestorDoneAnswering => Ok(views.html.game.play.gameDoneRequestor(state))
           case state: RequestorQuiz => Ok(views.html.game.play.createQuizRequestor(state))
           case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.awaitingQuizRequestor(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestor(state))
+          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestor(state, answerIdOp.flatMap(id => Answers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
         }
         else if(game.isRequestee(user)) game.toState match {
@@ -72,7 +73,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
           case state: RequesteeQuiz => Ok(views.html.game.play.createQuizRequestee(state))
           case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.awaitingQuizRequestee(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestee(state))
+          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestee(state, answerIdOp.flatMap(id => Answers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
         }
         else throw new IllegalStateException("TODO code up teacher view")
@@ -90,8 +91,8 @@ object GamesController extends Controller with SecureSocialConsented {
             case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[GameRequested].getName + "] but was " + game.toState)
           }
           if (accepted) { Games.update(gameState.accept(user.id)) }
-          else { Games.update(gameState.reject(user.id)) }
-          Redirect(routes.GamesController.game(game.id))
+          else {          Games.update(gameState.reject(user.id)) }
+          Redirect(routes.GamesController.game(game.id, None))
         })
     }
   }

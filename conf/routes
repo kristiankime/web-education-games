@@ -38,7 +38,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions                      contro
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove            controllers.question.derivative.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Course Quizzes Answers
-GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:n        controllers.question.derivative.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, n: AnswerId)
+GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:a        controllers.question.derivative.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, a: AnswerId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers           controllers.question.derivative.AnswersController.create(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
@@ -46,7 +46,7 @@ GET         /orgs/:o/courses/:c/games/find                                contro
 POST        /orgs/:o/courses/:c/games/request                             controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
 
 # Games
-GET         /games/:g                                                     controllers.game.GamesController.game(g: GameId)
+GET         /games/:g                                                     controllers.game.GamesController.game(g: GameId, a: Option[AnswerId])
 POST        /games/:g/respond                                             controllers.game.GamesController.respond(g: GameId)
 POST        /games/:g/questions/createRequestor                           controllers.game.GamesRequestorController.createQuestion(g: GameId)
 POST        /games/:g/questions/removeRequestor                           controllers.game.GamesRequestorController.removeQuestion(g: GameId)

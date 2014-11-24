@@ -1,1 +1,1 @@
-@(text: String, game: models.game.Game, atts: (scala.Symbol, String)*)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.game.routes.GamesController.game(game.id)"@tag.atts(('class -> "pure-button") +: atts)>@text</a>
+@(text: String, game: models.game.Game, atts: (scala.Symbol, String)*)(implicit session: play.api.db.slick.Config.driver.simple.Session)<a href="@controllers.game.routes.GamesController.game(game.id, None)"@tag.atts(('class -> "pure-button") +: atts)>@text</a>

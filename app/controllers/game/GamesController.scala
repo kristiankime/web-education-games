@@ -1,5 +1,6 @@
 package controllers.game
 
+import com.artclod.play.CommonsMailerHelper
 import com.artclod.util._
 import controllers.organization.CoursesController
 import controllers.question.derivative.AnswersController
@@ -14,6 +15,7 @@ import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
 import models.game.GameRole._
+import models.user.UserPimped
 
 object GamesController extends Controller with SecureSocialConsented {
 
@@ -48,7 +50,15 @@ object GamesController extends Controller with SecureSocialConsented {
         otherUserId => Games.activeGame(user.id, otherUserId) match {
           case Some(game) => Redirect(controllers.game.routes.GamesController.game(game.id, None)) // TODO accept game if in awaiting state
           case None => {
-            val game = Games.request(user, Users(otherUserId).get, course)
+            val otherUser = Users(otherUserId).get
+            val game = Games.request(user, otherUser, course)
+            for(otherMail <- otherUser.email) {
+              val mail = CommonsMailerHelper.defaultMailSetup(otherMail)
+              val userName = user.name
+              mail.setSubject("CalcTutor game request from " + userName)
+              val gameLink = gameLinkEmail(request, game, "go to the game")
+              mail.sendHtml(userName + " has requested to play a game with you in the " + serverLinkEmail(request) + " (" + gameLink + ").")
+            }
             Redirect(controllers.game.routes.GamesController.game(game.id, None))
           }
         })
@@ -90,8 +100,25 @@ object GamesController extends Controller with SecureSocialConsented {
             case g : GameRequested => g
             case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[GameRequested].getName + "] but was " + game.toState)
           }
-          if (accepted) { Games.update(gameState.accept(user.id)) }
-          else {          Games.update(gameState.reject(user.id)) }
+          if (accepted) {
+            Games.update(gameState.accept(user.id))
+            for(otherMail <- gameState.game.otherPlayer(user).email) {
+              val mail = CommonsMailerHelper.defaultMailSetup(otherMail)
+              val userName = user.name
+              mail.setSubject(userName + " accepted your CalcTutor game request")
+              val gameLink = gameLinkEmail(request, game, "go to the game")
+              mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + gameLink + ").")
+            }
+          }
+          else {
+            Games.update(gameState.reject(user.id))
+            for(otherMail <- gameState.game.otherPlayer(user).email) {
+              val mail = CommonsMailerHelper.defaultMailSetup(otherMail)
+              val userName = user.name
+              mail.setSubject(userName + " rejected your CalcTutor game request")
+              mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))
+            }
+          }
           Redirect(routes.GamesController.game(game.id, None))
         })
     }
@@ -153,6 +180,11 @@ object GamesController extends Controller with SecureSocialConsented {
       }
     }
   }
+
+  // val gameAddress = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.game.routes.GamesController.game(game.id, None) +"\">go to the game</a>"
+  def gameLinkEmail(request: play.api.mvc.Request[_], game: Game, linkText: String) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.game.routes.GamesController.game(game.id, None) + "\">" + linkText + "</a>"
+
+  def serverLinkEmail(request: play.api.mvc.Request[_]) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + "\">CalcTutor</a>"
 
 }
 

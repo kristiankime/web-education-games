@@ -5,6 +5,7 @@ import com.artclod.util._
 import controllers.organization.CoursesController
 import controllers.question.derivative.AnswersController
 import controllers.support.SecureSocialConsented
+import controllers.game.GamesEmail.{gameLinkEmail, serverLinkEmail}
 import models.game._
 import models.organization._
 import models.question.derivative.Answers
@@ -180,11 +181,6 @@ object GamesController extends Controller with SecureSocialConsented {
       }
     }
   }
-
-  // val gameAddress = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.game.routes.GamesController.game(game.id, None) +"\">go to the game</a>"
-  def gameLinkEmail(request: play.api.mvc.Request[_], game: Game, linkText: String) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.game.routes.GamesController.game(game.id, None) + "\">" + linkText + "</a>"
-
-  def serverLinkEmail(request: play.api.mvc.Request[_]) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + "\">CalcTutor</a>"
 
 }
 

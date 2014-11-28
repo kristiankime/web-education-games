@@ -49,7 +49,7 @@
                 } else {
                     <h5> The course has the following quiz@zes(quizzes): </h5>
                     <ul class="pure-list">
-                    @for(quiz <- quizzes) {<li> @tag.courseQuizLink(course, quiz) </li> }
+                    @for(quiz <- quizzes) {<li> @tag.courseQuizLink(course, quiz, None) </li> }
                     </ul>
                 }
                 @if(course.access.write) { <a href="@QuizzesController.createForm(course.organizationId, course.id)" class="pure-button"> add a quiz</a> }

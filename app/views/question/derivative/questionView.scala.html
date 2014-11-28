@@ -10,7 +10,7 @@
 
 @defining(quiz.access){ access =>
 
-@mainWithBorder("Question Page", tag.courseLink(course), tag.courseQuizLink(course, quiz)) {
+@mainWithBorder("Question Page", tag.courseLink(course), tag.courseQuizLink(course, quiz, None)) {
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
     <h4>What is the Derivative of:</h4>
@@ -41,7 +41,7 @@
                 <input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
                 <input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
                 <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="answerFormSubmit()">
-                @tag.courseQuizLink(course, quiz)
+                @tag.courseQuizLink(course, quiz, Some("Back to Quiz"))
             </fieldset>
         }
     </section>

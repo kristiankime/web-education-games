@@ -3,19 +3,22 @@ package controllers.game
 import com.artclod.mathml.Match._
 import com.artclod.mathml.MathML
 import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.play.CommonsMailerHelper
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
+import controllers.game.GamesEmail._
 import controllers.question.derivative.QuestionsController
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.question.derivative._
 import models.support._
+import models.user.Users
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.{Controller, Result}
 import service.User
-
+import models.user.UserPimped
 import scala.util.{Left, Right}
 
 trait GamesPlayerController extends Controller with SecureSocialConsented {
@@ -81,6 +84,11 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeQuizInternal(game)
+        for(mail <- game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+          val userName = user.name
+          mail.setSubject(userName + " created a CalcTutor game quiz for you")
+          mail.sendHtml(userName + " created a game quiz for you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
+        }
         Redirect(routes.GamesController.game(game.id, None))
       }
     }
@@ -114,6 +122,11 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeAnswersInternal(game)
+        for(mail <- game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+          val userName = user.name
+          mail.setSubject(userName + " finished answering your CalcTutor game quiz")
+          mail.sendHtml(userName + " finished answering your game quiz in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
+        }
         Redirect(routes.GamesController.game(game.id, None))
       }
     }

@@ -5,7 +5,7 @@ import com.artclod.util._
 import controllers.organization.CoursesController
 import controllers.question.derivative.AnswersController
 import controllers.support.SecureSocialConsented
-import controllers.game.GamesEmail.{gameLinkEmail, serverLinkEmail}
+import controllers.game.GamesEmail._
 import models.game._
 import models.organization._
 import models.question.derivative.Answers
@@ -53,12 +53,10 @@ object GamesController extends Controller with SecureSocialConsented {
           case None => {
             val otherUser = Users(otherUserId).get
             val game = Games.request(user, otherUser, course)
-            for(otherMail <- otherUser.email) {
-              val mail = CommonsMailerHelper.defaultMailSetup(otherMail)
+            for(mail <- otherUser.email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.name
               mail.setSubject("CalcTutor game request from " + userName)
-              val gameLink = gameLinkEmail(request, game, "go to the game")
-              mail.sendHtml(userName + " has requested to play a game with you in the " + serverLinkEmail(request) + " (" + gameLink + ").")
+              mail.sendHtml(userName + " has requested to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
             }
             Redirect(controllers.game.routes.GamesController.game(game.id, None))
           }
@@ -103,18 +101,15 @@ object GamesController extends Controller with SecureSocialConsented {
           }
           if (accepted) {
             Games.update(gameState.accept(user.id))
-            for(otherMail <- gameState.game.otherPlayer(user).email) {
-              val mail = CommonsMailerHelper.defaultMailSetup(otherMail)
+            for(mail <- gameState.game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.name
               mail.setSubject(userName + " accepted your CalcTutor game request")
-              val gameLink = gameLinkEmail(request, game, "go to the game")
-              mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + gameLink + ").")
+              mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
             }
           }
           else {
             Games.update(gameState.reject(user.id))
-            for(otherMail <- gameState.game.otherPlayer(user).email) {
-              val mail = CommonsMailerHelper.defaultMailSetup(otherMail)
+            for(mail <- gameState.game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.name
               mail.setSubject(userName + " rejected your CalcTutor game request")
               mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))

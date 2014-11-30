@@ -6,7 +6,9 @@ import play.api.mvc.Request
 
 object GamesEmail {
 
-  def gameLinkEmail(request: Request[_], game: Game, linkText: String) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.game.routes.GamesController.game(game.id, None) + "\">" + linkText + "</a>"
+  def goToGameLinkEmail(request: Request[_], game: Game) =  gameLinkEmail(request, game, "go to the game")
+
+  private def gameLinkEmail(request: Request[_], game: Game, linkText: String) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.game.routes.GamesController.game(game.id, None) + "\">" + linkText + "</a>"
 
   def serverLinkEmail(request: Request[_]) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + "\">CalcTutor</a>"
 

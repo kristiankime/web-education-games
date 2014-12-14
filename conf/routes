@@ -64,15 +64,8 @@ POST        /games/:g/questions/:q/requestor                              contro
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                          controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
-
+# Question Difficulty service (ajax)
 POST        /questiondifficulty                                           controllers.question.derivative.QuestionsController.questionDifficulty
-
-# ======== START DEPRICATED ========
-# Equation pages
-GET         /equation                                                     controllers.EquationController.equations
-POST        /equation                                                     controllers.EquationController.newEquation
-POST        /equation/:id/delete                                          controllers.EquationController.deleteEquation(id: Long)
-# ======== END DEPRICATED ========
 
 # ======== START Routes for Secure Social ========
 # Login page

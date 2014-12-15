@@ -21,13 +21,21 @@
 
         <script src="@routes.Assets.at("javascripts/jquery/jquery-2.0.3.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/moment.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/artclod/artclod-txt2mathml.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/artclod/artclod-mathml-utils.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/artclod/artclod-xsl.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/mathjs/math.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/artclod/artclod-mathjax.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/artclod/artclod-mathjs.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/artclod/artclod-localize.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/artclod/artclod-percent.js")" type="text/javascript"></script>
 
-        <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full" type="text/javascript"></script>
+        <!-- MathJax including Content MathML extension -->
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+              MathML: {
+                extensions: ["content-mathml.js"]
+              }
+            });
+        </script>
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML" type="text/javascript"> </script>
 
         <!-- opentip related files placed together -->
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/opentip/opentip.css")" type="text/css" />

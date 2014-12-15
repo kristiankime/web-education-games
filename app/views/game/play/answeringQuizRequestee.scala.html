@@ -22,7 +22,7 @@
         @for(result <- quizResults.results) {
         <tr>
             <td>
-                <a class="pure-button" href="@GamesController.question(gameState.game.id, result.question.id)"> @mathml.mathmlContent(result.question) </a>
+                <a class="pure-button" href="@GamesController.question(gameState.game.id, result.question.id)"> @mathml.mathmlDisplay(result.question) </a>
             </td>
             <td>
                 @views.html.question.status(result.status) @tag.maybeIndicateCorrect(result.question, answerOp)

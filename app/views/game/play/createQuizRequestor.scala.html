@@ -32,7 +32,7 @@
             <th>Question</th> <th> Remove </th>
             @for(question <- questions){
                 <tr>
-                    <td> @mathml.mathmlContent(question) </td>
+                    <td> @mathml.mathmlDisplay(question) </td>
                     <td> @form(GamesRequestorController.removeQuestion(gameState.game.id), 'class -> "pure-form") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" class="pure-button" value="remove" > } </td>
                 </tr>
             }

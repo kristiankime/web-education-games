@@ -15,14 +15,14 @@
 
     <h4>What is the Derivative of:</h4>
 
-    @mathml.mathmlContent(results.question)
+    @mathml.mathmlDisplay(results.question)
 
     @for(answerEither <- currentAnswer) {
         <section align="center">
             <h4>
             @answerEither match {
-                case Right(answer) => {You answered @mathml.mathmlContent(answer) that answer was @mathml.correct(answer.correct)}
-                case Left(answerTmp) => {You answered @mathml.mathmlContent(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+                case Right(answer) => {You answered @mathml.mathmlDisplay(answer) that answer was @mathml.correct(answer.correct)}
+                case Left(answerTmp) => {You answered @mathml.mathmlDisplay(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
             }
             </h4>
         </section>
@@ -70,7 +70,7 @@
                 </tr>
                 @for(answer <- results.answers) {
                 <tr>
-                    <td>@mathml.mathmlContent(answer)</td>
+                    <td>@mathml.mathmlDisplay(answer)</td>
                     <td>@mathml.correct(answer.correct)</td>
                 </tr>
                 }

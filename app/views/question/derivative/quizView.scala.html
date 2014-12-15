@@ -34,7 +34,7 @@
         @for(result <- results.results){
         <tr>
             <td>
-                <a class="pure-button" href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)"> @mathml.mathmlContent(result.question) </a>
+                <a class="pure-button" href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)"> @mathml.mathmlDisplay(result.question) </a>
             </td>
             <td>
                 @views.html.question.status(result.status) @tag.maybeIndicateCorrect(result.question, answerOp)

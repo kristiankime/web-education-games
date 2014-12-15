@@ -31,16 +31,14 @@
                 valid : false
              };
 
-        result.updateAnswer = function(mathMLStr) {
-
-            result.rawStr = mathMLStr;
-
-            var mathMLStatus = ARTC.statusTxt2MathML(mathMLStr);
-            if (mathMLStatus.success) {
-                result.mathML = mathMLStatus.value;
+        result.updateAnswer = function(mathStr) {
+            result.rawStr = mathStr;
+            var mathResult = ARTC.mathJS.defaultParser(mathStr);
+            if(mathResult.success) {
+                result.mathML = mathResult.content;
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
-                ARTC.updateInnerAsciiMath("@{editorName+"View"}", result.rawStr);
+                ARTC.mathJax.update("@{editorName+"View"}", ARTC.mathJax.mathml(mathResult.content));
                 @for(callbackSuccess <- callbackSuccessOp){@{callbackSuccess}(result)}
             } else {
                 result.valid = false;

@@ -88,11 +88,19 @@ ARTC.mathJS.buildParser = (function(){
             return "<ci> " + node.name + " </ci>";
         }
 
+        // ============== Constant Handling ===========
+        var constantNodeFunction = function(node){
+            switch(node.valueType){
+                case 'undefined' : throw { message: "Error, received an undefined node " + node };
+                default          : return "<cn> " + node.value + " </cn>"; // TODO parse down to cn type here
+            }
+        }
+
         // ============== Full Parsing ===========
         var parseNode = function(node) {
             switch (node.type) {
                 case 'OperatorNode': return operatorNodeFunction(node);
-                case 'ConstantNode': return "<cn> " + node.value + " </cn>"; // TODO parse down to cn type here
+                case 'ConstantNode': return constantNodeFunction(node);
                 case 'SymbolNode':   return symbolNodeFunction(node);
                 case 'FunctionNode': return functionNodeFunction(node);
                 default:             throw { message: "Error, unknown node type " + node };

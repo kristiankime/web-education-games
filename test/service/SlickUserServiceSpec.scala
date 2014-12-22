@@ -9,7 +9,6 @@ import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import models.DBTest.inMemH2
 import play.api.test.FakeApplication
-import models.Equations
 import securesocial.core.Identity
 import securesocial.core.IdentityId
 import java.util.UUID

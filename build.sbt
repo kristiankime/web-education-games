@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "postgresql"              %  "postgresql"          % "9.1-901-1.jdbc4" withSources,
   "com.typesafe.play"       %% "play-slick"          % "0.6.0.1" withSources,
   "securesocial"            %% "securesocial"        % "2.1.2" withSources,
-  "com.typesafe"            %% "play-plugins-mailer" % "2.2.0" withSources
+  "com.typesafe"            %% "play-plugins-mailer" % "2.2.0" withSources,
+  "org.mozilla"             %  "rhino"               % "1.7R4" withSources
 )
 
 resolvers ++= Seq(
@@ -25,5 +26,3 @@ resolvers ++= Seq(
 )
 
 routesImport += "models.support._"
-
-// TODO check this out http://stackoverflow.com/questions/10436815/how-to-use-twitter-bootstrap-2-with-play-framework-2-x

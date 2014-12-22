@@ -113,6 +113,7 @@ ARTC.mathJS.buildParser = (function(){
 
                 return {
                     success: true,
+                    node: mathJSNode,
                     content: '<math xmlns="http://www.w3.org/1998/Math/MathML"> ' + parseNode(mathJSNode) + ' </math>',
                     mathJSNode: mathJSNode,
                     error: {}
@@ -120,6 +121,7 @@ ARTC.mathJS.buildParser = (function(){
             } catch (e) {
                 return {
                     success: false,
+                    node: {},
                     content: "",
                     mathJSNode: {},
                     error: e

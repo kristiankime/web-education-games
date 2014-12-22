@@ -11,7 +11,7 @@
         @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
         <input id="mathMLInput" type="text" size="@characterLimitOp.getOrElse(80)" @for(lim <- characterLimitOp){maxlength="@lim"} onkeyup="@{editorName + ".updateAnswer(this.value)"}" onpaste="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
         <span style:visibility="hidden" id="@{editorName+"Indicator"}"> @tag.icon("icon-warning2", 'class -> "warning", 'data_ot -> "Equation could not be parsed (or is empty)") </span>
-        <span id="@{editorName+"View"}"> `` </span>
+        <span id="@{editorName+"View"}"> $$ $$ </span>
     </span>
 
     <script>
@@ -38,7 +38,7 @@
                 result.mathML = mathResult.content;
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
-                ARTC.mathJax.update("@{editorName+"View"}", ARTC.mathJax.mathml(mathResult.content));
+                ARTC.mathJax.update("@{editorName+"View"}", ARTC.mathJax.tex(mathResult.node.toTex()));
                 @for(callbackSuccess <- callbackSuccessOp){@{callbackSuccess}(result)}
             } else {
                 result.valid = false;

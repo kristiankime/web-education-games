@@ -2,7 +2,7 @@ package models.question
 
 import com.artclod.mathml.scalar.MathMLElem
 
-trait MathJSMathML {
+trait ViewableMath {
 	val mathML: MathMLElem
 	val rawStr: String
 }

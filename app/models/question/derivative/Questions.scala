@@ -3,7 +3,7 @@ package models.question.derivative
 import com.artclod.mathml.scalar._
 import com.google.common.annotations.VisibleForTesting
 import models.organization.Course
-import models.question.MathJSMathML
+import models.question.ViewableMath
 import models.question.derivative.result.QuestionResults
 import models.question.derivative.table._
 import models.support._
@@ -18,7 +18,7 @@ import models.question.derivative.table.MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.lifted
 
-case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends MathJSMathML with Owned {
+case class Question(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends ViewableMath with Owned {
 
   def quiz(implicit session: Session) = Questions.quizFor(id)
 
@@ -56,7 +56,7 @@ object QuestionScore {
   }
 }
 
-case class QuestionSummary(questionId: QuestionId, attempts: Int, mathML: MathMLElem, rawStr: String, correct: Boolean, firstAttempt: DateTime) extends MathJSMathML {
+case class QuestionSummary(questionId: QuestionId, attempts: Int, mathML: MathMLElem, rawStr: String, correct: Boolean, firstAttempt: DateTime) extends ViewableMath {
 
   def difficulty : Double = QuestionDifficulty(mathML)
 

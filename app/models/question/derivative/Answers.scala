@@ -4,7 +4,7 @@ import com.artclod.mathml._
 import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
 import com.artclod.slick.JodaUTC.timestamp2DateTime
-import models.question.MathJSMathML
+import models.question.ViewableMath
 import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime
@@ -25,7 +25,7 @@ object Correct2Short {
 
 }
 
-case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correctNum: Short, creationDate: DateTime) extends MathJSMathML with Owned {
+case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correctNum: Short, creationDate: DateTime) extends ViewableMath with Owned {
   // We need to count number of correct answers in the db, so we store correct as a number with { 0 -> false, 1 -> true }
   if(correctNum != 0 && correctNum != 1) { correctNumError }
 

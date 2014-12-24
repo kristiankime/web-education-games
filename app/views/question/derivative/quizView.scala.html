@@ -1,6 +1,6 @@
 @(access: service.Access,
 	course: models.organization.Course,
-    quiz: models.question.derivative.Quiz,
+    quiz: models.question.Quiz,
     answerOp: Option[models.question.derivative.Answer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._

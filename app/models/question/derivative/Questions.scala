@@ -3,7 +3,7 @@ package models.question.derivative
 import com.artclod.mathml.scalar._
 import com.google.common.annotations.VisibleForTesting
 import models.organization.Course
-import models.question.ViewableMath
+import models.question.{Quiz, ViewableMath}
 import models.question.derivative.result.QuestionResults
 import models.question.derivative.table._
 import models.support._

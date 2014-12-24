@@ -1,6 +1,7 @@
 package models.question.derivative
 
 import com.artclod.slick.JodaUTC
+import models.question.Quizzes
 import models.question.derivative.result.{QuizResults, QuestionResults}
 import models.support.CourseId
 import org.specs2.mutable._

@@ -1,6 +1,7 @@
 package controllers.game
 
 import models.game._
+import models.question.Quiz
 import models.question.derivative._
 import models.support.{QuestionId, GameId}
 import play.api.db.slick.Config.driver.simple.Session

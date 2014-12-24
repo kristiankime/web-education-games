@@ -1,5 +1,6 @@
 package models.organization
 
+import models.question.Quizzes
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import models.support._

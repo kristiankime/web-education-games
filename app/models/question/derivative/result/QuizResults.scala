@@ -1,6 +1,7 @@
 package models.question.derivative.result
 
-import models.question.derivative.{Question, Quiz}
+import models.question.Quiz
+import models.question.derivative.Question
 import com.artclod.collection.PimpedSeq
 import service.User
 

@@ -3,7 +3,8 @@ package controllers.question.derivative
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser
 import models.organization._
-import models.question.derivative.{Questions, Quizzes, TestQuestion, TestQuiz}
+import models.question.Quizzes
+import models.question.derivative.{Questions, TestQuestion, TestQuiz}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._

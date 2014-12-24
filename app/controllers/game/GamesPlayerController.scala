@@ -10,6 +10,7 @@ import controllers.game.GamesEmail._
 import controllers.question.derivative.QuestionsController
 import controllers.support.SecureSocialConsented
 import models.game._
+import models.question.Quiz
 import models.question.derivative._
 import models.support._
 import models.user.Users

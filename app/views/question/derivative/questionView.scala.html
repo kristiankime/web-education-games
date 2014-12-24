@@ -1,5 +1,5 @@
 @(course: models.organization.Course,
-  quiz: models.question.derivative.Quiz,
+  quiz: models.question.Quiz,
   results: models.question.derivative.result.QuestionResults,
   currentAnswer: Option[Either[models.question.derivative.Answer, models.question.derivative.Answer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 

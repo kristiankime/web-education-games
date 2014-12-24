@@ -1,5 +1,6 @@
 package models.question.derivative
 
+import models.question.Quiz
 import models.support.UserId
 import org.joda.time.DateTime
 import com.artclod.slick.JodaUTC

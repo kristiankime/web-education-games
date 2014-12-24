@@ -2,6 +2,7 @@ package controllers.question.derivative
 
 import com.artclod.util._
 import com.artclod.slick.JodaUTC
+import models.question.{Quizzes, Quiz}
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.data.Form
 import play.api.data.Forms._

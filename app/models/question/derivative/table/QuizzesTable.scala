@@ -1,5 +1,6 @@
 package models.question.derivative.table
 
+import models.question.Quiz
 import play.api.db.slick.Config.driver.simple._
 import models.question.derivative._
 import models.support._

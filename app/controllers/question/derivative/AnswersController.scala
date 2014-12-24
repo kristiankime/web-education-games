@@ -1,5 +1,7 @@
 package controllers.question.derivative
 
+import models.question.{Quizzes, Quiz}
+
 import scala.util._
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML

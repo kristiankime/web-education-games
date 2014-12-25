@@ -90,6 +90,10 @@ http://securesocial.ws/guide/getting-started.html
 Samples
 https://github.com/jaliss/securesocial/tree/master/samples/scala/demo
 
+Secure Social does not yet have an official release for Play 2.3 but one is in the works see:
+https://groups.google.com/forum/#!topic/securesocial/AEnf2McpQXY
+http://www.filtercode.com/play/play-scala-securesocial
+
 ### [Twitter Bootstrap](http://getbootstrap.com/)
 http://stackoverflow.com/questions/10436815/how-to-use-twitter-bootstrap-2-with-play-framework-2-x
 

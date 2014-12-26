@@ -3,6 +3,7 @@ package com.artclod
 import scala.util.Random
 import scala.collection.generic.CanBuildFrom
 import com.artclod.collection._
+import scala.language.higherKinds
 
 package object random {
 

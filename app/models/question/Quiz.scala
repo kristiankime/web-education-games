@@ -11,6 +11,7 @@ import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
+import scala.language.postfixOps
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 

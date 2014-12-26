@@ -7,6 +7,7 @@ import models.support._
 import play.api.db.slick.Config.driver.simple._
 import service.User
 import models.user.UserPimped
+import scala.language.postfixOps
 
 object Games {
 

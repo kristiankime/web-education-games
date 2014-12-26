@@ -2,6 +2,7 @@ package com.artclod.mathml
 
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.concept._
+import scala.language.implicitConversions
 
 package object scalar {
 	// Simple Constants

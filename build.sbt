@@ -4,6 +4,8 @@ import sbt._
 import sbt.Keys._
 import play.Project._
 
+scalacOptions += "-feature"
+
 play.Project.playScalaSettings
 
 name := "web-education-games"
@@ -26,3 +28,4 @@ resolvers ++= Seq(
 )
 
 routesImport += "models.support._"
+

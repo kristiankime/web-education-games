@@ -6,6 +6,7 @@ import securesocial.core.IdentityId
 import securesocial.core.OAuth1Info
 import securesocial.core.OAuth2Info
 import securesocial.core.PasswordInfo
+import scala.language.implicitConversions
 
 object SecurityMapper {
 

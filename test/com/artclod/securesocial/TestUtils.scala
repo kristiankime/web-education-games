@@ -11,6 +11,7 @@ import play.api.test.Helpers._
 import securesocial.core.Identity
 import securesocial.core.Authenticator
 import play.api.mvc.Cookie
+import scala.language.implicitConversions
 
 // modified from http://stackoverflow.com/questions/17735636/testing-a-play2-application-with-securesocial-using-dependency-injection
 object TestUtils {

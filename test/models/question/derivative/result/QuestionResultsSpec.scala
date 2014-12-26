@@ -1,12 +1,12 @@
 package models.question.derivative.result
 
 import com.artclod.mathml.scalar._
+import models.question.QuestionScore
 import models.question.derivative._
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
 import service.{UserTest, User}
-import models.question.derivative.QuestionScore
 import models.question.derivative.QuestionDifficulty.Diff
 
 @RunWith(classOf[JUnitRunner])

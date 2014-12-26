@@ -1,7 +1,8 @@
 package models.question.derivative.result
 
+import models.question.QuestionScore
 import models.question.derivative.QuestionDifficulty.Diff
-import models.question.derivative.{QuestionScore, _}
+import models.question.derivative.{_}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._

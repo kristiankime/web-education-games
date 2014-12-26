@@ -1,5 +1,6 @@
 package controllers.question.derivative
 
+import models.question.QuestionScore
 import play.api.db.slick.Config.driver.simple.Session
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML

@@ -1,7 +1,7 @@
 package models.question.derivative.result
 
-import models.question.Status
-import models.question.derivative.{QuestionScore, Answer, Question}
+import models.question.{QuestionScore, Status}
+import models.question.derivative.{Answer, Question}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
 import service.User

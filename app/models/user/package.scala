@@ -2,7 +2,7 @@ package models
 
 import models.game.Games
 import models.organization.Courses
-import models.question.derivative.QuestionSummary
+import models.question.derivative.result.QuestionSummary
 import models.question.derivative.{QuestionDifficulty, Answers, Questions}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime

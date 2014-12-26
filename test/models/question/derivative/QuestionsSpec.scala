@@ -5,7 +5,7 @@ import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest._
 import models.question.{Quizzes, Quiz}
-import models.question.derivative.result.QuestionResults
+import models.question.derivative.result.{QuestionSummary, QuestionResults}
 import models.support.QuestionId
 import org.joda.time.{DateTimeZone, DateTime}
 import org.junit.runner._

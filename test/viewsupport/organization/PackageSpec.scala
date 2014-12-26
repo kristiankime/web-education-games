@@ -1,9 +1,10 @@
 package viewsupport.organization
 
+import models.question.Correct2Short
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-import models.question.derivative.{Correct2Short, TestAnswer, Answer}
+import models.question.derivative.{TestAnswer, Answer}
 import models.support._
 import com.artclod.mathml.scalar.Cn
 import com.artclod.slick.JodaUTC

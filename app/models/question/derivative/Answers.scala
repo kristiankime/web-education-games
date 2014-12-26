@@ -4,44 +4,12 @@ import com.artclod.mathml._
 import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
 import com.artclod.slick.JodaUTC.timestamp2DateTime
-import models.question.ViewableMath
+import models.question.{Correct2Short, ViewableMath}
 import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.User
-
-object Correct2Short {
-  val T : Short = 1
-  val F : Short = 0
-
-  def apply(s: Short) = s match {
-    case 0 => false
-    case 1 => true
-    case _ => throw new IllegalStateException("Converting short to correct value was [" + s + "] must be in { 0 -> false, 1 -> true }, coding error")
-  }
-
-  def apply(b: Boolean) : Short = if(b) 1 else 0
-
-}
-
-case class Answer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correctNum: Short, creationDate: DateTime) extends ViewableMath with Owned {
-  // We need to count number of correct answers in the db, so we store correct as a number with { 0 -> false, 1 -> true }
-  if(correctNum != 0 && correctNum != 1) { correctNumError }
-
-  def correct : Boolean = correctNum match {
-    case 0 => false
-    case 1 => true
-    case _ => correctNumError
-  }
-
-  private def correctNumError = throw new IllegalStateException("In " + this + " correctNum was [" + correctNum + "] can only be in { 0 -> false, 1 -> true }, coding error")
-}
-
-object UnfinishedAnswer {
-  def apply(ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean): Answer =
-    Answer(null, ownerId, questionId, mathML, rawStr, if(correct) 1 else 0, creationDate)
-}
 
 object Answers {
 
@@ -88,4 +56,3 @@ object Answers {
   }
 
 }
-

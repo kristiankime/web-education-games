@@ -6,7 +6,7 @@ import models.organization._
 import models.organization.table._
 import models.question.derivative.result.QuizResults
 import models.question.derivative.table._
-import models.question.derivative.{Question, Questions}
+import models.question.derivative.{DerivativeQuestion, DerivativeQuestions}
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
@@ -35,7 +35,7 @@ object Quizzes {
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
     ) yield q).sortBy(_.creationDate).list
 
-  def questions(quizId: QuizId)(implicit session: Session) : List[Question] =
+  def questions(quizId: QuizId)(implicit session: Session) : List[DerivativeQuestion] =
     (for {
       l <- quizzesQuestionsTable if l.quizId === quizId
       q <- questionsTable if l.questionId === q.id

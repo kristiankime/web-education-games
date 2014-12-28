@@ -2,8 +2,9 @@ package models
 
 import models.game.Games
 import models.organization.Courses
+import models.question.QuestionDifficulty
 import models.question.derivative.result.QuestionSummary
-import models.question.derivative.{QuestionDifficulty, Answers, Questions}
+import models.question.derivative.{DerivativeAnswers, DerivativeQuestions}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
@@ -37,9 +38,9 @@ package object user {
 
     def courses()(implicit session: Session) = Courses(user.id)
 
-    def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(Questions.summary(user))
+    def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(user))
 
-    def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(Questions.summary(user, asOf))
+    def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(user, asOf))
 
     private def studentSkillLevelPrivate(questionSummaries: List[QuestionSummary]) : Double = {
       val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)

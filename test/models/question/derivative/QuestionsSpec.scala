@@ -24,12 +24,12 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id))
-        val question = Questions.create(TestQuestion(owner = user.id), quiz.id)
+        val question = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
-        val answer2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
+        val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
 
-        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
+        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2)))
       }
     }
 
@@ -37,12 +37,12 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id))
-        val question = Questions.create(TestQuestion(owner = user.id), quiz.id)
+        val question = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
-        val answer2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = true))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
+        val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = true))
 
-        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2), None))
+        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2)))
       }
     }
   }
@@ -52,11 +52,11 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
-        val question = Questions.create(qTmp, quiz.id)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val question = DerivativeQuestions.create(qTmp, quiz.id)
 
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
-        val answer2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
+        val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
 
         question.answers(user) must beEqualTo(List(answer1, answer2))
       }
@@ -66,13 +66,13 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
-        val question = Questions.create(qTmp, quiz.id)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val question = DerivativeQuestions.create(qTmp, quiz.id)
 
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
-        val answer2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
+        val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
 
-        val otherAnswer = Answers.createAnswer(TestAnswer(owner = DBTest.newFakeUser(UserTest()).id, questionId = question.id))
+        val otherAnswer = DerivativeAnswers.createAnswer(TestAnswer(owner = DBTest.newFakeUser(UserTest()).id, questionId = question.id))
 
         question.answers(user) must beEqualTo(List(answer1, answer2))
       }
@@ -82,14 +82,14 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
-        val question = Questions.create(qTmp, quiz.id)
-        val otherQuestion = Questions.create(TestQuestion(owner = user.id), quiz.id)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val question = DerivativeQuestions.create(qTmp, quiz.id)
+        val otherQuestion = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
-        val answer2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
+        val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
 
-        val otherAnswer = Answers.createAnswer(TestAnswer(owner = user.id, questionId = otherQuestion.id))
+        val otherAnswer = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = otherQuestion.id))
 
         question.answers(user) must beEqualTo(List(answer1, answer2))
       }
@@ -101,9 +101,9 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = Question(null, user.id, x + `1`, "x + 1", JodaUTC.now)
-        val question = Questions.create(qTmp, quiz.id)
-        val eq = Questions(question.id)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val question = DerivativeQuestions.create(qTmp, quiz.id)
+        val eq = DerivativeQuestions(question.id)
 
         eq must beSome(question)
       }
@@ -114,17 +114,17 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
 
-        Questions.create(Question(null, user.id, x + `1`, "x + 2", JodaUTC.now), quiz.id)
-        Questions.create(Question(null, user.id, x + `2`, "x + 2", JodaUTC.now), quiz.id)
+        DerivativeQuestions.create(DerivativeQuestion(null, user.id, x + `1`, "x + 2", JodaUTC.now), quiz.id)
+        DerivativeQuestions.create(DerivativeQuestion(null, user.id, x + `2`, "x + 2", JodaUTC.now), quiz.id)
 
-        val eqs = Questions.list.map(_.mathML)
+        val eqs = DerivativeQuestions.list.map(_.mathML)
         eqs must beEqualTo(List(x + `1`, x + `2`))
       }
     }
 
     "return None when the request question does not exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        val eq = Questions(QuestionId(Int.MaxValue))
+        val eq = DerivativeQuestions(QuestionId(Int.MaxValue))
 
         eq must beNone
       }
@@ -138,64 +138,64 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser
 
-        Questions.summary(user) must beEmpty
+        DerivativeQuestions.summary(user) must beEmpty
       }
     }
 
     "return answer if there is one" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, JodaUTC(1))))
+        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, JodaUTC(1))))
       }
     }
 
     "collapse all answers for one question into a row" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
+        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
       }
     }
 
     "not count answers from other users" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
 
         val user2 = DBTest.newFakeUser
-        val answer = Answers.createAnswer(TestAnswer(owner = user2.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer = DerivativeAnswers.createAnswer(TestAnswer(owner = user2.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
+        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
       }
     }
 
     "return one row per question" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
 
-        val question1 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
-        val question2 = Questions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
+        val question2 = DerivativeQuestions.create(TestQuestion(owner = DBTest.newFakeUser.id, mathML = x, rawStr = "x"))
 
         val user = DBTest.newFakeUser
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(3)))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(3)))
 
-        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(2)))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(2)))
 
-        Questions.summary(user) must beEqualTo(List(
+        DerivativeQuestions.summary(user) must beEqualTo(List(
           QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1)),
           QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, JodaUTC(2))
         ))
@@ -209,30 +209,30 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
 
-        Questions.summary(user) must beEmpty
+        DerivativeQuestions.summary(user) must beEmpty
       }
     }
 
     "find one answer if that's all the user has done" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
-        val question = Questions.create(TestQuestion(owner = user.id))
-        val answer1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
+        val question = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
 
-        Questions.summary(user) must beEqualTo(List(QuestionSummary(question.id, 1, question.mathML, question.rawStr, false, answer1.creationDate)))
+        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question.id, 1, question.mathML, question.rawStr, false, answer1.creationDate)))
       }
     }
 
     "find multiple answers to multiple questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
-        val question1 = Questions.create(TestQuestion(owner = user.id))
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
-        val question2 = Questions.create(TestQuestion(owner = user.id))
-        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
-        Questions.summary(user) must beEqualTo(List(
+        DerivativeQuestions.summary(user) must beEqualTo(List(
           QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
           QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr,false, answer2_1.creationDate)
         ))
@@ -242,16 +242,16 @@ class QuestionsSpec extends Specification {
     "ignore answers other users have made" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
-        val question1 = Questions.create(TestQuestion(owner = user.id))
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
-        val question2 = Questions.create(TestQuestion(owner = user.id))
-        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
         val otherUser = DBTest.newFakeUser(UserTest())
-        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        Questions.summary(user) must beEqualTo(List(
+        DerivativeQuestions.summary(user) must beEqualTo(List(
           QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
           QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
@@ -262,32 +262,32 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id)) // NOTE: In the quiz
-        val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
-        val question2 = Questions.create(TestQuestion(owner = user.id)) // NOTE: Not in quiz
-        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id)) // NOTE: Not in quiz
+        val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
         val otherUser = DBTest.newFakeUser(UserTest())
-        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        Questions.summary(user, quiz) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
+        DerivativeQuestions.summary(user, quiz) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
       }
     }
 
     "summarize answers before asOf date only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
-        val question1 = Questions.create(TestQuestion(owner = user.id))
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
-        val question2 = Questions.create(TestQuestion(owner = user.id))
-        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
         val otherUser = DBTest.newFakeUser(UserTest())
-        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        Questions.summary(user, JodaUTC(1)) must beEqualTo(List(
+        DerivativeQuestions.summary(user, JodaUTC(1)) must beEqualTo(List(
           QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate),
           QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
@@ -298,16 +298,16 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(TestQuiz(owner = user.id)) // NOTE: In the quiz
-        val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-        val answer1_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
-        val answer1_2 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
-        val question2 = Questions.create(TestQuestion(owner = user.id)) // NOTE: Not in quiz
-        val answer2_1 = Answers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+        val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+        val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id)) // NOTE: Not in quiz
+        val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
         val otherUser = DBTest.newFakeUser(UserTest())
-        val otherAnswer1_1 = Answers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        Questions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
+        DerivativeQuestions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
       }
     }
 
@@ -321,7 +321,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         questionAndAnswers(otherUser, (true, d(0)))
 
-        Questions.correct(user.id) must beEmpty
+        DerivativeQuestions.correct(user.id) must beEmpty
       }
     }
 
@@ -330,7 +330,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         questionAndAnswers(user, (false, d(0)))
 
-        Questions.correct(user.id) must beEmpty
+        DerivativeQuestions.correct(user.id) must beEmpty
       }
     }
 
@@ -339,7 +339,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (true, d(0)))
 
-        Questions.correct(user.id) must beEqualTo(List((q1.id, d(0))))
+        DerivativeQuestions.correct(user.id) must beEqualTo(List((q1.id, d(0))))
       }
     }
 
@@ -348,7 +348,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (false, d(0)), (true, d(1)), (false, d(2)), (true, d(3)) )
 
-        Questions.correct(user.id) must beEqualTo(List((q1.id, d(1))))
+        DerivativeQuestions.correct(user.id) must beEqualTo(List((q1.id, d(1))))
       }
     }
 
@@ -358,7 +358,7 @@ class QuestionsSpec extends Specification {
         val q1 = questionAndAnswers(user, (true, d(4)) )
         val q2 = questionAndAnswers(user, (false, d(0)), (true, d(1)), (false, d(2)), (true, d(7)) )
 
-        Questions.correct(user.id) must beEqualTo(List((q1.id, d(4)), (q2.id, d(1))))
+        DerivativeQuestions.correct(user.id) must beEqualTo(List((q1.id, d(4)), (q2.id, d(1))))
       }
     }
   }
@@ -371,7 +371,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         questionAndAnswers(otherUser, (true, d(0)))
 
-        Questions.incorrect(user.id) must beEmpty
+        DerivativeQuestions.incorrect(user.id) must beEmpty
       }
     }
 
@@ -380,7 +380,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (false, d(0)))
 
-        Questions.incorrect(user.id) must beEqualTo(List((q1.id, d(0))))
+        DerivativeQuestions.incorrect(user.id) must beEqualTo(List((q1.id, d(0))))
       }
     }
 
@@ -389,7 +389,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         questionAndAnswers(user, (false, d(0)), (true, d(1)))
 
-        Questions.incorrect(user.id) must beEmpty
+        DerivativeQuestions.incorrect(user.id) must beEmpty
       }
     }
 
@@ -398,7 +398,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (false, d(0)), (false, d(1)), (false, d(2)), (false, d(3)) )
 
-        Questions.incorrect(user.id) must beEqualTo(List((q1.id, d(3))))
+        DerivativeQuestions.incorrect(user.id) must beEqualTo(List((q1.id, d(3))))
       }
     }
 
@@ -408,7 +408,7 @@ class QuestionsSpec extends Specification {
         val q1 = questionAndAnswers(user, (false, d(4)) )
         val q2 = questionAndAnswers(user, (false, d(0)), (false, d(1)), (false, d(2)), (false, d(7)) )
 
-        Questions.incorrect(user.id) must beEqualTo(List((q2.id, d(7)), (q1.id, d(4))))
+        DerivativeQuestions.incorrect(user.id) must beEqualTo(List((q2.id, d(7)), (q1.id, d(4))))
       }
     }
   }
@@ -416,8 +416,8 @@ class QuestionsSpec extends Specification {
   private def d(l: Long) = JodaUTC(l)
 
   private def questionAndAnswers(user: User, answers: (Boolean, DateTime)* )(implicit session: Session) = {
-    val question = Questions.create(TestQuestion(owner = user.id))
-    for(answer <- answers) { Answers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = answer._1, creationDate = answer._2)) }
+    val question = DerivativeQuestions.create(TestQuestion(owner = user.id))
+    for(answer <- answers) { DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = answer._1, creationDate = answer._2)) }
     question
   }
 

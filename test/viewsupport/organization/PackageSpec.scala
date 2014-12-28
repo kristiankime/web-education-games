@@ -4,7 +4,7 @@ import models.question.Correct2Short
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-import models.question.derivative.{TestAnswer, Answer}
+import models.question.derivative.{TestAnswer, DerivativeAnswer}
 import models.support._
 import com.artclod.mathml.scalar.Cn
 import com.artclod.slick.JodaUTC
@@ -24,7 +24,7 @@ class PackageSpec extends Specification {
 		}
 
 		"get math string from Answer" in {
-			mathMLStr(Some(Right(Answer(AnswerId(0), UserId(0), QuestionId(0), Cn(0), "rawStr", Correct2Short(false), JodaUTC.now)))) must beEqualTo(Some("rawStr"))
+			mathMLStr(Some(Right(DerivativeAnswer(AnswerId(0), UserId(0), QuestionId(0), Cn(0), "rawStr", Correct2Short(false), JodaUTC.now)))) must beEqualTo(Some("rawStr"))
 		}
 	}
 	

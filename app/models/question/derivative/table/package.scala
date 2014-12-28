@@ -1,15 +1,15 @@
 package models.question.derivative
 
+import models.question.table.{Users2QuizzesTable, QuizzesTable}
 import play.api.db.slick.Config.driver.simple._
 
 package object table {
 
-  val answersTable = TableQuery[AnswersTable]
-  val answerTimesTable = TableQuery[AnswerTimesTable]
-  val questionsTable = TableQuery[QuestionsTable]
-  val quizzesQuestionsTable = TableQuery[Quizzes2QuestionsTable]
+  val answersTable = TableQuery[DerivativeAnswersTable]
+  val questionsTable = TableQuery[DerivativeQuestionsTable]
+  val quizzesQuestionsTable = TableQuery[Quizzes2DerivativeQuestionsTable]
   val quizzesTable = TableQuery[QuizzesTable]
-  val usersAnswersTable = TableQuery[UsersAnswersTable]
+  val usersAnswersTable = TableQuery[Users2DerivativeAnswersTable]
   val usersQuizzesTable = TableQuery[Users2QuizzesTable]
 
 }

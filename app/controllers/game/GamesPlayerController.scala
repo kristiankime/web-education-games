@@ -37,12 +37,12 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
-  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: (Boolean) => Answer )(implicit user: User,session: Session) : Result
+  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer )(implicit user: User,session: Session) : Result
 
-  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
+  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)]
 
   // ===== Concrete =====
-  def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
+  def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)] =
     Games(gameId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no game for id=[" + gameId + "]")))
       case Some(game) => createdQuiz(game) match {
@@ -60,7 +60,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             val mathML = MathML(form._1).get // TODO better handle on error
-            Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
+            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }
@@ -74,7 +74,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           questionId => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            for (question <- Questions(questionId)) { quiz.remove(question) }
+            for (question <- DerivativeQuestions(questionId)) { quiz.remove(question) }
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }
@@ -105,11 +105,11 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           form => {
             val math: MathMLElem = MathML(form._1).get // TODO better error handling
             val rawStr = form._2
-            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now) _
-            Answers.correct(question, math) match {
+            val unfinishedAnswer = DerivativeAnswerUnfinished(user.id, question.id, math, rawStr, JodaUTC.now) _
+            DerivativeAnswers.correct(question, math) match {
 //              case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-              case Yes => Redirect(routes.GamesController.game(game.id, Some(Answers.createAnswer(unfinishedAnswer(true)).id)))
-              case No => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
+              case Yes => Redirect(routes.GamesController.game(game.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case No => Redirect(routes.GamesController.answer(game.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer)
             }
           })

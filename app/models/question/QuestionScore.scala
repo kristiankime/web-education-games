@@ -1,14 +1,14 @@
 package models.question
 
 import com.google.common.annotations.VisibleForTesting
-import models.question.derivative.{Question, QuestionDifficulty}
+import models.question.derivative.DerivativeQuestion
 
 
 object QuestionScore {
   @VisibleForTesting
   val zoneOfProximalDevelopmentFactor = 1.25
 
-  def teacherScore(question: Question, correct: Boolean, studentSkillLevel: Double) : Double = teacherScore(QuestionDifficulty(question.mathML), correct, studentSkillLevel)
+  def teacherScore(question: DerivativeQuestion, correct: Boolean, studentSkillLevel: Double) : Double = teacherScore(QuestionDifficulty(question.mathML), correct, studentSkillLevel)
 
   def teacherScore(difficulty : Double, correct: Boolean, studentSkillLevel: Double) : Double = {
     val l = studentSkillLevel

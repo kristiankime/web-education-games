@@ -1,10 +1,8 @@
-package models.question.derivative.table
+package com.artclod.mathml.slick
 
+import com.artclod.mathml.scalar.{Cn, MathMLElem}
+import com.artclod.mathml.{Math, MathML}
 import play.api.db.slick.Config.driver.simple._
-import com.artclod.mathml.Math
-import com.artclod.mathml.MathML
-import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.mathml.scalar.Cn
 
 object MathMLMapper {
 

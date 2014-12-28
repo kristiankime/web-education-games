@@ -6,13 +6,13 @@ import service._
 import service.table._
 import models.support._
 
-case class User2Answer(userId: UserId, answerId: AnswerId, access: Access)
+case class User2DerivativeAnswer(userId: UserId, answerId: AnswerId, access: Access)
 
-class UsersAnswersTable(tag: Tag) extends Table[User2Answer](tag, "users_2_derivative_answers") {
+class Users2DerivativeAnswersTable(tag: Tag) extends Table[User2DerivativeAnswer](tag, "users_2_derivative_answers") {
 	def userId = column[UserId]("user_id")
 	def answerId = column[AnswerId]("answer_id")
 	def access = column[Access]("access")
-	def * = (userId, answerId, access) <> (User2Answer.tupled, User2Answer.unapply _)
+	def * = (userId, answerId, access) <> (User2DerivativeAnswer.tupled, User2DerivativeAnswer.unapply _)
 
 	def pk = primaryKey("users_2_derivative_answers_pk", (userId, answerId))
 

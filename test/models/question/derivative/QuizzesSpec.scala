@@ -23,13 +23,12 @@ class QuizzesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
-				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 				val student = newFakeUser(UserTest())
-        val startTime = fakeStartWorkingOn(student, question1.id, JodaUTC.zero)
-				val answer1 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
-				val answer2 = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
+				val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
+				val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 
-				val sqr1 = QuestionResults(student, question1, List(answer1, answer2), Some(startTime))
+				val sqr1 = QuestionResults(student, question1, List(answer1, answer2))
 				val sr = QuizResults(student, quiz, List(sqr1))
 				quiz.results(student) must beEqualTo(sr)
 			}
@@ -39,14 +38,13 @@ class QuizzesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
-				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-				val question2 = Questions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 				val student = newFakeUser(UserTest())
-        val startTime = fakeStartWorkingOn(student, question1.id, JodaUTC.zero)
-        val answer = Answers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id, correct = true))
+        val answer = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id, correct = true))
 
-				val sqr1 = QuestionResults(student, question1, List(answer), Some(startTime))
-				val sqr2 = QuestionResults(student, question2, List(), None)
+				val sqr1 = QuestionResults(student, question1, List(answer))
+				val sqr2 = QuestionResults(student, question2, List())
 				val sr = QuizResults(student, quiz, List(sqr1, sqr2))
 				quiz.results(student) must beEqualTo(sr)
 			}
@@ -60,8 +58,8 @@ class QuizzesSpec extends Specification {
 				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 
-				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-				val question2 = Questions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 
 				quiz.questions must beEqualTo(List(question1, question2))
 			}
@@ -73,10 +71,10 @@ class QuizzesSpec extends Specification {
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 				val otherQuiz = Quizzes.create(TestQuiz(owner = user.id))
 
-				val question1 = Questions.create(TestQuestion(owner = user.id), quiz.id)
-				val question2 = Questions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 
-				val otherQuestion = Questions.create(TestQuestion(owner = user.id), otherQuiz.id)
+				val otherQuestion = DerivativeQuestions.create(TestQuestion(owner = user.id), otherQuiz.id)
 
 				quiz.questions must beEqualTo(List(question1, question2))
 			}

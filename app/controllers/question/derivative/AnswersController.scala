@@ -21,8 +21,8 @@ import service._
 
 object AnswersController extends Controller with SecureSocialConsented {
 
-  def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
-    Answers(answerId) match {
+  def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, DerivativeAnswer] =
+    DerivativeAnswers(answerId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no answer for id=["+answerId+"]")))
       case Some(answer) =>
         if(answer.id ^!= answerId) Left(NotFound(views.html.errors.notFoundPage("The answer id=["+answerId+"] was not for the question id=[" + questionId + "]")))
@@ -49,11 +49,11 @@ object AnswersController extends Controller with SecureSocialConsented {
             val math : MathMLElem = MathML(form._1).get // TODO better error handling
             val rawStr = form._2
             val quizOp : Option[Quiz] = Quizzes(quizId)
-            val unfinishedAnswer = UnfinishedAnswer(user.id, question.id, math, rawStr, JodaUTC.now)_
-            Answers.correct(question, math) match {
+            val unfinishedAnswer = DerivativeAnswerUnfinished(user.id, question.id, math, rawStr, JodaUTC.now)_
+            DerivativeAnswers.correct(question, math) match {
 //              case Yes => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-              case Yes => Redirect(routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(Answers.createAnswer(unfinishedAnswer(true)).id)))
-              case No => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(false)).id))
+              case Yes => Redirect(routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case No => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => questionView(course, quiz, question, Some(Left(unfinishedAnswer(false))))
             }
           })
@@ -61,7 +61,7 @@ object AnswersController extends Controller with SecureSocialConsented {
     }
 	}
 
-	private def questionView(course: Course, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) = {
+	private def questionView(course: Course, quiz: Quiz, question: DerivativeQuestion, answer: Option[Either[DerivativeAnswer, DerivativeAnswer]])(implicit user: User, session: Session) = {
     Ok(views.html.question.derivative.questionView(course, quiz, question.results(user), answer))
 	}
 }

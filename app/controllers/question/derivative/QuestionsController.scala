@@ -1,6 +1,6 @@
 package controllers.question.derivative
 
-import models.question.QuestionScore
+import models.question.{QuestionDifficulty, QuestionScore}
 import play.api.db.slick.Config.driver.simple.Session
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
@@ -17,8 +17,8 @@ import scala.util.{Failure, Success}
 
 object QuestionsController extends Controller with SecureSocialConsented {
 
-  def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
-    Questions(questionId) match {
+  def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, DerivativeQuestion] =
+    DerivativeQuestions(questionId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))
       case Some(question) => question.quiz match {
         case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for question for id=["+questionId+"]")))
@@ -36,7 +36,6 @@ object QuestionsController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course , quiz, question)) => {
         val nextQuestion = quiz.results(user).nextQuestion(question)
-        Answers.startWorkingOn(question.id)
         Ok(views.html.question.derivative.questionView(course, quiz, question.results(user), None))
       }
     }
@@ -50,7 +49,7 @@ object QuestionsController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
-            Questions.create(Question(null, user.id, mathML, form._2, JodaUTC.now), quizId)
+            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now), quizId)
             Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }

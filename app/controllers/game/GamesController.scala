@@ -8,7 +8,7 @@ import controllers.support.SecureSocialConsented
 import controllers.game.GamesEmail._
 import models.game._
 import models.organization._
-import models.question.derivative.Answers
+import models.question.derivative.DerivativeAnswers
 import models.support._
 import models.user.Users
 import play.api.data.Form
@@ -73,7 +73,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: RequestorDoneAnswering => Ok(views.html.game.play.gameDoneRequestor(state))
           case state: RequestorQuiz => Ok(views.html.game.play.createQuizRequestor(state))
           case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.awaitingQuizRequestor(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestor(state, answerIdOp.flatMap(id => Answers(id))))
+          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestor(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
         }
         else if(game.isRequestee(user)) game.toState match {
@@ -82,7 +82,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
           case state: RequesteeQuiz => Ok(views.html.game.play.createQuizRequestee(state))
           case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.awaitingQuizRequestee(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestee(state, answerIdOp.flatMap(id => Answers(id))))
+          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestee(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
         }
         else throw new IllegalStateException("TODO code up teacher view")

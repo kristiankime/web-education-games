@@ -1,16 +1,14 @@
 package models.question.derivative.result
 
 import models.question.{QuestionScore, Status}
-import models.question.derivative.{Answer, Question}
+import models.question.derivative.{DerivativeAnswer, DerivativeQuestion}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
 import service.User
 import viewsupport.question.derivative.{Correct, Ongoing, Unstarted}
 
-case class QuestionResults(answerer: User, question: Question, answers: List[Answer], startTime: Option[DateTime]) {
+case class QuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) {
   require(answers.forall(_.ownerId == answerer.id), "All the answers must be from the same user")
-
-  def viewed = startTime.nonEmpty
 
   def attempted = answers.nonEmpty
 
@@ -21,12 +19,6 @@ case class QuestionResults(answerer: User, question: Question, answers: List[Ans
   val status = Status(attempted, correct)
 
   val firstCorrect = answers.find(_.correct)
-
-  val timeToCorrect = (startTime, firstCorrect) match {
-    case (None, _) => Unstarted
-    case (Some(start), None) => Ongoing(start)
-    case (Some(start), Some(first)) => Correct(start, first.creationDate)
-  }
 
   val numAttemptsToCorrect = {
     val num = answers.indexWhere(_.correct)

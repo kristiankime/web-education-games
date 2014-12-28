@@ -1,10 +1,9 @@
-package models.question.derivative
+package models.question
 
-import com.artclod.mathml.{MathML, Math}
 import com.artclod.mathml.scalar.apply._
-import com.artclod.mathml.scalar.concept.{UnaryFunction, NthRoot, Logarithm, Constant}
+import com.artclod.mathml.scalar.concept.{Constant, NthRoot, UnaryFunction}
 import com.artclod.mathml.scalar.{Ci => Variable, Cn, MathMLElem}
-import com.google.common.annotations.VisibleForTesting
+import com.artclod.mathml.{Math, MathML}
 
 import scala.util.Failure
 
@@ -22,7 +21,7 @@ object QuestionDifficulty {
     }
   }
 
-  import MathType._
+  import models.question.QuestionDifficulty.MathType._
 
   def apply(e: MathMLElem): Double = e match {
       case m: Diff => m.diff // This object is designed for testing

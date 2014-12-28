@@ -50,10 +50,4 @@ object DBTest {
 
   def newFakeUserNoConsent(implicit session: Session): User = newFakeUserNoConsent(UserTest())
 
-
-  def fakeStartWorkingOn(user: User, questionId: QuestionId, time: DateTime)(implicit session: Session) ={
-    answerTimesTable += AnswerTime(user.id, questionId, time)
-    time
-  }
-
 }

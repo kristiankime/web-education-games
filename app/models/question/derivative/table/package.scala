@@ -9,7 +9,6 @@ package object table {
   val questionsTable = TableQuery[DerivativeQuestionsTable]
   val quizzesQuestionsTable = TableQuery[Quizzes2DerivativeQuestionsTable]
   val quizzesTable = TableQuery[QuizzesTable]
-  val usersAnswersTable = TableQuery[Users2DerivativeAnswersTable]
   val usersQuizzesTable = TableQuery[Users2QuizzesTable]
 
 }

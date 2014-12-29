@@ -11,6 +11,10 @@ import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
+import models.question.table.quizzesTable
+import models.question.table.questionsTable
+import models.question.table.usersQuizzesTable
+
 
 object Quizzes {
   // ======= CREATE ======
@@ -36,10 +40,7 @@ object Quizzes {
     ) yield q).sortBy(_.creationDate).list
 
   def questions(quizId: QuizId)(implicit session: Session) : List[DerivativeQuestion] =
-    (for {
-      l <- quizzesQuestionsTable if l.quizId === quizId
-      q <- questionsTable if l.questionId === q.id
-    } yield q).sortBy(_.creationDate).list
+    questionsTable.where(_.quizId === quizId).sortBy(_.creationDate).list
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (

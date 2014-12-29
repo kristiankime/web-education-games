@@ -9,6 +9,7 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.model.ForeignKeyAction
 import service.table.UsersTable
 import com.artclod.mathml.slick.MathMLMapper.string2mathML
+import models.question.table.questionsTable
 
 class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "derivative_answers") {
 	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)

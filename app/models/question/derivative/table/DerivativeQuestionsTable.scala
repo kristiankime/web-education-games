@@ -10,6 +10,7 @@ import org.joda.time.DateTime
 import com.artclod.slick.JodaUTC._
 import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
+import models.question.table.quizzesTable
 
 class DerivativeQuestionsTable(tag: Tag) extends Table[DerivativeQuestion](tag, "derivative_questions") {
 	def id = column[QuestionId]("id", O.PrimaryKey, O.AutoInc)
@@ -17,8 +18,12 @@ class DerivativeQuestionsTable(tag: Tag) extends Table[DerivativeQuestion](tag, 
 	def mathML = column[MathMLElem]("mathml")
 	def rawStr = column[String]("rawstr")
 	def creationDate = column[DateTime]("creation_date")
+	def quizId = column[Option[QuizId]]("quiz_id")
+	def order = column[Int]("order")
 
-	def * = (id, ownerId, mathML, rawStr, creationDate) <> (DerivativeQuestion.tupled, DerivativeQuestion.unapply _)
+	def * = (id, ownerId, mathML, rawStr, creationDate, quizId, order) <> (DerivativeQuestion.tupled, DerivativeQuestion.unapply _)
 
-	def ownerFK = foreignKey("derivative_questions_owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_questions__owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def quizIdFK = foreignKey("derivative_questions__quiz_fk", quizId, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+
 }

@@ -6,18 +6,19 @@ import scala.slick.model.ForeignKeyAction
 import models.question.derivative.table._
 import models.support._
 import com.artclod.slick.JodaUTC.timestamp2DateTime
+import models.question.table.quizzesTable
 
 case class Course2Quiz(courseId: CourseId, quizId: QuizId, startDate: Option[DateTime] = None, endDate: Option[DateTime] = None)
 
-class Courses2QuizzesTable(tag: Tag) extends Table[Course2Quiz](tag, "courses_2_derivative_quizzes") {
+class Courses2QuizzesTable(tag: Tag) extends Table[Course2Quiz](tag, "courses_2_quizzes") {
 	def courseId = column[CourseId]("course_id")
 	def quizId = column[QuizId]("quiz_id")
   def startDate = column[Option[DateTime]]("start_date")
   def endDate = column[Option[DateTime]]("end_date")
 	def * = (courseId, quizId, startDate, endDate) <> (Course2Quiz.tupled, Course2Quiz.unapply _)
 
-	def pk = primaryKey("courses_2_derivative_quizzes_pk", (courseId, quizId))
+	def pk = primaryKey("courses_2_quizzes__pk", (courseId, quizId))
 
-	def courseIdFK = foreignKey("courses_2_derivative_quizzes_course_fk", courseId, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def questionIdFK = foreignKey("courses_2_derivative_quizzes_quiz_fk", quizId, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def courseIdFK = foreignKey("courses_2_quizzes__course_fk", courseId, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionIdFK = foreignKey("courses_2_quizzes__quiz_fk", quizId, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

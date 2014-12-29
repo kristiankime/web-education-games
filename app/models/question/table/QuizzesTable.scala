@@ -17,5 +17,5 @@ class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "derivative_quizzes") {
 	def updateDate = column[DateTime]("update_date")
 	def * = (id, ownerId, name, creationDate, updateDate) <> (Quiz.tupled, Quiz.unapply _)
 
-	def ownerFK = foreignKey("derivative_quizzes_owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_quizzes__owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

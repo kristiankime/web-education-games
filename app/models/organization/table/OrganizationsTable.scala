@@ -7,7 +7,7 @@ import models.support.table.IdentifiedAndOwned
 import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
 
-class OrganizationsTable(tag: Tag) extends Table[Organization](tag, "organizations") { //with IdentifiedAndOwned[Course, CourseId] {
+class OrganizationsTable(tag: Tag) extends Table[Organization](tag, "organizations") {
 	def id = column[OrganizationId]("id", O.PrimaryKey, O.AutoInc)
 	def name = column[String]("name")
 	def creationDate = column[DateTime]("creation_Date")

@@ -3,12 +3,12 @@ package models.game.table
 import com.artclod.slick.JodaUTC._
 import models.game.{Game, GameResponseStatus}
 import models.organization.table._
-import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
+import models.question.table.quizzesTable
 
 class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def id = column[GameId]("id", O.PrimaryKey, O.AutoInc)
@@ -35,9 +35,9 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
     requestorQuiz, requestorQuizDone, requesteeQuiz, requesteeQuizDone,
     requesteeFinished, requestorFinished, requesteeStudentPoints, requesteeTeacherPoints, requestorStudentPoints, requestorTeacherPoints, finishedDate) <> (Game.tupled, Game.unapply _)
 
-  def requestorFK = foreignKey("games_requestor_fk", requestor, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-  def requesteeFK = foreignKey("games_requestee_fk", requestee, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-  def courseFK = foreignKey("games_course_fk", course, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-  def requestorQuizFK = foreignKey("games_requestor_quiz_fk", requestorQuiz, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-  def requesteeQuizFK = foreignKey("games_requestee_quiz_fk", requesteeQuiz, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def requestorFK = foreignKey("games__requestor_fk", requestor, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def requesteeFK = foreignKey("games__requestee_fk", requestee, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def courseFK = foreignKey("games__course_fk", course, coursesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def requestorQuizFK = foreignKey("games__requestor_quiz_fk", requestorQuiz, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def requesteeQuizFK = foreignKey("games__requestee_quiz_fk", requesteeQuiz, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

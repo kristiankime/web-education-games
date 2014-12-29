@@ -21,9 +21,9 @@ import MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.lifted
 
-case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime) extends ViewableMath with Owned {
+case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends ViewableMath with Owned {
 
-  def quiz(implicit session: Session) = DerivativeQuestions.quizFor(id)
+  def quiz(implicit session: Session) = quizIdOp.flatMap(Quizzes(_))
 
   def answersAndOwners(implicit session: Session) = DerivativeQuestions.answersAndOwners(id)
 

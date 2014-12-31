@@ -17,8 +17,8 @@ import com.artclod.slick.JodaUTC.timestamp2DateTime
 import MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.lifted
-import models.question.table.answersTable
-import models.question.table.questionsTable
+import models.question.table.derivativeAnswersTable
+import models.question.table.derivativeQuestionsTable
 import models.question.table.quizzesTable
 
 object DerivativeQuestions {
@@ -27,44 +27,44 @@ object DerivativeQuestions {
   def create(info: DerivativeQuestion, quizId: QuizId)(implicit session: Session): DerivativeQuestion = {
     val withQuiz = info.copy(quizIdOp = Some(quizId))
     // TODO fix order here
-    val questionId = (questionsTable returning questionsTable.map(_.id)) += withQuiz
+    val questionId = (derivativeQuestionsTable returning derivativeQuestionsTable.map(_.id)) += withQuiz
     withQuiz.copy(id = questionId)
   }
 
   def create(info: DerivativeQuestion)(implicit session: Session): DerivativeQuestion = {
-    val questionId = (questionsTable returning questionsTable.map(_.id)) += info
+    val questionId = (derivativeQuestionsTable returning derivativeQuestionsTable.map(_.id)) += info
     info.copy(id = questionId)
   }
 
   // ======= FIND ======
-  def list()(implicit session: Session) = questionsTable.list
+  def list()(implicit session: Session) = derivativeQuestionsTable.list
 
-  def apply(questionId: QuestionId)(implicit session: Session) = questionsTable.where(_.id === questionId).firstOption
+  def apply(questionId: QuestionId)(implicit session: Session) = derivativeQuestionsTable.where(_.id === questionId).firstOption
 
-  def apply(qid: QuestionId, owner: User)(implicit session: Session) = answersTable.where(a => a.questionId === qid && a.ownerId === owner.id).sortBy(_.creationDate).list
+  def apply(qid: QuestionId, owner: User)(implicit session: Session) = derivativeAnswersTable.where(a => a.questionId === qid && a.ownerId === owner.id).sortBy(_.creationDate).list
 
-  def answers(qid: QuestionId)(implicit session: Session) = answersTable.where(_.questionId === qid).sortBy(_.creationDate).list
+  def answers(qid: QuestionId)(implicit session: Session) = derivativeAnswersTable.where(_.questionId === qid).sortBy(_.creationDate).list
 
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
-      a <- answersTable if a.questionId === qid;
+      a <- derivativeAnswersTable if a.questionId === qid;
       u <- UsersTable.userTable if u.id === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.email, aU._1.creationDate)).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) =
     (for (
-      q <- questionsTable if q.id === questionId;
+      q <- derivativeQuestionsTable if q.id === questionId;
       z <- quizzesTable if z.id === q.quizId
     ) yield z).firstOption
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
-    val userIds = answersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
+    val userIds = derivativeAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
     val users = service.table.UsersTable.userTable.where(_.id in userIds).sortBy(_.email)
     users.list
   }
 
   def correct(userId: UserId)(implicit session: Session) = { // Type information provided here to help IDE
-    val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- questionsTable; a <- answersTable if a.ownerId === userId && q.id === a.questionId && a.correct === Correct2Short.T) yield (q, a)
+    val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- derivativeQuestionsTable; a <- derivativeAnswersTable if a.ownerId === userId && q.id === a.questionId && a.correct === Correct2Short.T) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)]), (QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])] = query1.groupBy(_._1.id)
     val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.creationDate).min) }
     val query4 = query3.sortBy(_._2.desc)
@@ -74,7 +74,7 @@ object DerivativeQuestions {
   def correctResults(user: User, num: Int)(implicit session: Session) = correct(user.id).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
   def incorrect(userId: UserId)(implicit session: Session) = { // Type information provided here to help IDE
-    val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- questionsTable; a <- answersTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
+    val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- derivativeQuestionsTable; a <- derivativeAnswersTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)]), (QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])] = query1.groupBy(_._1.id)
     val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).max) }
     val query4 = query3.filter(_._2 === Correct2Short.F) // Only include question that have no correct answer
@@ -86,30 +86,30 @@ object DerivativeQuestions {
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: DerivativeQuestion)(implicit session: Session) =
-    questionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+    derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= Summary ======
   def summary(user: User)(implicit session: Session) = {
     val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- questionsTable; a <- answersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+      (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
     summaryFor(q)
   }
 
   def summary(user: User, asOf: DateTime)(implicit session: Session) = {
     val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- questionsTable; a <- answersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf } yield (q, a))
+      (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf } yield (q, a))
     summaryFor(q)
   }
 
   def summary(user: User, quiz: Quiz)(implicit session: Session) = {
     val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- questionsTable if q.quizId === quiz.id; a <- answersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+      (for { q <- derivativeQuestionsTable if q.quizId === quiz.id; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
     summaryFor(q)
   }
 
   def summary(user: User, asOf: DateTime, quiz: Quiz)(implicit session: Session) = {
     val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- questionsTable if q.quizId === quiz.id; a <- answersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf} yield (q, a))
+      (for { q <- derivativeQuestionsTable if q.quizId === quiz.id; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf} yield (q, a))
     summaryFor(q)
   }
 

@@ -9,7 +9,7 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.model.ForeignKeyAction
 import service.table.UsersTable
 import com.artclod.mathml.slick.MathMLMapper.string2mathML
-import models.question.table.questionsTable
+import models.question.table.derivativeQuestionsTable
 
 class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "derivative_answers") {
 	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)
@@ -22,6 +22,6 @@ class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "der
 
 	def * = (id, ownerId, questionId, mathML, rawStr, correct, creationDate) <> (DerivativeAnswer.tupled, DerivativeAnswer.unapply _)
 
-	def ownerFK = foreignKey("derivative_answers_owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def questionFK = foreignKey("derivative_answers_fk", questionId, questionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_answers__owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionFK = foreignKey("derivative_answers_question_fk", questionId, derivativeQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

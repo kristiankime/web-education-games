@@ -13,6 +13,7 @@ import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.Config.driver.simple.Query
+import play.api.templates.Html
 import service._
 import service.table.UsersTable
 import models.question.derivative.result.QuestionResults
@@ -21,7 +22,7 @@ import MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.lifted
 
-case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends ViewableMath with Owned {
+case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
 
   def quiz(implicit session: Session) = quizIdOp.flatMap(Quizzes(_))
 
@@ -38,5 +39,8 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
     val qAccess = Access(user, ownerId)
     Seq(cAccess, qAccess).max
   }
+
+  // === Methods for viewing
+  def display : Html = views.html.mathml.mathmlDisplay(this)
 
 }

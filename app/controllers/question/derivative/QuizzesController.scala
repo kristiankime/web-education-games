@@ -33,7 +33,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
   def createForm(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course)) => Ok(views.html.question.derivative.quizCreate(course))
+      case Right((organization, course)) => Ok(views.html.question.quizCreate(course))
     }
   }
 
@@ -56,7 +56,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         val access = course.access
-        Ok(views.html.question.derivative.quizView(access, course, quiz, answerIdOp.flatMap(id => DerivativeAnswers(id))))
+        Ok(views.html.question.quizView(access, course, quiz, answerIdOp.flatMap(id => DerivativeAnswers(id))))
       }
     }
   }

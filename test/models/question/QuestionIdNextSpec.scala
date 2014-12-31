@@ -20,19 +20,19 @@ class QuestionIdNextSpec extends Specification {
 
     "return a unique id" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        QuestionIdNext.apply must beEqualTo(QuestionId(1))
+        QuestionIdNext() must beEqualTo(QuestionId(1))
       }
     }
 
     "return two unique ids" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
-        QuestionIdNext.apply must beEqualTo(QuestionId(1))
-        QuestionIdNext.apply must beEqualTo(QuestionId(2))
+        QuestionIdNext() must beEqualTo(QuestionId(1))
+        QuestionIdNext() must beEqualTo(QuestionId(2))
       }
     }
 
-    "return range of unique ids" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      Range(1, 10).par.map(v => DB.withSession { implicit session: Session => QuestionIdNext.apply }).toList.sortWith(_.v < _.v) must beEqualTo(Range(1, 10).map(QuestionId(_)).toList)
+    "return range of unique ids, even when called in parallel" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      Range(1, 10).par.map(v => DB.withSession { implicit session: Session => QuestionIdNext() }).toList.sortWith(_.v < _.v) must beEqualTo(Range(1, 10).map(QuestionId(_)).toList)
     }
   }
 

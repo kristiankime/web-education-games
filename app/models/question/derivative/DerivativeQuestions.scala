@@ -17,23 +17,22 @@ import com.artclod.slick.JodaUTC.timestamp2DateTime
 import MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.lifted
-import models.question.table.derivativeAnswersTable
-import models.question.table.derivativeQuestionsTable
-import models.question.table.quizzesTable
+import models.question.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
 
 object DerivativeQuestions {
 
   // ======= CREATE ======
   def create(info: DerivativeQuestion, quizId: QuizId)(implicit session: Session): DerivativeQuestion = {
-    val withQuiz = info.copy(quizIdOp = Some(quizId))
-    // TODO fix order here
-    val questionId = (derivativeQuestionsTable returning derivativeQuestionsTable.map(_.id)) += withQuiz
-    withQuiz.copy(id = questionId)
+    val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
+    derivativeQuestionsTable += toInsert
+    toInsert
   }
 
+  @VisibleForTesting
   def create(info: DerivativeQuestion)(implicit session: Session): DerivativeQuestion = {
-    val questionId = (derivativeQuestionsTable returning derivativeQuestionsTable.map(_.id)) += info
-    info.copy(id = questionId)
+    val toInsert = info.copy(id = QuestionIdNext())
+    derivativeQuestionsTable += toInsert
+    toInsert
   }
 
   // ======= FIND ======

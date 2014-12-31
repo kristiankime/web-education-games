@@ -10,9 +10,9 @@ import service.table._
 import scala.slick.model.ForeignKeyAction
 
 object QuestionIdNext {
-	private val questionIdTable = TableQuery[QuestionIdTable]
+	val questionIdTable = TableQuery[QuestionIdTable]
 
-	def apply(implicit session: Session) : QuestionId =
+	def apply()(implicit session: Session) : QuestionId =
 		(questionIdTable returning questionIdTable.map(_.questionId)) += QuestionId(-1)
 }
 

@@ -2,7 +2,7 @@
 
 @import models.game.GameResponseStatus
 @import controllers.game.routes.GamesRequestorController
-@import controllers.game.GameCreateQuestion
+@import controllers.question.derivative.DerivativeQuestionForm
 @import controllers.game.GameRemoveQuestion
 @import helper._
 @import models.user.UserPimped
@@ -50,8 +50,8 @@
         </p>
 
         @form(GamesRequestorController.createQuestion(gameState.game.id), 'id -> "derivativeqForm", 'class -> "pure-form" ) {
-            <input type="hidden" name="@GameCreateQuestion.mathML" id="derivativeQuestionMathML">
-            <input type="hidden" name="@GameCreateQuestion.rawStr" id="derivativeQuestionRawStr">
+            <input type="hidden" name="@DerivativeQuestionForm.mathML" id="derivativeQuestionMathML">
+            <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="derivativeQuestionRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Save Question" onclick="formSubmit()">
         }
 

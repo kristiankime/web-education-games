@@ -2,7 +2,7 @@
 
 @import helper._
 @import controllers.question.derivative.routes.{ QuestionsController }
-@import controllers.question.derivative.{ QuestionForm }
+@import controllers.question.derivative.{ DerivativeQuestionForm }
 
 <section>
     @explanation <br>
@@ -10,8 +10,8 @@
     @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimitOp=Some(40))
 
     @form(action, 'id -> "derivativeqForm", 'class -> "pure-form") {
-        <input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
-        <input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
+        <input type="hidden" name="@DerivativeQuestionForm.mathML" id="derivativeQuestionMathML">
+        <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="derivativeQuestionRawStr">
         <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_QUESTION.formSubmit()">
     }
 

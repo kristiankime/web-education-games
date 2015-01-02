@@ -45,7 +45,7 @@ object QuestionsController extends Controller with SecureSocialConsented {
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
-        QuestionForm.values.bindFromRequest.fold(
+        DerivativeQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
@@ -99,9 +99,8 @@ object QuestionsController extends Controller with SecureSocialConsented {
 
 }
 
-object QuestionForm {
+object DerivativeQuestionForm {
 	val mathML = "mathML"
 	val rawStr = "rawStr"
-	val values = Form(tuple(mathML -> text, rawStr -> text))
+	val values = Form(tuple(mathML -> nonEmptyText, rawStr -> nonEmptyText))
 }
-

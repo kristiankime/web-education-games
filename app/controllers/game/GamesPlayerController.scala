@@ -7,7 +7,7 @@ import com.artclod.play.CommonsMailerHelper
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.game.GamesEmail._
-import controllers.question.derivative.QuestionsController
+import controllers.question.derivative.{DerivativeQuestionForm, QuestionsController}
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.question.Quiz
@@ -55,7 +55,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
-        GameCreateQuestion.form.bindFromRequest.fold(
+        DerivativeQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
@@ -138,12 +138,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 object GameRemoveQuestion {
   val removeId = "removeId"
   val form = Form(removeId -> questionId)
-}
-
-object GameCreateQuestion {
-  val mathML = "mathML"
-  val rawStr = "rawStr"
-  val form = Form(tuple(mathML -> text, rawStr -> text))
 }
 
 object GameAnswerQuestion {

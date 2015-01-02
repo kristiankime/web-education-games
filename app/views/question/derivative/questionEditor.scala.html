@@ -1,0 +1,29 @@
+@(action: play.api.mvc.Call)(explanation: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.question.derivative.routes.{ QuestionsController }
+@import controllers.question.derivative.{ QuestionForm }
+
+<section>
+    @explanation <br>
+
+    @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimitOp=Some(40))
+
+    @form(action, 'id -> "derivativeqForm", 'class -> "pure-form") {
+        <input type="hidden" name="@QuestionForm.mathML" id="derivativeQuestionMathML">
+        <input type="hidden" name="@QuestionForm.rawStr" id="derivativeQuestionRawStr">
+        <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_QUESTION.formSubmit()">
+    }
+
+    <script>
+    DERIVATIVE_QUESTION.formSubmit = function() {
+        if(DERIVATIVE_QUESTION.valid){
+            $("#derivativeQuestionMathML").val(DERIVATIVE_QUESTION.mathML);
+            $("#derivativeQuestionRawStr").val(DERIVATIVE_QUESTION.rawStr);
+            $("#derivativeqForm").submit();
+        } else {
+            alert("Sorry we couldn't create a questions since we couldn't understand what you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+        }
+    }
+    </script>
+</section>

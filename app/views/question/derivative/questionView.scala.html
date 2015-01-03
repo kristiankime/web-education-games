@@ -15,48 +15,23 @@
 
     <h4>What is the Derivative of:</h4>
 
-    @mathml.mathmlDisplay(results.question)
+    <section>
+        @results.question.display
+    </section>
+    <br>
 
     @for(answerEither <- currentAnswer) {
-        <section align="center">
-            <h4>
-            @answerEither match {
-                case Right(answer) => {You answered @mathml.mathmlDisplay(answer) that answer was @mathml.correct(answer.correct)}
-                case Left(answerTmp) => {You answered @mathml.mathmlDisplay(answerTmp) Sorry but the system was unable to determine if that answer was correct :( please try another answer}
-            }
-            </h4>
-        </section>
+    <section align="center">
+        <h4>
+        @answerEither match {
+            case Right(answer) => {You answered @answer.display that answer was @mathml.correct(answer.correct)}
+            case Left(answerTmp) => {You answered @answerTmp.display Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+        }
+        </h4>
+    </section>
     }
 
-    <section>
-        <p>
-            Type in your answer, and then hit the submit button @tag.answerWarning()<br>
-            @mathml.mathmlEditor("ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
-        </p>
-    </section>
-
-    <section>
-        @form(AnswersController.create(course.organizationId, course.id, quiz.id, results.question.id), 'id -> "answerForm", 'class -> "pure-form") {
-            <fieldset>
-                <input type="hidden" name="@AnswerForm.mathML" id="answerMathML">
-                <input type="hidden" name="@AnswerForm.rawStr" id="answerRawStr">
-                <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="answerFormSubmit()">
-                @tag.courseQuizLink(course, quiz, Some("Back to Quiz"))
-            </fieldset>
-        }
-    </section>
-
-    <script>
-    var answerFormSubmit = function ( ) {
-        if ( ANSWER.valid ) {
-            $ ( "#answerMathML" ).val ( ANSWER.mathML ) ;
-            $ ( "#answerRawStr" ).val ( ANSWER.rawStr ) ;
-            $ ( "#answerForm" ).submit ( ) ;
-        } else {
-            alert("Sorry we couldn't understand your answer. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
-        }
-    }
-    </script>
+    @views.html.question.derivative.answerEditor(AnswersController.create(course.organizationId, course.id, quiz.id, results.question.id), currentAnswer){@tag.courseQuizLink(course, quiz, Some("Back to Quiz"))}
 
     @* ===== Results ===== *@
     @if(results.answers.nonEmpty) {

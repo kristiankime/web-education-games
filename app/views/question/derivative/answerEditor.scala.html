@@ -1,0 +1,31 @@
+@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.question.derivative.DerivativeAnswer, models.question.derivative.DerivativeAnswer]])(link: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.question.derivative.AnswerForm
+
+<section>
+    Type in your answer, and then hit the submit button @tag.answerWarning()<br>
+
+    @mathml.mathmlEditor("DERIVATIVE_ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
+
+    @form(action, 'id -> "derivativeAnswerForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="hidden" name="@AnswerForm.mathML" id="derivativeAnswerMathML">
+            <input type="hidden" name="@AnswerForm.rawStr" id="derivativeAnswerRawStr">
+            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="DERIVATIVE_ANSWER.formSubmit()">
+            @link
+        </fieldset>
+    }
+
+    <script>
+    DERIVATIVE_ANSWER.formSubmit = function () {
+        if(DERIVATIVE_ANSWER.valid) {
+            $("#derivativeAnswerMathML").val(DERIVATIVE_ANSWER.mathML);
+            $("#derivativeAnswerRawStr").val(DERIVATIVE_ANSWER.rawStr);
+            $("#derivativeAnswerForm").submit();
+        } else {
+            alert("Sorry we couldn't understand your answer. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+        }
+    }
+    </script>
+</section>

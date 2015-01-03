@@ -1,18 +1,19 @@
 @(action: play.api.mvc.Call)(explanation: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
-@import controllers.question.derivative.routes.{ QuestionsController }
-@import controllers.question.derivative.{ DerivativeQuestionForm }
+@import controllers.question.derivative.DerivativeQuestionForm
 
 <section>
     @explanation <br>
 
     @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimitOp=Some(40))
 
-    @form(action, 'id -> "derivativeqForm", 'class -> "pure-form") {
-        <input type="hidden" name="@DerivativeQuestionForm.mathML" id="derivativeQuestionMathML">
-        <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="derivativeQuestionRawStr">
-        <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_QUESTION.formSubmit()">
+    @form(action, 'id -> "derivativeQuestionForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="hidden" name="@DerivativeQuestionForm.mathML" id="derivativeQuestionMathML">
+            <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="derivativeQuestionRawStr">
+            <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_QUESTION.formSubmit()">
+        </fieldset>
     }
 
     <script>
@@ -20,9 +21,9 @@
         if(DERIVATIVE_QUESTION.valid){
             $("#derivativeQuestionMathML").val(DERIVATIVE_QUESTION.mathML);
             $("#derivativeQuestionRawStr").val(DERIVATIVE_QUESTION.rawStr);
-            $("#derivativeqForm").submit();
+            $("#derivativeQuestionForm").submit();
         } else {
-            alert("Sorry we couldn't create a questions since we couldn't understand what you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+            alert("Sorry we couldn't understand what you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
         }
     }
     </script>

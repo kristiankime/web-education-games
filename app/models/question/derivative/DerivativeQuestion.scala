@@ -42,5 +42,5 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   // === Methods for viewing
   def display : Html = views.html.mathml.mathmlDisplay(this)
-
+  
 }

@@ -5,7 +5,7 @@ import com.artclod.mathml.slick.MathMLMapper
 import com.google.common.annotations.VisibleForTesting
 import models.organization.Course
 import models.question._
-import models.question.derivative.result.{QuestionSummary, QuestionResults}
+import models.question.derivative.result.{DerivativeQuestionScores, DerivativeQuestionResults}
 import models.question.derivative.table._
 import models.support._
 import org.joda.time.DateTime
@@ -112,12 +112,12 @@ object DerivativeQuestions {
     summaryFor(q)
   }
 
-  private def summaryFor(q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])(implicit session: Session) : List[QuestionSummary] = {
+  private def summaryFor(q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])(implicit session: Session) : List[DerivativeQuestionScores] = {
     // This line is mostly type information for the IDE
     val q2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)]),(QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)])] = q.groupBy(_._1.id)
     val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._1.rawStr).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
     val q4 = q3.sortBy(_._6)
-    q4.list.map(r => QuestionSummary(r._1, r._2, r._3.get, r._4.get, Correct2Short(r._5.get), r._6.get))
+    q4.list.map(r => DerivativeQuestionScores(r._1, r._2, r._3.get, r._4.get, Correct2Short(r._5.get), r._6.get))
   }
 
 }

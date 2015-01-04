@@ -1,6 +1,6 @@
 @(course: models.organization.Course,
   quiz: models.question.Quiz,
-  results: models.question.derivative.result.QuestionResults,
+  results: models.question.QuestionResults,
   currentAnswer: Option[Either[models.question.derivative.DerivativeAnswer, models.question.derivative.DerivativeAnswer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
@@ -45,7 +45,7 @@
                 </tr>
                 @for(answer <- results.answers) {
                 <tr>
-                    <td>@mathml.mathmlDisplay(answer)</td>
+                    <td>@answer.display</td>
                     <td>@mathml.correct(answer.correct)</td>
                 </tr>
                 }

@@ -20,7 +20,7 @@
             </tr>
             @for(result <- quizResults.results) {
             <tr>
-                <td> @mathml.mathmlDisplay(result.question) </td>
+                <td> @result.question.display </td>
                 <td> @mathml.correct(result.correct) </td>
             </tr>
             }

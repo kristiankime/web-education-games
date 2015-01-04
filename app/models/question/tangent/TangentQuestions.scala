@@ -4,7 +4,7 @@ import com.artclod.mathml.slick.MathMLMapper
 import com.artclod.mathml.slick.MathMLMapper.string2mathML
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import models.question._
-import models.question.derivative.result.QuestionSummary
+import models.question.derivative.result.DerivativeQuestionScores
 import models.question.derivative.table._
 import models.question.table.{derivativeAnswersTable, tangentQuestionsTable, quizzesTable}
 import models.support._

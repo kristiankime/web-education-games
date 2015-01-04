@@ -1,6 +1,6 @@
 package controllers.question.derivative
 
-import models.question.{QuestionDifficulty, QuestionScore}
+import models.question.{QuestionDifficulty, QuestionScoring}
 import play.api.db.slick.Config.driver.simple.Session
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
@@ -88,8 +88,8 @@ object QuestionsController extends Controller with SecureSocialConsented {
             case Failure(e) => BadRequest("Could not parse [" + difficultyRequest.mathML + "] as mathml\n" + e.getStackTraceString)
             case Success(mathML) => {
               val diff = QuestionDifficulty(mathML)
-              val correct = QuestionScore.teacherScore(diff, true, difficultyRequest.partnerSkill)
-              val incorrect = QuestionScore.teacherScore(diff, false, difficultyRequest.partnerSkill)
+              val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
+              val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
               Ok(Json.toJson(DifficultyResponse(difficultyRequest.rawStr, mathML.toString, diff, correct, incorrect)))
             }
           }

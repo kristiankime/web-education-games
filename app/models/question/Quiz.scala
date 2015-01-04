@@ -1,11 +1,7 @@
 package models.question
 
 import com.artclod.collection._
-import com.google.common.annotations.VisibleForTesting
 import models.organization._
-import models.organization.table._
-import models.question.derivative.result.QuizResults
-import models.question.derivative.table._
 import models.question.derivative.{DerivativeQuestion, DerivativeQuestions}
 import models.support._
 import org.joda.time.DateTime

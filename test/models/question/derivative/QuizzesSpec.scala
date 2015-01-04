@@ -1,8 +1,8 @@
 package models.question.derivative
 
 import com.artclod.slick.JodaUTC
-import models.question.Quizzes
-import models.question.derivative.result.{QuizResults, QuestionResults}
+import models.question.{QuizResults, Quizzes}
+import models.question.derivative.result.DerivativeQuestionResults
 import models.support.CourseId
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -28,7 +28,7 @@ class QuizzesSpec extends Specification {
 				val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 				val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
 
-				val sqr1 = QuestionResults(student, question1, List(answer1, answer2))
+				val sqr1 = DerivativeQuestionResults(student, question1, List(answer1, answer2))
 				val sr = QuizResults(student, quiz, List(sqr1))
 				quiz.results(student) must beEqualTo(sr)
 			}
@@ -43,8 +43,8 @@ class QuizzesSpec extends Specification {
 				val student = newFakeUser(UserTest())
         val answer = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id, correct = true))
 
-				val sqr1 = QuestionResults(student, question1, List(answer))
-				val sqr2 = QuestionResults(student, question2, List())
+				val sqr1 = DerivativeQuestionResults(student, question1, List(answer))
+				val sqr2 = DerivativeQuestionResults(student, question2, List())
 				val sr = QuizResults(student, quiz, List(sqr1, sqr2))
 				quiz.results(student) must beEqualTo(sr)
 			}

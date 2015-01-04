@@ -4,7 +4,7 @@ import com.google.common.annotations.VisibleForTesting
 import models.question.derivative.DerivativeQuestion
 
 
-object QuestionScore {
+object QuestionScoring {
   @VisibleForTesting
   val zoneOfProximalDevelopmentFactor = 1.25
 

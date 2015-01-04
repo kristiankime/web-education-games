@@ -1,4 +1,4 @@
-@(question: models.question.derivative.DerivativeQuestion)(implicit session: play.api.db.slick.Config.driver.simple.Session)
+@(question: models.question.Question)(implicit session: play.api.db.slick.Config.driver.simple.Session)
 
 @import com.artclod.play.s
 @import models.user.UserPimped
@@ -11,7 +11,7 @@
         @for(answer <- allAnswers) {
         <tr>
             <td> @answer._2.name </td>
-            <td> @mathml.mathmlDisplay(answer._1) </td>
+            <td> answer._1.display </td>
             <td> @mathml.correct(answer._1.correct) </td>
             <td> @views.html.tag.datetime(answer._1.creationDate) </td>
         </tr>

@@ -1,13 +1,13 @@
-package models.question.derivative.result
+package models.question
 
-import models.question.{QuestionScore, Status}
 import models.question.derivative.{DerivativeAnswer, DerivativeQuestion}
-import org.joda.time.DateTime
-import play.api.db.slick.Config.driver.simple.Session
 import service.User
-import viewsupport.question.derivative.{Correct, Ongoing, Unstarted}
 
-case class QuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) {
+trait QuestionResults {
+  val answerer: User
+  val question: Question
+  val answers: List[Answer]
+
   require(answers.forall(_.ownerId == answerer.id), "All the answers must be from the same user")
 
   def attempted = answers.nonEmpty
@@ -32,5 +32,6 @@ case class QuestionResults(answerer: User, question: DerivativeQuestion, answers
 
   def studentScore = if(correct) 1d else 0d
 
-  def teacherScore(studentSkill: Double): Double = QuestionScore.teacherScore(question, correct, studentSkill)
+  def teacherScore(studentSkill: Double): Double // = QuestionScore.teacherScore(question, correct, studentSkill)
+
 }

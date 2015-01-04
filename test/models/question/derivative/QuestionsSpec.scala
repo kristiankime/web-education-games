@@ -5,7 +5,7 @@ import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest._
 import models.question.{Quizzes, Quiz}
-import models.question.derivative.result.{QuestionSummary, QuestionResults}
+import models.question.derivative.result.{DerivativeQuestionScores, DerivativeQuestionResults}
 import models.support.QuestionId
 import org.joda.time.{DateTimeZone, DateTime}
 import org.junit.runner._
@@ -29,7 +29,7 @@ class QuestionsSpec extends Specification {
         val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
         val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
 
-        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2)))
+        question.results(user) must beEqualTo(DerivativeQuestionResults(user, question, List(answer1, answer2)))
       }
     }
 
@@ -42,7 +42,7 @@ class QuestionsSpec extends Specification {
         val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
         val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = true))
 
-        question.results(user) must beEqualTo(QuestionResults(user, question, List(answer1, answer2)))
+        question.results(user) must beEqualTo(DerivativeQuestionResults(user, question, List(answer1, answer2)))
       }
     }
   }
@@ -150,7 +150,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser
         val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
 
-        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, JodaUTC(1))))
+        DerivativeQuestions.summary(user) must beEqualTo(List(DerivativeQuestionScores(question1.id, 1, question1.mathML, question1.rawStr, false, JodaUTC(1))))
       }
     }
 
@@ -163,7 +163,7 @@ class QuestionsSpec extends Specification {
         val answer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
         val answer1_2 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
 
-        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
+        DerivativeQuestions.summary(user) must beEqualTo(List(DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
       }
     }
 
@@ -179,7 +179,7 @@ class QuestionsSpec extends Specification {
         val user2 = DBTest.newFakeUser
         val answer = DerivativeAnswers.createAnswer(TestAnswer(owner = user2.id, questionId = question1.id, correct = false, creationDate = JodaUTC(1)))
 
-        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
+        DerivativeQuestions.summary(user) must beEqualTo(List(DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1))))
       }
     }
 
@@ -196,8 +196,8 @@ class QuestionsSpec extends Specification {
         val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(2)))
 
         DerivativeQuestions.summary(user) must beEqualTo(List(
-          QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1)),
-          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, JodaUTC(2))
+          DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, JodaUTC(1)),
+          DerivativeQuestionScores(question2.id, 1, question2.mathML, question2.rawStr, false, JodaUTC(2))
         ))
       }
     }
@@ -219,7 +219,7 @@ class QuestionsSpec extends Specification {
         val question = DerivativeQuestions.create(TestQuestion(owner = user.id))
         val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id, correct = false))
 
-        DerivativeQuestions.summary(user) must beEqualTo(List(QuestionSummary(question.id, 1, question.mathML, question.rawStr, false, answer1.creationDate)))
+        DerivativeQuestions.summary(user) must beEqualTo(List(DerivativeQuestionScores(question.id, 1, question.mathML, question.rawStr, false, answer1.creationDate)))
       }
     }
 
@@ -233,8 +233,8 @@ class QuestionsSpec extends Specification {
         val answer2_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
         DerivativeQuestions.summary(user) must beEqualTo(List(
-          QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
-          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr,false, answer2_1.creationDate)
+          DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
+          DerivativeQuestionScores(question2.id, 1, question2.mathML, question2.rawStr,false, answer2_1.creationDate)
         ))
       }
     }
@@ -252,8 +252,8 @@ class QuestionsSpec extends Specification {
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
         DerivativeQuestions.summary(user) must beEqualTo(List(
-          QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
-          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
+          DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate),
+          DerivativeQuestionScores(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
       }
     }
@@ -271,7 +271,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.summary(user, quiz) must beEqualTo(List(QuestionSummary(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
+        DerivativeQuestions.summary(user, quiz) must beEqualTo(List(DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
       }
     }
 
@@ -288,8 +288,8 @@ class QuestionsSpec extends Specification {
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
         DerivativeQuestions.summary(user, JodaUTC(1)) must beEqualTo(List(
-          QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate),
-          QuestionSummary(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
+          DerivativeQuestionScores(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate),
+          DerivativeQuestionScores(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
       }
     }
@@ -307,7 +307,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(QuestionSummary(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
+        DerivativeQuestions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(DerivativeQuestionScores(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
       }
     }
 

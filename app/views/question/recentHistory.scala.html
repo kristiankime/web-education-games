@@ -2,8 +2,8 @@
 
 @import models.user.UserPimped
 
-@defining(models.question.derivative.DerivativeQuestions.incorrectResults(user, 5)) { incorrectQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
-@defining(models.question.derivative.DerivativeQuestions.correctResults(user, 5)) { correctQuestions: List[(models.question.derivative.result.QuestionResults, org.joda.time.DateTime)] =>
+@defining(models.question.derivative.DerivativeQuestions.incorrectResults(user, 5)) { incorrectQuestions: List[(models.question.derivative.result.DerivativeQuestionResults, org.joda.time.DateTime)] =>
+@defining(models.question.derivative.DerivativeQuestions.correctResults(user, 5)) { correctQuestions: List[(models.question.derivative.result.DerivativeQuestionResults, org.joda.time.DateTime)] =>
 
     <section class="secondary-content recent-history">
         <h4> Other Player's History </h4>

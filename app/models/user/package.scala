@@ -3,7 +3,7 @@ package models
 import models.game.Games
 import models.organization.Courses
 import models.question.QuestionDifficulty
-import models.question.derivative.result.QuestionSummary
+import models.question.derivative.result.DerivativeQuestionScores
 import models.question.derivative.{DerivativeAnswers, DerivativeQuestions}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
@@ -42,7 +42,7 @@ package object user {
 
     def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(user, asOf))
 
-    private def studentSkillLevelPrivate(questionSummaries: List[QuestionSummary]) : Double = {
+    private def studentSkillLevelPrivate(questionSummaries: List[DerivativeQuestionScores]) : Double = {
       val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)
       math.max(1d,
         if(top5.isEmpty) 1d

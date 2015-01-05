@@ -1,21 +1,19 @@
-package controllers.question.derivative
+package controllers.question
 
-import models.question.{QuestionDifficulty, QuestionScoring}
-import play.api.db.slick.Config.driver.simple.Session
-import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
 import com.artclod.util._
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.libs.json.{JsError, Json}
-import play.api.mvc.{Action, Result, Controller}
-import controllers.support.{SecureSocialConsented, SecureSocialDB}
+import controllers.question.derivative.{DerivativeQuestionsControllon, TangentQuestionsControllon}
+import controllers.support.SecureSocialConsented
 import models.question.derivative._
+import models.question.{QuestionDifficulty, QuestionScoring}
 import models.support._
-import models.organization.Course
+import play.api.db.slick.Config.driver.simple.Session
+import play.api.libs.json.{JsError, Json}
+import play.api.mvc.{Action, Controller, Result}
+
 import scala.util.{Failure, Success}
 
-object QuestionsController extends Controller with SecureSocialConsented {
+object QuestionsController extends Controller with SecureSocialConsented with DerivativeQuestionsControllon with TangentQuestionsControllon {
 
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, DerivativeQuestion] =
     DerivativeQuestions(questionId) match {
@@ -41,22 +39,7 @@ object QuestionsController extends Controller with SecureSocialConsented {
     }
 	}
 
-	def create(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    QuizzesController(organizationId, courseId, quizId) match {
-      case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, quiz)) => {
-        DerivativeQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.errors.formErrorPage(errors)),
-          form => {
-            val mathML = MathML(form._1).get // TODO better handle on error
-            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now), quizId)
-            Redirect(routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
-          })
-      }
-    }
-	}
-
-	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) +
       QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
@@ -66,7 +49,6 @@ object QuestionsController extends Controller with SecureSocialConsented {
       }
     }
 	}
-
 
   // Meta Information for difficulty ajax call
   val mathML = "mathML"
@@ -97,10 +79,4 @@ object QuestionsController extends Controller with SecureSocialConsented {
     }.getOrElse(BadRequest("Expecting Json data"))
   }
 
-}
-
-object DerivativeQuestionForm {
-	val mathML = "mathML"
-	val rawStr = "rawStr"
-	val values = Form(tuple(mathML -> nonEmptyText, rawStr -> nonEmptyText))
 }

@@ -4,12 +4,10 @@
 @import helper._
 @import service._
 @import viewsupport.organization.AccessName.an
-@import models.user.UserPimped
 @import controllers.organization.CourseJoin
 @import controllers.organization.routes.CoursesController
-@import controllers.question.derivative.routes.QuizzesController
+@import controllers.question.routes.QuizzesController
 @import controllers.game.routes.GamesController
-@import views.html.game.status.gamesStatus
 
 @mainWithStatus(course.name, tag.organizationLink(organization))(Some(course)) {
     <h2>Welcome to the information page for the course: @course.name</h2>
@@ -43,17 +41,17 @@
 
         @* ======= Quizzes ======= *@
         @defining(course.quizzes) { quizzes =>
-            <section>
-                @if(quizzes.isEmpty) {
-                    <h5> There are no quizzes for this course </h5>
-                } else {
-                    <h5> The course has the following quiz@zes(quizzes): </h5>
-                    <ul class="pure-list">
-                    @for(quiz <- quizzes) {<li> @tag.courseQuizLink(course, quiz, None) </li> }
-                    </ul>
-                }
-                @if(course.access.write) { <a href="@QuizzesController.createForm(course.organizationId, course.id)" class="pure-button"> add a quiz</a> }
-            </section>
+        <section>
+            @if(quizzes.isEmpty) {
+                <h5> There are no quizzes for this course </h5>
+            } else {
+                <h5> The course has the following quiz@zes(quizzes): </h5>
+                <ul class="pure-list">
+                @for(quiz <- quizzes) {<li> @tag.courseQuizLink(course, quiz, None) </li> }
+                </ul>
+            }
+            @if(course.access.write) { <a href="@QuizzesController.createForm(course.organizationId, course.id)" class="pure-button"> add a quiz</a> }
+        </section>
         }
         @* ======= Start a Game ======= *@
         <section>

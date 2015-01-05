@@ -10,7 +10,7 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.templates.Html
 import service._
 
-case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: Double, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
   def results(user: User)(implicit session: Session) : QuestionResults = null // TODO
 

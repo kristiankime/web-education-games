@@ -3,9 +3,9 @@
     quiz: models.question.Quiz,
     answerOp: Option[models.question.derivative.DerivativeAnswer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+@import controllers.question.routes.{ QuestionsController, QuizzesController}
+@import controllers.question.QuizForm
 @import helper._
-@import controllers.question.derivative.routes.{ QuestionsController, QuizzesController}
-@import controllers.question.derivative.QuizForm
 @import models.user.UserPimped
 @import com.artclod.play.{are, s}
 
@@ -41,7 +41,7 @@
     }
 
     @if(access.write){
-    @views.html.question.derivative.questionEditor(QuestionsController.create(course.organizationId, course.id, quiz.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
+    @views.html.question.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
 
     @defining(quiz.results(course)) { quizResults =>
     <section>

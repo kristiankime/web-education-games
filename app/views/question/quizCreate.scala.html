@@ -1,11 +1,11 @@
 @(course: models.organization.Course)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+@import controllers.question.routes.{QuizzesController}
+@import controllers.question.{QuizForm}
 @import helper._
 @import views.html.tag._
-@import controllers.question.derivative.QuizForm
-@import controllers.question.derivative.routes.QuizzesController
 
-@mainWithBorder("Create a Quiz", tag.courseLink(course)) {
+    @mainWithBorder("Create a Quiz", tag.courseLink(course)) {
 
     <h2>Please enter the information about your quiz:</h2>
 
@@ -13,7 +13,7 @@
         This quiz is for the course @courseLink(course)
     </p>
 
-    @form(action = QuizzesController.createSubmit(course.organizationId, course.id), 'class -> "pure-form") {
+    @form(QuizzesController.createSubmit(course.organizationId, course.id), 'class -> "pure-form") {
         <fieldset>
             <label for="@QuizForm.name">Name: <input type="text" name="@QuizForm.name" value="quiz name"></label>
             <input type="submit" class="pure-button pure-button-primary" value="Submit">

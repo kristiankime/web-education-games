@@ -7,7 +7,8 @@ import com.artclod.play.CommonsMailerHelper
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.game.GamesEmail._
-import controllers.question.derivative.{DerivativeQuestionForm, QuestionsController}
+import controllers.question.QuestionsController
+import controllers.question.derivative.DerivativeQuestionForm
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.question.Quiz

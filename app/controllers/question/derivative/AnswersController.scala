@@ -1,7 +1,7 @@
 package controllers.question.derivative
 
+import controllers.question.{QuizzesController, QuestionsController}
 import models.question.{Quizzes, Quiz}
-
 import scala.util._
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
@@ -17,7 +17,6 @@ import models.support._
 import models.organization._
 import models.question.derivative._
 import service._
-
 
 object AnswersController extends Controller with SecureSocialConsented {
 
@@ -38,7 +37,7 @@ object AnswersController extends Controller with SecureSocialConsented {
     }
 	}
 
-	def create(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+	def create(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) +
     QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
@@ -52,7 +51,7 @@ object AnswersController extends Controller with SecureSocialConsented {
             val unfinishedAnswer = DerivativeAnswerUnfinished(user.id, question.id, math, rawStr, JodaUTC.now)_
             DerivativeAnswers.correct(question, math) match {
 //              case Yes => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-              case Yes => Redirect(routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case Yes => Redirect(controllers.question.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => questionView(course, quiz, question, Some(Left(unfinishedAnswer(false))))
             }

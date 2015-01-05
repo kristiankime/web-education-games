@@ -1,18 +1,18 @@
-package controllers.question.derivative
+package controllers.question
 
-import com.artclod.util._
 import com.artclod.slick.JodaUTC
-import models.question.{Quizzes, Quiz}
-import play.api.db.slick.Config.driver.simple.Session
+import com.artclod.util._
+import controllers.organization.CoursesController
+import controllers.question
+import controllers.support.{RequireAccess, SecureSocialConsented}
+import models.organization._
+import models.question.derivative._
+import models.question.{Quiz, Quizzes}
+import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Result, Controller}
-import controllers.organization.CoursesController
-import models.support._
-import models.question.derivative._
-import models.organization._
-import controllers.support.{SecureSocialConsented, RequireAccess, SecureSocialDB}
-import play.api.Logger
+import play.api.db.slick.Config.driver.simple.Session
+import play.api.mvc.{Controller, Result}
 import service.Edit
 
 

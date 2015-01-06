@@ -43,6 +43,8 @@
     @if(access.write){
     @views.html.question.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
 
+    @views.html.question.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id)){ <h4>Add a new Question</h4> Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": }
+
     @defining(quiz.results(course)) { quizResults =>
     <section>
         <h4>Summary of student results</h4>

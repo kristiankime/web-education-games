@@ -2,7 +2,8 @@ package controllers.question
 
 import com.artclod.mathml.MathML
 import com.artclod.util._
-import controllers.question.derivative.{DerivativeQuestionsControllon, TangentQuestionsControllon}
+import controllers.question.derivative.DerivativeQuestionsControllon
+import controllers.question.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
 import models.question.derivative._
 import models.question.{QuestionDifficulty, QuestionScoring}

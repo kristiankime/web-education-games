@@ -1,0 +1,49 @@
+@(action: play.api.mvc.Call)(explanation: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.question.tangent.TangentQuestionForm
+
+<section>
+    @explanation <br>
+
+    Function: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_FUNCTION", characterLimitOp=Some(40)) <br>
+
+    Tangent point x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", characterLimitOp=Some(10)) <br>
+
+    <script>
+    var TANGENT_QUESTION = {}
+    TANGENT_QUESTION.formSubmit = function() {
+        var ready = true;
+
+        if(TANGENT_QUESTION_FUNCTION.valid){
+            $("#tangentQuestionFunctionMathML").val(TANGENT_QUESTION_FUNCTION.mathML);
+            $("#tangentQuestionFunctionRawStr").val(TANGENT_QUESTION_FUNCTION.rawStr);
+        } else {
+            ready = false;
+            alert("Sorry we couldn't understand the function that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+        }
+
+        if(TANGENT_QUESTION_X.valid){
+            $("#tangentQuestionXMathML").val(TANGENT_QUESTION_X.mathML);
+            $("#tangentQuestionXRawStr").val(TANGENT_QUESTION_X.rawStr);
+        } else {
+            ready = false;
+            alert("Sorry we couldn't understand the x value that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+        }
+
+        if(ready) {
+            $("#tangentQuestionForm").submit();
+        }
+    }
+    </script>
+
+    @form(action, 'id -> "tangentQuestionForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="hidden" name="@TangentQuestionForm.function"    id="tangentQuestionFunctionMathML">
+            <input type="hidden" name="@TangentQuestionForm.functionStr" id="tangentQuestionFunctionRawStr">
+            <input type="hidden" name="@TangentQuestionForm.atPointX"    id="tangentQuestionXMathML">
+            <input type="hidden" name="@TangentQuestionForm.atPointXStr" id="tangentQuestionXRawStr">
+            <input type="button" class="pure-button" value="Save Question" onclick="TANGENT_QUESTION.formSubmit()">
+        </fieldset>
+    }
+</section>

@@ -11,6 +11,10 @@ import scala.language.postfixOps
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {
 
+  def questions(implicit session: Session) = Quizzes.questions(id)
+
+  // === TODO Above update for multiple question types ===
+
    def results(student: User)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
 
    def results(course: Course)(implicit session: Session) : List[QuizResults] = course.students.map(results(_))
@@ -19,7 +23,6 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
    def summary(student: User, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.summary(student, asOf, this)
 
-   def questions(implicit session: Session) = Quizzes.questions(id)
 
    def previousQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementBefore(question)
 

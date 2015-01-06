@@ -8,29 +8,5 @@ import service.User
 import viewsupport.question.derivative.{Correct, Ongoing, Unstarted}
 
 case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults {
-//  require(answers.forall(_.ownerId == answerer.id), "All the answers must be from the same user")
-//
-//  def attempted = answers.nonEmpty
-//
-//  def numAttempts = answers.size
-//
-//  val correct = answers.foldLeft(false)(_ || _.correct)
-//
-//  val status = Status(attempted, correct)
-//
-//  val firstCorrect = answers.find(_.correct)
-//
-//  val numAttemptsToCorrect = {
-//    val num = answers.indexWhere(_.correct)
-//    if (num == -1) None else Some(num + 1)
-//  }
-//
-//  val score: Option[Double] =
-//    if (!attempted) None
-//    else if(correct) Some(1d)
-//    else Some(0d)
-//
-//  def studentScore = if(correct) 1d else 0d
-
   def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
 }

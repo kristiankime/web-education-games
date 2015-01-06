@@ -12,6 +12,7 @@ import play.api.db.slick.Config.driver.simple._
 import service._
 import models.question.table.quizzesTable
 import models.question.table.derivativeQuestionsTable
+import models.question.table.tangentQuestionsTable
 import models.question.table.usersQuizzesTable
 
 
@@ -38,8 +39,10 @@ object Quizzes {
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
     ) yield q).sortBy(_.creationDate).list
 
-  def questions(quizId: QuizId)(implicit session: Session) : List[DerivativeQuestion] =
-    derivativeQuestionsTable.where(_.quizId === quizId).sortBy(_.creationDate).list
+  def questions(quizId: QuizId)(implicit session: Session) : List[Question] = {
+    derivativeQuestionsTable.where(_.quizId === quizId).sortBy(_.creationDate).list ++:
+    tangentQuestionsTable.where(_.quizId === quizId).sortBy(_.creationDate).list
+  }
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (

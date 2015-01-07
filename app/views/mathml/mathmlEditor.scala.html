@@ -2,7 +2,8 @@
   initialAnswerOp: Option[String] = None,
   characterLimitOp: Option[Int] = None,
   callbackSuccessOp : Option[String] = None,
-  callbackfailureOp : Option[String] = None)
+  callbackfailureOp : Option[String] = None,
+  mathParser: String = "ARTC.mathJS.defaultParser")
 
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
     @mathml.mathmlEditorHelp()
@@ -33,7 +34,7 @@
 
         result.updateAnswer = function(mathStr) {
             result.rawStr = mathStr;
-            var mathResult = ARTC.mathJS.defaultParser(mathStr);
+            var mathResult = @{mathParser}(mathStr);
             if(mathResult.success) {
                 result.mathML = mathResult.content;
                 result.valid = true;

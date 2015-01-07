@@ -6,9 +6,9 @@
 <section>
     @explanation <br>
 
-    Function: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_FUNCTION", characterLimitOp=Some(40)) <br>
+    Function: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_FUNCTION", characterLimitOp=Some(40), mathParser = "CALC.mathJS.functionOfXParser") <br>
 
-    Tangent point x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", characterLimitOp=Some(10)) <br>
+    Tangent point x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", characterLimitOp=Some(10), mathParser = "CALC.mathJS.constantParser") <br>
 
     <script>
     var TANGENT_QUESTION = {}

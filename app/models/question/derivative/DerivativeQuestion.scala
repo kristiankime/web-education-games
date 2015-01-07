@@ -33,6 +33,6 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
   // === Methods for viewing
-  def display : Html = views.html.mathml.mathmlDisplay(this)
+  def display : Html = views.html.question.derivative.questionDisplay(this)
 
 }

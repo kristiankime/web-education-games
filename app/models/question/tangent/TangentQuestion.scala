@@ -19,10 +19,7 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
 
   def difficulty : Double = 1d // TODO
 
-  def display : Html = views.html.tag.twoHtml(
-    views.html.mathml.mathmlDisplay(functionViewableMath),
-    views.html.mathml.mathmlDisplay(atPointXViewableMath)
-  ) // TODO
+  def display : Html = views.html.question.tangent.questionDisplay(this)
 
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 

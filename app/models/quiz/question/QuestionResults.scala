@@ -1,6 +1,6 @@
-package models.quiz
+package models.quiz.question
 
-import models.quiz.question.Question
+import models.quiz.{Answer, Status}
 import service.User
 
 trait QuestionResults {

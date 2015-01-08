@@ -1,7 +1,6 @@
-package models.quiz
+package models.quiz.question
 
 import com.google.common.annotations.VisibleForTesting
-import models.quiz.question.DerivativeQuestion
 
 
 object QuestionScoring {

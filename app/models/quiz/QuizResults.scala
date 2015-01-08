@@ -1,7 +1,7 @@
 package models.quiz
 
 import com.artclod.collection.PimpedSeq
-import models.quiz.question.DerivativeQuestion
+import models.quiz.question.{QuestionResults, DerivativeQuestion}
 import service.User
 
 case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]) {

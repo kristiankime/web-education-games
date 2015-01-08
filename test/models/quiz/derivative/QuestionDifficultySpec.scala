@@ -3,7 +3,7 @@ package models.quiz.derivative
 import com.artclod.slick.JodaUTC
 import models.DBTest._
 import models.organization._
-import models.quiz.QuestionDifficulty
+import models.quiz.question.QuestionDifficulty
 import models.support.CourseId
 import org.junit.runner._
 import org.specs2.mutable._

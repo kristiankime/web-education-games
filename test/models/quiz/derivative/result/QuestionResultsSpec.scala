@@ -2,8 +2,9 @@ package models.quiz.derivative.result
 
 import com.artclod.mathml.scalar._
 import models.quiz.answer.result.DerivativeQuestionResults
-import models.quiz.{QuestionDifficulty, QuestionScoring}
+import models.quiz.QuestionScoring
 import models.quiz.derivative._
+import models.quiz.question.{QuestionScoring, QuestionDifficulty}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._

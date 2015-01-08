@@ -1,4 +1,4 @@
-package models.quiz
+package models.quiz.question
 
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.concept.{Constant, NthRoot, UnaryFunction}
@@ -10,7 +10,7 @@ import scala.util.Failure
 object QuestionDifficulty {
   private val chainRulePoints = 13
 
-  object MathType extends Enumeration {
+  private object MathType extends Enumeration {
     type MathType = Value
     val Con, Var, Fun = Value
 
@@ -20,8 +20,7 @@ object QuestionDifficulty {
       case (_, _) => Fun
     }
   }
-
-  import models.quiz.QuestionDifficulty.MathType._
+  import MathType._
 
   def apply(e: MathMLElem): Double = e match {
       case m: Diff => m.diff // This object is designed for testing

@@ -1,8 +1,7 @@
 package models.quiz.answer.result
 
 import models.quiz.answer.DerivativeAnswer
-import models.quiz.question.DerivativeQuestion
-import models.quiz.{QuestionResults, QuestionScoring}
+import models.quiz.question.{QuestionScoring, QuestionResults, DerivativeQuestion}
 import service.User
 
 case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults {

@@ -1,8 +1,7 @@
 package models.quiz.answer.result
 
-import models.quiz.QuestionResults
 import models.quiz.answer.TangentAnswer
-import models.quiz.question.TangentQuestion
+import models.quiz.question.{QuestionResults, TangentQuestion}
 import service.User
 
 case class TangentQuestionResults(answerer: User, question: TangentQuestion, answers: List[TangentAnswer]) extends QuestionResults {

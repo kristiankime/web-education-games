@@ -2,9 +2,8 @@ package models
 
 import models.game.Games
 import models.organization.Courses
-import models.quiz.QuestionDifficulty
 import models.quiz.answer.result.DerivativeQuestionScores
-import models.quiz.question.DerivativeQuestions
+import models.quiz.question.{QuestionDifficulty, DerivativeQuestions}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._

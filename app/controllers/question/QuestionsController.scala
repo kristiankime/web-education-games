@@ -5,8 +5,7 @@ import com.artclod.util._
 import controllers.question.derivative.DerivativeQuestionsControllon
 import controllers.question.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{DerivativeQuestion, DerivativeQuestions}
-import models.quiz.{QuestionDifficulty, QuestionScoring}
+import models.quiz.question.{QuestionScoring, QuestionDifficulty, DerivativeQuestion, DerivativeQuestions}
 import models.support._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.libs.json.{JsError, Json}

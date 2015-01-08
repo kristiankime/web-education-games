@@ -5,7 +5,7 @@ import com.artclod.mathml.slick.MathMLMapper
 import com.artclod.mathml.slick.MathMLMapper._
 import com.artclod.slick.JodaUTC._
 import models.question.derivative._
-import models.question.table.quizzesTable
+import models.question.table.{QuestionIdNext, quizzesTable}
 import models.question.tangent.TangentQuestion
 import models.support._
 import org.joda.time.DateTime
@@ -15,7 +15,7 @@ import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
 
 class TangentQuestionsTable(tag: Tag) extends Table[TangentQuestion](tag, "tangent_questions") {
-	def id = column[QuestionId]("id", O.PrimaryKey, O.AutoInc)
+	def id = column[QuestionId]("id", O.PrimaryKey)
 	def ownerId = column[UserId]("owner")
 	def function = column[MathMLElem]("function")
 	def functionStr = column[String]("function_str")
@@ -27,6 +27,7 @@ class TangentQuestionsTable(tag: Tag) extends Table[TangentQuestion](tag, "tange
 
 	def * = (id, ownerId, function, functionStr, atPointX, atPointXStr, creationDate, quizId, order) <> (TangentQuestion.tupled, TangentQuestion.unapply _)
 
+	def idFK = foreignKey("tangent_questions__id_fk", id, QuestionIdNext.questionIdTable)(_.questionId, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("tangent_questions__owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def quizIdFK = foreignKey("tangent_questions__quiz_fk", quizId, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 

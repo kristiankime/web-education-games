@@ -1,6 +1,6 @@
 package viewsupport
 
-import models.question.derivative._
+import models.quiz.answer.DerivativeAnswer
 
 package object organization {
 

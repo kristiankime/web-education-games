@@ -1,5 +1,6 @@
-@(gameState: models.game.GameState with models.game.RequesteeQuizFinished, answerOp: Option[models.question.derivative.DerivativeAnswer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequesteeQuizFinished, answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+@import models.quiz.answer.DerivativeAnswer
 @import controllers.game.routes.{GamesController, GamesRequestorController}
 @import helper._
 @import models.user.UserPimped

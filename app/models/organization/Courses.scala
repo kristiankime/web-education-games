@@ -1,11 +1,10 @@
 package models.organization
 
-import models.question.Quizzes
+import models.quiz.Quizzes
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import models.support._
 import models.organization.table._
-import models.question.derivative._
 import service._
 import service.table.UsersTable.userTable
 

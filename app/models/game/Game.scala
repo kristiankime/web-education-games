@@ -2,7 +2,7 @@ package models.game
 
 import com.artclod.slick.JodaUTC
 import models.organization.Courses
-import models.question.{Quizzes, Quiz}
+import models.quiz.{Quizzes, Quiz}
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._

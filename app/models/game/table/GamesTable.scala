@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.table.UsersTable
 import scala.slick.model.ForeignKeyAction
-import models.question.table.quizzesTable
+import models.quiz.table.quizzesTable
 
 class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def id = column[GameId]("id", O.PrimaryKey, O.AutoInc)

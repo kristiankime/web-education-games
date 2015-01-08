@@ -17,11 +17,11 @@ case class GameId(v: Long) {
 }
 
 case class QuizId(v: Long) {
-  override def toString = "Z"+v
+  override def toString = "Qz"+v
 }
 
 case class QuestionId(v: Long) {
-  override def toString = "Q"+v
+  override def toString = "Qn"+v
 }
 
 case class AnswerId(v: Long) {

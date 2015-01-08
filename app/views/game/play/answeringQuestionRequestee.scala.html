@@ -1,7 +1,7 @@
 @(gameState: models.game.GameState,
-        quiz: models.question.Quiz,
-        question: models.question.derivative.DerivativeQuestion,
-        currentAnswer: Option[Either[models.question.derivative.DerivativeAnswer, models.question.derivative.DerivativeAnswer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+        quiz: models.quiz.Quiz,
+        question: models.quiz.question.DerivativeQuestion,
+        currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesRequesteeController, GamesController}
 @import controllers.game.GameAnswerQuestion

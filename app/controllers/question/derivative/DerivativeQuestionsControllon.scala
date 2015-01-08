@@ -1,21 +1,14 @@
 package controllers.question.derivative
 
 import controllers.question.QuizzesController
-import models.question.tangent.{TangentQuestions, TangentQuestion}
-import models.question.{QuestionDifficulty, QuestionScoring}
-import play.api.db.slick.Config.driver.simple.Session
+import models.quiz.question.{DerivativeQuestion, DerivativeQuestions}
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
-import com.artclod.util._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.libs.json.{JsError, Json}
-import play.api.mvc.{Action, Result, Controller}
-import controllers.support.{SecureSocialConsented, SecureSocialDB}
-import models.question.derivative._
+import play.api.mvc.{Controller}
+import controllers.support.{SecureSocialConsented}
 import models.support._
-import models.organization.Course
-import scala.util.{Failure, Success}
 
 trait DerivativeQuestionsControllon extends Controller with SecureSocialConsented {
 

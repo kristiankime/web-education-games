@@ -1,7 +1,7 @@
 @(access: service.Access,
 	course: models.organization.Course,
-    quiz: models.question.Quiz,
-    answerOp: Option[models.question.derivative.DerivativeAnswer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+    quiz: models.quiz.Quiz,
+    answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.question.routes.{ QuestionsController, QuizzesController}
 @import controllers.question.QuizForm

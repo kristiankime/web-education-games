@@ -1,6 +1,6 @@
 package models.game
 
-import models.question.Quizzes
+import models.quiz.Quizzes
 import models.support.QuizId
 import play.api.db.slick.Config.driver.simple._
 import models.user.Users

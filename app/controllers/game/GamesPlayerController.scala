@@ -11,10 +11,10 @@ import controllers.question.QuestionsController
 import controllers.question.derivative.DerivativeQuestionForm
 import controllers.support.SecureSocialConsented
 import models.game._
-import models.question.Quiz
-import models.question.derivative._
+import models.quiz.Quiz
+import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
+import models.quiz.question.{DerivativeQuestions, DerivativeQuestion}
 import models.support._
-import models.user.Users
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session

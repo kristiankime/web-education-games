@@ -8,7 +8,7 @@ import controllers.support.SecureSocialConsented
 import controllers.game.GamesEmail._
 import models.game._
 import models.organization._
-import models.question.derivative.DerivativeAnswers
+import models.quiz.answer.DerivativeAnswers
 import models.support._
 import models.user.Users
 import play.api.data.Form

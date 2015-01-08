@@ -1,14 +1,7 @@
 package models
 
-import com.artclod.slick.JodaUTC
-import models.question.derivative.table._
-import models.support.{UserId, QuestionId}
 import models.user.{UserSetting, UserSettings}
-import org.joda.time.DateTime
 import play.api.test.Helpers.inMemoryDatabase
-import play.api.test.FakeApplication
-import play.api.Play.current
-import play.api.db.slick.DB
 import service.table.UsersTable
 import service.UserTest
 import service.User

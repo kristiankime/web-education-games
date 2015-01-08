@@ -1,7 +1,9 @@
 package controllers.question.derivative
 
 import controllers.question.{QuizzesController, QuestionsController}
-import models.question.{Quizzes, Quiz}
+import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
+import models.quiz.question.DerivativeQuestion
+import models.quiz.{Quizzes, Quiz}
 import scala.util._
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
@@ -12,10 +14,9 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{Result, Controller}
-import controllers.support.{SecureSocialConsented, SecureSocialDB}
+import controllers.support.{SecureSocialConsented}
 import models.support._
 import models.organization._
-import models.question.derivative._
 import service._
 
 object AnswersController extends Controller with SecureSocialConsented {

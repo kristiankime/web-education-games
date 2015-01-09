@@ -29,7 +29,7 @@
     </section>
     }
 
-    @views.html.question.derivative.answerEditor(AnswersController.create(course.organizationId, course.id, quiz.id, results.question.id), currentAnswer){@tag.courseQuizLink(course, quiz, Some("Back to Quiz"))}
+    @views.html.quiz.derivative.answerEditor(AnswersController.create(course.organizationId, course.id, quiz.id, results.question.id), currentAnswer){@tag.courseQuizLink(course, quiz, Some("Back to Quiz"))}
 
     @* ===== Results ===== *@
     @if(results.answers.nonEmpty) {

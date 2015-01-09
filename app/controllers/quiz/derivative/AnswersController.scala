@@ -62,7 +62,7 @@ object AnswersController extends Controller with SecureSocialConsented {
 	}
 
 	private def questionView(course: Course, quiz: Quiz, question: DerivativeQuestion, answer: Option[Either[DerivativeAnswer, DerivativeAnswer]])(implicit user: User, session: Session) = {
-    Ok(views.html.question.questionView(course, quiz, question.results(user), answer))
+    Ok(views.html.quiz.questionView(course, quiz, question.results(user), answer))
 	}
 }
 

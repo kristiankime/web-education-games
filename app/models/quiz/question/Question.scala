@@ -46,7 +46,7 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
   // === Methods for viewing
-  def display : Html = views.html.question.derivative.questionDisplay(this)
+  def display : Html = views.html.quiz.derivative.questionDisplay(this)
 
 }
 
@@ -58,7 +58,7 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
 
   def difficulty : Double = 1d // TODO
 
-  def display : Html = views.html.question.tangent.questionDisplay(this)
+  def display : Html = views.html.quiz.tangent.questionDisplay(this)
 
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 

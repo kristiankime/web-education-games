@@ -1,4 +1,4 @@
-package controllers.question.derivative
+package controllers.quiz.derivative
 
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser

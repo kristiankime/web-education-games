@@ -27,20 +27,20 @@ GET         /orgs/:o/courses/:c                                           contro
 POST        /orgs/:o/courses/:c/join                                      controllers.organization.CoursesController.join(o: OrganizationId, c: CourseId)
 
 # Course Quizzes
-GET         /orgs/:o/courses/:c/quizzes/create                            controllers.question.QuizzesController.createForm(o: OrganizationId, c: CourseId)
-POST        /orgs/:o/courses/:c/quizzes                                   controllers.question.QuizzesController.createSubmit(o: OrganizationId, c: CourseId)
-GET         /orgs/:o/courses/:c/quizzes/:z                                controllers.question.QuizzesController.view(o: OrganizationId, c: CourseId, z: QuizId, a: Option[models.support.AnswerId])
-POST        /orgs/:o/courses/:c/quizzes/:z/rename                         controllers.question.QuizzesController.rename(o: OrganizationId, c: CourseId, z: QuizId)
+GET         /orgs/:o/courses/:c/quizzes/create                            controllers.quiz.QuizzesController.createForm(o: OrganizationId, c: CourseId)
+POST        /orgs/:o/courses/:c/quizzes                                   controllers.quiz.QuizzesController.createSubmit(o: OrganizationId, c: CourseId)
+GET         /orgs/:o/courses/:c/quizzes/:z                                controllers.quiz.QuizzesController.view(o: OrganizationId, c: CourseId, z: QuizId, a: Option[models.support.AnswerId])
+POST        /orgs/:o/courses/:c/quizzes/:z/rename                         controllers.quiz.QuizzesController.rename(o: OrganizationId, c: CourseId, z: QuizId)
 
 # Course Quizzes Questions
-GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q                   controllers.question.QuestionsController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
-POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivative           controllers.question.QuestionsController.createDerivative(o: OrganizationId, c: CourseId, z: QuizId)
-POST        /orgs/:o/courses/:c/quizzes/:z/questions/tangent              controllers.question.QuestionsController.createTangent(o: OrganizationId, c: CourseId, z: QuizId)
-POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove            controllers.question.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q                   controllers.quiz.QuestionsController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivative           controllers.quiz.QuestionsController.createDerivative(o: OrganizationId, c: CourseId, z: QuizId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/tangent              controllers.quiz.QuestionsController.createTangent(o: OrganizationId, c: CourseId, z: QuizId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove            controllers.quiz.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Course Quizzes Answers
-GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:a        controllers.question.derivative.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, a: AnswerId)
-POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers           controllers.question.derivative.AnswersController.create(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:a        controllers.quiz.derivative.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, a: AnswerId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers           controllers.quiz.derivative.AnswersController.create(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)
@@ -66,7 +66,7 @@ POST        /games/:g/questions/:q/requestor                              contro
 GET         /games/:g/quizzes/:z                                          controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
 # Question Difficulty service (ajax)
-POST        /questiondifficulty                                           controllers.question.QuestionsController.questionDifficulty
+POST        /questiondifficulty                                           controllers.quiz.QuestionsController.questionDifficulty
 
 # ======== START Routes for Secure Social ========
 # Login page

@@ -1,8 +1,8 @@
-package controllers.question.tangent
+package controllers.quiz.tangent
 
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
-import controllers.question.QuizzesController
+import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
 import models.quiz.question.{TangentQuestions, TangentQuestion}
 import models.support._
@@ -21,7 +21,7 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
           form => {
             val (function, functionStr, atPointX, atPointXStr) = form
             TangentQuestions.create(TangentQuestion(null, user.id, MathML(function).get, functionStr, MathML(atPointX).get, atPointXStr, JodaUTC.now), quizId) // TODO better handle on error for MathML().get
-            Redirect(controllers.question.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
+            Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
     }

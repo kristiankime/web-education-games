@@ -1,7 +1,7 @@
 @(gameState: models.game.GameState with models.game.RequesteeQuiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesRequesteeController
-@import controllers.question.derivative.DerivativeQuestionForm
+@import controllers.quiz.derivative.DerivativeQuestionForm
 @import controllers.game.GameRemoveQuestion
 @import helper._
 @import models.user.UserPimped

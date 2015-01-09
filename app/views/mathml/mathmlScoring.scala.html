@@ -1,6 +1,6 @@
 @(name: String, skillLevel: Double)
 
-@import controllers.question.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
+@import controllers.quiz.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
 
 @defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 

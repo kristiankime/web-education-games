@@ -3,8 +3,8 @@
     quiz: models.quiz.Quiz,
     answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.question.routes.{ QuestionsController, QuizzesController}
-@import controllers.question.QuizForm
+@import controllers.quiz.routes.{ QuestionsController, QuizzesController}
+@import controllers.quiz.QuizForm
 @import helper._
 @import models.user.UserPimped
 @import com.artclod.play.{are, s}

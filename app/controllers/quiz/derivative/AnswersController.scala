@@ -1,6 +1,6 @@
-package controllers.question.derivative
+package controllers.quiz.derivative
 
-import controllers.question.{QuizzesController, QuestionsController}
+import controllers.quiz.{QuizzesController, QuestionsController}
 import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
 import models.quiz.question.DerivativeQuestion
 import models.quiz.{Quizzes, Quiz}
@@ -52,7 +52,7 @@ object AnswersController extends Controller with SecureSocialConsented {
             val unfinishedAnswer = DerivativeAnswerUnfinished(user.id, question.id, math, rawStr, JodaUTC.now)_
             DerivativeAnswers.correct(question, math) match {
 //              case Yes => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
-              case Yes => Redirect(controllers.question.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case Yes => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => questionView(course, quiz, question, Some(Left(unfinishedAnswer(false))))
             }

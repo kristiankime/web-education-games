@@ -1,4 +1,4 @@
-package controllers.question
+package controllers.quiz
 
 import com.artclod.slick.JodaUTC
 import com.artclod.util._

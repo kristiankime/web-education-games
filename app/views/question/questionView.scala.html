@@ -3,7 +3,7 @@
   results: models.quiz.question.QuestionResults,
   currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.question.derivative.routes._
+@import controllers.quiz.derivative.routes._
 @import com.artclod.play.s
 
 @defining(quiz.access){ access =>

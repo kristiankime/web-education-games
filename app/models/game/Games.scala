@@ -77,4 +77,15 @@ object Games {
   // ======= Update ======
   def update(game: Game)(implicit session: Session) = gamesTable.where(_.id === game.id).update(game)
 
+  // ======= Counts ======
+  def numberOfCompletedGamesByPlayer(implicit session: Session) = {
+    val requstorCounts = gamesTable.filter(_.finishedDate.isNotNull).groupBy(g => g.requestor).map{ case (requestor, group) => (requestor, group.length) }
+    val requsteeCounts = gamesTable.filter(_.finishedDate.isNotNull).groupBy(g => g.requestee).map{ case (requestee, group) => (requestee, group.length) }
+    val countsUnion = requstorCounts.union(requsteeCounts)
+    val counts = countsUnion.groupBy(g => g._1).map{ case (id, group) => (id, group.map(_._2).sum) }.sortBy(_._2)
+    counts.list.map(r => Count(r._1, r._2.getOrElse(0)))
+  }
+
+  case class Count(id:UserId, count:Int)
+
 }

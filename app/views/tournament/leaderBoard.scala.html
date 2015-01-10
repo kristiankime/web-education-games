@@ -1,0 +1,13 @@
+@()(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@defining(models.game.Games.numberOfCompletedGamesByPlayer.take(10)) { numGamesByPlayer =>
+
+@main("Leader Board") {
+    <h1>Leader Board</h1>
+
+    <ul>
+        @for(numGames <- numGamesByPlayer){<li>@numGames.id @numGames.count</li>}
+    </ul>
+}
+
+}

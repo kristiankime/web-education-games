@@ -26,6 +26,10 @@ POST        /orgs/:o/courses                                              contro
 GET         /orgs/:o/courses/:c                                           controllers.organization.CoursesController.view(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/join                                      controllers.organization.CoursesController.join(o: OrganizationId, c: CourseId)
 
+# Tournaments
+GET         /leaderboard                                                  controllers.tournament.TournamentsController.leaderBoard
+
+
 # Course Quizzes
 GET         /orgs/:o/courses/:c/quizzes/create                            controllers.quiz.QuizzesController.createForm(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/quizzes                                   controllers.quiz.QuizzesController.createSubmit(o: OrganizationId, c: CourseId)

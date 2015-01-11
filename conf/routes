@@ -11,6 +11,9 @@ POST        /consent                                                      contro
 GET         /noconsent                                                    controllers.Consent.noConsent
 POST        /revokeconsent                                                controllers.Consent.revokeConsent
 
+# User Settings
+POST        /togglegameemail                                              controllers.Settings.toggleGameEmails
+
 # Home page
 GET         /                                                             controllers.Home.index
 GET         /user                                                         controllers.Home.userInfo

@@ -22,7 +22,7 @@ object Consent extends Controller with SecureSocialDB {
     Ok(views.html.user.noConsent())
   }
 
-  def consentSubmit(goTo: Option[String]) = SecuredUserDBAction { implicit request => implicit user => implicit session =>
+  def consentSubmit(goTo: Option[String]) = SecuredUserDBAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     ConsentForm.values.bindFromRequest.fold(
       errors => {
         Logger("consent").info("error" + errors)

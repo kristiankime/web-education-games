@@ -35,6 +35,13 @@ trait SecureSocialDB extends SecureSocial {
 			}
 		}
 
+		// LATER this method is essentially the same as the one above and exists for Intellij 14 IDE help
+		def apply(dummy: String)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+			DB.withSession { session: Session =>
+				f(request)(User(request))(session)
+			}
+		}
+
 		def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
 				f(request)(User(request))(session)

@@ -43,7 +43,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def requestGame(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def requestGame(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) => GameRequest.form.bindFromRequest.fold(
@@ -53,7 +53,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case None => {
             val otherUser = Users(otherUserId).get
             val game = Games.request(user, otherUser, course)
-            for(mail <- otherUser.email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+            for(mail <- otherUser.maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.name
               mail.setSubject("CalcTutor game request from " + userName)
               mail.sendHtml(userName + " has requested to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
@@ -89,7 +89,7 @@ object GamesController extends Controller with SecureSocialConsented {
       }
     }
 
-  def respond(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def respond(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => GameResponse.form.bindFromRequest.fold(
@@ -101,7 +101,7 @@ object GamesController extends Controller with SecureSocialConsented {
           }
           if (accepted) {
             Games.update(gameState.accept(user.id))
-            for(mail <- gameState.game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.name
               mail.setSubject(userName + " accepted your CalcTutor game request")
               mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
@@ -109,7 +109,7 @@ object GamesController extends Controller with SecureSocialConsented {
           }
           else {
             Games.update(gameState.reject(user.id))
-            for(mail <- gameState.game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.name
               mail.setSubject(userName + " rejected your CalcTutor game request")
               mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))
@@ -179,7 +179,7 @@ object GamesController extends Controller with SecureSocialConsented {
 
 }
 
-object GameRequest {
+object  GameRequest {
   val requestee = "requestee"
   val form = Form(requestee -> userId)
 }

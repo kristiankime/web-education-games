@@ -13,17 +13,27 @@ package object user {
 
   implicit class UserPimped(user: User){
 
-    def settings(implicit session: Session) = UserSettings(user.id)
+    def settingsOp(implicit session: Session) = UserSettings(user.id)
 
-    def consented(implicit session: Session) = settings match {
+    def settings(implicit session: Session) : UserSetting = UserSettings(user.id) match {
+      case None => throw new IllegalStateException("Programming error, name method should only be called if the user has settings")
+      case Some(setting) => setting
+    }
+
+    def consented(implicit session: Session) = settingsOp match {
       case None => false
       case Some(setting) => setting.consented
     }
 
-    def name(implicit session: Session) = settings match {
+    def name(implicit session: Session) = settingsOp match {
       case None => throw new IllegalStateException("Programming error, name method should only be called if the user has settings")
       case Some(setting) => setting.name
     }
+
+    /**
+     * If we can (and should) send an email to the user returns Some(their_email), otherwise None.
+     */
+    def maybeSendGameEmail(implicit session: Session) = settingsOp.flatMap(s => if(s.emailGameUpdates){ user.email } else None)
 
     def activeGame(otherId: UserId)(implicit session: Session) = Games.activeGame(user.id, otherId)
 

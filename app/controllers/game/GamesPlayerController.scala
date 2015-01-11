@@ -52,7 +52,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       }
     }
 
-  def createQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def createQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -67,7 +67,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def removeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def removeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -81,12 +81,12 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeQuizInternal(game)
-        for(mail <- game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+        for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
           val userName = user.name
           mail.setSubject(userName + " created a CalcTutor game quiz for you")
           mail.sendHtml(userName + " created a game quiz for you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
@@ -96,7 +96,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def answerQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question)) => {
@@ -119,12 +119,12 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def finalizeAnswers(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def finalizeAnswers(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeAnswersInternal(game)
-        for(mail <- game.otherPlayer(user).email.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+        for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
           val userName = user.name
           mail.setSubject(userName + " finished answering your CalcTutor game quiz")
           mail.sendHtml(userName + " finished answering your game quiz in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")

@@ -6,12 +6,14 @@
 @import models.user.UserPimped
 @import helper._
 
+@defining(UserPimped(user).settings) { settings =>
+
 @mainWithBorder("User Information") {
 
     <h1>Welcome to the EdTech Math Games Server</h1>
 
     <p>
-        You are logged in as: @user.name <br>
+        You are logged in as: @settings.name <br>
         You email is: @user.email
     </p>
 
@@ -26,7 +28,17 @@
     }
     }
 
+    @form(action = routes.Settings.toggleGameEmails, 'class -> "pure-form") {
+        @if(settings.emailGameUpdates) {
+            You are currently receiving emails on game updates <input class="pure-button" type="submit" value="Stop Game Emails">
+        } else {
+            You are not currently receiving emails on game updates <input class="pure-button" type="submit" value="Start Game Emails">
+        }
+    }
+
     @form(action = routes.Consent.revokeConsent, 'class -> "pure-form") {
         I no longer want to take part in this study <input class="pure-button" type="submit" value="Revoke Consent">
     }
+}
+
 }

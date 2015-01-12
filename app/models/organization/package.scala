@@ -1,6 +1,6 @@
 package models
 
-import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick.Config.driver.simple.Session
 
 package object organization {
 

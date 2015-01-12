@@ -11,12 +11,12 @@ case class UserSetting(userId: UserId, consented: Boolean = true, name: String, 
 object UserSettings {
 
   def create(userSetting: UserSetting)(implicit session: Session) =
-    Try(session.withTransaction { userInfosTable.insert(userSetting); userSetting })
+    Try(session.withTransaction { userSettingsTable.insert(userSetting); userSetting })
 
   def update(userSetting: UserSetting)(implicit session: Session) =
-    Try(session.withTransaction {userInfosTable.where(_.userId === userSetting.userId).update(userSetting); userSetting })
+    Try(session.withTransaction {userSettingsTable.where(_.userId === userSetting.userId).update(userSetting); userSetting })
 
-  def apply(userId: UserId)(implicit session: Session) = userInfosTable.where(_.userId === userId).firstOption
+  def apply(userId: UserId)(implicit session: Session) = userSettingsTable.where(_.userId === userId).firstOption
 
   /**
    * Produces a name that was unique at the time that this call was made.
@@ -27,10 +27,10 @@ object UserSettings {
    * @return
    */
   def validName(startingName: String)(implicit session: Session) = {
-    userInfosTable.where(_.name === startingName).firstOption match {
+    userSettingsTable.where(_.name === startingName).firstOption match {
       case None => startingName
       case Some(_) => {
-        val similarNames = userInfosTable.where(_.name like (startingName + "%")).list.map(_.name).toSet
+        val similarNames = userSettingsTable.where(_.name like (startingName + "%")).list.map(_.name).toSet
 
         if(!similarNames(startingName)) startingName
         else {

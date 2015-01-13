@@ -11,5 +11,5 @@ object TestQuestion {
 		mathML: MathMLElem = `6`,
 		rawStr: String = "6",
 		creationDate: DateTime = JodaUTC.zero) =
-		DerivativeQuestion(null, owner, mathML, rawStr, creationDate)
+		DerivativeQuestion(null, owner, mathML, rawStr, creationDate, 0d)
 }

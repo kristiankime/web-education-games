@@ -54,7 +54,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now, 0d)
         val question = DerivativeQuestions.create(qTmp, quiz.id)
 
         val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
@@ -68,7 +68,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now, 0d)
         val question = DerivativeQuestions.create(qTmp, quiz.id)
 
         val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = user.id, questionId = question.id))
@@ -84,7 +84,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now, 0d)
         val question = DerivativeQuestions.create(qTmp, quiz.id)
         val otherQuestion = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
 
@@ -103,7 +103,7 @@ class QuestionsSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
-        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now)
+        val qTmp = DerivativeQuestion(null, user.id, x + `1`, "x + 1", JodaUTC.now, 0d)
         val question = DerivativeQuestions.create(qTmp, quiz.id)
         val eq = DerivativeQuestions(question.id)
 
@@ -116,8 +116,8 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val quiz = Quizzes.create(Quiz(null, user.id, "test", new DateTime(0L, DateTimeZone.UTC), new DateTime(0L, DateTimeZone.UTC)))
 
-        DerivativeQuestions.create(DerivativeQuestion(null, user.id, x + `1`, "x + 2", JodaUTC.now), quiz.id)
-        DerivativeQuestions.create(DerivativeQuestion(null, user.id, x + `2`, "x + 2", JodaUTC.now), quiz.id)
+        DerivativeQuestions.create(DerivativeQuestion(null, user.id, x + `1`, "x + 2", JodaUTC.now, 0d), quiz.id)
+        DerivativeQuestions.create(DerivativeQuestion(null, user.id, x + `2`, "x + 2", JodaUTC.now, 0d), quiz.id)
 
         val eqs = DerivativeQuestions.list.map(_.mathML)
         eqs must beEqualTo(List(x + `1`, x + `2`))

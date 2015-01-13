@@ -1,7 +1,7 @@
 package controllers.quiz.derivative
 
 import controllers.quiz.QuizzesController
-import models.quiz.question.{DerivativeQuestion, DerivativeQuestions}
+import models.quiz.question.{QuestionDifficulty, DerivativeQuestion, DerivativeQuestions}
 import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
 import play.api.data.Form
@@ -20,7 +20,7 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val mathML = MathML(form._1).get // TODO better handle on error
-            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now), quizId)
+            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now, QuestionDifficulty(mathML)), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }

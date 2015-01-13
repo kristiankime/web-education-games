@@ -13,7 +13,7 @@ import controllers.support.SecureSocialConsented
 import models.game._
 import models.quiz.Quiz
 import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
-import models.quiz.question.{DerivativeQuestions, DerivativeQuestion}
+import models.quiz.question.{QuestionDifficulty, DerivativeQuestions, DerivativeQuestion}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -61,7 +61,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             val mathML = MathML(form._1).get // TODO better handle on error
-            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now), quiz.id)
+            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now, QuestionDifficulty(mathML)), quiz.id)
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }

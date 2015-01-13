@@ -20,10 +20,11 @@ class TangentQuestionsTable(tag: Tag) extends Table[TangentQuestion](tag, "tange
 	def atPointX = column[MathMLElem]("at_point_x")
 	def atPointXStr = column[String]("at_point_x_str")
 	def creationDate = column[DateTime]("creation_date")
+	def atCreationDifficulty = column[Double]("at_creation_difficulty")
 	def quizId = column[Option[QuizId]]("quiz_id")
 	def order = column[Int]("order")
 
-	def * = (id, ownerId, function, functionStr, atPointX, atPointXStr, creationDate, quizId, order) <> (TangentQuestion.tupled, TangentQuestion.unapply _)
+	def * = (id, ownerId, function, functionStr, atPointX, atPointXStr, creationDate, atCreationDifficulty, quizId, order) <> (TangentQuestion.tupled, TangentQuestion.unapply _)
 
 	def idFK = foreignKey("tangent_questions__id_fk", id, QuestionIdNext.questionIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("tangent_questions__owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)

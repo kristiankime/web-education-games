@@ -18,10 +18,11 @@ class DerivativeQuestionsTable(tag: Tag) extends Table[DerivativeQuestion](tag, 
 	def mathML = column[MathMLElem]("mathml")
 	def rawStr = column[String]("rawstr")
 	def creationDate = column[DateTime]("creation_date")
+	def atCreationDifficulty = column[Double]("at_creation_difficulty")
 	def quizId = column[Option[QuizId]]("quiz_id")
 	def order = column[Int]("order")
 
-	def * = (id, ownerId, mathML, rawStr, creationDate, quizId, order) <> (DerivativeQuestion.tupled, DerivativeQuestion.unapply _)
+	def * = (id, ownerId, mathML, rawStr, creationDate, atCreationDifficulty, quizId, order) <> (DerivativeQuestion.tupled, DerivativeQuestion.unapply _)
 
 	def idFK = foreignKey("derivative_questions__id_fk", id, QuestionIdNext.questionIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("derivative_questions__owner_fk", ownerId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)

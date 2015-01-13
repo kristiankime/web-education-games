@@ -4,7 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{TangentQuestions, TangentQuestion}
+import models.quiz.question.{QuestionDifficulty, TangentQuestions, TangentQuestion}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -20,7 +20,7 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (function, functionStr, atPointX, atPointXStr) = form
-            TangentQuestions.create(TangentQuestion(null, user.id, MathML(function).get, functionStr, MathML(atPointX).get, atPointXStr, JodaUTC.now), quizId) // TODO better handle on error for MathML().get
+            TangentQuestions.create(TangentQuestion(null, user.id, MathML(function).get, functionStr, MathML(atPointX).get, atPointXStr, JodaUTC.now, QuestionDifficulty(MathML(function).get)), quizId) // TODO better handle on error for MathML().get
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }

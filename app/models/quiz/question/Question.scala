@@ -16,6 +16,7 @@ trait Question extends Owned {
   val ownerId: UserId
   val creationDate: DateTime
   val quizIdOp: Option[QuizId]
+  val atCreationDifficulty : Double
   val order: Int
 
   def quiz(implicit session: Session) = quizIdOp.flatMap(Quizzes(_))
@@ -35,7 +36,7 @@ trait Question extends Owned {
   def display : Html
 }
 
-case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
+case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
 
   def answersAndOwners(implicit session: Session) = DerivativeQuestions.answersAndOwners(id)
 
@@ -45,12 +46,11 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
-  // === Methods for viewing
   def display : Html = views.html.quiz.derivative.questionDisplay(this)
 
 }
 
-case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
   def results(user: User)(implicit session: Session) = TangentQuestionResults(user, this, List()) // TODO
 

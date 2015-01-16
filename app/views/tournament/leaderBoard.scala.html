@@ -2,14 +2,23 @@
 
 @import com.artclod.play.s
 
-@defining(models.tournament.Tournaments.numberOfCompletedGamesByPlayer.take(10)) { numGamesByPlayer =>
+@defining(models.tournament.Tournaments.studentScores.take(10).zipWithIndex) { scores =>
+@defining(models.tournament.Tournaments.numberOfCompletedGamesByPlayer.take(10).zipWithIndex) { numGamesByPlayer =>
 
-@main("Leader Board") {
-    <h1>Leader Board</h1>
+    @main("Leader Board") {
+        <h1>Leader Board</h1>
 
-    <ul>
-        @for(numGames <- numGamesByPlayer){<li>@numGames.name has played @numGames.count game@s(numGamesByPlayer)</li>}
-    </ul>
+        <h3> Highest Student Skill Level </h3>
+        <table class="pure-table">
+            <tr> <th>Index</th> <th>Name</th> <th>Skill Level</th> </tr>
+            @for(score <- scores) {<tr> <td>@score._2</td> <td>@score._1.name</td> <td>@tag.skillLevel(score._1.score)</td> </tr>}
+        </table>
+
+        <h3> Most Games Played </h3>
+        <table class="pure-table">
+            <tr> <th>Index</th> <th>Name</th> <th># Games</th> </tr>
+            @for(numGames <- numGamesByPlayer) {<tr> <td>@numGames._2</td> <td>@numGames._1.name</td> <td>@numGames._1.count</td> </tr>}
+        </table>
+    }
 }
-
 }

@@ -2,22 +2,30 @@
 
 @import com.artclod.play.s
 
-@defining(models.tournament.Tournaments.studentScores.take(10).zipWithIndex) { scores =>
-@defining(models.tournament.Tournaments.numberOfCompletedGamesByPlayer.take(10).zipWithIndex) { numGamesByPlayer =>
+@defining(models.tournament.Tournaments.studentScoresRankingFor(user.id, 10)) { scoreRanking =>
+@defining(models.tournament.Tournaments.completedGamesRankingFor(user.id, 10)) { gameRanking =>
 
     @main("Leader Board") {
         <h1>Leader Board</h1>
 
         <h3> Highest Student Skill Level </h3>
         <table class="pure-table">
-            <tr> <th>Index</th> <th>Name</th> <th>Skill Level</th> </tr>
-            @for(score <- scores) {<tr> <td>@score._2</td> <td>@score._1.name</td> <td>@tag.skillLevel(score._1.score)</td> </tr>}
+            <tr> <th>Rank</th> <th>Player</th> <th>Skill Level</th> </tr>
+            @for(score <- scoreRanking.ranks) {<tr> <td>@score.index</td> <td>@score.name</td> <td>@tag.skillLevel(score.metric)</td> </tr>}
+            @for(score <- scoreRanking.user) {
+            <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
+            <tr> <td>@score.index</td> <td>@score.name</td> <td>@tag.skillLevel(score.metric)</td> </tr>
+            }
         </table>
 
         <h3> Most Games Played </h3>
         <table class="pure-table">
-            <tr> <th>Index</th> <th>Name</th> <th># Games</th> </tr>
-            @for(numGames <- numGamesByPlayer) {<tr> <td>@numGames._2</td> <td>@numGames._1.name</td> <td>@numGames._1.count</td> </tr>}
+            <tr> <th>Rank</th> <th>Player</th> <th>Games </th> </tr>
+            @for(score <- gameRanking.ranks) {<tr> <td>@score.index</td> <td>@score.name</td> <td>@score.metric</td> </tr>}
+            @for(score <- gameRanking.user) {
+            <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
+            <tr> <td>@score.index</td> <td>@score.name</td> <td>@score.metric</td> </tr>
+            }
         </table>
     }
 }

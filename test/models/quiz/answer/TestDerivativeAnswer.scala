@@ -1,14 +1,13 @@
-package models.quiz.derivative
+package models.quiz.answer
 
-import models.quiz.Correct2Short
-import models.quiz.answer.DerivativeAnswer
-import models.support._
-import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
 import com.artclod.slick.JodaUTC
+import models.quiz.Correct2Short
+import models.support._
+import org.joda.time.DateTime
 
 
-object TestAnswer {
+object TestDerivativeAnswer {
 	def apply(owner: UserId,
 		questionId: QuestionId,
 		mathML: MathMLElem = `7`,

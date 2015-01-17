@@ -8,13 +8,13 @@ import scala.language.postfixOps
 import models.user.table.userSettingsTable
 import models.quiz.Correct2Short
 
+case class Rankings[M](ranks: List[Rank[M]], user: Option[Rank[M]])
+
+case class Rank[M](id:UserId, name: String, metric: M, index: Int)
+
 object Tournaments {
 
   // ============ Generic Ranking Core ===========
-  case class Rankings[M](ranks: List[Rank[M]], user: Option[Rank[M]])
-
-  case class Rank[M](id:UserId, name: String, metric: M, index: Int)
-
   private def rankingsFor[M](id:UserId, size: Int, ranks:  List[Rank[M]]) = {
     val findUserRank = ranks.find(_.id == id)
     val userRank = findUserRank.flatMap(e => if(e.index > size){ Some(e) } else { None })
@@ -61,8 +61,18 @@ object Tournaments {
     val countsUnion = requstorCounts.unionAll(requsteeCounts)
     val counts = countsUnion.groupBy(g => g._1).map{ case (id, group) => (id, group.map(_._2).sum) }
     val joinNames = for { (c, s) <- counts innerJoin userSettingsTable on (_._1 === _.userId) } yield (c._1, s.name, c._2)
-    val sorted = joinNames.sortBy(_._2)
+    val sorted = joinNames.sortBy(_._2.desc)
     sorted.list
   }
 
+  // ============ Number of Unique Opponents Rankings ===========
+  private def numberOfUniqueOpponents(implicit session: Session) = {
+    val requstorGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestor, r.requestee)) //.groupBy(g => g.requestor).map{ case (requestor, group) => (requestor, group. .requestee) }
+    val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requestor)) //.groupBy(g => g.requestee).map{ case (requestee, group) => (requestee, group.requestor) }
+    val gamesUnion = requstorGames.unionAll(requsteeGames)
+    val uniqueOpponents = gamesUnion.groupBy(g => g._1).map{ case (player, group) => (player, group.map(_._2).countDistinct) }
+    val joinNames = for { (u, s) <- uniqueOpponents innerJoin userSettingsTable on (_._1 === _.userId) } yield (u._1, s.name, u._2)
+    val sorted = joinNames.sortBy(_._3.desc)
+    sorted.list
+  }
 }

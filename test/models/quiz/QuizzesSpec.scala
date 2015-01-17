@@ -1,21 +1,18 @@
-package models.quiz.derivative
+package models.quiz
 
-import com.artclod.slick.JodaUTC
-import models.quiz.answer.DerivativeAnswers
+import models.DBTest._
+import models.organization._
+import models.quiz.answer.{TestDerivativeAnswer, DerivativeAnswers}
 import models.quiz.answer.result.DerivativeQuestionResults
-import models.quiz.question.DerivativeQuestions
-import models.quiz.{QuizResults, Quizzes}
+import models.quiz.question.{TestDerivativeQuestion, DerivativeQuestions}
 import models.support.CourseId
+import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import org.junit.runner._
-import play.api.test._
-import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
-import models.DBTest._
+import play.api.db.slick.DB
+import play.api.test._
 import service._
-import viewsupport.question.derivative._
-import models.organization._
 
 @RunWith(classOf[JUnitRunner])
 class QuizzesSpec extends Specification {
@@ -25,10 +22,10 @@ class QuizzesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
-				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
 				val student = newFakeUser(UserTest())
-				val answer1 = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
-				val answer2 = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id))
+				val answer1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = student.id, questionId = question1.id))
+				val answer2 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = student.id, questionId = question1.id))
 
 				val sqr1 = DerivativeQuestionResults(student, question1, List(answer1, answer2))
 				val sr = QuizResults(student, quiz, List(sqr1))
@@ -40,10 +37,10 @@ class QuizzesSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
-				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
-				val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
+				val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
 				val student = newFakeUser(UserTest())
-        val answer = DerivativeAnswers.createAnswer(TestAnswer(owner = student.id, questionId = question1.id, correct = true))
+        val answer = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = student.id, questionId = question1.id, correct = true))
 
 				val sqr1 = DerivativeQuestionResults(student, question1, List(answer))
 				val sqr2 = DerivativeQuestionResults(student, question2, List())
@@ -60,8 +57,8 @@ class QuizzesSpec extends Specification {
 				val user = newFakeUser(UserTest())
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 
-				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
-				val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
+				val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
 
 				quiz.questions must beEqualTo(List(question1, question2))
 			}
@@ -73,10 +70,10 @@ class QuizzesSpec extends Specification {
 				val quiz = Quizzes.create(TestQuiz(owner = user.id))
 				val otherQuiz = Quizzes.create(TestQuiz(owner = user.id))
 
-				val question1 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
-				val question2 = DerivativeQuestions.create(TestQuestion(owner = user.id), quiz.id)
+				val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
+				val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
 
-				val otherQuestion = DerivativeQuestions.create(TestQuestion(owner = user.id), otherQuiz.id)
+				val otherQuestion = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), otherQuiz.id)
 
 				quiz.questions must beEqualTo(List(question1, question2))
 			}

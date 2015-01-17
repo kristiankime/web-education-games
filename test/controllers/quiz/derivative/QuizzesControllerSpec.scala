@@ -3,9 +3,8 @@ package controllers.quiz.derivative
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser
 import models.organization._
-import models.quiz.Quizzes
-import models.quiz.derivative.{TestQuestion, TestQuiz}
-import models.quiz.question.DerivativeQuestions
+import models.quiz.{TestQuiz, Quizzes}
+import models.quiz.question.{TestDerivativeQuestion, DerivativeQuestions}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -30,7 +29,7 @@ class QuizzesControllerSpec extends Specification {
           val organization = Organizations.create(TestOrganization())
           val course = Courses.create(TestCourse(owner = owner.id, organizationId = organization.id))
           val quiz = Quizzes.create(TestQuiz(owner = owner.id), course.id)
-          val question = DerivativeQuestions.create(TestQuestion(owner = owner.id), quiz.id)
+          val question = DerivativeQuestions.create(TestDerivativeQuestion(owner = owner.id), quiz.id)
 
           val routeStr: String = "/orgs/" + organization.id.v + "/courses/" + course.id.v + "/quizzes/" + quiz.id.v + "/questions/" + question.id.v
 

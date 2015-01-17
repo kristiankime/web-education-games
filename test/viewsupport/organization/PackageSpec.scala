@@ -1,11 +1,10 @@
 package viewsupport.organization
 
 import models.quiz.Correct2Short
-import models.quiz.answer.DerivativeAnswer
+import models.quiz.answer.{TestDerivativeAnswer, DerivativeAnswer}
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-import models.quiz.derivative.TestAnswer
 import models.support._
 import com.artclod.mathml.scalar.Cn
 import com.artclod.slick.JodaUTC
@@ -21,7 +20,7 @@ class PackageSpec extends Specification {
 		}
 	
 		"get math string from AnswerTmp" in {
-			mathMLStr(Some(Left(TestAnswer(UserId(0), QuestionId(0), rawStr="rawStr")))) must beEqualTo(Some("rawStr"))
+			mathMLStr(Some(Left(TestDerivativeAnswer(UserId(0), QuestionId(0), rawStr="rawStr")))) must beEqualTo(Some("rawStr"))
 		}
 
 		"get math string from Answer" in {

@@ -1,14 +1,13 @@
-package models.quiz.derivative.result
+package models.quiz
 
+import models.quiz.answer.TestDerivativeAnswer
 import models.quiz.answer.result.DerivativeQuestionResults
-import models.quiz.question.{QuestionScoring, QuestionDifficulty, DerivativeQuestion}
-import models.quiz.QuizResults
-import QuestionDifficulty.Diff
-import models.quiz.derivative.{_}
+import models.quiz.question.QuestionDifficulty.Diff
+import models.quiz.question.{DerivativeQuestion, QuestionDifficulty, QuestionScoring, TestDerivativeQuestion}
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import service.{UserTest, User}
+import service.{User, UserTest}
 
 @RunWith(classOf[JUnitRunner])
 class QuizResultsSpec extends Specification {
@@ -19,10 +18,10 @@ class QuizResultsSpec extends Specification {
       val (answerer, asker) = (UserTest(firstName = "answerer"), UserTest(firstName = "asker"))
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestQuestion(owner = asker.id, mathML = Diff(1d))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(1d))
       val question1Results = questionResults(answerer, question1, numberOfAnswers = 0)
 
-      val question2 = TestQuestion(owner = asker.id, mathML = Diff(1d))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(1d))
       val question2Results = questionResults(answerer, question2, numberOfAnswers = 0)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
@@ -34,10 +33,10 @@ class QuizResultsSpec extends Specification {
       val (answerer, asker) = (UserTest(firstName = "answerer"), UserTest(firstName = "asker"))
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestQuestion(owner = asker.id, mathML = Diff(1d))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(1d))
       val question1Results = questionResults(answerer, question1, correct = true, numberOfAnswers = 2)
 
-      val question2 = TestQuestion(owner = asker.id, mathML = Diff(1d))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(1d))
       val question2Results = questionResults(answerer, question2, correct = true, numberOfAnswers = 1)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
@@ -49,10 +48,10 @@ class QuizResultsSpec extends Specification {
       val (answerer, asker) = (UserTest(firstName = "answerer"), UserTest(firstName = "asker"))
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestQuestion(owner = asker.id, mathML = Diff(1d))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(1d))
       val question1Results = questionResults(answerer, question1, correct = false, numberOfAnswers = 2)
 
-      val question2 = TestQuestion(owner = asker.id, mathML = Diff(1d))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(1d))
       val question2Results = questionResults(answerer, question2, correct = true, numberOfAnswers = 1)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
@@ -69,10 +68,10 @@ class QuizResultsSpec extends Specification {
       val studentSkill = 1d
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
       val question1Results = questionResults(answerer, question1, correct = true, numberOfAnswers = 2)
 
-      val question2 = TestQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
       val question2Results = questionResults(answerer, question2, correct = true, numberOfAnswers = 1)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
@@ -86,10 +85,10 @@ class QuizResultsSpec extends Specification {
       val studentSkill = 1d
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
       val question1Results = questionResults(answerer, question1, correct = false, numberOfAnswers = 2)
 
-      val question2 = TestQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
       val question2Results = questionResults(answerer, question2, correct = false, numberOfAnswers = 1)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
@@ -104,7 +103,7 @@ class QuizResultsSpec extends Specification {
 
   private def questionResults(answerer: User, question: DerivativeQuestion, correct: Boolean = false, numberOfAnswers : Int = 1) = {
     val answers = for(i <- 1 to numberOfAnswers) yield {
-      TestAnswer(owner = answerer.id, questionId = question.id, correct = if(i == numberOfAnswers) correct else false) // question.id is null here but will work for testing
+      TestDerivativeAnswer(owner = answerer.id, questionId = question.id, correct = if(i == numberOfAnswers) correct else false) // question.id is null here but will work for testing
     }
     DerivativeQuestionResults(answerer, question, answers.toList)
   }

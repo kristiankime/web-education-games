@@ -1,19 +1,9 @@
-package models.quiz.derivative
+package models.quiz.question
 
-import com.artclod.slick.JodaUTC
-import models.DBTest._
-import models.organization._
-import models.quiz.question.QuestionDifficulty
-import models.support.CourseId
+import com.artclod.mathml.scalar._
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
-import play.api.test._
-import service._
-import viewsupport.question.derivative._
-import com.artclod.mathml.scalar._
 
 @RunWith(classOf[JUnitRunner])
 class QuestionDifficultySpec extends Specification {

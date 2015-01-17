@@ -1,12 +1,11 @@
-package models.quiz.derivative
+package models.quiz.question
 
-import models.quiz.question.DerivativeQuestion
-import models.support.UserId
-import org.joda.time.DateTime
 import com.artclod.mathml.scalar._
 import com.artclod.slick.JodaUTC
+import models.support.UserId
+import org.joda.time.DateTime
 
-object TestQuestion {
+object TestDerivativeQuestion {
 	def apply(owner: UserId,
 		mathML: MathMLElem = `6`,
 		rawStr: String = "6",

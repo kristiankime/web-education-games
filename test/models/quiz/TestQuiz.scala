@@ -1,9 +1,8 @@
-package models.quiz.derivative
+package models.quiz
 
-import models.quiz.Quiz
+import com.artclod.slick.JodaUTC
 import models.support.UserId
 import org.joda.time.DateTime
-import com.artclod.slick.JodaUTC
 
 object TestQuiz {
 	def apply(owner: UserId,

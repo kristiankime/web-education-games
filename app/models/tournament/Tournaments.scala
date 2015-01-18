@@ -50,9 +50,7 @@ object Tournaments {
   }
 
   private def completedGamesRank(implicit session: Session) = {
-    val completedGames = numberOfCompletedGamesByPlayer
-    val gamesRankings = completedGames.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0), v._2 + 1))
-    gamesRankings
+    numberOfCompletedGamesByPlayer.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0), v._2 + 1))
   }
 
   private def numberOfCompletedGamesByPlayer(implicit session: Session) = {
@@ -66,6 +64,14 @@ object Tournaments {
   }
 
   // ============ Number of Unique Opponents Rankings ===========
+  def numberOfUniqueOpponentsRankingFor(id:UserId, size: Int)(implicit session: Session) = {
+    rankingsFor(id, size, numberOfUniqueOpponentsRank)
+  }
+
+  private def numberOfUniqueOpponentsRank(implicit session: Session) = {
+    numberOfUniqueOpponents.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3, v._2 + 1))
+  }
+
   private def numberOfUniqueOpponents(implicit session: Session) = {
     val requstorGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestor, r.requestee)) //.groupBy(g => g.requestor).map{ case (requestor, group) => (requestor, group. .requestee) }
     val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requestor)) //.groupBy(g => g.requestee).map{ case (requestee, group) => (requestee, group.requestor) }

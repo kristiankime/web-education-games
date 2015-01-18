@@ -6,7 +6,6 @@ import models.quiz.Correct2Short
 import models.support._
 import org.joda.time.DateTime
 
-
 object TestDerivativeAnswer {
 	def apply(owner: UserId,
 		questionId: QuestionId,

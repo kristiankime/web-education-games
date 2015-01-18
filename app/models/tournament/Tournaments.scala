@@ -32,7 +32,7 @@ object Tournaments {
     val user2HighestDifficulty = user2Difficulty.mapValues(l => l.sorted(Ordering[Double].reverse).take(5))
     val user2HighScoreAverage = user2HighestDifficulty.mapValues(v => v.sum / v.length)
     val usersAndScores = user2HighScoreAverage.toList.map(e => (e._1._1, e._1._2, e._2)).sortBy(_._3)((Ordering[Double].reverse))
-    val rankings = usersAndScores.zipWithIndex.map(v => Rank[Double](v._1._1, v._1._2, v._1._3, v._2))
+    val rankings = usersAndScores.zipWithIndex.map(v => Rank[Double](v._1._1, v._1._2, v._1._3, v._2 + 1))
     rankings
   }
 

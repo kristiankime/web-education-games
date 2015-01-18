@@ -84,6 +84,26 @@ class TournamentsSpec extends Specification {
 			}
 		}
 
+		"return scores of all players (returns requested user as option if they are not in the list)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val questioner = DBTest.newFakeUser(UserTest())
+				val answerer1 = DBTest.newFakeUser(UserTest(fullName = "answerer1"))
+				val answerer2 = DBTest.newFakeUser(UserTest(fullName = "answerer2"))
+				val answerer3 = DBTest.newFakeUser(UserTest(fullName = "answerer3"))
+				TestDerivativeQuestion.create(questioner.id, difficulty = 3d, answered = Some(answerer1.id))
+				TestDerivativeQuestion.create(questioner.id, difficulty = 2d, answered = Some(answerer2.id))
+				TestDerivativeQuestion.create(questioner.id, difficulty = 1d, answered = Some(answerer3.id))
+
+				val rankings = Tournaments.studentScoresRankingFor(answerer3.id, 2)
+
+				rankings.ranks must beEqualTo(List(
+					Rank(answerer1.id, "answerer1", 3d, 1),
+					Rank(answerer2.id, "answerer2", 2d, 2))
+				)
+				rankings.user must beEqualTo(Some(Rank(answerer3.id, "answerer3", 1d, 3)))
+			}
+		}
+
 	}
 
 }

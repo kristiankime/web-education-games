@@ -51,7 +51,7 @@ object Tournaments {
 
   private def completedGamesRank(implicit session: Session) = {
     val completedGames = numberOfCompletedGamesByPlayer
-    val gamesRankings = completedGames.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0), v._2))
+    val gamesRankings = completedGames.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0), v._2 + 1))
     gamesRankings
   }
 
@@ -61,7 +61,7 @@ object Tournaments {
     val countsUnion = requstorCounts.unionAll(requsteeCounts)
     val counts = countsUnion.groupBy(g => g._1).map{ case (id, group) => (id, group.map(_._2).sum) }
     val joinNames = for { (c, s) <- counts innerJoin userSettingsTable on (_._1 === _.userId) } yield (c._1, s.name, c._2)
-    val sorted = joinNames.sortBy(_._2.desc)
+    val sorted = joinNames.sortBy(_._2)
     sorted.list
   }
 

@@ -9,7 +9,7 @@ object TestCourse {
     organizationId: OrganizationId,
 		owner: UserId, 
 		editCode: String = "editCode", 
-		viewCode: String = "viewCode", 
+		viewCode: Option[String] = Some("viewCode"),
 		date: DateTime = JodaUTC.zero) = Course(null, name, organizationId, owner, editCode, viewCode, date, date)
 
 }

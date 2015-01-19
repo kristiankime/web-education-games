@@ -8,13 +8,15 @@ import models.organization.table._
 import service._
 import service.table.UsersTable.userTable
 
-case class Course(id: CourseId, name: String, organizationId: OrganizationId, ownerId: UserId, editCode: String, viewCode: String, creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
+case class Course(id: CourseId, name: String, organizationId: OrganizationId, ownerId: UserId, editCode: String, viewCode: Option[String], creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
   def organization(implicit session: Session) = Organizations(organizationId).get
 
   def quizzes(implicit session: Session) = Quizzes(id)
 
   def students(implicit session: Session) = Courses.students(id)
+
+	def anyStudent = viewCode.isEmpty
 
   // ========== Access Methods ==========
   protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)

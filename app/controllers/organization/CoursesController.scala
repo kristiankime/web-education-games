@@ -49,7 +49,8 @@ object CoursesController extends Controller with SecureSocialConsented {
           form => {
             val (editNum, viewNum) = codeRange.pick2From
             val now = JodaUTC.now
-            val course = Courses.create(Course(null, form, organization.id, user.id, "CO-E-" + editNum, "CO-V-" + viewNum, now, now))
+            val viewOp = if(form._2){ None } else { Some("CO-V-" + viewNum) }
+            val course = Courses.create(Course(null, form._1, organization.id, user.id, "CO-E-" + editNum, viewOp, now, now))
             Redirect(routes.CoursesController.view(organization.id, course.id))
           })
     }
@@ -68,8 +69,8 @@ object CoursesController extends Controller with SecureSocialConsented {
       case Right((organization, course)) => CourseJoin.form.bindFromRequest.fold(
         errors => BadRequest(views.html.errors.formErrorPage(errors)),
         form => {
-            if (course.viewCode == form) Courses.grantAccess(course, View)
             if (course.editCode == form) Courses.grantAccess(course, Edit)
+            if (course.viewCode == None || course.viewCode.get == form) Courses.grantAccess(course, View)
             Redirect(routes.CoursesController.view(organization.id, course.id)) // TODO indicate access was not granted in a better fashion
         })
     }
@@ -79,7 +80,8 @@ object CoursesController extends Controller with SecureSocialConsented {
 
 object CourseCreate {
 	val name = "name"
-	val form = Form(name -> nonEmptyText)
+  val anyStudents = "any_student"
+	val form = Form(tuple(name -> nonEmptyText, anyStudents -> boolean))
 }
 
 object CourseJoin {

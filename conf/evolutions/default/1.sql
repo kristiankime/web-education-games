@@ -1,4 +1,4 @@
-# STOP AUTOGEN
+# STOP AUTO GEN
 # --- Created by Slick DDL
 # To stop Slick DDL generation, remove this comment and start using Evolutions
 
@@ -6,7 +6,7 @@
 
 create table "application_user_settings" ("user_id" BIGINT NOT NULL PRIMARY KEY,"consented" BOOLEAN NOT NULL,"name" TEXT NOT NULL,"allow_auto_match" BOOLEAN NOT NULL,"seen_help" BOOLEAN NOT NULL,"email_game_updates" BOOLEAN NOT NULL);
 create unique index "application_user_settings__name_index" on "application_user_settings" ("name");
-create table "courses" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"organization" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"edit_code" TEXT NOT NULL,"view_code" TEXT NOT NULL,"creation_Date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
+create table "courses" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"organization" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"edit_code" TEXT NOT NULL,"view_code" TEXT,"creation_Date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "courses_2_quizzes" ("course_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL,"start_date" TIMESTAMP,"end_date" TIMESTAMP);
 alter table "courses_2_quizzes" add constraint "courses_2_quizzes__pk" primary key("course_id","quiz_id");
 create table "derivative_answers" ("id" SERIAL NOT NULL PRIMARY KEY,"owner" BIGINT NOT NULL,"question_id" BIGINT NOT NULL,"mathml" TEXT NOT NULL,"rawstr" TEXT NOT NULL,"correct" SMALLINT NOT NULL,"creation_date" TIMESTAMP NOT NULL);
@@ -30,8 +30,8 @@ alter table "courses_2_quizzes" add constraint "courses_2_quizzes__course_fk" fo
 alter table "courses_2_quizzes" add constraint "courses_2_quizzes__quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_answers" add constraint "derivative_answers__owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_answers" add constraint "derivative_answers_question_fk" foreign key("question_id") references "derivative_questions"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_questions" add constraint "derivative_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_questions" add constraint "derivative_questions__owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_questions" add constraint "derivative_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_questions" add constraint "derivative_questions__quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_quizzes" add constraint "derivative_quizzes__owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "games" add constraint "games__requestor_fk" foreign key("requestor") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
@@ -41,8 +41,8 @@ alter table "games" add constraint "games__requestor_quiz_fk" foreign key("reque
 alter table "games" add constraint "games__requestee_quiz_fk" foreign key("requestee_quiz") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_answers" add constraint "tangent_answers__owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_answers" add constraint "tangent_answers_question_fk" foreign key("question_id") references "tangent_questions"("id") on update NO ACTION on delete CASCADE;
-alter table "tangent_questions" add constraint "tangent_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_questions" add constraint "tangent_questions__owner_fk" foreign key("owner") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
+alter table "tangent_questions" add constraint "tangent_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_questions" add constraint "tangent_questions__quiz_fk" foreign key("quiz_id") references "derivative_quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_courses" add constraint "users_2_courses__course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_courses" add constraint "users_2_courses__user_fk" foreign key("user_id") references "secure_social_users"("id") on update NO ACTION on delete CASCADE;
@@ -58,8 +58,8 @@ alter table "courses_2_quizzes" drop constraint "courses_2_quizzes__course_fk";
 alter table "courses_2_quizzes" drop constraint "courses_2_quizzes__quiz_fk";
 alter table "derivative_answers" drop constraint "derivative_answers__owner_fk";
 alter table "derivative_answers" drop constraint "derivative_answers_question_fk";
-alter table "derivative_questions" drop constraint "derivative_questions__id_fk";
 alter table "derivative_questions" drop constraint "derivative_questions__owner_fk";
+alter table "derivative_questions" drop constraint "derivative_questions__id_fk";
 alter table "derivative_questions" drop constraint "derivative_questions__quiz_fk";
 alter table "derivative_quizzes" drop constraint "derivative_quizzes__owner_fk";
 alter table "games" drop constraint "games__requestor_fk";
@@ -69,8 +69,8 @@ alter table "games" drop constraint "games__requestor_quiz_fk";
 alter table "games" drop constraint "games__requestee_quiz_fk";
 alter table "tangent_answers" drop constraint "tangent_answers__owner_fk";
 alter table "tangent_answers" drop constraint "tangent_answers_question_fk";
-alter table "tangent_questions" drop constraint "tangent_questions__id_fk";
 alter table "tangent_questions" drop constraint "tangent_questions__owner_fk";
+alter table "tangent_questions" drop constraint "tangent_questions__id_fk";
 alter table "tangent_questions" drop constraint "tangent_questions__quiz_fk";
 alter table "users_2_courses" drop constraint "users_2_courses__course_fk";
 alter table "users_2_courses" drop constraint "users_2_courses__user_fk";

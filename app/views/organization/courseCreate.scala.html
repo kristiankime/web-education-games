@@ -11,8 +11,13 @@
     <h5>Please enter the information about your course:</h5>
     
     @form(action = routes.CoursesController.createSubmit(organization.id), 'class -> "pure-form") {
-		Name: <input type="text" name="@CourseCreate.name" value="course name">
-	    <input type="submit" class="pure-button pure-button-primary" value="Submit">
+        <label for="@CourseCreate.name">Name</label>
+        <input type="text" name="@CourseCreate.name" value="course name"> <br>
+
+        <label for="@CourseCreate.anyStudents"> Open Student Enrollment</label>
+        <input type="checkbox" name="@CourseCreate.anyStudents" value="true" /> <input type="hidden" name="@CourseCreate.anyStudents" value="false" /> <br>
+
+        <button type="submit" class="pure-button pure-button-primary"> Submit </button>
     }
     
 }

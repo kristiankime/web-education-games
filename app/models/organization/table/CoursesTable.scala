@@ -15,7 +15,7 @@ class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") with Identifi
   def organization = column[OrganizationId]("organization")
 	def owner = column[UserId]("owner")
 	def editCode = column[String]("edit_code")
-	def viewCode = column[String]("view_code")
+	def viewCode = column[Option[String]]("view_code")
 	def creationDate = column[DateTime]("creation_Date")
 	def updateDate = column[DateTime]("update_date")
 

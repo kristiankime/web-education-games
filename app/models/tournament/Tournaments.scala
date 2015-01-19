@@ -110,4 +110,23 @@ object Tournaments {
     sorted.list
   }
 
+  // ============ Sum of Teacher Score Rankings ===========
+  def sumOfTeacherScoresRankingFor(id: UserId, size: Int)(implicit session: Session) = {
+    rankingsFor(id, size, sumOfTeacherScoresRank)
+  }
+
+  @VisibleForTesting
+  protected[tournament] def sumOfTeacherScoresRank(implicit session: Session) = {
+    sumOfTeacherScores.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0d), v._2 + 1))
+  }
+
+  private def sumOfTeacherScores(implicit session: Session) = {
+    val requstorGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestor, r.requestorTeacherPoints))
+    val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requesteeTeacherPoints))
+    val gamesUnion = requstorGames.unionAll(requsteeGames)
+    val sumScores = gamesUnion.groupBy(_._1).map { case (player, group) => (player, group.map(_._2).sum)}
+    val joinNames = for {(u, s) <- sumScores innerJoin userSettingsTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
+    val sorted = joinNames.sortBy(_._3.desc)
+    sorted.list
+  }
 }

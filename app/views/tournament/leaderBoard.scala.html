@@ -4,6 +4,9 @@
 
 @defining(models.tournament.Tournaments.studentScoresRankingFor(user.id, 10)) { scoreRanking =>
 @defining(models.tournament.Tournaments.completedGamesRankingFor(user.id, 10)) { gameRanking =>
+@defining(models.tournament.Tournaments.numberOfUniqueOpponentsRankingFor(user.id, 10)) { uniqueRanking =>
+@defining(models.tournament.Tournaments.sumOfStudentScoresRankingFor(user.id, 10)) { studentRanking =>
+@defining(models.tournament.Tournaments.sumOfTeacherScoresRankingFor(user.id, 10)) { teacherRanking =>
 
     @main("Leader Board") {
         <h1>Leader Board</h1>
@@ -11,22 +14,52 @@
         <h3> Highest Student Skill Level </h3>
         <table class="pure-table">
             <tr> <th>Rank</th> <th>Player</th> <th>Skill Level</th> </tr>
-            @for(score <- scoreRanking.ranks) {<tr> <td>@score.index</td> <td>@score.name</td> <td>@tag.skillLevel(score.metric)</td> </tr>}
-            @for(score <- scoreRanking.user) {
+            @for(rank <- scoreRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@tag.skillLevel(rank.metric)</td> </tr>}
+            @for(userRank <- scoreRanking.user) {
             <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
-            <tr> <td>@score.index</td> <td>@score.name</td> <td>@tag.skillLevel(score.metric)</td> </tr>
+            <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@tag.skillLevel(userRank.metric)</td> </tr>
             }
         </table>
 
         <h3> Most Games Played </h3>
         <table class="pure-table">
-            <tr> <th>Rank</th> <th>Player</th> <th>Games </th> </tr>
-            @for(score <- gameRanking.ranks) {<tr> <td>@score.index</td> <td>@score.name</td> <td>@score.metric</td> </tr>}
-            @for(score <- gameRanking.user) {
+            <tr> <th>Rank</th> <th>Player</th> <th>Games</th> </tr>
+            @for(rank <- gameRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@rank.metric</td> </tr>}
+            @for(userRank <- gameRanking.user) {
             <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
-            <tr> <td>@score.index</td> <td>@score.name</td> <td>@score.metric</td> </tr>
+            <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@userRank.metric</td> </tr>
+            }
+        </table>
+
+        <h3> Most Unique People Played </h3>
+        <table class="pure-table">
+            <tr> <th>Rank</th> <th>Player</th> <th>Unique People</th> </tr>
+            @for(rank <- uniqueRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@rank.metric</td> </tr>}
+            @for(userRank <- uniqueRanking.user) {
+                <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
+                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@userRank.metric</td> </tr>
+            }
+        </table>
+
+        <h3> Highest Total Student Score </h3>
+        <table class="pure-table">
+            <tr> <th>Rank</th> <th>Player</th> <th>Score</th> </tr>
+            @for(rank <- studentRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@rank.metric</td> </tr>}
+            @for(userRank <- studentRanking.user) {
+                <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
+                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@userRank.metric</td> </tr>
+            }
+        </table>
+
+        <h3> Highest Total Teacher Score </h3>
+        <table class="pure-table">
+            <tr> <th>Rank</th> <th>Player</th> <th>Score</th> </tr>
+            @for(rank <- teacherRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@rank.metric</td> </tr>}
+            @for(userRank <- teacherRanking.user) {
+                <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
+                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@userRank.metric</td> </tr>
             }
         </table>
     }
-}
-}
+
+}}}}}

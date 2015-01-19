@@ -92,7 +92,7 @@ class TournamentsSpec extends Specification {
 	} // End Should
 
 
-	"completedGamesRankingFor" should {
+	"completedGamesRank" should {
 		"return nothing if no games have been completed" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.newFakeUser(UserTest())
@@ -120,7 +120,7 @@ class TournamentsSpec extends Specification {
 
 	} // End Should
 
-	"numberOfUniqueOpponentsRankingFor" should {
+	"numberOfUniqueOpponentsRank" should {
 
 		"return nothing if no games have been completed" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
@@ -176,6 +176,33 @@ class TournamentsSpec extends Specification {
 				val rankings = Tournaments.sumOfStudentScoresRank
 
 				rankings must beEqualTo(List(Rank(user1.id, "user1", 1.4, 1), Rank(user2.id, "user2", 1.2, 2)))
+			}
+		}
+
+	} // End Should
+
+	"sumOfTeacherScoresRank" should {
+
+		"return nothing if no games have been completed" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = DBTest.newFakeUser(UserTest())
+
+				val rankings = Tournaments.sumOfTeacherScoresRank
+
+				rankings must haveSize(0)
+			}
+		}
+
+		"return players in order of most points from all games (as teacher)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val (user1, user2) = (newFakeUser(UserTest(fullName = "user1")), newFakeUser(UserTest(fullName = "user2")))
+
+				TestGame.createFinished(user1, user2, .0, .0, .5, .8)
+				TestGame.createFinished(user2, user1, .0, .0, .7, .3)
+
+				val rankings = Tournaments.sumOfTeacherScoresRank
+
+				rankings must beEqualTo(List(Rank(user2.id, "user2", 1.5, 1), Rank(user1.id, "user1", .8, 2)))
 			}
 		}
 

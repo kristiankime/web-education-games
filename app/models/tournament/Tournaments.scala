@@ -1,5 +1,6 @@
 package models.tournament
 
+import com.google.common.annotations.VisibleForTesting
 import models.game.table.gamesTable
 import models.quiz.table._
 import models.support._
@@ -30,7 +31,8 @@ object Tournaments {
     rankingsFor(id, size, studentScoresRankings)
   }
 
-  private def studentScoresRankings(implicit session: Session) = {
+  @VisibleForTesting
+  protected[tournament] def studentScoresRankings(implicit session: Session) = {
     val usersAndAnswers = questionsAnsweredCorrectly
     val user2Difficulty = usersAndAnswers.groupBy(r => (r._1, r._2)).mapValues(_.map(_._3))
     val user2HighestDifficulty = user2Difficulty.mapValues(l => l.sorted(Ordering[Double].reverse).take(5))
@@ -53,7 +55,8 @@ object Tournaments {
     rankingsFor(id, size, completedGamesRank)
   }
 
-  private def completedGamesRank(implicit session: Session) = {
+  @VisibleForTesting
+  protected[tournament] def completedGamesRank(implicit session: Session) = {
     numberOfCompletedGamesByPlayer.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0), v._2 + 1))
   }
 
@@ -72,7 +75,8 @@ object Tournaments {
     rankingsFor(id, size, numberOfUniqueOpponentsRank)
   }
 
-  private def numberOfUniqueOpponentsRank(implicit session: Session) = {
+  @VisibleForTesting
+  protected[tournament] def numberOfUniqueOpponentsRank(implicit session: Session) = {
     numberOfUniqueOpponents.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3, v._2 + 1))
   }
 
@@ -91,7 +95,8 @@ object Tournaments {
     rankingsFor(id, size, sumOfStudentScoresRank)
   }
 
-  private def sumOfStudentScoresRank(implicit session: Session) = {
+  @VisibleForTesting
+  protected[tournament] def sumOfStudentScoresRank(implicit session: Session) = {
     sumOfStudentScores.zipWithIndex.map(v => Rank(v._1._1, v._1._2, v._1._3.getOrElse(0d), v._2 + 1))
   }
 

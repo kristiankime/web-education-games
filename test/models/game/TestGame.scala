@@ -13,10 +13,18 @@ object TestGame {
     finishedGame
   }
 
-  def createFinished(requestor: User, requestee : User)(implicit session: Session) = {
-    val game = Games.request(requestor, requestee)
+  def score(game: Game)(requestorStudent : Double = 0d, requesteeStudent : Double = 0d, requestorTeacher : Double = 0d, requesteeTeacher : Double = 0d) = {
+    game.copy(
+      requestorStudentPoints = Some(requestorStudent),
+      requesteeStudentPoints = Some(requesteeStudent),
+      requestorTeacherPoints = Some(requestorTeacher),
+      requesteeTeacherPoints = Some(requesteeTeacher)
+    )
+  }
+
+  def createFinished(requestor: User, requestee : User, requestorStudent : Double = 0d, requesteeStudent : Double = 0d, requestorTeacher : Double = 0d, requesteeTeacher : Double = 0d)(implicit session: Session) = {
+    val game = score(Games.request(requestor, requestee))(requestorStudent, requesteeStudent, requestorTeacher, requesteeTeacher)
     finish(game)
-    game
   }
 
 }

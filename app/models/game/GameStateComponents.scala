@@ -103,7 +103,15 @@ trait RequestorAnswerStatus {
 trait RequestorStillAnswering extends RequestorAnswerStatus {
   override def requestorAnswerStatusCheck = if (game.requestorFinished != false) { throw new IllegalStateException("Requestor cannot be done answering")  }
 
-  def requestorDoneAnswering = game.copy(requestorFinished = true).maybeUpdateForGameDone
+  def requestorDoneAnswering(implicit session: Session) = {
+    val quiz = game.requesteeQuiz.get // Should always have a quiz here
+    val requestor = game.requestor
+    game.copy(
+      requestorFinished = true,
+      requestorStudentPoints = Some(quiz.studentScore(requestor)),
+      requesteeTeacherPoints = Some(quiz.teacherScore(requestor, game.requestorSkill))
+    ).maybeUpdateForGameDone
+  }
 }
 
 trait RequestorDoneAnswering extends RequestorAnswerStatus {
@@ -119,7 +127,14 @@ trait RequesteeAnswerStatus {
 trait RequesteeStillAnswering extends RequesteeAnswerStatus {
   override def requesteeAnswerStatusCheck = if (game.requesteeFinished != false) { throw new IllegalStateException("Requestee cannot be done answering")  }
 
-  def requesteeDoneAnswering = game.copy(requesteeFinished = true).maybeUpdateForGameDone
+  def requesteeDoneAnswering(implicit session: Session) = {
+    val quiz = game.requestorQuiz.get // Should always have a quiz here
+    val requestee = game.requestee
+    game.copy(requesteeFinished = true,
+      requesteeStudentPoints = Some(quiz.studentScore(requestee)),
+      requestorTeacherPoints = Some(quiz.teacherScore(requestee, game.requesteeSkill))
+    ).maybeUpdateForGameDone
+  }
 }
 
 trait RequesteeDoneAnswering extends RequesteeAnswerStatus {

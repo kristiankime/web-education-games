@@ -47,7 +47,7 @@
             @for(rank <- studentRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@rank.metric</td> </tr>}
             @for(userRank <- studentRanking.user) {
                 <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
-                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@userRank.metric</td> </tr>
+                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@tag.skillLevel(userRank.metric)</td> </tr>
             }
         </table>
 
@@ -57,7 +57,7 @@
             @for(rank <- teacherRanking.ranks) {<tr> <td>@rank.index</td> <td>@rank.name</td> <td>@rank.metric</td> </tr>}
             @for(userRank <- teacherRanking.user) {
                 <tr> <td> ... </td> <td> ... </td> <td> ... </td> </tr>
-                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@userRank.metric</td> </tr>
+                <tr> <td>@userRank.index</td> <td>@userRank.name</td> <td>@tag.skillLevel(userRank.metric)</td> </tr>
             }
         </table>
     }

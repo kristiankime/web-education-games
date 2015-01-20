@@ -50,6 +50,7 @@
         <header class="header">
             <div class="header-links">
                 <a href="@routes.Home.index" class="pure-button">Home</a>
+                <a href="@controllers.tournament.routes.TournamentsController.leaderBoard" class="pure-button">Leader Board</a>
                 <a href="@controllers.organization.routes.OrganizationsController.list" class="pure-button">Organizations</a>
                 @for(header <- headers) {
                     @header

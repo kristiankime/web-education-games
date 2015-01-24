@@ -19,7 +19,7 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 	def anyStudent = viewCode.isEmpty
 
   // ========== Access Methods ==========
-  protected def linkAccess(implicit user: User, session: Session): Access = Courses.otherAccess(this)
+  protected def linkAccess(implicit user: HasUserId, session: Session): Access = Courses.otherAccess(this)
 
 	/**
 	 * In terms of access level Users can:
@@ -28,7 +28,7 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 	 * Access to the course determines access to quizzes etc.
 	 * This means users who are granted access to Sections should also be granted access to the corresponding course.
 	 */
-	def access(implicit user: User, session: Session): Access = directAccess
+	def access(implicit user: HasUserId, session: Session): Access = directAccess
 
 	def grantAccess(access: Access)(implicit user: User, session: Session) = Courses.grantAccess(this, access)
 }
@@ -68,10 +68,10 @@ object Courses {
 
 
   // ======= AUTHORIZATION ======
-	def otherAccess(course: Course)(implicit user: User, session: Session) =
+	def otherAccess(course: Course)(implicit user: HasUserId, session: Session) =
     usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 
-	def grantAccess(course: Course, access: Access)(implicit user: User, session: Session) : User = {
+	def grantAccess(course: Course, access: Access)(implicit user: HasUserId, session: Session) : User = {
 		if (course.access < access) {
       usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
 				case Some(u2c) if u2c.access < access => usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access, 1))
@@ -79,7 +79,7 @@ object Courses {
 				case _ => {}
 			}
 		}
-    user
+    user.user
 	}
 
 }

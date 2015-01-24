@@ -1,6 +1,5 @@
-@(title: String, headers: Html*)(content: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(title: String, headers: Html*)(content: Html)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import models.user.UserPimped
 @import views.html.tag.studentSkillLevel
 
 <!DOCTYPE html>
@@ -57,7 +56,7 @@
                 }
             </div>
             <div class="header-info">
-                <a href="@routes.Home.userInfo" class="pure-button">@user.name</a>
+                <a href="@routes.Home.userInfo" class="pure-button">@tag.name(user)</a>
                 <a href="@securesocial.controllers.routes.LoginPage.logout" class="pure-button">logout</a>
                 Skill Level: @studentSkillLevel(user)
             </div>

@@ -1,4 +1,4 @@
-@(courseOp: Option[models.organization.Course] = None)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(courseOp: Option[models.organization.Course] = None)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import views.html.game.status.{requestedGames, awaitingGames, activeAcceptedGames, finishedGames}
 

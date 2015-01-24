@@ -64,7 +64,7 @@ object Quizzes {
     }
 
   // ======= AUTHORIZATION ======
-  def linkAccess(quiz: Quiz)(implicit user: User, session: Session) =
+  def linkAccess(quiz: Quiz)(implicit user: HasUserId, session: Session) =
     usersQuizzesTable.where(uq => uq.userId === user.id && uq.quizId === quiz.id).firstOption.map(_.access).toAccess
 
   // ======= Scoring ======

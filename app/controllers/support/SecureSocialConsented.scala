@@ -18,44 +18,44 @@ trait SecureSocialConsented extends SecureSocial {
     def consentForm(path: String) : Result = // LATER Type indicated for Intellij 14 IDE help
       Redirect(routes.Consent.consent(Some(path), None))
 
-    def apply(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
-      DB.withSession { session: Session =>
+    def apply(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+      DB.withSession { implicit session: Session =>
         val user = User(request)
-        if(!user.consented(session)) consentForm(request.path)
-        else f(request)(user)(session)
+        if(!user.consented) consentForm(request.path)
+        else f(request)(UserFull(user))(session)
       }
     }
 
     // LATER this method is essentially the same as the one above and exists for Intellij 14 IDE help
-    def apply(dummy: String)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
-      DB.withSession { session: Session =>
+    def apply(dummy: String)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+      DB.withSession { implicit session: Session =>
         val user = User(request)
-        if(!user.consented(session)) consentForm(request.path)
-        else f(request)(user)(session)
+        if(!user.consented) consentForm(request.path)
+        else f(request)(UserFull(user))(session)
       }
     }
 
-    def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
-      DB.withSession { session: Session =>
+    def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
+      DB.withSession { implicit session: Session =>
         val user = User(request)
-        if(!user.consented(session)) consentForm(request.path)
-        else f(request)(user)(session)
+        if(!user.consented) consentForm(request.path)
+        else f(request)(UserFull(user))(session)
       }
     }
 
-    def apply(ajaxCall: Boolean)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(ajaxCall) { request: SecuredRequest[AnyContent] =>
-      DB.withSession { session: Session =>
+    def apply(ajaxCall: Boolean)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction(ajaxCall) { request: SecuredRequest[AnyContent] =>
+      DB.withSession { implicit session: Session =>
         val user = User(request)
-        if(!user.consented(session)) consentForm(request.path)
-        else f(request)(user)(session)
+        if(!user.consented) consentForm(request.path)
+        else f(request)(UserFull(user))(session)
       }
     }
 
-    def apply(ajaxCall: Boolean, authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(ajaxCall, authorize) { request: SecuredRequest[AnyContent] =>
-      DB.withSession { session: Session =>
+    def apply(ajaxCall: Boolean, authorize: Authorization)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction(ajaxCall, authorize) { request: SecuredRequest[AnyContent] =>
+      DB.withSession { implicit session: Session =>
         val user = User(request)
-        if(!user.consented(session)) consentForm(request.path)
-        else f(request)(user)(session)
+        if(!user.consented) consentForm(request.path)
+        else f(request)(UserFull(user))(session)
       }
     }
 

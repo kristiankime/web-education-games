@@ -1,4 +1,4 @@
-@(organization: models.organization.Organization)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(organization: models.organization.Organization)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import com.artclod.play._
 @import views.html.tag._

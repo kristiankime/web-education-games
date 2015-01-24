@@ -1,20 +1,19 @@
-@()(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@()(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.organization.Courses
 @import com.artclod.play.s
 @import views.html.tag._
-@import models.user.UserPimped
 @import helper._
 
-@defining(UserPimped(user).settings) { settings =>
+@defining(user.settings) { settings =>
 
 @mainWithBorder("User Information") {
 
     <h1>Welcome to the EdTech Math Games Server</h1>
 
     <p>
-        You are logged in as: @settings.name <br>
-        You email is: @user.email
+        You are logged in as: @tag.name(user) <br>
+        You email is: @user.user.email
     </p>
 
     @defining(Courses(user.id)) { courses =>

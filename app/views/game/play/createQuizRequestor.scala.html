@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState with models.game.RequestorQuiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequestorQuiz)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.game.GameResponseStatus
 @import controllers.game.routes.GamesRequestorController
@@ -18,9 +18,9 @@
         <h1>Create a Game Quiz</h1>
 
         @if(gameState.game.response == GameResponseStatus.accepted){
-        You are now playing a game with @gameState.game.requestee.name, and need to create a Quiz for them. <br>
+        You are now playing a game with @tag.name(gameState.game.requestee), and need to create a Quiz for them. <br>
         } else {
-        You have requested to play with @gameState.game.requestee.name but they haven't yet replied. Please create a quiz, it will be waiting for them when they accept. <br>
+        You have requested to play with @tag.name(gameState.game.requestee) but they haven't yet replied. Please create a quiz, it will be waiting for them when they accept. <br>
         }
 
         @if(gameState.game.requesteeQuizDone){

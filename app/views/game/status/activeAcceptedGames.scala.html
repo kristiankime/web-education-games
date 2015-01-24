@@ -1,7 +1,7 @@
-@(courseOp: Option[models.organization.Course] = None)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(courseOp: Option[models.organization.Course] = None)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.game.Games
-@import models.user.UserPimped
+@import models.user.UserFull
 
 @defining(courseOp match { case Some(course) => Games.activeAccepted(user.id, course.id); case None => Games.activeAccepted(user.id)}) { games =>
 
@@ -9,7 +9,7 @@
     <h5>Games in Progress</h5>
     @if(games.isEmpty){<h6>You are currently not in the middle of a game with anyone</h6>} else {<h6>You are in the middle of a game with</h6>
     <ul class="pure-list">
-        @for(game <- games) {<li> @tag.gameLink(game.otherPlayer(user).name, game, 'class -> "button-xsmall") @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall")  </li>}
+        @for(game <- games) {<li> @tag.gameLink(game.otherPlayer(user.user).n, game, 'class -> "button-xsmall") @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall")  </li>}
     </ul>
     }
 </section>

@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game._
 @import helper._
@@ -8,10 +8,10 @@
 @mainWithBorder("Awaiting Quiz", tag.courseOpLink(gameState.game.course)) {
 
     @if(gameState.game.response == GameResponseStatus.accepted){
-        You finished your quiz but @gameState.game.requestee.name hasn't yet built theirs.
+        You finished your quiz but @tag.name(gameState.game.requestee) hasn't yet built theirs.
         Please wait for the other player to finish their game (you will need to reload the page).<br>
     } else {
-        You finished your quiz for @gameState.game.requestee.name but they haven't yet agreed to play a game with you.
+        You finished your quiz for @tag.name(gameState.game.requestee) but they haven't yet agreed to play a game with you.
         Please wait for the other player to accept their game (you will need to reload the page).<br>
     }
 

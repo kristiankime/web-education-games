@@ -1,8 +1,6 @@
-@()(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@()(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.organization.routes.OrganizationsController
-@import views.html.game.status.gamesStatus
-@import models.user.UserPimped
 @import com.artclod.play.s
 
 @defining(user.courses) { courses =>

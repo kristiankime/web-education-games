@@ -15,14 +15,14 @@ package object user {
 
     def settingsOp(implicit session: Session) = UserSettings(user.id)
 
-    def settings(implicit session: Session) : UserSetting = UserSettings(user.id) match {
-      case None => throw new IllegalStateException("Programming error, name method should only be called if the user has settings")
-      case Some(setting) => setting
-    }
-
     def consented(implicit session: Session) = settingsOp match {
       case None => false
       case Some(setting) => setting.consented
+    }
+
+    def settings(implicit session: Session) : UserSetting = UserSettings(user.id) match {
+      case None => throw new IllegalStateException("Programming error user has no settings")
+      case Some(setting) => setting
     }
 
     def name(implicit session: Session) = settingsOp match {

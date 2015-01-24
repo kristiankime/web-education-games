@@ -1,12 +1,12 @@
-@(gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game._
 @import helper._
-@import models.user.UserPimped
+@import models.user.UserFull
 
 @mainWithBorder("Game Requested", tag.courseOpLink(gameState.game.course)) {
 
-    @gameState.game.requestor.name requested to play a game with you but you have not yet responded <br>
+    @tag.name(gameState.game.requestor) requested to play a game with you but you have not yet responded <br>
 
     @form(action = routes.GamesController.respond(gameState.game.id), 'class -> "pure-form") {
 

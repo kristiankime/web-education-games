@@ -1,12 +1,8 @@
-@(gameState: models.game.GameState)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
-
-@import controllers.game._
-@import helper._
-@import models.user.UserPimped
+@(gameState: models.game.GameState)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @mainWithBorder("Game Declined", tag.courseOpLink(gameState.game.course)) {
 
-    @gameState.game.requestor.name requested to play a game with you but you declined to play <br>
+    @tag.name(gameState.game.requestor) requested to play a game with you but you declined to play <br>
 
 }
 

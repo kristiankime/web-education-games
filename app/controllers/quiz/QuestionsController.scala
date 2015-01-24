@@ -33,8 +33,8 @@ object QuestionsController extends Controller with SecureSocialConsented with De
     QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course , quiz, question)) => {
-        val nextQuestion = quiz.results(user).nextQuestion(question)
-        Ok(views.html.quiz.questionView(course, quiz, question.results(user), None))
+        val nextQuestion = quiz.results(user.user).nextQuestion(question)
+        Ok(views.html.quiz.questionView(course, quiz, question.results(user.user), None))
       }
     }
 	}

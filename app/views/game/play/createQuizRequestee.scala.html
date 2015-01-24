@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState with models.game.RequesteeQuiz)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequesteeQuiz)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesRequesteeController
 @import controllers.quiz.derivative.DerivativeQuestionForm
@@ -16,7 +16,7 @@
     <section class="primary-content">
         <h1>Create a Game Quiz</h1>
 
-        You are now playing a game with @gameState.game.requestor.name, and need to create a Quiz for them. <br>
+        You are now playing a game with @tag.name(gameState.game.requestor), and need to create a Quiz for them. <br>
 
         @if(gameState.game.requestorQuizDone){
         They have finished creating their quiz and are waiting for you to finish yours <br>

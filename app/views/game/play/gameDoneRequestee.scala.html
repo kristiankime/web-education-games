@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState with models.game.RequesteeDoneAnswering)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequesteeDoneAnswering)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesController
 @import controllers.game.GameRequest
@@ -9,27 +9,27 @@
 @mainWithBorder("Game Done", tag.courseOpLink(gameState.game.course)) {
 
     @if(!gameState.game.requestorFinished){
-    <h1>You have finished but @gameState.game.requestor.name still needs to finish your quiz.</h1>
+    <h1>You have finished but @tag.name(gameState.game.requestor) still needs to finish your quiz.</h1>
     } else {
-    <h1>Congratulations you finished a game with @gameState.game.requestor.name</h1>
+    <h1>Congratulations you finished a game with @tag.name(gameState.game.requestor)</h1>
     }
 
     @for(requestorQuiz <- gameState.game.requestorQuiz ) {
     <section class="extra-border">
-        Your score as a student was @tag.percent(requestorQuiz.studentScore(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>
+        Your score as a student was @tag.percent(requestorQuiz.studentScore(user.user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>
     </section>
     }
 
     @for(requesteeQuiz <- gameState.game.requesteeQuizIfAnswered ) {
     <section class="extra-border">
-        Your score as a teacher was @tag.percent(requesteeQuiz.teacherScore(gameState.game.requestor, gameState.game.requestorSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>
+        Your score as a teacher was @tag.percent(requesteeQuiz.teacherScore(gameState.game.requestor.user, gameState.game.requestorSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>
     </section>
     }
 
     <section class="extra-border">
     @for(course <- gameState.game.courseId.flatMap(Courses(_))){
     @form(action = GamesController.requestGame(course.organizationId, course.id), 'class -> "pure-form") {
-        Play another round with @gameState.game.requestor.name
+        Play another round with @tag.name(gameState.game.requestor)
         <input type="hidden" name="@GameRequest.requestee" value="@gameState.game.requestorId.v">
         <input type="submit" class="pure-button pure-button-primary" value="Play Again">
     }

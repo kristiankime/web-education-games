@@ -1,16 +1,19 @@
-@()(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@()(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 Thanks for agreeing to participate in the CalcTutor FACE OFF Tournament. Please take the following steps:
 
+You have been assigned a user names based on your login.
+If you'd like to change it you can go to the settings page by clicking on your name in the header or by clicking <a href="@controllers.routes.Home.userInfo" class="pure-button">here</a>.
+
 <ol>
     <li>Start by taking the "Pre-test Derivative Quiz"</li>
-    <li>Play as many games as you like until Jan 31st 2015 (to start a game click the "new game" button below)</li>
-    <li>When you decide your done take the "Post-test Derivative Quiz"</li>
+    <li>Play as many games as you like until Midnight Feb 1st 2015 (to start a game click the "new game" button below)</li>
+    <li>When you decide you're done take the "Post-test Derivative Quiz"</li>
     <li>Finish by letting us know what you think by taking this <a class="pure-button" href="https://docs.google.com/a/brandeis.edu/forms/d/1CtD0PFq9izyAxI8_q8K5tub4q_uOxFTBG7izh6MK75o/viewform">survey</a></li>
+    <li>After the deadline we'll send out an email congratulating the top scorers!</li>
 </ol>
 
-If you take the pre/post test and play at least 3 games before Jan 31st 2015 you will be entered into the raffle to win a $15 Amazon Gift Card.
-Additionally you can also win a gift card by getting first or second place in any of the following categories:
+You can compare your progress to other players in these categories by checking the <a href="@controllers.tournament.routes.TournamentsController.leaderBoard" class="pure-button">Leader Board</a>.
 
 <ul>
     <li>Highest Student Skill Level</li>
@@ -19,5 +22,3 @@ Additionally you can also win a gift card by getting first or second place in an
     <li>Highest Total Student Score</li>
     <li>Highest Total Teacher Score</li>
 </ul>
-
-You can see the current high scores on the <a href="@controllers.tournament.routes.TournamentsController.leaderBoard" class="pure-button">Leader Board</a>

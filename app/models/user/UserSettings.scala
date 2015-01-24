@@ -16,7 +16,7 @@ object UserSettings {
   def update(userSetting: UserSetting)(implicit session: Session) =
     Try(session.withTransaction {userSettingsTable.where(_.userId === userSetting.userId).update(userSetting); userSetting })
 
-  def apply(userId: UserId)(implicit session: Session) = userSettingsTable.where(_.userId === userId).firstOption
+  def apply(userId: UserId)(implicit session: Session) : Option[UserSetting] = userSettingsTable.where(_.userId === userId).firstOption
 
   /**
    * Produces a name that was unique at the time that this call was made.

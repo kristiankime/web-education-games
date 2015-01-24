@@ -45,8 +45,7 @@ object Consent extends Controller with SecureSocialDB {
       })
   }
 
-  private def defaultName(user: User)(implicit session: Session) =
-    UserSettings.validName(startingName(user))
+  private def defaultName(user: User)(implicit session: Session) : String = "Player" // UserSettings.validName(startingName(user))
 
   @VisibleForTesting
   def startingName(user: User) =

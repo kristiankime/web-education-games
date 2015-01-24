@@ -1,4 +1,4 @@
-@(title: String, headers: Html*)(major: Html)(minor: Html)(implicit user: service.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(title: String, headers: Html*)(major: Html)(minor: Html)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 @views.html.main(title, headers: _*) {
 <div class="major-minor-layout">
 

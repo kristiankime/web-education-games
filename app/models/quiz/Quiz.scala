@@ -22,8 +22,7 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
    def summary(student: User)(implicit session: Session) = DerivativeQuestions.summary(student, this)
 
    def summary(student: User, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.summary(student, asOf, this)
-
-
+  
    def previousQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementBefore(question)
 
    def nextQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementAfter(question)
@@ -39,9 +38,9 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
    def course(courseId: CourseId)(implicit session: Session): Option[Course] = Quizzes.course(courseId, id)
 
-   protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
+   protected def linkAccess(implicit user: HasUserId, session: Session) = Quizzes.linkAccess(this)
 
-   def access(implicit user: User, session: Session) = {
+   def access(implicit user: HasUserId, session: Session) = {
      val courseAccess = Quizzes.courses(id).map(_.access.ceilEdit).toSeq
      (courseAccess :+ directAccess) max
    }

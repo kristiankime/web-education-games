@@ -8,6 +8,11 @@ import securesocial.core.SecuredRequest
 import models.support.UserId
 import org.joda.time.DateTime
 
+trait HasUserId {
+	def id: UserId
+	def user: User
+}
+
 case class User(id: UserId,
 	identityId: IdentityId,
 	firstName: String,
@@ -20,7 +25,9 @@ case class User(id: UserId,
 	oAuth2Info: Option[OAuth2Info],
 	passwordInfo: Option[PasswordInfo],
 	creationDate: DateTime,
-	updateDate: DateTime) extends Identity
+	updateDate: DateTime) extends Identity with HasUserId {
+	def user = this
+}
 
 object User {
 	def apply(implicit request: SecuredRequest[_]) = {

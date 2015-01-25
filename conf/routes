@@ -13,6 +13,7 @@ POST        /revokeconsent                                                contro
 
 # User Settings
 POST        /togglegameemail                                              controllers.Settings.toggleGameEmails
+POST        /settings                                                     controllers.Settings.updateSettings
 
 # Home page
 GET         /                                                             controllers.Home.index

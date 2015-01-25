@@ -1,4 +1,4 @@
-@()(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+@(errorsOp: Option[Form[SettingsData]] = None)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.organization.Courses
 @import com.artclod.play.s
@@ -27,13 +27,36 @@
     }
     }
 
+    @*
     @form(action = routes.Settings.toggleGameEmails, 'class -> "pure-form") {
         @if(settings.emailGameUpdates) {
             You are currently receiving emails on game updates <input class="pure-button" type="submit" value="Stop Game Emails">
         } else {
             You are not currently receiving emails on game updates <input class="pure-button" type="submit" value="Start Game Emails">
         }
+    }*@
+
+
+    <h3> Update your settings </h3>
+
+    <div>To update your settings change the values below and then hit the "Update Settings" button.</div>
+
+    @form(action = routes.Settings.updateSettings, 'class -> "pure-form pure-form-stacked") {
+
+        <label for="@SettingsForm.name">Change user name:</label>
+        <input id="@SettingsForm.name" name="@SettingsForm.name" type="text" placeholder="@user.settings.name">
+        @for(err <- errorsOp.flatMap(_.error(SettingsForm.name))){ <span> @err.message </span> } @* TODO determine now to display errors *@
+
+        <label for="@SettingsForm.emailGameUpdates" class="pure-checkbox">
+            <input type="checkbox" id="@SettingsForm.emailGameUpdates" name="@SettingsForm.emailGameUpdates" value="true" @if(user.settings.emailGameUpdates){checked} />
+            <input type="hidden" name="@SettingsForm.emailGameUpdates" value="false" />
+            Send me an email on game updates
+        </label>
+
+        <button type="submit" class="pure-button pure-button-primary">Update Settings</button>
     }
+
+    <h3> Revoke Consent </h3>
 
     @form(action = routes.Consent.revokeConsent, 'class -> "pure-form") {
         I no longer want to take part in this study <input class="pure-button" type="submit" value="Revoke Consent">

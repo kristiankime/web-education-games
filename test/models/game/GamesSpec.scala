@@ -68,8 +68,8 @@ class GamesSpec extends Specification {
 
         val gameRequests = Games.requests(requestee.id)
         val gameRequest = gameRequests(0)
-        gameRequest.requestor must beEqualTo(requestor)
-        gameRequest.requestee must beEqualTo(requestee)
+        gameRequest.requestor.user must beEqualTo(requestor)
+        gameRequest.requestee.user must beEqualTo(requestee)
         gameRequest.course must beNone
       }
     }
@@ -85,8 +85,8 @@ class GamesSpec extends Specification {
 
         val gameRequests = Games.requests(requestee.id, course.id)
         val gameRequest = gameRequests(0)
-        gameRequest.requestor must beEqualTo(requestor)
-        gameRequest.requestee must beEqualTo(requestee)
+        gameRequest.requestor.user must beEqualTo(requestor)
+        gameRequest.requestee.user must beEqualTo(requestee)
         gameRequest.course must beSome(course)
       }
     }
@@ -153,8 +153,8 @@ class GamesSpec extends Specification {
 
         val gameRequest = Games.active(requestee.id)(session)(0)
 
-        gameRequest.requestor must beEqualTo(requestor)
-        gameRequest.requestee must beEqualTo(requestee)
+        gameRequest.requestor.user must beEqualTo(requestor)
+        gameRequest.requestee.user must beEqualTo(requestee)
         gameRequest.course must beSome(course)
         gameRequest must beEqualTo(Games.active(requestor.id)(session)(0)) // ensure Tor vs Tee is the same
       }

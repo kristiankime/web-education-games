@@ -41,17 +41,17 @@
 
     <div>To update your settings change the values below and then hit the "Update Settings" button.</div>
 
-    @form(action = routes.Settings.updateSettings, 'class -> "pure-form pure-form-stacked") {
+    @form(action = routes.Settings.updateSettings, 'class -> "pure-form") {
 
-        <label for="@SettingsForm.name">Change user name:</label>
+        <label for="@SettingsForm.name">Change user name: @tag.icon("icon-help", 'data_ot -> "Names cannot be blank, and will always have a -# appended to them.") </label>
         <input id="@SettingsForm.name" name="@SettingsForm.name" type="text" placeholder="@user.settings.name">
-        @for(err <- errorsOp.flatMap(_.error(SettingsForm.name))){ <span> @err.message </span> } @* TODO determine now to display errors *@
+        @for(err <- errorsOp.flatMap(_.error(SettingsForm.name))){ <span class="form-error"> @err.message </span> } @* TODO determine now to display errors *@<br>
 
         <label for="@SettingsForm.emailGameUpdates" class="pure-checkbox">
             <input type="checkbox" id="@SettingsForm.emailGameUpdates" name="@SettingsForm.emailGameUpdates" value="true" @if(user.settings.emailGameUpdates){checked} />
             <input type="hidden" name="@SettingsForm.emailGameUpdates" value="false" />
             Send me an email on game updates
-        </label>
+        </label><br>
 
         <button type="submit" class="pure-button pure-button-primary">Update Settings</button>
     }

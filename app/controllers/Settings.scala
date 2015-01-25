@@ -38,7 +38,7 @@ object SettingsForm {
   val emailGameUpdates = "emailGameUpdates"
 
   val values = Form(mapping(
-      name -> optional(text.verifying("Name must not be blank text", _.trim != "")),
+      name -> optional(text.verifying("Name must not be blank", _.trim != "")),
       emailGameUpdates -> boolean
     )(SettingsData.apply)(SettingsData.unapply))
 

@@ -1,6 +1,7 @@
 package models.tournament
 
 import models.game.TestGame
+import models.user.UserFull
 import models.{user, DBTest}
 import models.DBTest.newFakeUser
 import models.DBTest.inMemH2
@@ -16,6 +17,8 @@ import service.{UserTest, _}
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
 class TournamentsSpec extends Specification {
+
+	private def testName(user: User) = UserFull.name(user.fullName, user.id)
 
 	"studentScoresRankingFor" should {
 		
@@ -39,7 +42,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.studentScoresRankingFor(answerer.id, 3)
 
-				rankings.ranks must beEqualTo(List(Rank(answerer.id, "answerer", 10d, 1)))
+				rankings.ranks must beEqualTo(List(Rank(answerer.id, testName(answerer), 10d, 1)))
 				rankings.user must beEmpty
 			}
 		}
@@ -54,7 +57,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.studentScoresRankingFor(answerer1.id, 3)
 
-				rankings.ranks must beEqualTo(List(Rank(answerer1.id, "answerer1", 3d, 1), Rank(answerer2.id, "answerer2", 2d, 2), Rank(answerer3.id, "answerer3", 1d, 3)))
+				rankings.ranks must beEqualTo(List(Rank(answerer1.id, testName(answerer1), 3d, 1), Rank(answerer2.id, testName(answerer2), 2d, 2), Rank(answerer3.id, testName(answerer3), 1d, 3)))
 				rankings.user must beEmpty
 			}
 		}
@@ -69,7 +72,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.studentScoresRankingFor(answerer1.id, 2)
 
-				rankings.ranks must beEqualTo(List(Rank(answerer1.id, "answerer1", 3d, 1), Rank(answerer2.id, "answerer2", 2d, 2)))
+				rankings.ranks must beEqualTo(List(Rank(answerer1.id, testName(answerer1), 3d, 1), Rank(answerer2.id, testName(answerer2), 2d, 2)))
 				rankings.user must beEmpty
 			}
 		}
@@ -84,8 +87,8 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.studentScoresRankingFor(answerer3.id, 2)
 
-				rankings.ranks must beEqualTo(List(Rank(answerer1.id, "answerer1", 3d, 1),	Rank(answerer2.id, "answerer2", 2d, 2)))
-				rankings.user must beEqualTo(Some(Rank(answerer3.id, "answerer3", 1d, 3)))
+				rankings.ranks must beEqualTo(List(Rank(answerer1.id, testName(answerer1), 3d, 1),	Rank(answerer2.id, testName(answerer2), 2d, 2)))
+				rankings.user must beEqualTo(Some(Rank(answerer3.id, testName(answerer3), 1d, 3)))
 			}
 		}
 
@@ -114,7 +117,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.completedGamesRank
 
-				rankings must beEqualTo(List(Rank(user1.id, "user1", 3, 1), Rank(user2.id, "user2", 2, 2), Rank(user3.id, "user3", 1, 3)))
+				rankings must beEqualTo(List(Rank(user1.id, testName(user1), 3, 1), Rank(user2.id, testName(user2), 2, 2), Rank(user3.id, testName(user3), 1, 3)))
 			}
 		}
 
@@ -147,7 +150,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.numberOfUniqueOpponentsRank
 
-				rankings must beEqualTo(List(Rank(user1.id, "user1", 4, 1), Rank(user2.id, "user2", 3, 2), Rank(user3.id,"user3",2,3), Rank(user4.id,"user4",2,4), Rank(user5.id,"user5",1,5)))
+				rankings must beEqualTo(List(Rank(user1.id, testName(user1), 4, 1), Rank(user2.id, testName(user2), 3, 2), Rank(user3.id, testName(user3), 2, 3), Rank(user4.id, testName(user4), 2, 4), Rank(user5.id, testName(user5), 1, 5)))
 			}
 		}
 
@@ -175,7 +178,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.sumOfStudentScoresRank
 
-				rankings must beEqualTo(List(Rank(user1.id, "user1", 1.4, 1), Rank(user2.id, "user2", 1.2, 2)))
+				rankings must beEqualTo(List(Rank(user1.id, testName(user1), 1.4, 1), Rank(user2.id, testName(user2), 1.2, 2)))
 			}
 		}
 
@@ -202,7 +205,7 @@ class TournamentsSpec extends Specification {
 
 				val rankings = Tournaments.sumOfTeacherScoresRank
 
-				rankings must beEqualTo(List(Rank(user2.id, "user2", 1.5, 1), Rank(user1.id, "user1", .8, 2)))
+				rankings must beEqualTo(List(Rank(user2.id, testName(user2), 1.5, 1), Rank(user1.id, testName(user1), .8, 2)))
 			}
 		}
 

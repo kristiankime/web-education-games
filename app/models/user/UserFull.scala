@@ -15,7 +15,7 @@ case class UserFull(user: service.User, settings: UserSetting) extends HasUserId
 
   def n = views.html.tag.name(this)
 
-  def nStr = settings.name + "-" + user.id.v
+  def nStr = UserFull.name(settings.name, user.id)
 
   /**
    * If we can (and should) send an email to the user returns Some(their_email), otherwise None.
@@ -53,4 +53,6 @@ object UserFull {
     case None => throw new IllegalStateException("Programming error user has no settings")
     case Some(setting) => UserFull(user, setting)
   }
+
+  def name(name:String, id: UserId) = name + "-" + id.v
 }

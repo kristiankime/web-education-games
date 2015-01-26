@@ -11,7 +11,7 @@ import service.table._
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {
 	// =========== Identity Methods ===========
 	def save(identity: Identity) = DB.withSession { implicit s: Session =>
-    val user = User(identity, JodaUTC.now)
+    val user = Login(identity, JodaUTC.now)
 		UsersTable.save(user)
 	}
 

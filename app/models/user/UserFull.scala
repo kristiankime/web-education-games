@@ -6,10 +6,10 @@ import models.quiz.answer.result.DerivativeQuestionScores
 import models.quiz.question.{QuestionDifficulty, DerivativeQuestions}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
-import service.{HasUserId, User}
+import service.{HasUserId, Login}
 import play.api.db.slick.Config.driver.simple.Session
 
-case class UserFull(user: service.User, settings: UserSetting) extends HasUserId {
+case class UserFull(user: service.Login, settings: UserSetting) extends HasUserId {
 
   def id = user.id
 
@@ -49,7 +49,7 @@ case class UserFull(user: service.User, settings: UserSetting) extends HasUserId
 }
 
 object UserFull {
-  def apply(user: User)(implicit session: Session): UserFull = UserSettings(user.id) match {
+  def apply(user: Login)(implicit session: Session): UserFull = UserSettings(user.id) match {
     case None => throw new IllegalStateException("Programming error user has no settings")
     case Some(setting) => UserFull(user, setting)
   }

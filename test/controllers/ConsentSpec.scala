@@ -9,7 +9,7 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test.Helpers._
 import play.api.test._
-import service.{UserTest, User}
+import service.{UserTest, Login$}
 
 @RunWith(classOf[JUnitRunner])
 class ConsentSpec extends Specification {

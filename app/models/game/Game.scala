@@ -7,7 +7,7 @@ import models.support._
 import models.user.UserFull
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service.{HasUserId, User}
+import service.{HasUserId, Login}
 import service.table.UsersTable
 import models.game.GameRole._
 
@@ -31,23 +31,23 @@ case class Game(id: GameId = null,
                 requestorTeacherPoints: Option[Double] = None,
                 finishedDate: Option[DateTime] = None) {
 
-  def isRequestor(user: User) = user.id match {
+  def isRequestor(user: Login) = user.id match {
     case `requestorId` => true
     case _ => false
   }
 
-  def isRequestee(user: User) = user.id match {
+  def isRequestee(user: Login) = user.id match {
     case `requesteeId` => true
     case _ => false
   }
 
-  def gameRole(user: User) = user.id match {
+  def gameRole(user: Login) = user.id match {
     case `requesteeId` => Requestee
     case `requestorId` => Requestor
     case _ => Unrelated
   }
 
-  def skillLevel(user: User) = user.id match {
+  def skillLevel(user: Login) = user.id match {
     case `requesteeId` => requesteeSkill
     case `requestorId` => requestorSkill
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
@@ -75,7 +75,7 @@ case class Game(id: GameId = null,
       case _ => None
     }
 
-  def otherPlayer(user: User)(implicit session: Session) = user.id match {
+  def otherPlayer(user: Login)(implicit session: Session) = user.id match {
     case `requestorId` => requestee
     case `requesteeId` => requestor
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")

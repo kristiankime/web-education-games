@@ -166,10 +166,10 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right(game) => {
         (game.gameRole(user.user), game.requesteeQuizIfDone(quizId), game.requestorQuizIfDone(quizId)) match {
           case (Unrelated, _, _) => throw new IllegalStateException("user was not requestee or requestor (user = [" + user + "] game = [" + game + "])")
-          case (Requestor, Some(requesteeQuiz), None) => Ok(views.html.game.review.studentReview(game, requesteeQuiz, game.requestee.user))
-          case (Requestor, None, Some(requestorQuiz)) => Ok(views.html.game.review.teacherReview(game, requestorQuiz, game.requestee.user))
-          case (Requestee, Some(requesteeQuiz), None) => Ok(views.html.game.review.teacherReview(game, requesteeQuiz, game.requestor.user))
-          case (Requestee, None, Some(requestorQuiz)) => Ok(views.html.game.review.studentReview(game, requestorQuiz, game.requestor.user))
+          case (Requestor, Some(requesteeQuiz), None) => Ok(views.html.game.review.studentReview(game, requesteeQuiz, game.requestee))
+          case (Requestor, None, Some(requestorQuiz)) => Ok(views.html.game.review.teacherReview(game, requestorQuiz, game.requestee))
+          case (Requestee, Some(requesteeQuiz), None) => Ok(views.html.game.review.teacherReview(game, requesteeQuiz, game.requestor))
+          case (Requestee, None, Some(requestorQuiz)) => Ok(views.html.game.review.studentReview(game, requestorQuiz, game.requestor))
           case (_, None, None) => throw new IllegalStateException("The game requested was not finished for user [" + user + "] quizId [" + quizId + "] game [" + game + "]")
           case error => throw new IllegalStateException("Should not be possible coding error (error[" + error + "] user [" + user + "] quizId [" + quizId + "] game [" + game + "])")
         }

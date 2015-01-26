@@ -5,7 +5,7 @@ import models.organization.{Course, Courses}
 import models.game.table.gamesTable
 import models.support._
 import play.api.db.slick.Config.driver.simple._
-import service.User
+import service.Login
 import models.user.UserPimped
 import scala.language.postfixOps
 
@@ -18,14 +18,14 @@ object Games {
     Courses.studentsExcept(courseId, requestorId).filter(u => activeGame(requestorId, u.id).isEmpty)
 
   // ====== Request Game ======
-  def request(requestor: User, requestee: User, course: Course)(implicit session: Session): Game = {
+  def request(requestor: Login, requestee: Login, course: Course)(implicit session: Session): Game = {
     val now = JodaUTC.now
     request(Game(requestDate = now, courseId = Some(course.id),
       requestorId = requestor.id, requestorSkill = requestor.studentSkillLevel(now),
       requesteeId = requestee.id, requesteeSkill = requestee.studentSkillLevel(now)))
   }
 
-  def request(requestor: User, requestee: User)(implicit session: Session): Game = {
+  def request(requestor: Login, requestee: Login)(implicit session: Session): Game = {
     val now = JodaUTC.now
     request(Game(requestDate = now,
       requestorId = requestor.id, requestorSkill = requestor.studentSkillLevel(now),

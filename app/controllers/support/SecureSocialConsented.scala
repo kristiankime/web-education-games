@@ -8,7 +8,7 @@ import play.api.mvc.{Results, AnyContent, Result}
 import securesocial.core.SecureSocial
 import securesocial.core.SecuredRequest
 import securesocial.core.Authorization
-import service.User
+import service.Login
 import models.user._
 
 trait SecureSocialConsented extends SecureSocial {
@@ -20,7 +20,7 @@ trait SecureSocialConsented extends SecureSocial {
 
     def apply(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
       DB.withSession { implicit session: Session =>
-        val user = User(request)
+        val user = Login(request)
         if(!user.consented) consentForm(request.path)
         else f(request)(UserFull(user))(session)
       }
@@ -29,7 +29,7 @@ trait SecureSocialConsented extends SecureSocial {
     // LATER this method is essentially the same as the one above and exists for Intellij 14 IDE help
     def apply(dummy: String)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
       DB.withSession { implicit session: Session =>
-        val user = User(request)
+        val user = Login(request)
         if(!user.consented) consentForm(request.path)
         else f(request)(UserFull(user))(session)
       }
@@ -37,7 +37,7 @@ trait SecureSocialConsented extends SecureSocial {
 
     def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
       DB.withSession { implicit session: Session =>
-        val user = User(request)
+        val user = Login(request)
         if(!user.consented) consentForm(request.path)
         else f(request)(UserFull(user))(session)
       }
@@ -45,7 +45,7 @@ trait SecureSocialConsented extends SecureSocial {
 
     def apply(ajaxCall: Boolean)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction(ajaxCall) { request: SecuredRequest[AnyContent] =>
       DB.withSession { implicit session: Session =>
-        val user = User(request)
+        val user = Login(request)
         if(!user.consented) consentForm(request.path)
         else f(request)(UserFull(user))(session)
       }
@@ -53,7 +53,7 @@ trait SecureSocialConsented extends SecureSocial {
 
     def apply(ajaxCall: Boolean, authorize: Authorization)(f: SecuredRequest[AnyContent] => UserFull => Session => Result) = SecuredAction(ajaxCall, authorize) { request: SecuredRequest[AnyContent] =>
       DB.withSession { implicit session: Session =>
-        val user = User(request)
+        val user = Login(request)
         if(!user.consented) consentForm(request.path)
         else f(request)(UserFull(user))(session)
       }

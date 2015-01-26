@@ -30,7 +30,7 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 	 */
 	def access(implicit user: HasUserId, session: Session): Access = directAccess
 
-	def grantAccess(access: Access)(implicit user: User, session: Session) = Courses.grantAccess(this, access)
+	def grantAccess(access: Access)(implicit user: Login, session: Session) = Courses.grantAccess(this, access)
 }
 
 object Courses {
@@ -71,7 +71,7 @@ object Courses {
 	def otherAccess(course: Course)(implicit user: HasUserId, session: Session) =
     usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess
 
-	def grantAccess(course: Course, access: Access)(implicit user: HasUserId, session: Session) : User = {
+	def grantAccess(course: Course, access: Access)(implicit user: HasUserId, session: Session) : Login = {
 		if (course.access < access) {
       usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption match {
 				case Some(u2c) if u2c.access < access => usersCoursesTable.where(_.id === course.id).update(User2Course(user.id, course.id, access, 1))

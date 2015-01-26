@@ -20,7 +20,7 @@ object UserTest {
 		passwordInfo: Option[PasswordInfo] = None,
 		date: DateTime = new DateTime(0L, DateTimeZone.UTC)) =
 
-    new User(UserId(id.getAndDecrement),
+    new Login(UserId(id.getAndDecrement),
       identityId,
       firstName,
       lastName,

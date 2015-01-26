@@ -7,11 +7,11 @@ import models.quiz.question.{QuestionDifficulty, DerivativeQuestions}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service.User
+import service.Login
 
 package object user {
 
-  implicit class UserPimped(user: User){
+  implicit class UserPimped(user: Login){
 
     def settingsOp(implicit session: Session) = UserSettings(user.id)
 

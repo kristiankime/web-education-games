@@ -4,7 +4,7 @@ import play.api.db.slick.Config.driver.simple._
 package object service {
 
   implicit class EitherHasAccess(e: Either[HasAccess, HasAccess]) {
-    def access(implicit user: User, session: Session) = e match {
+    def access(implicit user: Login, session: Session) = e match {
       case Left(s) => s.access
       case Right(s) => s.access
     }
@@ -15,7 +15,7 @@ package object service {
   }
 
   implicit class SecuredPimped(val v: Secured) {
-    def toAccess(implicit user: User, session: Session) = v.access
+    def toAccess(implicit user: Login, session: Session) = v.access
   }
 
   implicit object AccessOrdering extends Ordering[Access] {

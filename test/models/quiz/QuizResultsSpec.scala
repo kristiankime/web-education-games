@@ -7,7 +7,7 @@ import models.quiz.question.{DerivativeQuestion, QuestionDifficulty, QuestionSco
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import service.{User, UserTest}
+import service.{Login, UserTest}
 
 @RunWith(classOf[JUnitRunner])
 class QuizResultsSpec extends Specification {
@@ -101,7 +101,7 @@ class QuizResultsSpec extends Specification {
 
   private def mediumDifficulty(studentSkill: Double) = (studentSkill * QuestionScoring.zoneOfProximalDevelopmentFactor) / 2
 
-  private def questionResults(answerer: User, question: DerivativeQuestion, correct: Boolean = false, numberOfAnswers : Int = 1) = {
+  private def questionResults(answerer: Login, question: DerivativeQuestion, correct: Boolean = false, numberOfAnswers : Int = 1) = {
     val answers = for(i <- 1 to numberOfAnswers) yield {
       TestDerivativeAnswer(owner = answerer.id, questionId = question.id, correct = if(i == numberOfAnswers) correct else false) // question.id is null here but will work for testing
     }

@@ -2,9 +2,9 @@ package models.quiz
 
 import com.artclod.collection.PimpedSeq
 import models.quiz.question.{QuestionResults, DerivativeQuestion}
-import service.User
+import service.Login
 
-case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]) {
+case class QuizResults(student: Login, quiz: Quiz, results: List[QuestionResults]) {
   require(results.forall(_.answerer == student), "All the question results must be from the same user")
 
   def numQuestions = results.size

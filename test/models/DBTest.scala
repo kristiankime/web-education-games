@@ -4,7 +4,7 @@ import models.user.{UserSetting, UserSettings}
 import play.api.test.Helpers.inMemoryDatabase
 import service.table.UsersTable
 import service.UserTest
-import service.User
+import service.Login
 import play.api.db.slick.Config.driver.simple._
 import com.artclod.util.TryUtil._
 
@@ -14,12 +14,8 @@ object DBTest {
 
   /**
    * Create a default fake user who has consented.
-   *
-   * @param userNoId
-   * @param session
-   * @return
    */
-	def newFakeUser(userNoId: User)(implicit session: Session): User = {
+	def newFakeUser(userNoId: Login)(implicit session: Session): Login = {
     val user = UsersTable.insert(userNoId)
 
     val createSettings = (() => UserSettings.create(UserSetting(user.id, consented = true, name = UserSettings.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false)))
@@ -28,19 +24,13 @@ object DBTest {
     user
   }
 
-	def newFakeUser(implicit session: Session): User = newFakeUser(UserTest())
-
-
+	def newFakeUser(implicit session: Session): Login = newFakeUser(UserTest())
 
   /**
    * Create a default fake user who has not consented (and therefore cannot access most of the site).
-   *
-   * @param userNoId
-   * @param session
-   * @return
    */
-  def newFakeUserNoConsent(userNoId: User)(implicit session: Session): User = UsersTable.insert(userNoId)
+  def newFakeUserNoConsent(userNoId: Login)(implicit session: Session): Login = UsersTable.insert(userNoId)
 
-  def newFakeUserNoConsent(implicit session: Session): User = newFakeUserNoConsent(UserTest())
+  def newFakeUserNoConsent(implicit session: Session): Login = newFakeUserNoConsent(UserTest())
 
 }

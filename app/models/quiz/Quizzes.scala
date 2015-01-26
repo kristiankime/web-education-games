@@ -68,7 +68,7 @@ object Quizzes {
     usersQuizzesTable.where(uq => uq.userId === user.id && uq.quizId === quiz.id).firstOption.map(_.access).toAccess
 
   // ======= Scoring ======
-  def studentScore(quiz: Quiz, user: User)(implicit session: Session) = {
+  def studentScore(quiz: Quiz, user: Login)(implicit session: Session) = {
     quiz.questions.map( _.results(user))
   }
 

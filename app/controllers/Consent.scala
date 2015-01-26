@@ -7,7 +7,7 @@ import play.api.mvc.Controller
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import service.User
+import service.Login
 import scala.util.Failure
 import play.api.db.slick.Config.driver.simple.Session
 
@@ -45,10 +45,10 @@ object Consent extends Controller with SecureSocialDB {
       })
   }
 
-  private def defaultName(user: User)(implicit session: Session) : String = "Player" // UserSettings.validName(startingName(user))
+  private def defaultName(user: Login)(implicit session: Session) : String = "Player" // UserSettings.validName(startingName(user))
 
   @VisibleForTesting
-  def startingName(user: User) =
+  def startingName(user: Login) =
     user.email match {
       case Some(splitEmailOnAt(before, after)) => before
       case _ => user.fullName

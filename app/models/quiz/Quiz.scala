@@ -15,19 +15,19 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   // === TODO Above update for multiple question types ===
 
-   def results(student: User)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
+   def results(student: Login)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
 
    def results(course: Course)(implicit session: Session) : List[QuizResults] = course.students.map(results(_))
 
-   def summary(student: User)(implicit session: Session) = DerivativeQuestions.summary(student, this)
+   def summary(student: Login)(implicit session: Session) = DerivativeQuestions.summary(student, this)
 
-   def summary(student: User, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.summary(student, asOf, this)
+   def summary(student: Login, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.summary(student, asOf, this)
   
    def previousQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementBefore(question)
 
    def nextQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementAfter(question)
 
-   def firstUnfinishedQuestion(user: User)(implicit session: Session) = results(user).firstUnfinishedQuestion
+   def firstUnfinishedQuestion(user: Login)(implicit session: Session) = results(user).firstUnfinishedQuestion
 
    def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
 
@@ -45,12 +45,12 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
      (courseAccess :+ directAccess) max
    }
 
-   def studentScore(student: User)(implicit session: Session) = {
+   def studentScore(student: Login)(implicit session: Session) = {
      val summaries = DerivativeQuestions.summary(student, this)
      summaries.map(_.studentScore).sum / questions.size.toDouble
    }
 
-   def teacherScore(student: User, studentSkillLevel: Double)(implicit session: Session) = {
+   def teacherScore(student: Login, studentSkillLevel: Double)(implicit session: Session) = {
      val summaries = DerivativeQuestions.summary(student, this)
      summaries.map(_.teacherScore(studentSkillLevel)).sum / questions.size.toDouble
    }

@@ -4,7 +4,7 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 
 object Application extends Controller {
-	val version = Version(0, 5, 1)
+	val version = Version(0, 5, 2)
 	
 	/**
 	 * Application does not use trailing slashes so indicate to browsers

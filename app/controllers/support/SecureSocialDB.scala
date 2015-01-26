@@ -9,7 +9,7 @@ import play.api.Play.current
 import securesocial.core.SecureSocial
 import securesocial.core.SecuredRequest
 import securesocial.core.Authorization
-import service.User
+import service.Login
 
 trait SecureSocialDB extends SecureSocial {
 
@@ -29,34 +29,34 @@ trait SecureSocialDB extends SecureSocial {
 //	}
 
 	object SecuredUserDBAction {
-		def apply(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+		def apply(f: SecuredRequest[AnyContent] => Login => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
-				f(request)(User(request))(session)
+				f(request)(Login(request))(session)
 			}
 		}
 
 		// LATER this method is essentially the same as the one above and exists for Intellij 14 IDE help
-		def apply(dummy: String)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
+		def apply(dummy: String)(f: SecuredRequest[AnyContent] => Login => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
-				f(request)(User(request))(session)
+				f(request)(Login(request))(session)
 			}
 		}
 
-		def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
+		def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => Login => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
-				f(request)(User(request))(session)
+				f(request)(Login(request))(session)
 			}
 		}
 		
-		def apply(ajaxCall: Boolean)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(ajaxCall) { request: SecuredRequest[AnyContent] =>
+		def apply(ajaxCall: Boolean)(f: SecuredRequest[AnyContent] => Login => Session => Result) = SecuredAction(ajaxCall) { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
-				f(request)(User(request))(session)
+				f(request)(Login(request))(session)
 			}
 		}
 
-		def apply(ajaxCall: Boolean, authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(ajaxCall, authorize) { request: SecuredRequest[AnyContent] =>
+		def apply(ajaxCall: Boolean, authorize: Authorization)(f: SecuredRequest[AnyContent] => Login => Session => Result) = SecuredAction(ajaxCall, authorize) { request: SecuredRequest[AnyContent] =>
 			DB.withSession { session: Session =>
-				f(request)(User(request))(session)
+				f(request)(Login(request))(session)
 			}
 		}
 		

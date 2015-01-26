@@ -7,7 +7,7 @@ import models.quiz.question.DerivativeQuestion
 import models.support.{QuestionId, GameId}
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.Result
-import service.{HasUserId, User}
+import service.{HasUserId, Login$}
 
 object GamesRequesteeController extends GamesPlayerController {
 

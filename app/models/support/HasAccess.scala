@@ -1,6 +1,6 @@
 package models.support
 
-import service.{HasUserId, Access, User}
+import service.{HasUserId, Access, Login$}
 import play.api.db.slick.Config.driver.simple._
 
 trait HasAccess {

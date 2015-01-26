@@ -60,9 +60,9 @@ object Access {
 		case None => Non
 	}
 
-	def apply(user: User, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
+	def apply(user: Login, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
-	def apply(user: User, owner: User, in: Option[Access]): Access =
+	def apply(user: Login, owner: Login, in: Option[Access]): Access =
 		if (user.id == owner.id) Own
     else Access(in)
 

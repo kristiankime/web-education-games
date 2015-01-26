@@ -416,7 +416,7 @@ class QuestionsSpec extends Specification {
 
   private def d(l: Long) = JodaUTC(l)
 
-  private def questionAndAnswers(user: User, answers: (Boolean, DateTime)* )(implicit session: Session) = {
+  private def questionAndAnswers(user: Login, answers: (Boolean, DateTime)* )(implicit session: Session) = {
     val question = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
     for(answer <- answers) { DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question.id, correct = answer._1, creationDate = answer._2)) }
     question

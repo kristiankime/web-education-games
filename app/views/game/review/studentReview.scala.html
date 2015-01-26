@@ -1,13 +1,11 @@
-@(game: models.game.Game, quiz: models.quiz.Quiz, teacher: service.User)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
-
-@import models.user.UserPimped
+@(game: models.game.Game, quiz: models.quiz.Quiz, teacher: models.user.UserFull)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
 
 @mainWithBorder("Student Game Score", tag.courseOpLink(game.course), tag.gameLink(Html("game"), game)) {
 
     <h2> Student Game Score @tag.icon("icon-help", 'data_ot -> "Players get two scores. One as a Student and one as a teacher. Your student score is based on how many questions you got right.")</h2>
 
     <section>
-        You played a @tag.gameLink(Html("game"), game) with @teacher.name on @tag.datetimeOp(game.finishedDate)
+        You played a @tag.gameLink(Html("game"), game) with @teacher.n on @tag.datetimeOp(game.finishedDate)
     </section>
 
     <section>

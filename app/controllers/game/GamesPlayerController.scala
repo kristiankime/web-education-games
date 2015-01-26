@@ -19,7 +19,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.{Controller, Result}
-import service.{HasUserId, User}
+import service.{HasUserId, Login$}
 import models.user.UserPimped
 import scala.util.{Left, Right}
 

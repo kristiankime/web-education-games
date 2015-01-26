@@ -10,10 +10,10 @@ import org.joda.time.DateTime
 
 trait HasUserId {
 	def id: UserId
-	def user: User
+	def user: Login
 }
 
-case class User(id: UserId,
+case class Login(id: UserId,
 	identityId: IdentityId,
 	firstName: String,
 	lastName: String,
@@ -29,13 +29,13 @@ case class User(id: UserId,
 	def user = this
 }
 
-object User {
+object Login {
 	def apply(implicit request: SecuredRequest[_]) = {
 		request.user match {
-			case user: User => user
+			case user: Login => user
 			case _ => throw new IllegalStateException("User was not the expected type this should not happen, programmatic error")
 		}
 	}
 
-  def apply(i: Identity, date: DateTime): User = User(null, i.identityId, i.firstName, i.lastName, i.fullName, i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info, i.passwordInfo, date, date)
+  def apply(i: Identity, date: DateTime): Login = Login(null, i.identityId, i.firstName, i.lastName, i.fullName, i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info, i.passwordInfo, date, date)
 }

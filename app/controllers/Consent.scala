@@ -38,7 +38,10 @@ object Consent extends Controller with SecureSocialDB {
         })
 
         (settings, consented, goTo) match {
-          case (Failure(t), _, _) => Redirect(routes.Consent.consent(goTo, Some("Sorry a system error occured please try again [" + stackTraceToString(t) + "]")))
+          case (Failure(t), _, _) => {
+            Logger("consent").error(stackTraceToString(t))
+            Redirect(routes.Consent.consent(goTo, Some("Sorry a system error occured please try again [" + t.getMessage + "]")))
+          }
           case (_, false, _) => Redirect(routes.Consent.noConsent())
           case (_, true, Some(path)) => Redirect(path)
           case (_, true, None) => Redirect(routes.Home.index())

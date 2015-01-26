@@ -1,5 +1,7 @@
 package controllers
 
+import java.io.{PrintWriter, StringWriter}
+
 import com.google.common.annotations.VisibleForTesting
 import controllers.support.SecureSocialDB
 import models.user.{UserSetting, UserSettings}
@@ -36,13 +38,20 @@ object Consent extends Controller with SecureSocialDB {
         })
 
         (settings, consented, goTo) match {
-          case (Failure(_), _, _) => Redirect(routes.Consent.consent(goTo, Some("Sorry a system error occured please try again")))
+          case (Failure(t), _, _) => Redirect(routes.Consent.consent(goTo, Some("Sorry a system error occured please try again [" + stackTraceToString(t) + "]")))
           case (_, false, _) => Redirect(routes.Consent.noConsent())
           case (_, true, Some(path)) => Redirect(path)
           case (_, true, None) => Redirect(routes.Home.index())
         }
 
       })
+  }
+
+  private def stackTraceToString(t : Throwable) = {
+    val sw = new StringWriter();
+    val pw = new PrintWriter(sw);
+    t.printStackTrace(pw);
+    sw.toString();
   }
 
   private def defaultName(user: Login)(implicit session: Session) : String = "Player" // UserSettings.validName(startingName(user))

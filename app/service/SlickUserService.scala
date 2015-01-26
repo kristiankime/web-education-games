@@ -12,15 +12,15 @@ class SlickUserService(implicit application: Application) extends UserServicePlu
 	// =========== Identity Methods ===========
 	def save(identity: Identity) = DB.withSession { implicit s: Session =>
     val user = Login(identity, JodaUTC.now)
-		UsersTable.save(user)
+		LoginsTable.save(user)
 	}
 
 	def find(id: IdentityId) = DB.withSession { implicit s: Session =>
-    UsersTable.findByIdentityId(id)
+    LoginsTable.findByIdentityId(id)
 	}
 
 	def findByEmailAndProvider(email: String, providerId: String) = DB.withSession { implicit s: Session =>
-    UsersTable.findByEmailAndProvider(email, providerId)
+    LoginsTable.findByEmailAndProvider(email, providerId)
 	}
 
 	// =========== Token Methods ===========

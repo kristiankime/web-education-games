@@ -5,7 +5,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.organization._
 import models.support._
 import org.joda.time.DateTime
-import service.table.UsersTable
+import service.table.LoginsTable
 import scala.slick.model.ForeignKeyAction
 import models.support.table.IdentifiedAndOwned
 
@@ -21,7 +21,7 @@ class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") with Identifi
 
 	def * = (id, name, organization, owner, editCode, viewCode, creationDate, updateDate) <> (Course.tupled, Course.unapply _)
 
-	def ownerFK = foreignKey("courses__owner_fk", owner, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("courses__owner_fk", owner, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
   def organizationFK = foreignKey("courses__organization_fk", organization, organizationsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

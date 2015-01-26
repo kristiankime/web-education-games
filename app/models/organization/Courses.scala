@@ -6,7 +6,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.support._
 import models.organization.table._
 import service._
-import service.table.UsersTable.userTable
+import service.table.LoginsTable.userTable
 
 case class Course(id: CourseId, name: String, organizationId: OrganizationId, ownerId: UserId, editCode: String, viewCode: Option[String], creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 

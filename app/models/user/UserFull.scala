@@ -20,7 +20,6 @@ case class UserFull(user: service.Login, settings: UserSetting) extends HasUserI
   /**
    * If we can (and should) send an email to the user returns Some(their_email), otherwise None.
    */
-//  def maybeSendGameEmail(implicit session: Session) = settingsOp.flatMap(s => if(s.emailGameUpdates){ user.email } else None)
   def maybeSendGameEmail(implicit session: Session) = if(settings.emailGameUpdates){ user.email } else { None }
 
   def activeGame(otherId: UserId)(implicit session: Session) = Games.activeGame(user.id, otherId)

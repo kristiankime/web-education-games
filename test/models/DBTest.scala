@@ -2,7 +2,7 @@ package models
 
 import models.user.{UserSetting, UserSettings}
 import play.api.test.Helpers.inMemoryDatabase
-import service.table.UsersTable
+import service.table.LoginsTable
 import service.UserTest
 import service.Login
 import play.api.db.slick.Config.driver.simple._
@@ -16,7 +16,7 @@ object DBTest {
    * Create a default fake user who has consented.
    */
 	def newFakeUser(userNoId: Login)(implicit session: Session): Login = {
-    val user = UsersTable.insert(userNoId)
+    val user = LoginsTable.insert(userNoId)
 
     val createSettings = (() => UserSettings.create(UserSetting(user.id, consented = true, name = UserSettings.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false)))
     createSettings.retryOnFail()
@@ -29,7 +29,7 @@ object DBTest {
   /**
    * Create a default fake user who has not consented (and therefore cannot access most of the site).
    */
-  def newFakeUserNoConsent(userNoId: Login)(implicit session: Session): Login = UsersTable.insert(userNoId)
+  def newFakeUserNoConsent(userNoId: Login)(implicit session: Session): Login = LoginsTable.insert(userNoId)
 
   def newFakeUserNoConsent(implicit session: Session): Login = newFakeUserNoConsent(UserTest())
 

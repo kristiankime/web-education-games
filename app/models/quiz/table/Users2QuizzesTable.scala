@@ -18,6 +18,6 @@ class Users2QuizzesTable(tag: Tag) extends Table[User2Quiz](tag, "users_2_deriva
 
 	def pk = primaryKey("users_2_derivative_quizzes_pk", (userId, quizId))
 
-	def userIdFK = foreignKey("users_2_derivative_quizzes__user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def userIdFK = foreignKey("users_2_derivative_quizzes__user_fk", userId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def quizIdFK = foreignKey("users_2_derivative_quizzes__quiz_fk", quizId, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

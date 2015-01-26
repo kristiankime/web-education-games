@@ -8,7 +8,7 @@ import models.user.UserFull
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.{HasUserId, Login}
-import service.table.UsersTable
+import service.table.LoginsTable
 import models.game.GameRole._
 
 case class Game(id: GameId = null,
@@ -53,9 +53,9 @@ case class Game(id: GameId = null,
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
   }
 
-  def requestor(implicit session: Session) = UserFull(UsersTable.findById(requestorId).get)
+  def requestor(implicit session: Session) = UserFull(LoginsTable.findById(requestorId).get)
 
-  def requestee(implicit session: Session) = UserFull(UsersTable.findById(requesteeId).get)
+  def requestee(implicit session: Session) = UserFull(LoginsTable.findById(requesteeId).get)
 
   def requestorQuiz(implicit session: Session) = requestorQuizId.flatMap(Quizzes(_))
 

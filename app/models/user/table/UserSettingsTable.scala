@@ -3,7 +3,7 @@ package models.user.table
 import models.support.UserId
 import models.user.UserSetting
 import play.api.db.slick.Config.driver.simple._
-import service.table.UsersTable
+import service.table.LoginsTable
 import models.support._
 
 import scala.slick.model.ForeignKeyAction
@@ -18,7 +18,7 @@ class UserSettingsTable(tag: Tag) extends Table[UserSetting](tag, "application_u
 
   def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates) <> (UserSetting.tupled, UserSetting.unapply _)
 
-  def userFK = foreignKey("application_user_settings__user_fk", userId, UsersTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def userFK = foreignKey("application_user_settings__user_fk", userId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
   def nameIndex = index("application_user_settings__name_index", name, unique = true)
 }

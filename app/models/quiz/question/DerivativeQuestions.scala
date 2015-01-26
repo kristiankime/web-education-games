@@ -15,7 +15,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.Config.driver.simple.Query
 import service._
-import service.table.UsersTable
+import service.table.LoginsTable
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
@@ -50,7 +50,7 @@ object DerivativeQuestions {
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- derivativeAnswersTable if a.questionId === qid;
-      u <- UsersTable.userTable if u.id === a.ownerId
+      u <- LoginsTable.userTable if u.id === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.email, aU._1.creationDate)).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) =
@@ -61,7 +61,7 @@ object DerivativeQuestions {
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = derivativeAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
-    val users = service.table.UsersTable.userTable.where(_.id in userIds).sortBy(_.email)
+    val users = service.table.LoginsTable.userTable.where(_.id in userIds).sortBy(_.email)
     users.list
   }
 

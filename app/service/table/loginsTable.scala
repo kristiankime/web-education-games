@@ -10,7 +10,7 @@ import models.support._
 import org.joda.time.DateTime
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
-class UsersTable(tag: Tag) extends Table[Login](tag, "secure_social_users") {
+class LoginsTable(tag: Tag) extends Table[Login](tag, "secure_social_users") {
   // General
   def id = column[UserId]("id", O.PrimaryKey, O.AutoInc)
   def userId = column[String]("user_id")
@@ -43,8 +43,8 @@ class UsersTable(tag: Tag) extends Table[Login](tag, "secure_social_users") {
     )
 }
 
-object UsersTable {
-  val userTable = TableQuery[UsersTable]
+object LoginsTable {
+  val userTable = TableQuery[LoginsTable]
 
   def insert(u: Login)(implicit s: Session) = {
     val userId = (userTable returning userTable.map(_.id)) += u
@@ -65,7 +65,7 @@ object UsersTable {
     } yield user).firstOption
   }
 
-  def all(implicit s: Session) = TableQuery[UsersTable].list
+  def all(implicit s: Session) = TableQuery[LoginsTable].list
 
   def save(t: Login)(implicit s: Session) = {
     findByIdentityId(t.identityId) match {

@@ -3,7 +3,7 @@ package models.game
 import models.quiz.Quizzes
 import models.support.QuizId
 import play.api.db.slick.Config.driver.simple._
-import models.user.Users
+import models.user.Logins
 
 object GameState {
   val numberOfQuestions = 3

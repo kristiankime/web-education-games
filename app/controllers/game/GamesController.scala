@@ -10,7 +10,7 @@ import models.game._
 import models.organization._
 import models.quiz.answer.DerivativeAnswers
 import models.support._
-import models.user.Users
+import models.user.Logins
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -51,7 +51,7 @@ object GamesController extends Controller with SecureSocialConsented {
         otherUserId => Games.activeGame(user.id, otherUserId) match {
           case Some(game) => Redirect(controllers.game.routes.GamesController.game(game.id, None)) // TODO accept game if in awaiting state
           case None => {
-            val otherUser = Users(otherUserId).get
+            val otherUser = Logins(otherUserId).get
             val game = Games.request(user.user, otherUser, course)
             for(mail <- otherUser.maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.nStr

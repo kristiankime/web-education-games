@@ -27,7 +27,7 @@ package object user {
 
     def name(implicit session: Session) = settingsOp match {
       case None => throw new IllegalStateException("Programming error, name method should only be called if the user has settings")
-      case Some(setting) => setting.name
+      case Some(setting) => UserFull.name(setting.name, user.id)
     }
 
     /**

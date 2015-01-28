@@ -11,6 +11,9 @@ import com.artclod.util.TryUtil._
 @RunWith(classOf[JUnitRunner])
 class UserSettingsSpec extends Specification {
 
+  // LATER We are not currently requiring unique names
+  skipAll
+
   "validName" should {
 
     "return the starting name if it does not conflict" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>

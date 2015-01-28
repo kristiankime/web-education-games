@@ -3,7 +3,6 @@ package controllers.organization
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser
 import models.organization._
-import models.user.Logins
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -11,6 +10,7 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test.Helpers._
 import play.api.test._
+import service.Logins
 
 @RunWith(classOf[JUnitRunner])
 class CoursesControllerSpec extends Specification {

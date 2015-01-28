@@ -63,8 +63,4 @@ object Access {
 
 	def apply(user: UserSetting, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
-//	def apply(user: UserSetting, owner: UserSetting, in: Option[Access]): Access =
-//		if (user.id == owner.id) Own
-//    else Access(in)
-
 }

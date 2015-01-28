@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import models.support.{CourseId, UserId}
 import models.user.table._
+import service.Logins
 import scala.util.Try
 
 case class UserSetting(userId: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {

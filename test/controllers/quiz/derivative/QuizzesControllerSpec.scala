@@ -5,7 +5,6 @@ import models.DBTest.newFakeUser
 import models.organization._
 import models.quiz.{TestQuiz, Quizzes}
 import models.quiz.question.{TestDerivativeQuestion, DerivativeQuestions}
-import models.user.Logins
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -13,7 +12,7 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test.Helpers._
 import play.api.test._
-import service.{UserTest => U}
+import service.{UserTest => U, Logins}
 
 
 @RunWith(classOf[JUnitRunner])

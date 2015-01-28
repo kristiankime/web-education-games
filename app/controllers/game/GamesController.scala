@@ -10,7 +10,7 @@ import models.game._
 import models.organization._
 import models.quiz.answer.DerivativeAnswers
 import models.support._
-import models.user.{UserSettings, UserSetting, Logins}
+import models.user.{UserSettings, UserSetting}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session

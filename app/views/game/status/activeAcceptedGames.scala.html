@@ -1,7 +1,6 @@
 @(courseOp: Option[models.organization.Course] = None)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.game.Games
-@import models.user.UserFull
 
 @defining(courseOp match { case Some(course) => Games.activeAccepted(user.id, course.id); case None => Games.activeAccepted(user.id)}) { games =>
 

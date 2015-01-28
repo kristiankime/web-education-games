@@ -6,7 +6,7 @@ import models.game.table.gamesTable
 import models.support._
 import play.api.db.slick.Config.driver.simple._
 import service.Login
-import models.user.{UserSetting, UserFull}
+import models.user.{UserSetting}
 import scala.language.postfixOps
 
 object Games {

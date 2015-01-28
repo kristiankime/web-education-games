@@ -15,7 +15,7 @@ case class UserSetting(userId: UserId, consented: Boolean = true, name: String, 
 
   def n = views.html.tag.name(this)
 
-  def nStr = UserFull.name(name, userId)
+  def nStr = UserSettings.name(name, userId)
 
   def email(implicit session: Session) = Logins(id).flatMap(_.email)
 
@@ -50,6 +50,9 @@ case class UserSetting(userId: UserId, consented: Boolean = true, name: String, 
 }
 
 object UserSettings {
+
+  def name(name:String, id: UserId) = name + "-" + id.v
+
 
   def create(userSetting: UserSetting)(implicit session: Session) =
     Try(session.withTransaction { userSettingsTable.insert(userSetting); userSetting })

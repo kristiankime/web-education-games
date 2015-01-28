@@ -1,9 +1,8 @@
 package models.game
 
 import com.artclod.slick.JodaUTC
-import models.user.{UserFull, UserSetting}
+import models.user.{UserSetting}
 import play.api.db.slick.Config.driver.simple.Session
-import service.Login
 
 object TestGame {
 

@@ -1,7 +1,7 @@
 package models.organization
 
 import models.quiz.Quizzes
-import models.user.{UserFull, UserSetting}
+import models.user.{UserSetting}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import models.support._

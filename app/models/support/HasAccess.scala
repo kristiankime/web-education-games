@@ -1,6 +1,6 @@
 package models.support
 
-import models.user.{UserFull, UserSetting}
+import models.user.{UserSetting}
 import service.{Access}
 import play.api.db.slick.Config.driver.simple._
 

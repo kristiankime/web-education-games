@@ -1,7 +1,7 @@
 package models.tournament
 
 import models.game.TestGame
-import models.user.{UserSetting, UserFull}
+import models.user.{UserSetting}
 import models.{DBTest}
 import models.DBTest.newFakeUser
 import models.DBTest.inMemH2

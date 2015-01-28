@@ -4,7 +4,7 @@ import com.google.common.annotations.VisibleForTesting
 import models.game.table.gamesTable
 import models.quiz.table._
 import models.support._
-import models.user.UserFull
+import models.user.UserSettings
 import play.api.db.slick.Config.driver.simple._
 import scala.language.postfixOps
 import models.user.table.userSettingsTable
@@ -24,7 +24,7 @@ object Tournaments {
   private def rankings[M](list: List[(UserId, String, M)]) =
     list.zipWithIndex.map( e => {
       val ((userId, name, metric), index) = e;
-      Rank[M](userId, UserFull.name(name, userId), metric, index + 1)
+      Rank[M](userId, UserSettings.name(name, userId), metric, index + 1)
     })
 
   private def rankingsFor[M](id: UserId, size: Int, ranks: List[Rank[M]]) = {

@@ -4,7 +4,7 @@ import com.artclod.slick.JodaUTC
 import models.organization.Courses
 import models.quiz.{Quizzes, Quiz}
 import models.support._
-import models.user.{UserSettings, UserSetting, UserFull}
+import models.user.{UserSettings, UserSetting}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.{Login}

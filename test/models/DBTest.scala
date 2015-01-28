@@ -1,6 +1,6 @@
 package models
 
-import models.user.{UserFull, UserSetting, UserSettings}
+import models.user.{UserSetting, UserSettings}
 import play.api.test.Helpers.inMemoryDatabase
 import service.table.LoginsTable
 import service.UserTest

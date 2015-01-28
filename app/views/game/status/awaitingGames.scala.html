@@ -1,4 +1,4 @@
-@(courseOp: Option[models.organization.Course] = None)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+@(courseOp: Option[models.organization.Course] = None)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.game.Games
 @import models.user.UserFull
@@ -10,7 +10,7 @@
     <h5>Awaiting Replies</h5>
     @if(games.isEmpty){<h6>You are not waiting for anyone to accept a request</h6>} else {<h6>You are waiting for the following players to accept a game</h6>
     <ul class="pure-list">
-        @for(game <- games) {<li> @gameLink(game.otherPlayer(user.user).n, game, 'class -> "button-xsmall") @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall") </li>}
+        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).n, game, 'class -> "button-xsmall") @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall") </li>}
     </ul>
     }
 </section>

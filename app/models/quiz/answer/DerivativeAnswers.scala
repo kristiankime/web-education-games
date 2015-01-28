@@ -7,6 +7,7 @@ import models.quiz.Correct2Short
 import models.quiz.question.DerivativeQuestion
 import models.quiz.table.derivativeAnswersTable
 import models.support._
+import models.user.UserSetting
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.Login
@@ -38,7 +39,7 @@ object DerivativeAnswers {
   // ======= ATTEMPTS SUMMARY ======
   case class AnswersSummary(questionId: QuestionId, attempts : Int, correct: Boolean, firstAttempt: DateTime)
 
-  def summary(user: Login)(implicit session: Session) = {
+  def summary(user: UserSetting)(implicit session: Session) = {
     val q = derivativeAnswersTable.where(_.ownerId === user.id).groupBy(a => a.questionId)
     val q2 = q.map { case (questionId, v) => (questionId, v.length, v.map(_.correct).max, v.map(_.creationDate).min) }
     val q3 = q2.sortBy(_._4)

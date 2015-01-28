@@ -1,5 +1,6 @@
 package controllers.support
 
+import models.user.UserFull
 import play.api.db.slick.Config.driver.simple.Session
 import securesocial.core.Authorization
 import securesocial.core.Identity
@@ -11,11 +12,11 @@ import models.organization._
 
 case class RequireAccess(level: Access, secured: Session => Option[Secured]) extends Authorization {
 
-	def isAuthorized(user: Identity) = DB.withSession { session: Session =>
-		(user, secured(session)) match {
-			case (u: Login, Some(s)) => s.access(u, session) >= level
-			case (u: Login, None) => false
-			case _ => throw new IllegalStateException("User was not the expected type this should not happen, programatic error")
+	def isAuthorized(identity: Identity) = DB.withSession { implicit session: Session =>
+		(identity, secured(session)) match {
+			case (login: Login, Some(s)) => s.access(UserFull(login).settings, session) >= level
+			case (login: Login, None) => false
+			case _ => throw new IllegalStateException("Identity was not the expected type this should not happen, programatic error")
 		}
 	}
 

@@ -1,9 +1,8 @@
-@(organization: models.organization.Organization, course: models.organization.Course)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+@(organization: models.organization.Organization, course: models.organization.Course)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesController
 @import controllers.game.GameRequest
 @import helper._
-@import models.user.UserPimped
 
 @defining(user.studentsToPlayWith(course.id)) { students =>
 
@@ -19,7 +18,7 @@
     @form(action = GamesController.requestGame(organization.id, course.id), 'class -> "pure-form") {
         @for(student <- students.zipWithIndex){
         <label for="player@student._2" class="pure-checkbox">
-            <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
+            <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.userId.v"@if(student._2 == 0){checked}>
             @student._1.name
         </label>
         }

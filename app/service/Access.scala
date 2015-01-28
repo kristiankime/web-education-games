@@ -1,6 +1,7 @@
 package service
 
 import models.support.UserId
+import models.user.UserSetting
 
 sealed abstract class Access extends Ordered[Access] {
 	val v: Short
@@ -60,10 +61,10 @@ object Access {
 		case None => Non
 	}
 
-	def apply(user: Login, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
+	def apply(user: UserSetting, owner: UserId): Access = if (user.id == owner) { Own } else { Non }
 
-	def apply(user: Login, owner: Login, in: Option[Access]): Access =
-		if (user.id == owner.id) Own
-    else Access(in)
+//	def apply(user: UserSetting, owner: UserSetting, in: Option[Access]): Access =
+//		if (user.id == owner.id) Own
+//    else Access(in)
 
 }

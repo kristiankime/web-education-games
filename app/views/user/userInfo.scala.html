@@ -1,19 +1,17 @@
-@(errorsOp: Option[Form[SettingsData]] = None)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+@(errorsOp: Option[Form[SettingsData]] = None)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.organization.Courses
 @import com.artclod.play.s
 @import views.html.tag._
 @import helper._
 
-@defining(user.settings) { settings =>
-
 @mainWithBorder("User Information") {
 
     <h1>Welcome to the EdTech Math Games Server</h1>
 
     <p>
-        You are logged in as: @tag.name(user) <br>
-        You email is: @user.user.email
+        You are logged in as: @user.n <br>
+        You email is: @user.email
     </p>
 
     @defining(Courses(user.id)) { courses =>
@@ -44,11 +42,11 @@
     @form(action = routes.Settings.updateSettings, 'class -> "pure-form") {
 
         <label for="@SettingsForm.name">Change user name: @tag.icon("icon-help", 'data_ot -> "Names cannot be blank, and will always have a -# appended to them.") </label>
-        <input id="@SettingsForm.name" name="@SettingsForm.name" type="text" placeholder="@user.settings.name">
+        <input id="@SettingsForm.name" name="@SettingsForm.name" type="text" placeholder="@user.name">
         @for(err <- errorsOp.flatMap(_.error(SettingsForm.name))){ <span class="form-error"> @err.message </span> } @* TODO determine now to display errors *@<br>
 
         <label for="@SettingsForm.emailGameUpdates" class="pure-checkbox">
-            <input type="checkbox" id="@SettingsForm.emailGameUpdates" name="@SettingsForm.emailGameUpdates" value="true" @if(user.settings.emailGameUpdates){checked} />
+            <input type="checkbox" id="@SettingsForm.emailGameUpdates" name="@SettingsForm.emailGameUpdates" value="true" @if(user.emailGameUpdates){checked} />
             <input type="hidden" name="@SettingsForm.emailGameUpdates" value="false" />
             Send me an email on game updates
         </label><br>
@@ -61,6 +59,4 @@
     @form(action = routes.Consent.revokeConsent, 'class -> "pure-form") {
         I no longer want to take part in this study <input class="pure-button" type="submit" value="Revoke Consent">
     }
-}
-
 }

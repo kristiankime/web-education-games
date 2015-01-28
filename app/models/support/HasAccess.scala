@@ -1,10 +1,11 @@
 package models.support
 
-import service.{HasUserId, Access, Login$}
+import models.user.{UserFull, UserSetting}
+import service.{Access}
 import play.api.db.slick.Config.driver.simple._
 
 trait HasAccess {
 
-  def access(implicit user: HasUserId, session: Session): Access
+  def access(implicit user: UserSetting, session: Session) : Access
 
 }

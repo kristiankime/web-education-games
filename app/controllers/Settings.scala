@@ -9,8 +9,7 @@ import play.api.mvc.Controller
 object Settings extends Controller with SecureSocialConsented {
 
   def toggleGameEmails() = ConsentedAction { implicit request => implicit user => implicit session =>
-    val setting = user.settings
-    UserSettings.update(setting.copy(emailGameUpdates = !setting.emailGameUpdates))
+    UserSettings.update(user.copy(emailGameUpdates = !user.emailGameUpdates))
     Ok(views.html.user.userInfo())
   }
 
@@ -22,7 +21,7 @@ object Settings extends Controller with SecureSocialConsented {
         BadRequest(views.html.user.userInfo(Some(errors)))
       },
       updates => {
-        var settings = user.settings.copy(emailGameUpdates = updates.emailGameUpdates)
+        var settings = user.copy(emailGameUpdates = updates.emailGameUpdates)
         settings = ifSomeUpdate(settings, updates.name){ (s, v) => s.copy(name = v.trim) }
         UserSettings.update(settings)
         Redirect(routes.Home.userInfo())

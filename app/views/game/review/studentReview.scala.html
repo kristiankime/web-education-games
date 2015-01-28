@@ -1,4 +1,4 @@
-@(game: models.game.Game, quiz: models.quiz.Quiz, teacher: models.user.UserFull)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+@(game: models.game.Game, quiz: models.quiz.Quiz, teacher: models.user.UserSetting)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @mainWithBorder("Student Game Score", tag.courseOpLink(game.course), tag.gameLink(Html("game"), game)) {
 
@@ -10,7 +10,7 @@
 
     <section>
         Your results for each question:<br>
-        @defining(quiz.results(user.user)) { quizResults =>
+        @defining(quiz.results(user)) { quizResults =>
         <table class="pure-table pure-table-striped extra-border">
             <tr>
                 <th>question</th>

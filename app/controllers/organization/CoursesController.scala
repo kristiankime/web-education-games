@@ -69,8 +69,8 @@ object CoursesController extends Controller with SecureSocialConsented {
       case Right((organization, course)) => CourseJoin.form.bindFromRequest.fold(
         errors => BadRequest(views.html.errors.formErrorPage(errors)),
         form => {
-            if (course.editCode == form) Courses.grantAccess(course, Edit)
-            if (course.viewCode == None || course.viewCode.get == form) Courses.grantAccess(course, View)
+            if (course.editCode == form) Courses.grantAccess(course, Edit)(user, session)
+            if (course.viewCode == None || course.viewCode.get == form) Courses.grantAccess(course, View)(user, session)
             Redirect(routes.CoursesController.view(organization.id, course.id)) // TODO indicate access was not granted in a better fashion
         })
     }

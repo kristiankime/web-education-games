@@ -1,7 +1,7 @@
 @(course: models.organization.Course,
   quiz: models.quiz.Quiz,
   results: models.quiz.question.QuestionResults,
-  currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+  currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.derivative.routes._
 @import com.artclod.play.s

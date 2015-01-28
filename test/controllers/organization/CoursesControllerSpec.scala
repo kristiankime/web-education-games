@@ -3,6 +3,7 @@ package controllers.organization
 import com.artclod.securesocial.TestUtils._
 import models.DBTest.newFakeUser
 import models.organization._
+import models.user.Logins
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -23,7 +24,7 @@ class CoursesControllerSpec extends Specification {
           val organization = Organizations.create(TestOrganization())
           val course = Courses.create(TestCourse(owner = newFakeUser.id, organizationId = organization.id))
 
-          val page = route(FakeRequest(GET, "/orgs/" + organization.id.v + "/courses/" + course.id.v).withLoggedInUser(user)).get
+          val page = route(FakeRequest(GET, "/orgs/" + organization.id.v + "/courses/" + course.id.v).withLoggedInUser(Logins(user.id).get)).get
 
           status(page) must equalTo(OK)
           contentType(page) must beSome.which(_ == "text/html")
@@ -36,7 +37,7 @@ class CoursesControllerSpec extends Specification {
         implicit session: Session =>
           val user = newFakeUser
           val organization = Organizations.create(TestOrganization())
-          val page = route(FakeRequest(GET, "/orgs/" + organization.id.v + "/courses/create").withLoggedInUser(user)).get
+          val page = route(FakeRequest(GET, "/orgs/" + organization.id.v + "/courses/create").withLoggedInUser(Logins(user.id).get)).get
 
           status(page) must equalTo(OK)
           contentType(page) must beSome.which(_ == "text/html")

@@ -8,6 +8,7 @@ import models.quiz._
 import models.quiz.answer.result.{DerivativeQuestionResults, DerivativeQuestionScores}
 import models.quiz.answer.{DerivativeAnswers, TestDerivativeAnswer}
 import models.support.QuestionId
+import models.user.UserSetting
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.runner._
 import org.specs2.mutable._
@@ -416,7 +417,7 @@ class QuestionsSpec extends Specification {
 
   private def d(l: Long) = JodaUTC(l)
 
-  private def questionAndAnswers(user: Login, answers: (Boolean, DateTime)* )(implicit session: Session) = {
+  private def questionAndAnswers(user: UserSetting, answers: (Boolean, DateTime)* )(implicit session: Session) = {
     val question = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
     for(answer <- answers) { DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question.id, correct = answer._1, creationDate = answer._2)) }
     question

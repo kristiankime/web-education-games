@@ -4,10 +4,10 @@ import com.artclod.slick.JodaUTC
 import models.organization.Courses
 import models.quiz.{Quizzes, Quiz}
 import models.support._
-import models.user.UserFull
+import models.user.{UserSettings, UserSetting, UserFull}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service.{HasUserId, Login}
+import service.{Login}
 import service.table.LoginsTable
 import models.game.GameRole._
 
@@ -31,31 +31,31 @@ case class Game(id: GameId = null,
                 requestorTeacherPoints: Option[Double] = None,
                 finishedDate: Option[DateTime] = None) {
 
-  def isRequestor(user: Login) = user.id match {
+  def isRequestor(user: UserSetting) = user.id match {
     case `requestorId` => true
     case _ => false
   }
 
-  def isRequestee(user: Login) = user.id match {
+  def isRequestee(user: UserSetting) = user.id match {
     case `requesteeId` => true
     case _ => false
   }
 
-  def gameRole(user: Login) = user.id match {
+  def gameRole(user: UserSetting) = user.id match {
     case `requesteeId` => Requestee
     case `requestorId` => Requestor
     case _ => Unrelated
   }
 
-  def skillLevel(user: Login) = user.id match {
+  def skillLevel(user: UserSetting) = user.id match {
     case `requesteeId` => requesteeSkill
     case `requestorId` => requestorSkill
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
   }
 
-  def requestor(implicit session: Session) = UserFull(LoginsTable.findById(requestorId).get)
+  def requestor(implicit session: Session) = UserSettings(requestorId).get
 
-  def requestee(implicit session: Session) = UserFull(LoginsTable.findById(requesteeId).get)
+  def requestee(implicit session: Session) = UserSettings(requesteeId).get
 
   def requestorQuiz(implicit session: Session) = requestorQuizId.flatMap(Quizzes(_))
 
@@ -75,7 +75,7 @@ case class Game(id: GameId = null,
       case _ => None
     }
 
-  def otherPlayer(user: Login)(implicit session: Session) = user.id match {
+  def otherPlayer(user: UserSetting)(implicit session: Session) = user.id match {
     case `requestorId` => requestee
     case `requesteeId` => requestor
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
@@ -103,7 +103,7 @@ case class Game(id: GameId = null,
     case _ => throw new IllegalStateException("Game was not in an allowed state, probably programming error " + this)
   }
 
-  def ensureRequestorQuiz(implicit user: HasUserId, session: Session) : (Game, Quiz) = requestorQuizId match {
+  def ensureRequestorQuiz(implicit user: UserSetting, session: Session) : (Game, Quiz) = requestorQuizId match {
     case Some(quizId) => (this, Quizzes(quizId).get)
     case None => {
       val quiz = blankQuiz(user)
@@ -113,7 +113,7 @@ case class Game(id: GameId = null,
     }
   }
 
-  def ensureRequesteeQuiz(implicit user: HasUserId, session: Session) : (Game, Quiz) = requesteeQuizId match {
+  def ensureRequesteeQuiz(implicit user: UserSetting, session: Session) : (Game, Quiz) = requesteeQuizId match {
     case Some(quizId) => (this, Quizzes(quizId).get)
     case None => {
       val quiz = blankQuiz(user)
@@ -123,7 +123,7 @@ case class Game(id: GameId = null,
     }
   }
 
-  private def blankQuiz(user: HasUserId)(implicit session: Session): Quiz = {
+  private def blankQuiz(user: UserSetting)(implicit session: Session): Quiz = {
     val now = JodaUTC.now
     Quizzes.create(Quiz(null, user.id, "Game Quiz", now, now))
   }

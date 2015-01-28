@@ -1,10 +1,10 @@
-@(gameState: models.game.GameState with models.game.RequestorQuizFinished, answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequestorQuizFinished, answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesController, GamesRequesteeController}
 @import helper._
 
 @defining(gameState.requestorQuiz) { quiz =>
-@defining(quiz.results(user.user)) { quizResults =>
+@defining(quiz.results(user)) { quizResults =>
 
 @mainWithBorder("Answering Quiz", tag.courseOpLink(gameState.game.course)) {
 

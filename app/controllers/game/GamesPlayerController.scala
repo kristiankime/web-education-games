@@ -15,12 +15,12 @@ import models.quiz.Quiz
 import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
 import models.quiz.question.{QuestionDifficulty, DerivativeQuestions, DerivativeQuestion}
 import models.support._
+import models.user.UserSetting
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.{Controller, Result}
-import service.{HasUserId, Login$}
-import models.user.UserPimped
+import service.{Login}
 import scala.util.{Left, Right}
 
 trait GamesPlayerController extends Controller with SecureSocialConsented {
@@ -30,7 +30,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def createdQuiz(game: Game)(implicit session: Session): Option[Quiz]
 
-  protected def createdQuizEnsured(game: Game)(implicit user: HasUserId, session: Session): (Game, Quiz)
+  protected def createdQuizEnsured(game: Game)(implicit user: UserSetting, session: Session): (Game, Quiz)
 
   protected def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz]
 
@@ -38,7 +38,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
-  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.UserFull, session: Session) : Result
+  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.UserSetting, session: Session) : Result
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)]
 
@@ -86,7 +86,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeQuizInternal(game)
-        for(mail <- game.otherPlayer(user.user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+        for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
           val userName = user.nStr
           mail.setSubject(userName + " created a CalcTutor game quiz for you")
           mail.sendHtml(userName + " created a game quiz for you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
@@ -124,7 +124,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeAnswersInternal(game)
-        for(mail <- game.otherPlayer(user.user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+        for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
           val userName = user.nStr
           mail.setSubject(userName + " finished answering your CalcTutor game quiz")
           mail.sendHtml(userName + " finished answering your game quiz in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")

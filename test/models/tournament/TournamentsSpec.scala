@@ -1,7 +1,7 @@
 package models.tournament
 
 import models.game.TestGame
-import models.user.UserFull
+import models.user.{UserSetting, UserFull}
 import models.{DBTest}
 import models.DBTest.newFakeUser
 import models.DBTest.inMemH2
@@ -18,7 +18,7 @@ import service.{UserTest, _}
 @RunWith(classOf[JUnitRunner])
 class TournamentsSpec extends Specification {
 
-	private def testName(user: Login) = UserFull.name(user.fullName, user.id)
+	private def testName(user: UserSetting) = user.nStr // UserFull.name(user.name, user.id)
 
 	"studentScoresRankingFor" should {
 		

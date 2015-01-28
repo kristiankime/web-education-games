@@ -10,13 +10,12 @@ import models.game._
 import models.organization._
 import models.quiz.answer.DerivativeAnswers
 import models.support._
-import models.user.Logins
+import models.user.{UserSettings, UserSetting, UserFull, Logins}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
 import models.game.GameRole._
-import models.user.UserPimped
 
 object GamesController extends Controller with SecureSocialConsented {
 
@@ -51,8 +50,10 @@ object GamesController extends Controller with SecureSocialConsented {
         otherUserId => Games.activeGame(user.id, otherUserId) match {
           case Some(game) => Redirect(controllers.game.routes.GamesController.game(game.id, None)) // TODO accept game if in awaiting state
           case None => {
-            val otherUser = Logins(otherUserId).get
-            val game = Games.request(user.user, otherUser, course)
+
+            val otherUser = UserSettings(otherUserId).get // TODO
+
+            val game = Games.request(user, otherUser, course)
             for(mail <- otherUser.maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.nStr
               mail.setSubject("CalcTutor game request from " + userName)
@@ -68,7 +69,7 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
-        if(game.isRequestor(user.user)) game.toState match {
+        if(game.isRequestor(user)) game.toState match {
           case state: GameRejected => Ok(views.html.game.request.rejectedRequestor(state))
           case state: RequestorDoneAnswering => Ok(views.html.game.play.gameDoneRequestor(state))
           case state: RequestorQuiz => Ok(views.html.game.play.createQuizRequestor(state))
@@ -76,7 +77,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestor(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
         }
-        else if(game.isRequestee(user.user)) game.toState match {
+        else if(game.isRequestee(user)) game.toState match {
           case state: GameRejected => Ok(views.html.game.request.rejectedRequestee(state))
           case state: RequesteeDoneAnswering => Ok(views.html.game.play.gameDoneRequestee(state))
           case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
@@ -101,7 +102,7 @@ object GamesController extends Controller with SecureSocialConsented {
           }
           if (accepted) {
             Games.update(gameState.accept(user.id))
-            for(mail <- gameState.game.otherPlayer(user.user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.nStr
               mail.setSubject(userName + " accepted your CalcTutor game request")
               mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
@@ -109,7 +110,7 @@ object GamesController extends Controller with SecureSocialConsented {
           }
           else {
             Games.update(gameState.reject(user.id))
-            for(mail <- gameState.game.otherPlayer(user.user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
               val userName = user.nStr
               mail.setSubject(userName + " rejected your CalcTutor game request")
               mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))
@@ -124,12 +125,12 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
-        if(game.isRequestor(user.user))
+        if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
             case Right((game, quiz, question)) => Ok(views.html.game.play.answeringQuestionRequestor(game.toState, quiz, question, None))
           }
-        else if(game.isRequestee(user.user))
+        else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
             case Right((game, quiz, question)) => Ok(views.html.game.play.answeringQuestionRequestee(game.toState, quiz, question, None))
@@ -144,13 +145,13 @@ object GamesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
 
-        if(game.isRequestor(user.user))
+        if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) + AnswersController(questionId, answerId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
             case Right((game, quiz, question, answer)) => Ok(views.html.game.play.answeringQuestionRequestor(game.toState, quiz, question, Some(Right(answer))))
           }
 
-        else if(game.isRequestee(user.user))
+        else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId)  + AnswersController(questionId, answerId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
             case Right((game, quiz, question, answer)) => Ok(views.html.game.play.answeringQuestionRequestee(game.toState, quiz, question, Some(Right(answer))))
@@ -164,7 +165,7 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
-        (game.gameRole(user.user), game.requesteeQuizIfDone(quizId), game.requestorQuizIfDone(quizId)) match {
+        (game.gameRole(user), game.requesteeQuizIfDone(quizId), game.requestorQuizIfDone(quizId)) match {
           case (Unrelated, _, _) => throw new IllegalStateException("user was not requestee or requestor (user = [" + user + "] game = [" + game + "])")
           case (Requestor, Some(requesteeQuiz), None) => Ok(views.html.game.review.studentReview(game, requesteeQuiz, game.requestee))
           case (Requestor, None, Some(requestorQuiz)) => Ok(views.html.game.review.teacherReview(game, requestorQuiz, game.requestee))

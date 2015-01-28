@@ -1,9 +1,9 @@
-@(user: models.user.UserFull)(implicit session: play.api.db.slick.Config.driver.simple.Session)
+@(user: models.user.UserSetting)(implicit session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.quiz.answer.result.DerivativeQuestionResults
 
-@defining(models.quiz.question.DerivativeQuestions.incorrectResults(user.user, 5)) { incorrectQuestions: List[(DerivativeQuestionResults, org.joda.time.DateTime)] =>
-@defining(models.quiz.question.DerivativeQuestions.correctResults(user.user, 5)) { correctQuestions: List[(DerivativeQuestionResults, org.joda.time.DateTime)] =>
+@defining(models.quiz.question.DerivativeQuestions.incorrectResults(user, 5)) { incorrectQuestions: List[(DerivativeQuestionResults, org.joda.time.DateTime)] =>
+@defining(models.quiz.question.DerivativeQuestions.correctResults(user, 5)) { correctQuestions: List[(DerivativeQuestionResults, org.joda.time.DateTime)] =>
 
     <section class="secondary-content recent-history">
         <h4> Other Player's History </h4>
@@ -15,9 +15,9 @@
 
         <h5> Correct </h5>
         @if(correctQuestions.isEmpty) {
-            @tag.name(user) hasn't answered any questions correctly
+            @user.n hasn't answered any questions correctly
         } else {
-            Here are the questions @tag.name(user) answered correctly recently:
+            Here are the questions @user.n answered correctly recently:
             <ol>
             @for(correctQuestion <- correctQuestions) {
                 <li> @tag.questionSummary(correctQuestion) </li>
@@ -27,9 +27,9 @@
 
         <h5> Incorrect </h5>
         @if(incorrectQuestions.isEmpty) {
-            @tag.name(user) hasn't answered any questions incorrectly
+            @user.n hasn't answered any questions incorrectly
         } else {
-            Here are the questions @tag.name(user) answered incorrectly recently:
+            Here are the questions @user.n answered incorrectly recently:
             <ol>
             @for(incorrectQuestion <- incorrectQuestions) {
                 <li> @tag.questionSummary(incorrectQuestion) </li>

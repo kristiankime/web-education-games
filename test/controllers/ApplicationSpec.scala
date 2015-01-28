@@ -2,6 +2,7 @@ package controllers
 
 import com.artclod.securesocial.TestUtils._
 import models.DBTest._
+import models.user.Logins
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -16,7 +17,7 @@ class ApplicationSpec extends Specification {
   "Application" should {
 
     "render the index page (when logged in)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
-          val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUser)).get
+          val response = route(FakeRequest(GET, "/").withLoggedInUser(Logins(newFakeUser.id).get)).get
 
           status(response) must equalTo(OK)
           contentType(response) must beSome.which(_ == "text/html")
@@ -31,7 +32,7 @@ class ApplicationSpec extends Specification {
 
   "untrail" should {
     "indicated trailing / are not used in the application" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
-      val response = route(FakeRequest(GET, "/boum/").withLoggedInUser(newFakeUser)).get
+      val response = route(FakeRequest(GET, "/boum/").withLoggedInUser(Logins(newFakeUser.id).get)).get
 
       status(response) must equalTo(MOVED_PERMANENTLY)
       redirectLocation(response).map(_ must equalTo("/boum")) getOrElse failure("missing redirect location")
@@ -40,7 +41,7 @@ class ApplicationSpec extends Specification {
 
   "backTrack" should {
     "redirect back to a working url" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
-      val response = route(FakeRequest(GET, "/boum").withLoggedInUser(newFakeUser)).get
+      val response = route(FakeRequest(GET, "/boum").withLoggedInUser(Logins(newFakeUser.id).get)).get
 
       status(response) must equalTo(SEE_OTHER)
       redirectLocation(response).map(_ must equalTo("/")) getOrElse failure("missing redirect location")

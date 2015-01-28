@@ -1,14 +1,15 @@
 package models.quiz.question
 
 import models.quiz.{Answer, Status}
+import models.user.UserSetting
 import service.Login
 
 trait QuestionResults {
-  val answerer: Login
+  val answerer: UserSetting
   val question: Question
   val answers: List[Answer]
 
-  require(answers.forall(_.ownerId == answerer.id), "All the answers must be from the same user")
+  require(answers.forall(_.ownerId == answerer.userId), "All the answers must be from the same user")
 
   def attempted = answers.nonEmpty
 

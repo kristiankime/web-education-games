@@ -1,13 +1,8 @@
-@(gameState: models.game.GameState)(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
-
-@import controllers.game._
-@import helper._
-@import models.user.UserPimped
-@import models.game.GameResponseStatus
+@(gameState: models.game.GameState)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @mainWithBorder("Awaiting Quiz", tag.courseOpLink(gameState.game.course)) {
 
-    You finished your quiz but @tag.name(gameState.game.requestor) hasn't yet built theirs.
+    You finished your quiz but @gameState.game.requestor.n hasn't yet built theirs.
     Please wait for the other player to finish their game (you will need to reload the page).<br>
 
 }

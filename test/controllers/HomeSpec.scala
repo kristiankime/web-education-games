@@ -2,6 +2,7 @@ package controllers
 
 import com.artclod.securesocial.TestUtils._
 import models.DBTest._
+import models.user.Logins
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -16,7 +17,7 @@ class HomeSpec extends Specification {
   "index" should {
 
     "render home page if the user has consented" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) { DB.withSession { implicit session: Session =>
-      val response = route(FakeRequest(GET, "/").withLoggedInUser(newFakeUser)).get
+      val response = route(FakeRequest(GET, "/").withLoggedInUser(Logins(newFakeUser.id).get)).get
 
       val statusVal = status(response)
       val redirectLocationVal = redirectLocation(response)

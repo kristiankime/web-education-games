@@ -108,8 +108,8 @@ trait RequestorStillAnswering extends RequestorAnswerStatus {
     val requestor = game.requestor
     game.copy(
       requestorFinished = true,
-      requestorStudentPoints = Some(quiz.studentScore(requestor.user)),
-      requesteeTeacherPoints = Some(quiz.teacherScore(requestor.user, game.requestorSkill))
+      requestorStudentPoints = Some(quiz.studentScore(requestor)),
+      requesteeTeacherPoints = Some(quiz.teacherScore(requestor, game.requestorSkill))
     ).maybeUpdateForGameDone
   }
 }
@@ -131,8 +131,8 @@ trait RequesteeStillAnswering extends RequesteeAnswerStatus {
     val quiz = game.requestorQuiz.get // Should always have a quiz here
     val requestee = game.requestee
     game.copy(requesteeFinished = true,
-      requesteeStudentPoints = Some(quiz.studentScore(requestee.user)),
-      requestorTeacherPoints = Some(quiz.teacherScore(requestee.user, game.requesteeSkill))
+      requesteeStudentPoints = Some(quiz.studentScore(requestee)),
+      requestorTeacherPoints = Some(quiz.teacherScore(requestee, game.requesteeSkill))
     ).maybeUpdateForGameDone
   }
 }

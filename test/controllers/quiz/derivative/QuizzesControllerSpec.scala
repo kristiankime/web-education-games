@@ -5,6 +5,7 @@ import models.DBTest.newFakeUser
 import models.organization._
 import models.quiz.{TestQuiz, Quizzes}
 import models.quiz.question.{TestDerivativeQuestion, DerivativeQuestions}
+import models.user.Logins
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -33,7 +34,7 @@ class QuizzesControllerSpec extends Specification {
 
           val routeStr: String = "/orgs/" + organization.id.v + "/courses/" + course.id.v + "/quizzes/" + quiz.id.v + "/questions/" + question.id.v
 
-          val page = route(FakeRequest(GET, routeStr).withLoggedInUser(user)).get
+          val page = route(FakeRequest(GET, routeStr).withLoggedInUser(Logins(user.id).get)).get
 
           status(page) must equalTo(OK)
           contentType(page) must beSome.which(_ == "text/html")

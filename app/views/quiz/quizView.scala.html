@@ -1,12 +1,11 @@
 @(access: service.Access,
 	course: models.organization.Course,
     quiz: models.quiz.Quiz,
-    answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: models.user.UserFull, session: play.api.db.slick.Config.driver.simple.Session)
+    answerOp: Option[models.quiz.answer.DerivativeAnswer])(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.routes.{ QuestionsController, QuizzesController}
 @import controllers.quiz.QuizForm
 @import helper._
-@import models.user.UserPimped
 @import com.artclod.play.{are, s}
 
 @mainWithBorder("Quiz " + quiz.name, tag.courseLink(course)) {
@@ -20,7 +19,7 @@
     }
     }
 
-    @defining(quiz.results(user.user)){ results =>
+    @defining(quiz.results(user)){ results =>
     @defining(results.questions){ questions =>
 
     <h4>There @are(questions) @questions.size Question@s(questions) in the quiz @tag.icon("icon-help", 'data_ot -> "Click a question to answer it")</h4>

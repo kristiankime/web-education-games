@@ -15,9 +15,9 @@
 
         <h5> Correct </h5>
         @if(correctQuestions.isEmpty) {
-            @user.n hasn't answered any questions correctly
+            @user.nameView hasn't answered any questions correctly
         } else {
-            Here are the questions @user.n answered correctly recently:
+            Here are the questions @user.nameView answered correctly recently:
             <ol>
             @for(correctQuestion <- correctQuestions) {
                 <li> @tag.questionSummary(correctQuestion) </li>
@@ -27,9 +27,9 @@
 
         <h5> Incorrect </h5>
         @if(incorrectQuestions.isEmpty) {
-            @user.n hasn't answered any questions incorrectly
+            @user.nameView hasn't answered any questions incorrectly
         } else {
-            Here are the questions @user.n answered incorrectly recently:
+            Here are the questions @user.nameView answered incorrectly recently:
             <ol>
             @for(incorrectQuestion <- incorrectQuestions) {
                 <li> @tag.questionSummary(incorrectQuestion) </li>

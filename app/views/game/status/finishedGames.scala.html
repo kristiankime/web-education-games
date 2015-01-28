@@ -9,7 +9,7 @@
     <h5>Completed Games</h5>
     @if(games.isEmpty){<h6>You don't have any completed games</h6>} else {<h6>You have completed games with the following players</h6>
     <ul class="pure-list">
-        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).n, game, 'class -> "button-xsmall") on @datetime(game.finishedDate.get) @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall")  </li>}
+        @for(game <- games) {<li> @gameLink(game.otherPlayer(user).nameView, game, 'class -> "button-xsmall") on @datetime(game.finishedDate.get) @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall")  </li>}
     </ul>
     }
 </section>

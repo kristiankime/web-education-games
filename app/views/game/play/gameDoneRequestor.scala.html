@@ -8,9 +8,9 @@
 @mainWithBorder("Game Done", tag.courseOpLink(gameState.game.course)) {
 
     @if(!gameState.game.requesteeFinished){
-    <h1>You have finished but @gameState.game.requestee.n still needs to finish your quiz.</h1>
+    <h1>You have finished but @gameState.game.requestee.nameView still needs to finish your quiz.</h1>
     } else {
-    <h1>Congratulations you finished a game with @gameState.game.requestee.n</h1>
+    <h1>Congratulations you finished a game with @gameState.game.requestee.nameView</h1>
     }
 
     @for(requesteeQuiz <- gameState.game.requesteeQuiz ) {
@@ -28,7 +28,7 @@
     <section class="extra-border">
     @for(course <- gameState.game.courseId.flatMap(Courses(_))){
     @form(action = GamesController.requestGame(course.organizationId, course.id), 'class -> "pure-form") {
-        Play another round with @gameState.game.requestee.n
+        Play another round with @gameState.game.requestee.nameView
         <input type="hidden" name="@GameRequest.requestee" value="@gameState.game.requesteeId.v">
         <input type="submit" class="pure-button pure-button-primary" value="Play Again">
     }

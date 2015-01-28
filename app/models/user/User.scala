@@ -11,7 +11,7 @@ import service.Logins
 
 case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {
 
-  def n = views.html.tag.name(this)
+  def nameView = views.html.tag.name(this)
 
   def nameDisplay = Users.nameDisplay(name, id)
 

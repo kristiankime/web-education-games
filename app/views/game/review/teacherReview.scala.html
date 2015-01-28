@@ -7,11 +7,11 @@
     <h2> Teacher Game Score @tag.icon("icon-help", 'data_ot -> "Players get two scores. One as a Student and one as a teacher. Your teacher score is based on the difficulty of the questions you asked and if the other player got them correct.")</h2>
 
     <section>
-        You played a @tag.gameLink(Html("game"), game) with @student.n on @tag.datetimeOp(game.finishedDate)
+        You played a @tag.gameLink(Html("game"), game) with @student.nameView on @tag.datetimeOp(game.finishedDate)
     </section>
 
     <section>
-        When you played the game @student.n had a skill level of @studentSkillLevel @tag.icon("icon-help", 'data_ot -> "This skill level is compared to the difficulty of the questions you asked to determine your teacher score.")<br>
+        When you played the game @student.nameView had a skill level of @studentSkillLevel @tag.icon("icon-help", 'data_ot -> "This skill level is compared to the difficulty of the questions you asked to determine your teacher score.")<br>
         @defining(quiz.results(student)) { quizResults =>
         <table class="table pure-table-striped extra-border">
             <tr>

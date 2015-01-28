@@ -18,7 +18,7 @@
     @form(action = GamesController.requestGame(organization.id, course.id), 'class -> "pure-form") {
         @for(student <- students.zipWithIndex){
         <label for="player@student._2" class="pure-checkbox">
-            <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.userId.v"@if(student._2 == 0){checked}>
+            <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
             @student._1.name
         </label>
         }

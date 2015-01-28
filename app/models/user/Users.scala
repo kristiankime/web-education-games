@@ -13,7 +13,7 @@ object Users {
     Try(session.withTransaction { userSettingsTable.insert(userSetting); userSetting })
 
   def update(userSetting: User)(implicit session: Session) =
-    Try(session.withTransaction {userSettingsTable.where(_.userId === userSetting.userId).update(userSetting); userSetting })
+    Try(session.withTransaction {userSettingsTable.where(_.userId === userSetting.id).update(userSetting); userSetting })
 
   def apply(userId: UserId)(implicit session: Session) : Option[User] = userSettingsTable.where(_.userId === userId).firstOption
 

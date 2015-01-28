@@ -24,7 +24,7 @@ class UserSettingsSpec extends Specification {
 
     "create a unique name if the name already exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
       val user1 = newFakeUserNoConsent
-      val user1Settings = User(userId = user1.id, name = "name")
+      val user1Settings = User(id = user1.id, name = "name")
       Users.create(user1Settings)
 
       val newName = Users.validName(user1Settings.name)
@@ -37,7 +37,7 @@ class UserSettingsSpec extends Specification {
 
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
-        val firstUserSettings = User(userId = firstUser.id, name = "name")
+        val firstUserSettings = User(id = firstUser.id, name = "name")
         Users.create(firstUserSettings)
         firstUserSettings
       }
@@ -47,7 +47,7 @@ class UserSettingsSpec extends Specification {
           val newUserName = Users.validName(settings.name)
           newUserName mustNotEqual (settings.name)
           val newUser = newFakeUserNoConsent
-          val newUserSettings = User(userId = newUser.id, name = newUserName)
+          val newUserSettings = User(id = newUser.id, name = newUserName)
           Users.create(newUserSettings).get.name
         }
       }
@@ -59,7 +59,7 @@ class UserSettingsSpec extends Specification {
 
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
-        val firstUserSettings = User(userId = firstUser.id, name = "name")
+        val firstUserSettings = User(id = firstUser.id, name = "name")
         Users.create(firstUserSettings)
         firstUserSettings
       }
@@ -69,7 +69,7 @@ class UserSettingsSpec extends Specification {
           val newUserName = Users.validName(settings.name)
           newUserName mustNotEqual (settings.name)
           val newUser = newFakeUserNoConsent
-          val newUserSettings = User(userId = newUser.id, name = newUserName)
+          val newUserSettings = User(id = newUser.id, name = newUserName)
           Users.create(newUserSettings)
         }
       }).par.map(_.retryOnFail(10)).seq.map(_.get.name) // run in parallel but also retry on fail

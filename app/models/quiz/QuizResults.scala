@@ -6,7 +6,7 @@ import models.user.User
 import service.Login
 
 case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]) {
-  require(results.forall(_.answerer.userId == student.userId), "All the question results must be from the same user")
+  require(results.forall(_.answerer.id == student.id), "All the question results must be from the same user")
 
   def numQuestions = results.size
 

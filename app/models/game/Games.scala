@@ -15,7 +15,7 @@ object Games {
 
   // ====== Find players  ======
   def studentsToPlayWith(requestorId: UserId, courseId: CourseId)(implicit session: Session) =
-    Courses.studentsExcept(courseId, requestorId).filter(u => activeGame(requestorId, u.userId).isEmpty)
+    Courses.studentsExcept(courseId, requestorId).filter(u => activeGame(requestorId, u.id).isEmpty)
 
   // ====== Request Game ======
   def request(requestor: User, requestee: User, course: Course)(implicit session: Session): Game = {

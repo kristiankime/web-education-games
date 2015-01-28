@@ -9,12 +9,11 @@ import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
 import service.Logins
 
-case class User(userId: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {
-  val id = userId
+case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {
 
   def n = views.html.tag.name(this)
 
-  def nStr = Users.name(name, userId)
+  def nStr = Users.name(name, id)
 
   def email(implicit session: Session) = Logins(id).flatMap(_.email)
 

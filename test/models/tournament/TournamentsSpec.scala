@@ -18,7 +18,7 @@ import service.{UserTest, _}
 @RunWith(classOf[JUnitRunner])
 class TournamentsSpec extends Specification {
 
-	private def testName(user: User) = user.nStr // UserFull.name(user.name, user.id)
+	private def testName(user: User) = user.nameDisplay
 
 	"studentScoresRankingFor" should {
 		

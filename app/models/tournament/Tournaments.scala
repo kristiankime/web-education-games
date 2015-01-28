@@ -24,7 +24,7 @@ object Tournaments {
   private def rankings[M](list: List[(UserId, String, M)]) =
     list.zipWithIndex.map( e => {
       val ((userId, name, metric), index) = e;
-      Rank[M](userId, Users.name(name, userId), metric, index + 1)
+      Rank[M](userId, Users.nameDisplay(name, userId), metric, index + 1)
     })
 
   private def rankingsFor[M](id: UserId, size: Int, ranks: List[Rank[M]]) = {

@@ -13,14 +13,14 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
 
   def n = views.html.tag.name(this)
 
-  def nStr = Users.name(name, id)
+  def nameDisplay = Users.nameDisplay(name, id)
 
   def email(implicit session: Session) = Logins(id).flatMap(_.email)
 
   /**
    * If we can (and should) send an email to the user returns Some(their_email), otherwise None.
    */
-  def maybeSendGameEmail(implicit session: Session) = if(emailGameUpdates){ Logins(id).flatMap(_.email) } else { None }
+  def maybeSendGameEmail(implicit session: Session) = if(emailGameUpdates){ email } else { None }
 
   def activeGame(otherId: UserId)(implicit session: Session) = Games.activeGame(id, otherId)
 

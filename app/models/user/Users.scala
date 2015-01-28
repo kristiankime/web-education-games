@@ -7,7 +7,7 @@ import scala.util.Try
 
 object Users {
 
-  def name(name:String, id: UserId) = name + "-" + id.v
+  def nameDisplay(name:String, id: UserId) = name + "-" + id.v
 
   def create(userSetting: User)(implicit session: Session) =
     Try(session.withTransaction { userSettingsTable.insert(userSetting); userSetting })

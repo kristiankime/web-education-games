@@ -87,7 +87,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Right(game) => {
         finalizeQuizInternal(game)
         for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
-          val userName = user.nStr
+          val userName = user.nameDisplay
           mail.setSubject(userName + " created a CalcTutor game quiz for you")
           mail.sendHtml(userName + " created a game quiz for you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
         }
@@ -125,7 +125,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Right(game) => {
         finalizeAnswersInternal(game)
         for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
-          val userName = user.nStr
+          val userName = user.nameDisplay
           mail.setSubject(userName + " finished answering your CalcTutor game quiz")
           mail.sendHtml(userName + " finished answering your game quiz in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
         }

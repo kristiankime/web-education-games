@@ -1,6 +1,6 @@
 package models
 
-import models.user.{UserSetting, UserSettings}
+import models.user.{User, Users}
 import play.api.test.Helpers.inMemoryDatabase
 import service.table.LoginsTable
 import service.UserTest
@@ -15,16 +15,16 @@ object DBTest {
   /**
    * Create a default fake user who has consented.
    */
-	def newFakeUser(userNoId: Login)(implicit session: Session) : UserSetting = {
+	def newFakeUser(userNoId: Login)(implicit session: Session) : User = {
     val user = LoginsTable.insert(userNoId)
 
-    val createSettings = (() => UserSettings.create(UserSetting(user.id, consented = true, name = UserSettings.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false)))
+    val createSettings = (() => Users.create(User(user.id, consented = true, name = Users.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false)))
     val settings = createSettings.retryOnFail()
 
     settings.get
   }
 
-	def newFakeUser(implicit session: Session) : UserSetting = newFakeUser(UserTest())
+	def newFakeUser(implicit session: Session) : User = newFakeUser(UserTest())
 
   /**
    * Create a default fake user who has not consented (and therefore cannot access most of the site).

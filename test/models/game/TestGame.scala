@@ -1,7 +1,7 @@
 package models.game
 
 import com.artclod.slick.JodaUTC
-import models.user.{UserSetting}
+import models.user.{User}
 import play.api.db.slick.Config.driver.simple.Session
 
 object TestGame {
@@ -22,7 +22,7 @@ object TestGame {
     )
   }
 
-  def createFinished(requestor: UserSetting, requestee : UserSetting, requestorStudent : Double = 0d, requesteeStudent : Double = 0d, requestorTeacher : Double = 0d, requesteeTeacher : Double = 0d)(implicit session: Session) = {
+  def createFinished(requestor: User, requestee : User, requestorStudent : Double = 0d, requesteeStudent : Double = 0d, requestorTeacher : Double = 0d, requesteeTeacher : Double = 0d)(implicit session: Session) = {
     val game = score(Games.request(requestor, requestee))(requestorStudent, requesteeStudent, requestorTeacher, requesteeTeacher)
     finish(game)
   }

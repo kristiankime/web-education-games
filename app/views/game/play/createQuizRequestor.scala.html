@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState with models.game.RequestorQuiz)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequestorQuiz)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.game.GameResponseStatus
 @import controllers.game.routes.GamesRequestorController

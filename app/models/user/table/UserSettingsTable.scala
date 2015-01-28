@@ -1,14 +1,14 @@
 package models.user.table
 
 import models.support.UserId
-import models.user.UserSetting
+import models.user.User
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
 import models.support._
 
 import scala.slick.model.ForeignKeyAction
 
-class UserSettingsTable(tag: Tag) extends Table[UserSetting](tag, "application_user_settings") {
+class UserSettingsTable(tag: Tag) extends Table[User](tag, "application_user_settings") {
   def userId = column[UserId]("user_id", O.PrimaryKey)
   def consented = column[Boolean]("consented")
   def name = column[String]("name")
@@ -16,7 +16,7 @@ class UserSettingsTable(tag: Tag) extends Table[UserSetting](tag, "application_u
   def seenHelp = column[Boolean]("seen_help")
   def emailGameUpdates = column[Boolean]("email_game_updates")
 
-  def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates) <> (UserSetting.tupled, UserSetting.unapply _)
+  def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates) <> (User.tupled, User.unapply _)
 
   def userFK = foreignKey("application_user_settings__user_fk", userId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 

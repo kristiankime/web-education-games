@@ -1,22 +1,20 @@
 package models.user
 
+import play.api.db.slick.Config.driver.simple.Session
 import models.game.Games
 import models.organization.Courses
 import models.quiz.answer.result.DerivativeQuestionScores
 import models.quiz.question.{QuestionDifficulty, DerivativeQuestions}
-import org.joda.time.DateTime
-import play.api.db.slick.Config.driver.simple._
 import models.support.{CourseId, UserId}
-import models.user.table._
+import org.joda.time.DateTime
 import service.Logins
-import scala.util.Try
 
-case class UserSetting(userId: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {
+case class User(userId: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {
   val id = userId
 
   def n = views.html.tag.name(this)
 
-  def nStr = UserSettings.name(name, userId)
+  def nStr = Users.name(name, userId)
 
   def email(implicit session: Session) = Logins(id).flatMap(_.email)
 
@@ -49,39 +47,3 @@ case class UserSetting(userId: UserId, consented: Boolean = true, name: String, 
     )
   }
 }
-
-object UserSettings {
-
-  def name(name:String, id: UserId) = name + "-" + id.v
-
-
-  def create(userSetting: UserSetting)(implicit session: Session) =
-    Try(session.withTransaction { userSettingsTable.insert(userSetting); userSetting })
-
-  def update(userSetting: UserSetting)(implicit session: Session) =
-    Try(session.withTransaction {userSettingsTable.where(_.userId === userSetting.userId).update(userSetting); userSetting })
-
-  def apply(userId: UserId)(implicit session: Session) : Option[UserSetting] = userSettingsTable.where(_.userId === userId).firstOption
-
-  /**
-   * Produces a name that was unique at the time that this call was made.
-   * Note that this name may not unique if an update/insert is done later.
-   */
-  def validName(startingName: String)(implicit session: Session) = {
-    userSettingsTable.where(_.name === startingName).firstOption match {
-      case None => startingName
-      case Some(_) => {
-        val similarNames = userSettingsTable.where(_.name like (startingName + "%")).list.map(_.name).toSet
-
-        if(!similarNames(startingName)) startingName
-        else {
-          var count = 0
-          while (similarNames(startingName + count)) { count += 1 }
-          startingName + count
-        }
-      }
-    }
-  }
-
-}
-

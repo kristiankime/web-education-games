@@ -6,7 +6,7 @@ import models.quiz.answer.TangentAnswer
 import models.quiz.answer.result.{DerivativeQuestionResults, TangentQuestionResults}
 import models.quiz._
 import models.support.{Owned, QuestionId, QuizId, UserId}
-import models.user.UserSetting
+import models.user.User
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.templates.Html
@@ -22,15 +22,15 @@ trait Question extends Owned {
 
   def quiz(implicit session: Session) = quizIdOp.flatMap(Quizzes(_))
 
-  def access(course: Course)(implicit user: UserSetting, session: Session) = {
+  def access(course: Course)(implicit user: User, session: Session) = {
     val courseAccess = course.access
     val ownerAccess = Access(user, ownerId)
     Seq(courseAccess, ownerAccess).max
   }
 
-  def results(user: UserSetting)(implicit session: Session) : QuestionResults
+  def results(user: User)(implicit session: Session) : QuestionResults
 
-  def answersAndOwners(implicit session: Session) : List[(Answer, UserSetting)]
+  def answersAndOwners(implicit session: Session) : List[(Answer, User)]
 
   def difficulty : Double
 
@@ -43,9 +43,9 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def difficulty : Double = QuestionDifficulty(mathML)
 
-  def results(user: UserSetting)(implicit session: Session) = DerivativeQuestionResults(user, this, answers(user))
+  def results(user: User)(implicit session: Session) = DerivativeQuestionResults(user, this, answers(user))
 
-  def answers(user: UserSetting)(implicit session: Session) = DerivativeQuestions(id, user)
+  def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
   def display : Html = views.html.quiz.derivative.questionDisplay(this)
 
@@ -53,9 +53,9 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
-  def results(user: UserSetting)(implicit session: Session) = TangentQuestionResults(user, this, List()) // TODO
+  def results(user: User)(implicit session: Session) = TangentQuestionResults(user, this, List()) // TODO
 
-  def answersAndOwners(implicit session: Session) : List[(TangentAnswer, UserSetting)] = List() // TODO
+  def answersAndOwners(implicit session: Session) : List[(TangentAnswer, User)] = List() // TODO
 
   def difficulty : Double = 1d // TODO
 

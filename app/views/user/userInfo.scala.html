@@ -1,4 +1,4 @@
-@(errorsOp: Option[Form[SettingsData]] = None)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
+@(errorsOp: Option[Form[SettingsData]] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.organization.Courses
 @import com.artclod.play.s

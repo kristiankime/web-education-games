@@ -1,4 +1,4 @@
-@(game: models.game.Game, quiz: models.quiz.Quiz, student: models.user.UserSetting)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
+@(game: models.game.Game, quiz: models.quiz.Quiz, student: models.user.User)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @defining(game.skillLevel(student)){ studentSkillLevel =>
 

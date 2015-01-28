@@ -5,7 +5,7 @@ import models.organization._
 import models.organization.table._
 import models.quiz.question.Question
 import models.support._
-import models.user.UserSetting
+import models.user.User
 import play.api.db.slick.Config.driver.simple._
 import service._
 import models.quiz.table.quizzesTable
@@ -65,11 +65,11 @@ object Quizzes {
     }
 
   // ======= AUTHORIZATION ======
-  def linkAccess(quiz: Quiz)(implicit user: UserSetting, session: Session) =
+  def linkAccess(quiz: Quiz)(implicit user: User, session: Session) =
     usersQuizzesTable.where(uq => uq.userId === user.id && uq.quizId === quiz.id).firstOption.map(_.access).toAccess
 
   // ======= Scoring ======
-  def studentScore(quiz: Quiz, user: UserSetting)(implicit session: Session) = {
+  def studentScore(quiz: Quiz, user: User)(implicit session: Session) = {
     quiz.questions.map( _.results(user))
   }
 

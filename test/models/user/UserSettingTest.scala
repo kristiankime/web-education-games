@@ -12,6 +12,6 @@ object UserSettingTest {
             allowAutoMatch: Boolean = true,
             seenHelp: Boolean = false,
             emailGameUpdates: Boolean = true) = {
-    UserSetting(UserId(id.getAndDecrement), consented, name, allowAutoMatch, seenHelp, emailGameUpdates)
+    User(UserId(id.getAndDecrement), consented, name, allowAutoMatch, seenHelp, emailGameUpdates)
   }
 }

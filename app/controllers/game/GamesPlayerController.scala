@@ -15,7 +15,7 @@ import models.quiz.Quiz
 import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
 import models.quiz.question.{QuestionDifficulty, DerivativeQuestions, DerivativeQuestion}
 import models.support._
-import models.user.UserSetting
+import models.user.User
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -30,7 +30,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def createdQuiz(game: Game)(implicit session: Session): Option[Quiz]
 
-  protected def createdQuizEnsured(game: Game)(implicit user: UserSetting, session: Session): (Game, Quiz)
+  protected def createdQuizEnsured(game: Game)(implicit user: User, session: Session): (Game, Quiz)
 
   protected def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz]
 
@@ -38,7 +38,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
-  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.UserSetting, session: Session) : Result
+  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.User, session: Session) : Result
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)]
 

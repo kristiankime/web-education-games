@@ -4,7 +4,7 @@ import java.io.{PrintWriter, StringWriter}
 
 import com.google.common.annotations.VisibleForTesting
 import controllers.support.SecureSocialDB
-import models.user.{UserSetting, UserSettings}
+import models.user.{User, Users}
 import play.api.mvc.Controller
 import play.api.Logger
 import play.api.data.Form
@@ -32,9 +32,9 @@ object Consent extends Controller with SecureSocialDB {
       },
       consented => {
 
-        val settings = (UserSettings(user.id) match {
-          case Some(setting) => UserSettings.update(setting.copy(consented = consented))
-          case None => UserSettings.create(UserSetting(userId = user.id, consented = consented, name = defaultName(user), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
+        val settings = (Users(user.id) match {
+          case Some(setting) => Users.update(setting.copy(consented = consented))
+          case None => Users.create(User(userId = user.id, consented = consented, name = defaultName(user), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
         })
 
         (settings, consented, goTo) match {
@@ -67,8 +67,8 @@ object Consent extends Controller with SecureSocialDB {
     }
 
   def revokeConsent() = SecuredUserDBAction { implicit request => implicit user => implicit session =>
-    val settings = (UserSettings(user.id) match {
-      case Some(setting) => UserSettings.update(setting.copy(consented = false))
+    val settings = (Users(user.id) match {
+      case Some(setting) => Users.update(setting.copy(consented = false))
       case None => throw new IllegalStateException("Attempted to revoke consent for [" + user.id + "] but user had no settings")
     })
     Ok(views.html.user.noConsent())

@@ -17,17 +17,17 @@ class UserSettingsSpec extends Specification {
   "validName" should {
 
     "return the starting name if it does not conflict" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
-      val newName = UserSettings.validName("name")
+      val newName = Users.validName("name")
 
       newName must beEqualTo("name")
     }  }
 
     "create a unique name if the name already exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
       val user1 = newFakeUserNoConsent
-      val user1Settings = UserSetting(userId = user1.id, name = "name")
-      UserSettings.create(user1Settings)
+      val user1Settings = User(userId = user1.id, name = "name")
+      Users.create(user1Settings)
 
-      val newName = UserSettings.validName(user1Settings.name)
+      val newName = Users.validName(user1Settings.name)
 
       newName mustNotEqual(user1Settings.name)
     }  }
@@ -37,18 +37,18 @@ class UserSettingsSpec extends Specification {
 
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
-        val firstUserSettings = UserSetting(userId = firstUser.id, name = "name")
-        UserSettings.create(firstUserSettings)
+        val firstUserSettings = User(userId = firstUser.id, name = "name")
+        Users.create(firstUserSettings)
         firstUserSettings
       }
 
       val nameSeq = for(i <- 1 to 20) yield {
         DB.withSession { implicit session: Session =>
-          val newUserName = UserSettings.validName(settings.name)
+          val newUserName = Users.validName(settings.name)
           newUserName mustNotEqual (settings.name)
           val newUser = newFakeUserNoConsent
-          val newUserSettings = UserSetting(userId = newUser.id, name = newUserName)
-          UserSettings.create(newUserSettings).get.name
+          val newUserSettings = User(userId = newUser.id, name = newUserName)
+          Users.create(newUserSettings).get.name
         }
       }
       val nameSet = nameSeq.toSet
@@ -59,18 +59,18 @@ class UserSettingsSpec extends Specification {
 
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
-        val firstUserSettings = UserSetting(userId = firstUser.id, name = "name")
-        UserSettings.create(firstUserSettings)
+        val firstUserSettings = User(userId = firstUser.id, name = "name")
+        Users.create(firstUserSettings)
         firstUserSettings
       }
 
       val nameSeq = (for(i <- 1 to 20) yield { () =>
         DB.withSession { implicit session: Session =>
-          val newUserName = UserSettings.validName(settings.name)
+          val newUserName = Users.validName(settings.name)
           newUserName mustNotEqual (settings.name)
           val newUser = newFakeUserNoConsent
-          val newUserSettings = UserSetting(userId = newUser.id, name = newUserName)
-          UserSettings.create(newUserSettings)
+          val newUserSettings = User(userId = newUser.id, name = newUserName)
+          Users.create(newUserSettings)
         }
       }).par.map(_.retryOnFail(10)).seq.map(_.get.name) // run in parallel but also retry on fail
       val nameSet = nameSeq.toSet

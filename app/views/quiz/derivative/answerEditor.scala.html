@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(link: Html)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivative.AnswerForm

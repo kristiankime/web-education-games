@@ -1,11 +1,11 @@
 package models.quiz.question
 
 import models.quiz.{Answer, Status}
-import models.user.UserSetting
+import models.user.User
 import service.Login
 
 trait QuestionResults {
-  val answerer: UserSetting
+  val answerer: User
   val question: Question
   val answers: List[Answer]
 

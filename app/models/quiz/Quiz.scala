@@ -4,7 +4,7 @@ import com.artclod.collection._
 import models.organization._
 import models.quiz.question.{DerivativeQuestion, DerivativeQuestions}
 import models.support._
-import models.user.UserSetting
+import models.user.User
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
@@ -16,19 +16,19 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   // === TODO Above update for multiple question types ===
 
-   def results(student: UserSetting)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
+   def results(student: User)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
 
    def results(course: Course)(implicit session: Session) : List[QuizResults] = course.students.map(results(_))
 
-   def summary(student: UserSetting)(implicit session: Session) = DerivativeQuestions.summary(student, this)
+   def summary(student: User)(implicit session: Session) = DerivativeQuestions.summary(student, this)
 
-   def summary(student: UserSetting, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.summary(student, asOf, this)
+   def summary(student: User, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.summary(student, asOf, this)
   
    def previousQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementBefore(question)
 
    def nextQuestion(question: DerivativeQuestion)(implicit session: Session) = questions.elementAfter(question)
 
-   def firstUnfinishedQuestion(user: UserSetting)(implicit session: Session) = results(user).firstUnfinishedQuestion
+   def firstUnfinishedQuestion(user: User)(implicit session: Session) = results(user).firstUnfinishedQuestion
 
    def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
 
@@ -39,19 +39,19 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
    def course(courseId: CourseId)(implicit session: Session): Option[Course] = Quizzes.course(courseId, id)
 
-   protected def linkAccess(implicit user: UserSetting, session: Session) = Quizzes.linkAccess(this)
+   protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
 
-   def access(implicit user: UserSetting, session: Session) = {
+   def access(implicit user: User, session: Session) = {
      val courseAccess = Quizzes.courses(id).map(_.access.ceilEdit).toSeq
      (courseAccess :+ directAccess) max
    }
 
-   def studentScore(student: UserSetting)(implicit session: Session) = {
+   def studentScore(student: User)(implicit session: Session) = {
      val summaries = DerivativeQuestions.summary(student, this)
      summaries.map(_.studentScore).sum / questions.size.toDouble
    }
 
-   def teacherScore(student: UserSetting, studentSkillLevel: Double)(implicit session: Session) = {
+   def teacherScore(student: User, studentSkillLevel: Double)(implicit session: Session) = {
      val summaries = DerivativeQuestions.summary(student, this)
      summaries.map(_.teacherScore(studentSkillLevel)).sum / questions.size.toDouble
    }

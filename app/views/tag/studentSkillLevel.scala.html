@@ -1,1 +1,1 @@
-@(user: models.user.UserSetting)(implicit session: play.api.db.slick.Config.driver.simple.Session)@tag.skillLevel(user.studentSkillLevel)
+@(user: models.user.User)(implicit session: play.api.db.slick.Config.driver.simple.Session)@tag.skillLevel(user.studentSkillLevel)

@@ -1,6 +1,6 @@
 package controllers.support
 
-import models.user.UserSettings
+import models.user.Users
 import play.api.db.slick.Config.driver.simple.Session
 import securesocial.core.Authorization
 import securesocial.core.Identity
@@ -15,7 +15,7 @@ case class RequireAccess(level: Access, secured: Session => Option[Secured]) ext
 	def isAuthorized(identity: Identity) = DB.withSession { implicit session: Session =>
 		(identity, secured(session)) match {
 			case (login: Login, Some(s)) =>
-				UserSettings(login.id) match {
+				Users(login.id) match {
 					case None => false
 					case Some(user) => s.access(user, session) >= level
 				}

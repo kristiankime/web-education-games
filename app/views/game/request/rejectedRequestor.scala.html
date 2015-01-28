@@ -1,4 +1,4 @@
-@(gameState: models.game.GameState)(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @mainWithBorder("Game Declined", tag.courseOpLink(gameState.game.course)) {
 

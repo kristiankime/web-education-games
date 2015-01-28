@@ -1,4 +1,4 @@
-@()(implicit user: models.user.UserSetting, session: play.api.db.slick.Config.driver.simple.Session)
+@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @defining(models.tournament.Tournaments.studentScoresRankingFor(user.id, 10)) { scoreRanking =>
 @defining(models.tournament.Tournaments.completedGamesRankingFor(user.id, 10)) { gameRanking =>

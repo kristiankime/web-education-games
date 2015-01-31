@@ -7,7 +7,7 @@ import play.api.db.slick.Config.driver.simple._
 import models.support._
 import models.organization.table._
 import service._
-import models.user.table.userSettingsTable
+import models.user.table.userTable
 
 case class Course(id: CourseId, name: String, organizationId: OrganizationId, ownerId: UserId, editCode: String, viewCode: Option[String], creationDate: DateTime, updateDate: DateTime) extends Secured with HasId[CourseId] {
 
@@ -59,12 +59,12 @@ object Courses {
 
   def students(courseId: CourseId)(implicit session: Session) =
   (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-        u <- userSettingsTable if u.userId === uc.userId
+        u <- userTable if u.userId === uc.userId
   ) yield u).sortBy(_.name).list
 
   def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) =
    (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-         u <- userSettingsTable if (u.userId === uc.userId) && (u.userId =!= userId)
+         u <- userTable if (u.userId === uc.userId) && (u.userId =!= userId)
    ) yield u).sortBy(_.name).list
 
 

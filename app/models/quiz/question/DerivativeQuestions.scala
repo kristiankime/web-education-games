@@ -22,7 +22,7 @@ import MathMLMapper.string2mathML
 import com.artclod.mathml.scalar.MathMLElem
 import scala.slick.lifted
 import models.quiz.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
-import models.user.table.userSettingsTable
+import models.user.table.userTable
 
 object DerivativeQuestions {
 
@@ -52,7 +52,7 @@ object DerivativeQuestions {
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- derivativeAnswersTable if a.questionId === qid;
-      u <- userSettingsTable if u.userId === a.ownerId
+      u <- userTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) =
@@ -63,7 +63,7 @@ object DerivativeQuestions {
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = derivativeAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
-    val users = service.table.LoginsTable.userTable.where(_.id in userIds).sortBy(_.email)
+    val users = service.table.LoginsTable.loginTable.where(_.id in userIds).sortBy(_.email)
     users.list
   }
 

@@ -4,6 +4,6 @@ import play.api.db.slick.Config.driver.simple._
 
 package object table {
 
-  val userSettingsTable = TableQuery[UserSettingsTable]
+  val userTable = TableQuery[UserSettingsTable]
 
 }

@@ -18,7 +18,7 @@ class UserSettingsTable(tag: Tag) extends Table[User](tag, "application_user_set
 
   def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates) <> (User.tupled, User.unapply _)
 
-  def userFK = foreignKey("application_user_settings__user_fk", userId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def userFK = foreignKey("application_user_settings__user_fk", userId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 //  def nameIndex = index("application_user_settings__name_index", name, unique = true)
   def nameIndex = index("application_user_settings__name_index", name)

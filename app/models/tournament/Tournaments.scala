@@ -7,7 +7,7 @@ import models.support._
 import models.user.Users
 import play.api.db.slick.Config.driver.simple._
 import scala.language.postfixOps
-import models.user.table.userSettingsTable
+import models.user.table.userTable
 import models.quiz.Correct2Short
 
 case class Rankings[M](ranks: List[Rank[M]], user: Option[Rank[M]])
@@ -55,7 +55,7 @@ object Tournaments {
     val correctAnswers /* one entry per question + user */ = derivativeAnswersTable.filter(_.correct === Correct2Short.T).groupBy(g => (g.ownerId, g.questionId)).map { case ((ownerId, questionId), group) => (ownerId, questionId)}
     val questionsAnsweredCorrectly = correctAnswers innerJoin derivativeQuestionsTable on (_._2 === _.id)
     val userAndQuestionDifficulty = questionsAnsweredCorrectly.map { r => (r._1._1, r._2.atCreationDifficulty)}.sortBy(r => (r._1, r._2))
-    val userNamesAndDifficulty = for {(q, s) <- userAndQuestionDifficulty innerJoin userSettingsTable on (_._1 === _.userId)} yield (q._1, s.name, q._2)
+    val userNamesAndDifficulty = for {(q, s) <- userAndQuestionDifficulty innerJoin userTable on (_._1 === _.userId)} yield (q._1, s.name, q._2)
     userNamesAndDifficulty.list
   }
 
@@ -72,7 +72,7 @@ object Tournaments {
     val requsteeCounts = gamesTable.filter(_.finishedDate.isNotNull).groupBy(g => g.requestee).map { case (requestee, group) => (requestee, group.length)}
     val countsUnion = requstorCounts.unionAll(requsteeCounts)
     val counts = countsUnion.groupBy(g => g._1).map { case (id, group) => (id, group.map(_._2).sum)}
-    val joinNames = for {(c, s) <- counts innerJoin userSettingsTable on (_._1 === _.userId)} yield (c._1, s.name, c._2)
+    val joinNames = for {(c, s) <- counts innerJoin userTable on (_._1 === _.userId)} yield (c._1, s.name, c._2)
     val sorted = joinNames.sortBy(_._2)
     sorted.list
   }
@@ -90,7 +90,7 @@ object Tournaments {
     val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requestor)) //.groupBy(g => g.requestee).map{ case (requestee, group) => (requestee, group.requestor) }
     val gamesUnion = requstorGames.unionAll(requsteeGames)
     val uniqueOpponents = gamesUnion.groupBy(g => g._1).map { case (player, group) => (player, group.map(_._2).countDistinct)}
-    val joinNames = for {(u, s) <- uniqueOpponents innerJoin userSettingsTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
+    val joinNames = for {(u, s) <- uniqueOpponents innerJoin userTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
     val sorted = joinNames.sortBy(_._3.desc)
     sorted.list
   }
@@ -108,7 +108,7 @@ object Tournaments {
     val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requesteeStudentPoints))
     val gamesUnion = requstorGames.unionAll(requsteeGames)
     val sumScores = gamesUnion.groupBy(_._1).map { case (player, group) => (player, group.map(_._2).sum)}
-    val joinNames = for {(u, s) <- sumScores innerJoin userSettingsTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
+    val joinNames = for {(u, s) <- sumScores innerJoin userTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
     val sorted = joinNames.sortBy(_._3.desc)
     sorted.list
   }
@@ -126,7 +126,7 @@ object Tournaments {
     val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requesteeTeacherPoints))
     val gamesUnion = requstorGames.unionAll(requsteeGames)
     val sumScores = gamesUnion.groupBy(_._1).map { case (player, group) => (player, group.map(_._2).sum)}
-    val joinNames = for {(u, s) <- sumScores innerJoin userSettingsTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
+    val joinNames = for {(u, s) <- sumScores innerJoin userTable on (_._1 === _.userId)} yield (u._1, s.name, u._2)
     val sorted = joinNames.sortBy(_._3.desc)
     sorted.list
   }

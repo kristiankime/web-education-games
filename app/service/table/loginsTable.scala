@@ -44,24 +44,24 @@ class LoginsTable(tag: Tag) extends Table[Login](tag, "secure_social_users") {
 }
 
 object LoginsTable {
-  val userTable = TableQuery[LoginsTable]
+  val loginTable = TableQuery[LoginsTable]
 
   def insert(u: Login)(implicit s: Session) = {
-    val userId = (userTable returning userTable.map(_.id)) += u
+    val userId = (loginTable returning loginTable.map(_.id)) += u
     u.copy(id = userId)
   }
 
-  def findById(id: UserId)(implicit s: Session) = userTable.where(_.id is id).firstOption
+  def findById(id: UserId)(implicit s: Session) = loginTable.where(_.id is id).firstOption
 
   def findByIdentityId(userId: IdentityId)(implicit s: Session): Option[Login] = {
     (for {
-      user <- userTable if (user.userId is userId.userId) && (user.providerId is userId.providerId)
+      user <- loginTable if (user.userId is userId.userId) && (user.providerId is userId.providerId)
     } yield user).firstOption
   }
 
   def findByEmailAndProvider(email: String, providerId: String)(implicit s: Session): Option[Login] = {
     (for {
-      user <- userTable if (user.email is email) && (user.providerId is providerId)
+      user <- loginTable if (user.email is email) && (user.providerId is providerId)
     } yield user).firstOption
   }
 
@@ -71,7 +71,7 @@ object LoginsTable {
     findByIdentityId(t.identityId) match {
       case None => insert(t)
       case Some(existingUser) => {
-        userTable.where(_.id is existingUser.id).update(existingUser)
+        loginTable.where(_.id is existingUser.id).update(existingUser)
         existingUser
       }
     }

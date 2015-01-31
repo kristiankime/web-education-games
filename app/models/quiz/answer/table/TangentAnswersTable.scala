@@ -23,6 +23,6 @@ class TangentAnswersTable(tag: Tag) extends Table[TangentAnswer](tag, "tangent_a
 
 	def * = (id, ownerId, questionId, mathML, rawStr, correct, creationDate) <> (TangentAnswer.tupled, TangentAnswer.unapply _)
 
-	def ownerFK = foreignKey("tangent_answers__owner_fk", ownerId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("tangent_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionFK = foreignKey("tangent_answers_question_fk", questionId, tangentQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

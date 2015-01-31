@@ -21,7 +21,7 @@ class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") with Identifi
 
 	def * = (id, name, organization, owner, editCode, viewCode, creationDate, updateDate) <> (Course.tupled, Course.unapply _)
 
-	def ownerFK = foreignKey("courses__owner_fk", owner, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("courses__owner_fk", owner, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
   def organizationFK = foreignKey("courses__organization_fk", organization, organizationsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

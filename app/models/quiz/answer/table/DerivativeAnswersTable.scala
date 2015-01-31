@@ -23,6 +23,6 @@ class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "der
 
 	def * = (id, ownerId, questionId, mathML, rawStr, correct, creationDate) <> (DerivativeAnswer.tupled, DerivativeAnswer.unapply _)
 
-	def ownerFK = foreignKey("derivative_answers__owner_fk", ownerId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionFK = foreignKey("derivative_answers_question_fk", questionId, derivativeQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

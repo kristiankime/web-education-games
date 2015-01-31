@@ -25,7 +25,7 @@ class DerivativeQuestionsTable(tag: Tag) extends Table[DerivativeQuestion](tag, 
 	def * = (id, ownerId, mathML, rawStr, creationDate, atCreationDifficulty, quizId, order) <> (DerivativeQuestion.tupled, DerivativeQuestion.unapply _)
 
 	def idFK = foreignKey("derivative_questions__id_fk", id, QuestionIdNext.questionIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def ownerFK = foreignKey("derivative_questions__owner_fk", ownerId, LoginsTable.userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("derivative_questions__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def quizIdFK = foreignKey("derivative_questions__quiz_fk", quizId, quizzesTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
 }

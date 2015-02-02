@@ -14,7 +14,6 @@ import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.{Controller, Result}
 import service.Edit
 
-
 object QuizzesController extends Controller with SecureSocialConsented {
 
   def apply(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId)(implicit session: Session) : Either[Result, (Organization, Course, Quiz)] =
@@ -50,13 +49,10 @@ object QuizzesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, answerIdOp: Option[AnswerId]) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
+  def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, answerIdOp: Option[models.support.AnswerId]) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, quiz)) => {
-        val access = course.access
-        Ok(views.html.quiz.quizView(access, course, quiz, answerIdOp.flatMap(id => DerivativeAnswers(id))))
-      }
+      case Right((organization, course, quiz)) => Ok(views.html.quiz.quizView(course.access, course, quiz, answerIdOp.flatMap(id => DerivativeAnswers(id))))
     }
   }
 

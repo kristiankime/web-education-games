@@ -1,5 +1,6 @@
 package models.quiz.question
 
+import models.quiz.Quiz
 import models.quiz.table._
 import models.support._
 import play.api.db.slick.Config.driver.simple._
@@ -12,5 +13,8 @@ object TangentQuestions {
     toInsert
   }
 
+  // ======= REMOVE ======
+  def remove(quiz: Quiz, question: TangentQuestion)(implicit session: Session) =
+    tangentQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 }
 

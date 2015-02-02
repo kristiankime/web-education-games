@@ -43,7 +43,7 @@ object DerivativeQuestions {
   // ======= FIND ======
   def list()(implicit session: Session) = derivativeQuestionsTable.list
 
-  def apply(questionId: QuestionId)(implicit session: Session) = derivativeQuestionsTable.where(_.id === questionId).firstOption
+  protected[question] def apply(questionId: QuestionId)(implicit session: Session) = derivativeQuestionsTable.where(_.id === questionId).firstOption
 
   def apply(qid: QuestionId, owner: User)(implicit session: Session) = derivativeAnswersTable.where(a => a.questionId === qid && a.ownerId === owner.id).sortBy(_.creationDate).list
 

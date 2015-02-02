@@ -5,7 +5,7 @@ import com.artclod.util._
 import controllers.quiz.derivative.DerivativeQuestionsControllon
 import controllers.quiz.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{QuestionScoring, QuestionDifficulty, DerivativeQuestion, DerivativeQuestions}
+import models.quiz.question._
 import models.support._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.libs.json.{JsError, Json}
@@ -15,27 +15,24 @@ import scala.util.{Failure, Success}
 
 object QuestionsController extends Controller with SecureSocialConsented with DerivativeQuestionsControllon with TangentQuestionsControllon {
 
-  def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, DerivativeQuestion] =
-    DerivativeQuestions(questionId) match {
+  def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
+    Questions(questionId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))
       case Some(question) => question.quiz match {
         case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for question for id=["+questionId+"]")))
         case Some(quiz) =>
-          if(quiz.id ^!= quizId) {
-            Left(NotFound(views.html.errors.notFoundPage("Question for id=["+questionId+"] is associated with quiz id=[" + quiz.id + "] not quiz id=[" + quizId + "]")))
-          }
-          else Right(question)
+          if(quiz.id ^!= quizId) { Left(NotFound(views.html.errors.notFoundPage("Question for id=["+questionId+"] is associated with quiz id=[" + quiz.id + "] not quiz id=[" + quizId + "]"))) }
+          else { Right(question) }
       }
     }
 
 	def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
-    QuizzesController(organizationId, courseId, quizId) +
-    QuestionsController(quizId, questionId) match {
+    QuizzesController(organizationId, courseId, quizId) + QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course , quiz, question)) => {
-        val nextQuestion = quiz.results(user).nextQuestion(question)
-        Ok(views.html.quiz.questionView(course, quiz, question.results(user), None))
-      }
+      case Right((organization, course , quiz, question)) => question match {
+          case derivative : DerivativeQuestion => Ok(views.html.quiz.derivative.questionView(course, quiz, derivative.results(user), None))
+          case tangent : TangentQuestion => Ok(views.html.quiz.tangent.questionView(course, quiz, tangent.results(user), None))
+        }
     }
 	}
 

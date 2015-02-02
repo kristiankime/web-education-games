@@ -1,7 +1,7 @@
 package models.quiz.answer.result
 
 import models.quiz.answer.DerivativeAnswer
-import models.quiz.question.{QuestionScoring, QuestionResults, DerivativeQuestion}
+import models.quiz.question.{QuestionScoring, DerivativeQuestion}
 import models.user.User
 import service.Login
 

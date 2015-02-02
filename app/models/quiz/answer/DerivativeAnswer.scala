@@ -1,7 +1,7 @@
 package models.quiz.answer
 
 import com.artclod.mathml.scalar.MathMLElem
-import models.quiz.{Answer, ViewableMath}
+import models.quiz.ViewableMath
 import models.support.{AnswerId, QuestionId, UserId}
 import org.joda.time.DateTime
 import play.api.templates.Html

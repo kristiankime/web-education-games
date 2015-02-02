@@ -48,7 +48,7 @@
             @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
         </p>
 
-        @form(GamesRequestorController.createQuestion(gameState.game.id), 'id -> "derivativeqForm", 'class -> "pure-form" ) {
+        @form(GamesRequestorController.createDerivativeQuestion(gameState.game.id), 'id -> "derivativeqForm", 'class -> "pure-form" ) {
             <input type="hidden" name="@DerivativeQuestionForm.mathML" id="derivativeQuestionMathML">
             <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="derivativeQuestionRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Save Question" onclick="formSubmit()">

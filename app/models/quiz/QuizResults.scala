@@ -1,7 +1,8 @@
 package models.quiz
 
 import com.artclod.collection.PimpedSeq
-import models.quiz.question.{QuestionResults, DerivativeQuestion}
+import models.quiz.answer.result.QuestionResults
+import models.quiz.question.{Question, DerivativeQuestion}
 import models.user.User
 import service.Login
 
@@ -16,9 +17,9 @@ case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]
 
   val questions = results.map(_.question)
 
-  def previousQuestion(question: DerivativeQuestion) = questions.elementBefore(question)
+  def previousQuestion(question: Question) = questions.elementBefore(question)
 
-  def nextQuestion(question: DerivativeQuestion) = questions.elementAfter(question)
+  def nextQuestion(question: Question) = questions.elementAfter(question)
 
   def firstUnfinishedQuestion = results.find(!_.correct)
 

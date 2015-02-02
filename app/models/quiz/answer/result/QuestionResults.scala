@@ -1,8 +1,9 @@
-package models.quiz.question
+package models.quiz.answer.result
 
-import models.quiz.{Answer, Status}
+import models.quiz.answer.Answer
+import models.quiz.question.Question
+import models.quiz.Status
 import models.user.User
-import service.Login
 
 trait QuestionResults {
   val answerer: User

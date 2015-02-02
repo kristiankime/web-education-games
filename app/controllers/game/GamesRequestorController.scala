@@ -3,7 +3,7 @@ package controllers.game
 import models.game._
 import models.quiz.Quiz
 import models.quiz.answer.DerivativeAnswer
-import models.quiz.question.DerivativeQuestion
+import models.quiz.question.{Question, DerivativeQuestion}
 import models.support.{QuestionId, GameId}
 import models.user.User
 import play.api.db.slick.Config.driver.simple.Session
@@ -39,7 +39,7 @@ object GamesRequestorController extends GamesPlayerController {
   protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.User, session: Session) : Result =
     Ok(views.html.game.play.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
 
-  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)] =
+  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     GamesRequesteeController(gameId, questionId)
 
 }

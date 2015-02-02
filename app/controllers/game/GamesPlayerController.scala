@@ -13,14 +13,13 @@ import controllers.support.SecureSocialConsented
 import models.game._
 import models.quiz.Quiz
 import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
-import models.quiz.question.{QuestionDifficulty, DerivativeQuestions, DerivativeQuestion}
+import models.quiz.question._
 import models.support._
 import models.user.User
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.{Controller, Result}
-import service.{Login}
 import scala.util.{Left, Right}
 
 trait GamesPlayerController extends Controller with SecureSocialConsented {
@@ -40,10 +39,10 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.User, session: Session) : Result
 
-  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)]
+  protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
 
   // ===== Concrete =====
-  def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, DerivativeQuestion)] =
+  def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     Games(gameId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no game for id=[" + gameId + "]")))
       case Some(game) => createdQuiz(game) match {
@@ -52,7 +51,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       }
     }
 
-  def createQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivativeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -75,7 +74,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           questionId => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            for (question <- DerivativeQuestions(questionId)) { quiz.remove(question) }
+            for (question <- Questions(questionId)) { quiz.remove(question) }
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }
@@ -96,11 +95,10 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerDerivativeQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((game, quiz, question)) => {
-
+      case Right((game, quiz, question : DerivativeQuestion)) => {
         GameAnswerQuestion.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
@@ -108,14 +106,13 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             val rawStr = form._2
             val unfinishedAnswer = DerivativeAnswerUnfinished(user.id, question.id, math, rawStr, JodaUTC.now) _
             DerivativeAnswers.correct(question, math) match {
-//              case Yes => Redirect(routes.GamesController.answer(game.id, question.id, Answers.createAnswer(unfinishedAnswer(true)).id))
               case Yes => Redirect(routes.GamesController.game(game.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer)
             }
           })
-
       }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a derivative question " + questionId))
     }
   }
 

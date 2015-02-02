@@ -2,7 +2,7 @@ package models.quiz
 
 import com.artclod.collection._
 import models.organization._
-import models.quiz.question.{DerivativeQuestion, DerivativeQuestions}
+import models.quiz.question.{Questions, Question, DerivativeQuestion, DerivativeQuestions}
 import models.support._
 import models.user.User
 import org.joda.time.DateTime
@@ -14,7 +14,7 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
   def questions(implicit session: Session) = Quizzes.questions(id)
 
-  // === TODO Above update for multiple question types ===
+  // === TODO update code below for multiple question types ===
 
    def results(student: User)(implicit session: Session) = QuizResults(student, this, questions.map(v => v.results(student)))
 
@@ -32,10 +32,7 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
 
    def rename(name: String)(implicit session: Session) = Quizzes.rename(id, name)
 
-   def remove(question: DerivativeQuestion)(implicit session: Session) = {
-
-     DerivativeQuestions.remove(this, question)
-   }
+   def remove(question: Question)(implicit session: Session) = Questions.remove(this, question)
 
    def course(courseId: CourseId)(implicit session: Session): Option[Course] = Quizzes.course(courseId, id)
 

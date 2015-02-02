@@ -3,7 +3,7 @@ package controllers.game
 import com.artclod.play.CommonsMailerHelper
 import com.artclod.util._
 import controllers.organization.CoursesController
-import controllers.quiz.derivative.AnswersController
+import controllers.quiz.AnswersController
 import controllers.support.SecureSocialConsented
 import controllers.game.GamesEmail._
 import models.game._

@@ -1,7 +1,7 @@
 package models.quiz.answer.result
 
 import models.quiz.answer.TangentAnswer
-import models.quiz.question.{QuestionResults, TangentQuestion}
+import models.quiz.question.TangentQuestion
 import models.user.User
 import service.Login
 

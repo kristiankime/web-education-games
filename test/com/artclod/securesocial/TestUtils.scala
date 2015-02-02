@@ -1,6 +1,5 @@
 package com.artclod.securesocial
 
-import service.table.loginsTable$
 import scala.slick.lifted.Query
 import models.support.UserId
 import play.api.db.slick.DB

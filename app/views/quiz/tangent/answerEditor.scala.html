@@ -1,26 +1,26 @@
-@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.TangentAnswer, models.quiz.answer.TangentAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.AnswerForm
 
-    <section>
+<section>
     Type in your answer, and then hit the submit button @tag.answerWarning()<br>
 
-    @mathml.mathmlEditor("DERIVATIVE_ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
+    @* @mathml.mathmlEditor("TANGENT_ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br> *@
 
     @helper.form(action, 'id -> "derivativeAnswerForm", 'class -> "pure-form") {
         <fieldset>
             <input type="hidden" name="@AnswerForm.mathML" id="derivativeAnswerMathML">
             <input type="hidden" name="@AnswerForm.rawStr" id="derivativeAnswerRawStr">
-            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="DERIVATIVE_ANSWER.formSubmit()">
+            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="TANGENT_ANSWER.formSubmit()">
             @link
         </fieldset>
     }
 
     <script>
-    DERIVATIVE_ANSWER.formSubmit = function () {
-        if(DERIVATIVE_ANSWER.valid) {
-            $("#derivativeAnswerMathML").val(DERIVATIVE_ANSWER.mathML);
-            $("#derivativeAnswerRawStr").val(DERIVATIVE_ANSWER.rawStr);
+    TANGENT_ANSWER.formSubmit = function () {
+        if(TANGENT_ANSWER.valid) {
+            $("#derivativeAnswerMathML").val(TANGENT_ANSWER.mathML);
+            $("#derivativeAnswerRawStr").val(TANGENT_ANSWER.rawStr);
             $("#derivativeAnswerForm").submit();
         } else {
             alert("Sorry we couldn't understand your answer. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")

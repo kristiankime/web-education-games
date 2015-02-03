@@ -1,7 +1,7 @@
 @(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.quiz.AnswerForm
 
+    @import controllers.quiz.derivative.DerivativeAnswerForm
     <section>
     Type in your answer, and then hit the submit button @tag.answerWarning()<br>
 
@@ -9,8 +9,8 @@
 
     @helper.form(action, 'id -> "derivativeAnswerForm", 'class -> "pure-form") {
         <fieldset>
-            <input type="hidden" name="@AnswerForm.mathML" id="derivativeAnswerMathML">
-            <input type="hidden" name="@AnswerForm.rawStr" id="derivativeAnswerRawStr">
+            <input type="hidden" name="@DerivativeAnswerForm.mathML" id="derivativeAnswerMathML">
+            <input type="hidden" name="@DerivativeAnswerForm.rawStr" id="derivativeAnswerRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="DERIVATIVE_ANSWER.formSubmit()">
             @link
         </fieldset>

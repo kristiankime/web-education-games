@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 import play.api.templates.Html
 
 case class DerivativeAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correctNum: Short, creationDate: DateTime) extends Answer with ViewableMath {
-  def display : Html = views.html.mathml.mathmlDisplay(this)
+  def display : Html = views.html.quiz.derivative.answerDisplay(this)
 }
 
 object DerivativeAnswerUnfinished {

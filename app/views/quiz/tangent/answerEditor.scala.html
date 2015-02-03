@@ -1,16 +1,16 @@
 @(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.TangentAnswer, models.quiz.answer.TangentAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.quiz.AnswerForm
 
-<section>
+    @import controllers.quiz.derivative.DerivativeAnswerForm
+    <section>
     Type in your answer, and then hit the submit button @tag.answerWarning()<br>
 
     @* @mathml.mathmlEditor("TANGENT_ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br> *@
 
     @helper.form(action, 'id -> "derivativeAnswerForm", 'class -> "pure-form") {
         <fieldset>
-            <input type="hidden" name="@AnswerForm.mathML" id="derivativeAnswerMathML">
-            <input type="hidden" name="@AnswerForm.rawStr" id="derivativeAnswerRawStr">
+            <input type="hidden" name="@DerivativeAnswerForm.mathML" id="derivativeAnswerMathML">
+            <input type="hidden" name="@DerivativeAnswerForm.rawStr" id="derivativeAnswerRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="TANGENT_ANSWER.formSubmit()">
             @link
         </fieldset>

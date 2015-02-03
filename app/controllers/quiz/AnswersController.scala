@@ -6,6 +6,7 @@ import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.quiz.derivative.DerivativeAnswersControllon
+import controllers.quiz.tangent.TangentAnswersControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.answer._
 import models.quiz.question.{DerivativeQuestion, TangentQuestion}
@@ -18,7 +19,7 @@ import play.api.mvc.{Controller, Result}
 
 import scala.util._
 
-object AnswersController extends DerivativeAnswersControllon with Controller with SecureSocialConsented {
+object AnswersController extends DerivativeAnswersControllon with TangentAnswersControllon with Controller with SecureSocialConsented {
 
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
     DerivativeAnswers(answerId) match {
@@ -41,8 +42,4 @@ object AnswersController extends DerivativeAnswersControllon with Controller wit
 
 }
 
-object AnswerForm {
-	val mathML = "mathML"
-	val rawStr = "rawStr"
-	val values = Form(tuple(mathML -> text, rawStr -> text))
-}
+

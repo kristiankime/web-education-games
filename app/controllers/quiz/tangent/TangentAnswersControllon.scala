@@ -1,23 +1,24 @@
-package controllers.quiz.derivative
+package controllers.quiz.tangent
 
 import com.artclod.mathml.Match._
-import com.artclod.mathml.scalar.MathMLElem
-import controllers.quiz.{QuestionsController, QuizzesController}
-import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished}
-import models.quiz.{Quizzes, Quiz}
-import models.quiz.question.{QuestionDifficulty, DerivativeQuestion, DerivativeQuestions}
-import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.slick.JodaUTC
+import com.artclod.util._
+import controllers.quiz.derivative.DerivativeAnswerForm
+import controllers.quiz.{QuestionsController, QuizzesController}
+import controllers.support.SecureSocialConsented
+import models.quiz.answer.{DerivativeAnswerUnfinished, DerivativeAnswers}
+import models.quiz.question.DerivativeQuestion
+import models.quiz.{Quiz, Quizzes}
+import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Controller}
-import controllers.support.{SecureSocialConsented}
-import models.support._
-import com.artclod.util._
+import play.api.mvc.Controller
 
-trait DerivativeAnswersControllon extends Controller with SecureSocialConsented {
+trait TangentAnswersControllon extends Controller with SecureSocialConsented {
 
-  def createDerivative(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createTangent(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) + QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz, question : DerivativeQuestion)) => {
@@ -41,8 +42,10 @@ trait DerivativeAnswersControllon extends Controller with SecureSocialConsented 
 
 }
 
-object DerivativeAnswerForm {
-  val mathML = "mathML"
-  val rawStr = "rawStr"
-  val values = Form(tuple(mathML -> text, rawStr -> text))
+object TangentAnswerForm {
+  val slopeMathML = "slopeMathML"
+  val slopeRawStr = "slopeRawStr"
+  val interceptMathML = "interceptMathML"
+  val interceptRawStr = "interceptRawStr"
+  val values = Form(tuple(slopeMathML -> text, slopeRawStr -> text, interceptMathML -> text, interceptRawStr -> text))
 }

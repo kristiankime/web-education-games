@@ -3,7 +3,7 @@ package controllers.quiz.derivative
 import com.artclod.mathml.Match._
 import com.artclod.mathml.scalar.MathMLElem
 import controllers.quiz.AnswersController._
-import controllers.quiz.{AnswerForm, QuestionsController, QuizzesController}
+import controllers.quiz.{QuestionsController, QuizzesController}
 import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished}
 import models.quiz.{Quizzes, Quiz}
 import models.quiz.question.{QuestionDifficulty, DerivativeQuestion, DerivativeQuestions}
@@ -34,4 +34,10 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
     }
   }
 
+}
+
+object DerivativeQuestionForm {
+  val mathML = "mathML"
+  val rawStr = "rawStr"
+  val values = Form(tuple(mathML -> nonEmptyText, rawStr -> nonEmptyText))
 }

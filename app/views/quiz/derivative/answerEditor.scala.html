@@ -1,11 +1,11 @@
 @(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+@import controllers.quiz.derivative.DerivativeAnswerForm
 
-    @import controllers.quiz.derivative.DerivativeAnswerForm
     <section>
     Type in your answer, and then hit the submit button @tag.answerWarning()<br>
 
-    @mathml.mathmlEditor("DERIVATIVE_ANSWER", viewsupport.organization.mathMLStr(currentAnswer)) <br>
+    @mathml.mathmlEditor("DERIVATIVE_ANSWER", currentAnswer.map(_.fold(_.rawStr, _.rawStr)), mathParser = "CALC.mathJS.functionOfXParser") <br>
 
     @helper.form(action, 'id -> "derivativeAnswerForm", 'class -> "pure-form") {
         <fieldset>

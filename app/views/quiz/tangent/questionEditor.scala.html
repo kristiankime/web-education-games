@@ -8,7 +8,17 @@
 
     Function: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_FUNCTION", characterLimitOp=Some(40), mathParser = "CALC.mathJS.functionOfXParser") <br>
 
-    Tangent point x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", characterLimitOp=Some(10), mathParser = "CALC.mathJS.constantParser") <br>
+    Tangent @@ x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", characterLimitOp=Some(10), mathParser = "CALC.mathJS.constantParser") <br>
+
+    @form(action, 'id -> "tangentQuestionForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="hidden" name="@TangentQuestionForm.function"    id="tangentQuestionFunctionMathML">
+            <input type="hidden" name="@TangentQuestionForm.functionStr" id="tangentQuestionFunctionRawStr">
+            <input type="hidden" name="@TangentQuestionForm.atPointX"    id="tangentQuestionXMathML">
+            <input type="hidden" name="@TangentQuestionForm.atPointXStr" id="tangentQuestionXRawStr">
+            <input type="button" class="pure-button" value="Save Question" onclick="TANGENT_QUESTION.formSubmit()">
+        </fieldset>
+    }
 
     <script>
     var TANGENT_QUESTION = {}
@@ -20,7 +30,7 @@
             $("#tangentQuestionFunctionRawStr").val(TANGENT_QUESTION_FUNCTION.rawStr);
         } else {
             ready = false;
-            alert("Sorry we couldn't understand the function that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+            alert("Sorry we couldn't understand the function that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
         }
 
         if(TANGENT_QUESTION_X.valid){
@@ -28,7 +38,7 @@
             $("#tangentQuestionXRawStr").val(TANGENT_QUESTION_X.rawStr);
         } else {
             ready = false;
-            alert("Sorry we couldn't understand the x value that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+            alert("Sorry we couldn't understand the x value that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
         }
 
         if(ready) {
@@ -37,13 +47,4 @@
     }
     </script>
 
-    @form(action, 'id -> "tangentQuestionForm", 'class -> "pure-form") {
-        <fieldset>
-            <input type="hidden" name="@TangentQuestionForm.function"    id="tangentQuestionFunctionMathML">
-            <input type="hidden" name="@TangentQuestionForm.functionStr" id="tangentQuestionFunctionRawStr">
-            <input type="hidden" name="@TangentQuestionForm.atPointX"    id="tangentQuestionXMathML">
-            <input type="hidden" name="@TangentQuestionForm.atPointXStr" id="tangentQuestionXRawStr">
-            <input type="button" class="pure-button" value="Save Question" onclick="TANGENT_QUESTION.formSubmit()">
-        </fieldset>
-    }
 </section>

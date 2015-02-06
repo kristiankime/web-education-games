@@ -16,7 +16,11 @@ abstract class MathMLElem(
 	child: Node*)
 	extends Elem(prefix, label, attributes1, scope, minimizeEmpty, child: _*) {
 
-	def eval(boundVariables: Map[String, Double]): Try[Double]
+  def eval : Try[Double] = eval(Map[String, Double]())
+
+  def eval(boundVariables: (String, Double)*) : Try[Double] = eval(Map(boundVariables:_*))
+
+	def eval(boundVariables: Map[String, Double] = Map()): Try[Double]
 
 	def isZero: Boolean = c.map(_.isZero).getOrElse(false)
 

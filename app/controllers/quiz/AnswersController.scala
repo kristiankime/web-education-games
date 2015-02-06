@@ -22,7 +22,7 @@ import scala.util._
 object AnswersController extends DerivativeAnswersControllon with TangentAnswersControllon with Controller with SecureSocialConsented {
 
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
-    DerivativeAnswers(answerId) match {
+    Answers(answerId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no answer for id=["+answerId+"]")))
       case Some(answer) =>
         if(answer.id ^!= answerId) Left(NotFound(views.html.errors.notFoundPage("The answer id=["+answerId+"] was not for the question id=[" + questionId + "]")))

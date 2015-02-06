@@ -10,7 +10,6 @@ import models.support._
 import models.user.User
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service.Login
 
 object DerivativeAnswers {
 

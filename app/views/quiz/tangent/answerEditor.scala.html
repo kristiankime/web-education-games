@@ -7,7 +7,7 @@
 
     Slope: @mathml.mathmlEditor("TANGENT_ANSWER_SLOPE", currentAnswer.map(_.fold(_.slopeRawStr, _.slopeRawStr)), characterLimitOp=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
 
-    Intercept: i@mathml.mathmlEditor("TANGENT_ANSWER_INTERCEPT", currentAnswer.map(_.fold(_.interceptRawStr, _.interceptRawStr)), characterLimitOp=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
+    Intercept: @mathml.mathmlEditor("TANGENT_ANSWER_INTERCEPT", currentAnswer.map(_.fold(_.interceptRawStr, _.interceptRawStr)), characterLimitOp=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
 
     @helper.form(action, 'id -> "tangentAnswerForm", 'class -> "pure-form") {
         <fieldset>
@@ -34,14 +34,14 @@
         }
 
         if(TANGENT_ANSWER_SLOPE.valid) {
-            $("#tangentSlopeAnswerMathML").val(TANGENT_ANSWER_INTERCEPT.mathML);
-            $("#tangentSlopeAnswerRawStr").val(TANGENT_ANSWER_INTERCEPT.rawStr);
+            $("#tangentInterceptAnswerMathML").val(TANGENT_ANSWER_INTERCEPT.mathML);
+            $("#tangentInterceptAnswerRawStr").val(TANGENT_ANSWER_INTERCEPT.rawStr);
         } else {
             ready = false;
             alert("Sorry we couldn't understand your intercept. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
         }
 
-        if(read){
+        if(ready){
             $("#tangentAnswerForm").submit();
         }
 

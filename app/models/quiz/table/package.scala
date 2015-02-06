@@ -16,6 +16,6 @@ package object table {
 
   val derivativeAnswersTable = TableQuery[DerivativeAnswersTable]
   val tangentAnswersTable = TableQuery[TangentAnswersTable]
-
+  val answerTables = MustHandle(derivativeAnswersTable, tangentAnswersTable)
 
 }

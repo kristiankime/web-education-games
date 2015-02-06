@@ -12,7 +12,7 @@ import play.api.db.slick.Config.driver.simple.Session
 import play.api.templates.Html
 import service.{Access, Login}
 
-trait Question extends Owned {
+sealed trait Question extends Owned {
   val id: QuestionId
   val ownerId: UserId
   val creationDate: DateTime
@@ -53,11 +53,13 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
-  def results(user: User)(implicit session: Session) = TangentQuestionResults(user, this, List()) // TODO
-
-  def answersAndOwners(implicit session: Session) : List[(TangentAnswer, User)] = List() // TODO
+  def answersAndOwners(implicit session: Session) : List[(TangentAnswer, User)] = TangentQuestions.answersAndOwners(id)
 
   def difficulty : Double = 1d // TODO
+
+  def results(user: User)(implicit session: Session) = TangentQuestionResults(user, this, answers(user))
+
+  def answers(user: User)(implicit session: Session) = TangentQuestions(id, user)
 
   def display : Html = views.html.quiz.tangent.questionDisplay(this)
 

@@ -32,14 +32,24 @@ object MathMLEq {
 //    System.err.println("eq2")
 //		System.err.println((vals, eq1s.zip(eq2s), matches).zipped.map((a, b, c) => "val=[" + a + "] evals=[" + b + "] match=[" + c + "]\n"))
 
-		matches.reduce( (a : Match.Value, b: Match.Value) => (a , b) match {
-			case (No, _) => No
-			case (_, No) => No // If we ever see a No they are not a match
-			case (Yes, _) => Yes
-			case (_, Yes) => Yes // If we have Inconclusive and yes conclude yes
-			case (Inconclusive, Inconclusive) => Inconclusive // If we only have Inconclusive...
-		})
+    matches.reduce(matchCombine)
+
+//		matches.reduce( (a : Match.Value, b: Match.Value) => (a , b) match {
+//			case (No, _) => No
+//			case (_, No) => No // If we ever see a No they are not a match
+//			case (Yes, _) => Yes
+//			case (_, Yes) => Yes // If we have Inconclusive and yes conclude yes
+//			case (Inconclusive, Inconclusive) => Inconclusive // If we only have Inconclusive...
+//		})
 	}
+
+  def matchCombine(a : Match.Value, b: Match.Value) : Match = (a , b) match {
+    case (No, _) => No
+    case (_, No) => No // If we ever see a No they are not a match
+    case (Yes, _) => Yes
+    case (_, Yes) => Yes // If we have Inconclusive and yes conclude yes
+    case (Inconclusive, Inconclusive) => Inconclusive // If we only have Inconclusive...
+  }
 
 	private def closeEnough(v1: Try[Double], v2: Try[Double]) =
 		(v1, v2) match {
@@ -47,7 +57,7 @@ object MathMLEq {
 			case (_, _) => Inconclusive
 		}
 
-	private def doubleCloseEnough(x: Double, y: Double) = {
+	def doubleCloseEnough(x: Double, y: Double) : Match  = {
 		if (x.isNaN || y.isNaN || x.isInfinite || y.isInfinite) Inconclusive
 		else if (x == y) Yes
     else if (x == 0d && y.abs <= closeEnoughTo0) Yes

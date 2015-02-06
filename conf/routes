@@ -49,7 +49,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove              cont
 # Course Quizzes Answers
 GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:a          controllers.quiz.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, a: AnswerId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivative  controllers.quiz.AnswersController.createDerivative(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
-POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivative  controllers.quiz.AnswersController.createTangent(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/tangent     controllers.quiz.AnswersController.createTangent(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                  controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)

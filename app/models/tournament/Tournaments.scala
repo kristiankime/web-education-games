@@ -1,8 +1,8 @@
 package models.tournament
 
+import com.artclod.slick.NumericBoolean
 import com.google.common.annotations.VisibleForTesting
 import models.game.table.gamesTable
-import models.quiz.Correct2Short
 import models.quiz.table._
 import models.support._
 import models.user.Users
@@ -53,7 +53,7 @@ object Tournaments {
   }
 
   private def questionsAnsweredCorrectly(implicit session: Session) = {
-    val correctAnswers /* one entry per question + user */ = derivativeAnswersTable.filter(_.correct === Correct2Short.T).groupBy(g => (g.ownerId, g.questionId)).map { case ((ownerId, questionId), group) => (ownerId, questionId)}
+    val correctAnswers /* one entry per question + user */ = derivativeAnswersTable.filter(_.correct === NumericBoolean.T).groupBy(g => (g.ownerId, g.questionId)).map { case ((ownerId, questionId), group) => (ownerId, questionId)}
     val questionsAnsweredCorrectly = correctAnswers innerJoin derivativeQuestionsTable on (_._2 === _.id)
     val userAndQuestionDifficulty = questionsAnsweredCorrectly.map { r => (r._1._1, r._2.atCreationDifficulty)}.sortBy(r => (r._1, r._2))
     val userNamesAndDifficulty = for {(q, s) <- userAndQuestionDifficulty innerJoin userTable on (_._1 === _.userId)} yield (q._1, s.name, q._2)

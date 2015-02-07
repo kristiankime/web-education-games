@@ -1,8 +1,9 @@
 package models.quiz.question
 
 import com.artclod.mathml.slick.MathMLMapper.string2mathML
+import com.artclod.slick.NumericBoolean
 import com.artclod.slick.JodaUTC.timestamp2DateTime
-import models.quiz.{Correct2Short, Quiz}
+import models.quiz.Quiz
 import models.quiz.answer.TangentAnswer
 import models.quiz.answer.table.TangentAnswersTable
 import models.quiz.question.table.TangentQuestionsTable
@@ -41,7 +42,7 @@ object TangentQuestions {
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
   def correct(userId: UserId, questionTable: TableQuery[TangentQuestionsTable], answerTable: TableQuery[TangentAnswersTable])(implicit session: Session) = { // Type information provided here to help IDE
-    val query1 : Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)] = for(q <- questionTable; a <- answerTable if a.ownerId === userId && q.id === a.questionId && a.correct === Correct2Short.T) yield (q, a)
+    val query1 : Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)] = for(q <- questionTable; a <- answerTable if a.ownerId === userId && q.id === a.questionId && a.correct === NumericBoolean.T) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)]), (QuestionId, Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)])] = query1.groupBy(_._1.id)
     val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.creationDate).min) }
     val query4 = query3.sortBy(_._2.desc)
@@ -54,7 +55,7 @@ object TangentQuestions {
     val query1 : Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)] = for(q <- questionTable; a <- answerTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)]), (QuestionId, Query[(TangentQuestionsTable, TangentAnswersTable), (TangentQuestion, TangentAnswer)])] = query1.groupBy(_._1.id)
     val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).max) }
-    val query4 = query3.filter(_._2 === Correct2Short.F) // Only include question that have no correct answer
+    val query4 = query3.filter(_._2 === NumericBoolean.F) // Only include question that have no correct answer
     val query5 = query4.sortBy(_._3.desc)
     query5.list.map(r => (r._1, r._3.get))
   }

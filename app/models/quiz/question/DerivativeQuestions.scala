@@ -2,6 +2,7 @@ package models.quiz.question
 
 import com.artclod.mathml.slick.MathMLMapper
 import com.artclod.mathml.slick.MathMLMapper.string2mathML
+import com.artclod.slick.NumericBoolean
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import com.google.common.annotations.VisibleForTesting
 import models.quiz._
@@ -60,7 +61,7 @@ object DerivativeQuestions {
   }
 
   def correct(userId: UserId, questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable])(implicit session: Session) = { // Type information provided here to help IDE
-    val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- questionTable; a <- answerTable if a.ownerId === userId && q.id === a.questionId && a.correct === Correct2Short.T) yield (q, a)
+    val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- questionTable; a <- answerTable if a.ownerId === userId && q.id === a.questionId && a.correct === NumericBoolean.T) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)]), (QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])] = query1.groupBy(_._1.id)
     val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.creationDate).min) }
     val query4 = query3.sortBy(_._2.desc)
@@ -73,7 +74,7 @@ object DerivativeQuestions {
     val query1 : Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = for(q <- questionTable; a <- answerTable if a.ownerId === userId && q.id === a.questionId) yield (q, a)
     val query2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)]), (QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])] = query1.groupBy(_._1.id)
     val query3 = query2.map { case (questionId, qAndA) => (questionId, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).max) }
-    val query4 = query3.filter(_._2 === Correct2Short.F) // Only include question that have no correct answer
+    val query4 = query3.filter(_._2 === NumericBoolean.F) // Only include question that have no correct answer
     val query5 = query4.sortBy(_._3.desc)
     query5.list.map(r => (r._1, r._3.get))
   }
@@ -114,7 +115,7 @@ object DerivativeQuestions {
     val q2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)]),(QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)])] = q.groupBy(_._1.id)
     val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._1.rawStr).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
     val q4 = q3.sortBy(_._6)
-    q4.list.map(r => DerivativeQuestionScores(r._1, r._2, r._3.get, r._4.get, Correct2Short(r._5.get), r._6.get))
+    q4.list.map(r => DerivativeQuestionScores(r._1, r._2, r._3.get, r._4.get, NumericBoolean(r._5.get), r._6.get))
   }
 
 }

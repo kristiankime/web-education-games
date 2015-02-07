@@ -10,8 +10,8 @@ object JodaUTC {
     long => Duration.millis(long))
 
   implicit def timestamp2DateTime = MappedColumnType.base[DateTime, java.sql.Timestamp](
-    dateTime => if(dateTime == null) null else new java.sql.Timestamp(dateTime.getMillis()),
-    date => if(date == null) null else new DateTime(date, DateTimeZone.UTC))
+    dateTime => if(dateTime == null) { null } else { new java.sql.Timestamp(dateTime.getMillis()) },
+    date => if(date == null) { null } else { new DateTime(date, DateTimeZone.UTC) } )
 
   def now = DateTime.now(DateTimeZone.UTC)
 

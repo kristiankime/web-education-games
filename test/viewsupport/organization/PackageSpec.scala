@@ -1,13 +1,12 @@
 package viewsupport.organization
 
-import models.quiz.Correct2Short
 import models.quiz.answer.{TestDerivativeAnswer, DerivativeAnswer}
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 import models.support._
 import com.artclod.mathml.scalar.Cn
-import com.artclod.slick.JodaUTC
+import com.artclod.slick.{NumericBoolean, JodaUTC}
 
 // TODO check out http://workwithplay.com/blog/2013/06/19/integration-testing/
 @RunWith(classOf[JUnitRunner])
@@ -24,7 +23,7 @@ class PackageSpec extends Specification {
 		}
 
 		"get math string from Answer" in {
-			mathMLStr(Some(Right(DerivativeAnswer(AnswerId(0), UserId(0), QuestionId(0), Cn(0), "rawStr", Correct2Short(false), JodaUTC.now)))) must beEqualTo(Some("rawStr"))
+			mathMLStr(Some(Right(DerivativeAnswer(AnswerId(0), UserId(0), QuestionId(0), Cn(0), "rawStr", NumericBoolean(false), JodaUTC.now)))) must beEqualTo(Some("rawStr"))
 		}
 	}
 	

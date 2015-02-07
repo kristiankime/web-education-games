@@ -2,8 +2,8 @@ package models.quiz.answer
 
 import com.artclod.mathml._
 import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.slick.NumericBoolean
 import com.artclod.slick.JodaUTC.timestamp2DateTime
-import models.quiz.Correct2Short
 import models.quiz.question.DerivativeQuestion
 import models.quiz.table.derivativeAnswersTable
 import models.support._
@@ -42,7 +42,7 @@ object DerivativeAnswers {
     val q = derivativeAnswersTable.where(_.ownerId === user.id).groupBy(a => a.questionId)
     val q2 = q.map { case (questionId, v) => (questionId, v.length, v.map(_.correct).max, v.map(_.creationDate).min) }
     val q3 = q2.sortBy(_._4)
-    q2.list.map(e => AnswersSummary(e._1, e._2, Correct2Short(e._3.get), e._4.get))
+    q2.list.map(e => AnswersSummary(e._1, e._2, NumericBoolean(e._3.get), e._4.get))
   }
 
 }

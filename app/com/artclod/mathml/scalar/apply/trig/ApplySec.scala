@@ -1,8 +1,9 @@
 package com.artclod.mathml.scalar.apply.trig
 
-import scala.util._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.concept._
+
+import scala.util._
 
 case class ApplySec(value: MathMLElem) extends UnaryFunction(value, Sec) {
 

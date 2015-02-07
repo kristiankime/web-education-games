@@ -3,9 +3,8 @@ package models.organization.table
 import com.artclod.slick.JodaUTC._
 import models.organization._
 import models.support._
-import models.support.table.IdentifiedAndOwned
-import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
 
 class OrganizationsTable(tag: Tag) extends Table[Organization](tag, "organizations") {
 	def id = column[OrganizationId]("id", O.PrimaryKey, O.AutoInc)

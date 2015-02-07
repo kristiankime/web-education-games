@@ -1,9 +1,10 @@
 package com.artclod.mathml.scalar.apply
 
-import scala.util._
 import com.artclod.mathml._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.concept.Constant
+
+import scala.util._
 
 /**
  * ApplyMinusUnary

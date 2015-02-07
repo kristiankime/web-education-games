@@ -2,9 +2,9 @@ package service.table
 
 import com.artclod.slick.JodaUTC
 import com.artclod.slick.JodaUTC._
+import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import securesocial.core.providers.Token
-import org.joda.time.DateTime
 
 class TokensTable(tag: Tag) extends Table[Token](tag, "secure_social_tokens") {
   def uuid = column[String]("uuid", O.PrimaryKey)

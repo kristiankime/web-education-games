@@ -1,9 +1,9 @@
 package controllers.organization
 
 import controllers.support.SecureSocialConsented
-import play.api.db.slick.Config.driver.simple.Session
 import models.organization._
 import models.support._
+import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
 
 object OrganizationsController extends Controller with SecureSocialConsented {

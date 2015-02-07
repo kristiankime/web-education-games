@@ -2,12 +2,12 @@ package models.quiz
 
 import com.artclod.collection._
 import models.organization._
-import models.quiz.question.{Questions, Question, DerivativeQuestion, DerivativeQuestions}
+import models.quiz.question.{DerivativeQuestion, DerivativeQuestions, Question, Questions}
 import models.support._
 import models.user.User
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service._
+
 import scala.language.postfixOps
 
 case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTime, updateDate: DateTime) extends Secured {

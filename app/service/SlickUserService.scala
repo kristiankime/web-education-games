@@ -2,10 +2,10 @@ package service
 
 import com.artclod.slick.JodaUTC
 import play.api.Application
-import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
-import securesocial.core.{ IdentityId, Identity, UserServicePlugin }
+import play.api.db.slick.DB
 import securesocial.core.providers.Token
+import securesocial.core.{Identity, IdentityId, UserServicePlugin}
 import service.table._
 
 class SlickUserService(implicit application: Application) extends UserServicePlugin(application) {

@@ -12,7 +12,7 @@ import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.quiz.Quiz
-import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished, DerivativeAnswer}
+import models.quiz.answer.{DerivativeAnswer, DerivativeAnswerUnfinished, DerivativeAnswers}
 import models.quiz.question._
 import models.support._
 import models.user.User
@@ -20,6 +20,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.{Controller, Result}
+
 import scala.util.{Left, Right}
 
 trait GamesPlayerController extends Controller with SecureSocialConsented {

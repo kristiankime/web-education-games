@@ -6,8 +6,8 @@ import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.quiz.{QuestionsController, QuizzesController}
 import controllers.support.SecureSocialConsented
-import models.quiz.answer.{TangentAnswers, TangentAnswerUnfinished}
-import models.quiz.question.{TangentQuestion}
+import models.quiz.answer.{TangentAnswerUnfinished, TangentAnswers}
+import models.quiz.question.TangentQuestion
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._

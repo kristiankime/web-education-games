@@ -1,7 +1,7 @@
 package com.artclod.slick
 
+import org.joda.time.{DateTime, DateTimeZone, Duration}
 import play.api.db.slick.Config.driver.simple._
-import org.joda.time.{DateTimeZone, DateTime, Duration}
 
 object JodaUTC {
 

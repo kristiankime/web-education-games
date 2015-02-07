@@ -1,7 +1,6 @@
 package com.artclod.mathml.scalar.apply
 
-import com.artclod.mathml.scalar._
-import com.artclod.mathml.scalar.Root
+import com.artclod.mathml.scalar.{Root, _}
 import com.artclod.mathml.scalar.concept._
 
 case class ApplyRoot(degree: BigDecimal, value: MathMLElem) extends NthRoot(degree, value, Seq(Root, Degree(degree)): _*) {
@@ -9,7 +8,7 @@ case class ApplyRoot(degree: BigDecimal, value: MathMLElem) extends NthRoot(degr
 	def simplifyStep() = {if (degree == ApplyRoot.BD_2) { ApplySqrt(v.s) } else { ApplyRoot(degree, v.s) }}
 
 	def derivative(x: String) = {
-		import ApplyRoot._
+		import com.artclod.mathml.scalar.apply.ApplyRoot._
 
 		val f = v.s
 		val fP = f.d(x)

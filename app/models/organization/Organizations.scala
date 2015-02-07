@@ -3,8 +3,8 @@ package models.organization
 import com.artclod.slick.JodaUTC
 import models.organization.table._
 import models.support._
-import play.api.db.slick.Config.driver.simple._
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
 
 case class Organization(id: OrganizationId, name: String, creationDate: DateTime, updateDate: DateTime) {
   def courses(implicit session: Session) = Organizations.courses(id)

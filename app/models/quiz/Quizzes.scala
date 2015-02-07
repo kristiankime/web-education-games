@@ -4,14 +4,11 @@ import com.google.common.annotations.VisibleForTesting
 import models.organization._
 import models.organization.table._
 import models.quiz.question.Question
+import models.quiz.table.{derivativeQuestionsTable, quizzesTable, tangentQuestionsTable, usersQuizzesTable}
 import models.support._
 import models.user.User
 import play.api.db.slick.Config.driver.simple._
 import service._
-import models.quiz.table.quizzesTable
-import models.quiz.table.derivativeQuestionsTable
-import models.quiz.table.tangentQuestionsTable
-import models.quiz.table.usersQuizzesTable
 
 
 object Quizzes {

@@ -20,7 +20,7 @@ object QuestionDifficulty {
       case (_, _) => Fun
     }
   }
-  import MathType._
+  import models.quiz.question.QuestionDifficulty.MathType._
 
   def apply(e: MathMLElem): Double = e match {
       case m: Diff => m.diff // This object is designed for testing

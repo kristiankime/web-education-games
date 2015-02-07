@@ -1,19 +1,12 @@
 package controllers.quiz
 
-import com.artclod.mathml.Match._
-import com.artclod.mathml.MathML
-import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.quiz.derivative.DerivativeAnswersControllon
 import controllers.quiz.tangent.TangentAnswersControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.answer._
 import models.quiz.question.{DerivativeQuestion, TangentQuestion}
-import models.quiz.{Quiz, Quizzes}
 import models.support._
-import play.api.data.Form
-import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc.{Controller, Result}
 

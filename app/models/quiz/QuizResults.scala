@@ -2,9 +2,8 @@ package models.quiz
 
 import com.artclod.collection.PimpedSeq
 import models.quiz.answer.result.QuestionResults
-import models.quiz.question.{Question, DerivativeQuestion}
+import models.quiz.question.Question
 import models.user.User
-import service.Login
 
 case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]) {
   require(results.forall(_.answerer.id == student.id), "All the question results must be from the same user")

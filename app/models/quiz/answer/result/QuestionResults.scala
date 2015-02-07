@@ -1,8 +1,8 @@
 package models.quiz.answer.result
 
+import models.quiz.Status
 import models.quiz.answer.Answer
 import models.quiz.question.Question
-import models.quiz.Status
 import models.user.User
 
 trait QuestionResults {

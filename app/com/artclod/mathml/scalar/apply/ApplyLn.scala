@@ -1,8 +1,9 @@
 package com.artclod.mathml.scalar.apply
 
-import scala.util._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.concept._
+
+import scala.util._
 
 case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, Seq(Ln): _*) {
 

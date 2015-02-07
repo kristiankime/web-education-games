@@ -1,13 +1,14 @@
 package models.organization.table
 
 import com.artclod.slick.JodaUTC._
-import play.api.db.slick.Config.driver.simple._
 import models.organization._
 import models.support._
-import org.joda.time.DateTime
-import service.table.LoginsTable
-import scala.slick.model.ForeignKeyAction
 import models.support.table.IdentifiedAndOwned
+import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
+import service.table.LoginsTable
+
+import scala.slick.model.ForeignKeyAction
 
 class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") with IdentifiedAndOwned[Course, CourseId] {
 	def id = column[CourseId]("id", O.PrimaryKey, O.AutoInc)

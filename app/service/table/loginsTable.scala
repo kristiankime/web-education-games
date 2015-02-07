@@ -1,13 +1,12 @@
 package service.table
 
-import securesocial.core._
-import play.api.db.slick.Config.driver.simple._
 import com.artclod.slick.JodaUTC._
-import securesocial.core.IdentityId
-import service.table.SecurityMapper._
-import service._
 import models.support._
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
+import securesocial.core.{IdentityId, _}
+import service._
+import service.table.SecurityMapper._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
 class LoginsTable(tag: Tag) extends Table[Login](tag, "secure_social_users") {

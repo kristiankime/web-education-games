@@ -1,7 +1,6 @@
 package controllers
 
-import play.api.mvc.Action
-import play.api.mvc.Controller
+import play.api.mvc.{Action, Controller}
 
 object Application extends Controller {
 	val version = Version(0, 5, 5)

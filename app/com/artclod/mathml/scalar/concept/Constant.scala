@@ -2,7 +2,8 @@ package com.artclod.mathml.scalar.concept
 
 import com.artclod.mathml.MathML
 import com.artclod.mathml.scalar._
-import scala.util.{Try, Success}
+
+import scala.util.{Success, Try}
 import scala.xml._
 
 // LATER might be able to make Constant scala.math.Numeric 

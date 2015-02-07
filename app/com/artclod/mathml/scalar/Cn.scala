@@ -1,9 +1,10 @@
 package com.artclod.mathml.scalar
 
+import com.artclod.mathml.scalar.concept._
+
+import scala.math.ScalaNumber
 import scala.util._
 import scala.xml._
-import scala.math.ScalaNumber
-import com.artclod.mathml.scalar.concept._
 
 case class CnInteger(override val v: BigInt) extends ConstantInteger("cn", Cn.integerType, false, v, Seq(IntegerText(v)): _*)
 

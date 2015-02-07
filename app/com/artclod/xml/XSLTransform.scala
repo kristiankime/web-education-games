@@ -1,12 +1,11 @@
 package com.artclod.xml
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import javax.xml.transform.TransformerFactory
-import javax.xml.transform.stream.StreamResult
-import javax.xml.transform.stream.StreamSource
-import scala.xml._
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import javax.xml.transform.stream.{StreamResult, StreamSource}
+
 import scala.util._
+import scala.xml._
 
 object XSLTransform {
 	val factory = TransformerFactory.newInstance()

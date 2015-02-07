@@ -1,11 +1,12 @@
 package models.organization.table
 
-import play.api.db.slick.Config.driver.simple._
-import scala.slick.model.ForeignKeyAction
-import service.table._
-import service._
 import models.support._
-import models.support.table.{UserLinkRow, UserLink}
+import models.support.table.{UserLink, UserLinkRow}
+import play.api.db.slick.Config.driver.simple._
+import service._
+import service.table._
+
+import scala.slick.model.ForeignKeyAction
 
 case class User2Course(userId: UserId, courseId: CourseId, access: Access, section: Int) extends UserLinkRow
 

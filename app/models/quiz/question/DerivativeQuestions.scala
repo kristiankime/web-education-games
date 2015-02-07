@@ -1,28 +1,20 @@
 package models.quiz.question
 
-import com.artclod.mathml.scalar._
 import com.artclod.mathml.slick.MathMLMapper
+import com.artclod.mathml.slick.MathMLMapper.string2mathML
+import com.artclod.slick.JodaUTC.timestamp2DateTime
 import com.google.common.annotations.VisibleForTesting
-import models.organization.Course
 import models.quiz._
 import models.quiz.answer.DerivativeAnswer
 import models.quiz.answer.result.DerivativeQuestionScores
 import models.quiz.answer.table.DerivativeAnswersTable
-import models.quiz.answer.result.DerivativeQuestionScores
 import models.quiz.question.table.DerivativeQuestionsTable
+import models.quiz.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
 import models.support._
 import models.user.User
-import org.joda.time.DateTime
-import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.Config.driver.simple.Query
-import service._
-import service.table.LoginsTable
-import com.artclod.slick.JodaUTC.timestamp2DateTime
-import MathMLMapper.string2mathML
-import com.artclod.mathml.scalar.MathMLElem
-import scala.slick.lifted
-import models.quiz.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
 import models.user.table.userTable
+import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple.{Query, _}
 
 object DerivativeQuestions {
 

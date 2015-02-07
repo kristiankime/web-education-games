@@ -1,6 +1,7 @@
 package com.artclod
 
 import org.joda.time.DateTime
+
 import scala.language.implicitConversions
 
 package object time {

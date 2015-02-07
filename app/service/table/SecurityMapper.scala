@@ -1,11 +1,8 @@
 package service.table
 
 import play.api.db.slick.Config.driver.simple._
-import securesocial.core.AuthenticationMethod
-import securesocial.core.IdentityId
-import securesocial.core.OAuth1Info
-import securesocial.core.OAuth2Info
-import securesocial.core.PasswordInfo
+import securesocial.core.{AuthenticationMethod, IdentityId, OAuth1Info, OAuth2Info, PasswordInfo}
+
 import scala.language.implicitConversions
 
 object SecurityMapper {

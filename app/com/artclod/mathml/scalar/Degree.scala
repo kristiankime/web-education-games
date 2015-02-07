@@ -1,10 +1,10 @@
 package com.artclod.mathml.scalar
 
-import scala.util._
-import scala.xml._
 import com.artclod.mathml._
 import com.artclod.mathml.scalar.concept.Constant
-import scala.util.Success
+
+import scala.util.{Success, _}
+import scala.xml._
 
 case class Degree(val value: Constant)
 	extends MathMLElem(MathML.h.prefix, "degree", MathML.h.attributes, MathML.h.scope, false, Seq(value): _*) {

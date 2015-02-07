@@ -1,8 +1,9 @@
 package models.user
 
-import play.api.db.slick.Config.driver.simple._
-import models.support.{UserId}
+import models.support.UserId
 import models.user.table._
+import play.api.db.slick.Config.driver.simple._
+
 import scala.util.Try
 
 object Users {

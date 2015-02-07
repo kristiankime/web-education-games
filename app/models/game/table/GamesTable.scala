@@ -3,12 +3,13 @@ package models.game.table
 import com.artclod.slick.JodaUTC._
 import models.game.{Game, GameResponseStatus}
 import models.organization.table._
+import models.quiz.table.quizzesTable
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
+
 import scala.slick.model.ForeignKeyAction
-import models.quiz.table.quizzesTable
 
 class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def id = column[GameId]("id", O.PrimaryKey, O.AutoInc)

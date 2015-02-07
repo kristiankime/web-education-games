@@ -5,7 +5,7 @@ import com.artclod.util._
 import controllers.organization.CoursesController
 import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.organization._
-import models.quiz.answer.{Answers, DerivativeAnswers}
+import models.quiz.answer.Answers
 import models.quiz.{Quiz, Quizzes}
 import models.support._
 import play.api.data.Form

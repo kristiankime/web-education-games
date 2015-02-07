@@ -1,12 +1,8 @@
 package service
 
-import securesocial.core._
-import securesocial.core.Identity
-import securesocial.core.IdentityId
-import securesocial.core.OAuth1Info
-import securesocial.core.SecuredRequest
 import models.support.UserId
 import org.joda.time.DateTime
+import securesocial.core.{Identity, IdentityId, OAuth1Info, SecuredRequest, _}
 
 case class Login(id: UserId,
 	identityId: IdentityId,

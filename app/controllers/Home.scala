@@ -1,7 +1,6 @@
 package controllers
 
-import controllers.Application._
-import controllers.support.{SecureSocialConsented, SecureSocialDB}
+import controllers.support.SecureSocialConsented
 import play.api.mvc.Controller
 
 object Home extends Controller with SecureSocialConsented {

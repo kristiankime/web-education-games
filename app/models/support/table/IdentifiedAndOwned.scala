@@ -1,7 +1,7 @@
 package models.support.table
 
-import play.api.db.slick.Config.driver.simple._
 import models.support.UserId
+import play.api.db.slick.Config.driver.simple._
 
 trait IdentifiedAndOwned[T, I] extends Table[T] {
 	def id: Column[I]

@@ -5,13 +5,14 @@ import java.io.{PrintWriter, StringWriter}
 import com.google.common.annotations.VisibleForTesting
 import controllers.support.SecureSocialDB
 import models.user.{User, Users}
-import play.api.mvc.Controller
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import service.Login
-import scala.util.Failure
 import play.api.db.slick.Config.driver.simple.Session
+import play.api.mvc.Controller
+import service.Login
+
+import scala.util.Failure
 
 object Consent extends Controller with SecureSocialDB {
   val splitEmailOnAt = """([^@]+)@([^@]+)""".r

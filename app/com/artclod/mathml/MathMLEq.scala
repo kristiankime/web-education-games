@@ -1,14 +1,15 @@
 package com.artclod.mathml
 
-import scala.util._
 import com.artclod.mathml.scalar._
+
+import scala.util._
 
 object Match extends Enumeration {
 	type Match = Value
 	val Yes, No, Inconclusive = Value
 }
 
-import Match._
+import com.artclod.mathml.Match._
 
 object MathMLEq {
 	private val ran = new Random(0L) // At least for now use a fixed set of pseudo random values

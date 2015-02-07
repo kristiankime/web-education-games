@@ -1,9 +1,9 @@
 package com.artclod.mathml.scalar.apply
 
-import scala.util._
-import com.artclod.mathml.scalar._
-import com.artclod.mathml.scalar.Root
+import com.artclod.mathml.scalar.{Root, _}
 import com.artclod.mathml.scalar.concept._
+
+import scala.util._
 
 case class ApplySqrt(value: MathMLElem) extends NthRoot(2, value, Seq(Root): _*) {
 

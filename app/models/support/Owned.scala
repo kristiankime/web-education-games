@@ -1,7 +1,7 @@
 package models.support
 
-import service.table.LoginsTable
 import play.api.db.slick.Config.driver.simple.Session
+import service.table.LoginsTable
 
 trait Owned {
 

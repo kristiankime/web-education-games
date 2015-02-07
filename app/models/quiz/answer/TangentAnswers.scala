@@ -1,7 +1,7 @@
 package models.quiz.answer
 
-import com.artclod.mathml.MathMLEq.{ doubleCloseEnough, matchCombine }
-import com.artclod.mathml.scalar.{Cn, MathMLElem, x}
+import com.artclod.mathml.MathMLEq.{doubleCloseEnough, matchCombine}
+import com.artclod.mathml.scalar.MathMLElem
 import models.quiz.question.TangentQuestion
 import models.quiz.table._
 import play.api.db.slick.Config.driver.simple._

@@ -1,17 +1,18 @@
 package controllers.organization
 
-import play.api.db.slick.Config.driver.simple.Session
-import scala.util.{Right, Random}
 import com.artclod.random._
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
-import play.api.mvc.{Result, Controller}
+import controllers.support.SecureSocialConsented
+import models.organization._
+import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.db.slick.Config.driver.simple.Session
+import play.api.mvc.{Controller, Result}
 import service._
-import models.support._
-import models.organization._
-import controllers.support.SecureSocialConsented
+
+import scala.util.{Random, Right}
 
 object CoursesController extends Controller with SecureSocialConsented {
 	implicit val randomEngine = new Random(JodaUTC.now.getMillis())

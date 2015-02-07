@@ -1,9 +1,8 @@
 package com.artclod.util
 
-import scala.util.Random
-import scala.util.Try
-import concurrent._
-import ExecutionContext.Implicits._
+import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent._
+import scala.util.{Random, Try}
 
 object TryUtil {
   val r = new Random(0)

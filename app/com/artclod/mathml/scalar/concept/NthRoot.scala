@@ -1,8 +1,9 @@
 package com.artclod.mathml.scalar.concept
 
-import scala.util._
 import com.artclod.mathml._
 import com.artclod.mathml.scalar._
+
+import scala.util._
 
 abstract class NthRoot(val n: BigDecimal, val v: MathMLElem, pre: MathMLElem*)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (pre ++ v): _*) {

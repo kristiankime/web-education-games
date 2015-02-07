@@ -1,8 +1,8 @@
 package models.quiz.answer.result
 
 import com.artclod.mathml.scalar.MathMLElem
-import models.quiz.question.{QuestionScoring, QuestionDifficulty}
 import models.quiz.ViewableMath
+import models.quiz.question.{QuestionDifficulty, QuestionScoring}
 import models.support._
 import org.joda.time.DateTime
 

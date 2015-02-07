@@ -1,10 +1,8 @@
 package models.support.form
 
 import models.support.UserId
+import play.api.data.{FormError, Forms, Mapping}
 import play.api.data.format.Formatter
-import play.api.data.Mapping
-import play.api.data.Forms
-import play.api.data.FormError
 
 // http://workwithplay.com/blog/2013/07/10/advanced-forms-techniques/
 object UserIdForm {

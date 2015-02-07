@@ -2,15 +2,15 @@ package models.quiz.question
 
 import com.artclod.mathml.scalar.MathMLElem
 import models.organization.Course
-import models.quiz.answer.{Answer, TangentAnswer}
-import models.quiz.answer.result.{QuestionResults, DerivativeQuestionResults, TangentQuestionResults}
 import models.quiz._
+import models.quiz.answer.result.{DerivativeQuestionResults, QuestionResults, TangentQuestionResults}
+import models.quiz.answer.{Answer, TangentAnswer}
 import models.support.{Owned, QuestionId, QuizId, UserId}
 import models.user.User
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.templates.Html
-import service.{Access, Login}
+import service.Access
 
 sealed trait Question extends Owned {
   val id: QuestionId

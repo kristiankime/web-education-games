@@ -1,9 +1,10 @@
 package com.artclod.mathml.scalar.apply
 
-import scala.util._
 import com.artclod.mathml._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.concept.Constant
+
+import scala.util._
 
 case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Power) ++ base ++ exp): _*) {

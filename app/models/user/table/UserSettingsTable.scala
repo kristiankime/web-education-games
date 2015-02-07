@@ -1,10 +1,9 @@
 package models.user.table
 
-import models.support.UserId
+import models.support.{UserId, _}
 import models.user.User
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
-import models.support._
 
 import scala.slick.model.ForeignKeyAction
 

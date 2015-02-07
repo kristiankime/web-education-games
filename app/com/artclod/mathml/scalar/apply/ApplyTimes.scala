@@ -1,9 +1,10 @@
 package com.artclod.mathml.scalar.apply
 
-import scala.util._
 import com.artclod.mathml._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.concept.Constant
+
+import scala.util._
 
 case class ApplyTimes(val values: MathMLElem*)
 	extends MathMLElem(MathML.h.prefix, "apply", MathML.h.attributes, MathML.h.scope, false, (Seq[MathMLElem](Times) ++ values): _*) {

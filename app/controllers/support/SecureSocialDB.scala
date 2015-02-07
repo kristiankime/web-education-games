@@ -1,14 +1,11 @@
 package controllers.support
 
 
+import play.api.Play.current
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.db.slick.DB
-import play.api.mvc.AnyContent
-import play.api.mvc.Result
-import play.api.Play.current
-import securesocial.core.SecureSocial
-import securesocial.core.SecuredRequest
-import securesocial.core.Authorization
+import play.api.mvc.{AnyContent, Result}
+import securesocial.core.{Authorization, SecureSocial, SecuredRequest}
 import service.Login
 
 trait SecureSocialDB extends SecureSocial {

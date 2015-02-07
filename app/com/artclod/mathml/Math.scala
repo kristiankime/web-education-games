@@ -1,8 +1,9 @@
 package com.artclod.mathml
 
-import scala.xml._
 import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.mathml.scalar.concept.Constant
+
+import scala.xml._
 
 case class Math(
 	override val prefix: String,

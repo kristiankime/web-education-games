@@ -1,6 +1,6 @@
 package viewsupport.question.derivative
 
-import org.joda.time.{Duration, DateTime}
+import org.joda.time.{DateTime, Duration}
 
 sealed trait AnswerTime
 

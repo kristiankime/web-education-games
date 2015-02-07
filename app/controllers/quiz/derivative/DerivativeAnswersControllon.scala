@@ -1,19 +1,17 @@
 package controllers.quiz.derivative
 
 import com.artclod.mathml.Match._
-import com.artclod.mathml.scalar.MathMLElem
-import controllers.quiz.{QuestionsController, QuizzesController}
-import models.quiz.answer.{DerivativeAnswers, DerivativeAnswerUnfinished}
-import models.quiz.{Quizzes, Quiz}
-import models.quiz.question.{QuestionDifficulty, DerivativeQuestion, DerivativeQuestions}
-import com.artclod.slick.JodaUTC
 import com.artclod.mathml.MathML
+import com.artclod.slick.JodaUTC
+import com.artclod.util._
+import controllers.quiz.{QuestionsController, QuizzesController}
+import controllers.support.SecureSocialConsented
+import models.quiz.answer.{DerivativeAnswerUnfinished, DerivativeAnswers}
+import models.quiz.question.DerivativeQuestion
+import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Controller}
-import controllers.support.{SecureSocialConsented}
-import models.support._
-import com.artclod.util._
+import play.api.mvc.Controller
 
 trait DerivativeAnswersControllon extends Controller with SecureSocialConsented {
 

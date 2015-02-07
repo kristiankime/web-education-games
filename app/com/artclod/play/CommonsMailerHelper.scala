@@ -1,8 +1,8 @@
 package com.artclod.play
 
-import com.typesafe.plugin.{MailerAPI, use, MailerPlugin}
-import play.api.Play.current
+import com.typesafe.plugin.{MailerAPI, MailerPlugin, use}
 import play.api.Play
+import play.api.Play.current
 
 /**
  * See http://chocksaway.com/blog/?p=547

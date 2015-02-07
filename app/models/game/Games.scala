@@ -1,12 +1,12 @@
 package models.game
 
 import com.artclod.slick.JodaUTC
-import models.organization.{Course, Courses}
 import models.game.table.gamesTable
+import models.organization.{Course, Courses}
 import models.support._
+import models.user.User
 import play.api.db.slick.Config.driver.simple._
-import service.Login
-import models.user.{User}
+
 import scala.language.postfixOps
 
 object Games {

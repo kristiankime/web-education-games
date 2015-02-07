@@ -1,12 +1,12 @@
 package models.user
 
-import play.api.db.slick.Config.driver.simple.Session
 import models.game.Games
 import models.organization.Courses
 import models.quiz.answer.result.DerivativeQuestionScores
-import models.quiz.question.{QuestionDifficulty, DerivativeQuestions}
+import models.quiz.question.{DerivativeQuestions, QuestionDifficulty}
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple.Session
 import service.Logins
 
 case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {

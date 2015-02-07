@@ -4,7 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{QuestionDifficulty, TangentQuestions, TangentQuestion}
+import models.quiz.question.{QuestionDifficulty, TangentQuestion, TangentQuestions}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._

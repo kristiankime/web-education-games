@@ -1,6 +1,6 @@
 package com.artclod.javascript
 
-import java.io.{InputStreamReader}
+import java.io.InputStreamReader
 
 import org.mozilla.javascript._
 import play.api.Play

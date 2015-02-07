@@ -1,9 +1,10 @@
 package com.artclod
 
-import scala.util.Random
-import scala.collection.generic.CanBuildFrom
 import com.artclod.collection._
+
+import scala.collection.generic.CanBuildFrom
 import scala.language.higherKinds
+import scala.util.Random
 
 package object random {
 

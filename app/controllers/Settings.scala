@@ -2,8 +2,8 @@ package controllers
 
 import controllers.support.SecureSocialConsented
 import models.user.Users
-import play.api.data._
 import play.api.data.Forms._
+import play.api.data._
 import play.api.mvc.Controller
 
 object Settings extends Controller with SecureSocialConsented {

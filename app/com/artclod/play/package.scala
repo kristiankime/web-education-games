@@ -1,6 +1,7 @@
 package com.artclod
 
 import _root_.play.api.templates.Html
+
 import scala.collection.mutable.LinkedHashMap
 
 package object play {

@@ -1,7 +1,6 @@
 package models.quiz.answer
 
 import com.artclod.tuple._
-import models.quiz._
 import models.quiz.table._
 import models.support._
 import play.api.db.slick.Config.driver.simple._

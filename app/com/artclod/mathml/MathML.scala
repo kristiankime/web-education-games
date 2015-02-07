@@ -1,11 +1,12 @@
 package com.artclod.mathml
 
-import scala.util._
-import scala.xml._
 import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.apply.trig._
 import com.artclod.mathml.scalar.concept.Constant
+
+import scala.util._
+import scala.xml._
 
 object MathML {
 	val h = <hack/> // This is a hack so we can get default XML meta data for default MathML objects

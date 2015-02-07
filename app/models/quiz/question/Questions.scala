@@ -1,21 +1,11 @@
 package models.quiz.question
 
-import com.artclod.mathml.slick.MathMLMapper
-import com.artclod.mathml.slick.MathMLMapper.string2mathML
-import com.artclod.slick.JodaUTC.timestamp2DateTime
-import com.google.common.annotations.VisibleForTesting
-import models.quiz._
-import models.quiz.answer.DerivativeAnswer
-import models.quiz.answer.result.DerivativeQuestionScores
-import models.quiz.answer.table.DerivativeAnswersTable
-import models.quiz.question.table.DerivativeQuestionsTable
-import models.quiz.table._  // {QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
-import models.support._
-import models.user.User
-import models.user.table.userTable
-import org.joda.time.DateTime
-import play.api.db.slick.Config.driver.simple.{Query, _}
 import com.artclod.tuple._
+import models.quiz._
+import models.quiz.table._
+import models.support._
+import play.api.db.slick.Config.driver.simple._
+
 import scala.language.postfixOps
 
 object Questions {

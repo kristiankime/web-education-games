@@ -2,13 +2,14 @@ package models.tournament
 
 import com.google.common.annotations.VisibleForTesting
 import models.game.table.gamesTable
+import models.quiz.Correct2Short
 import models.quiz.table._
 import models.support._
 import models.user.Users
-import play.api.db.slick.Config.driver.simple._
-import scala.language.postfixOps
 import models.user.table.userTable
-import models.quiz.Correct2Short
+import play.api.db.slick.Config.driver.simple._
+
+import scala.language.postfixOps
 
 case class Rankings[M](ranks: List[Rank[M]], user: Option[Rank[M]])
 

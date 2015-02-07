@@ -1,13 +1,10 @@
 package com.artclod.mathml.scalar.apply
 
+import com.artclod.mathml.scalar.concept.{Constant, Logarithm}
+import com.artclod.mathml.scalar.{Log, MathMLElem, ln_10}
+
 import scala.math.BigDecimal.int2bigDecimal
 import scala.util.Try
-
-import com.artclod.mathml.scalar.Log
-import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.mathml.scalar.concept.Constant
-import com.artclod.mathml.scalar.concept.Logarithm
-import com.artclod.mathml.scalar.ln_10
 
 case class ApplyLog10(value: MathMLElem) extends Logarithm(10, value, Seq(Log): _*) {
 

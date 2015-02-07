@@ -2,20 +2,20 @@ package controllers.game
 
 import com.artclod.play.CommonsMailerHelper
 import com.artclod.util._
+import controllers.game.GamesEmail._
 import controllers.organization.CoursesController
 import controllers.quiz.AnswersController
 import controllers.support.SecureSocialConsented
-import controllers.game.GamesEmail._
+import models.game.GameRole._
 import models.game._
 import models.organization._
 import models.quiz.answer.DerivativeAnswers
 import models.support._
-import models.user.{Users, User}
+import models.user.Users
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
-import models.game.GameRole._
 
 object GamesController extends Controller with SecureSocialConsented {
 

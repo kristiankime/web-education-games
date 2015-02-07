@@ -1,8 +1,8 @@
 package models.support.table
 
+import models.support.UserId
 import play.api.db.slick.Config.driver.simple._
 import service.Access
-import models.support.UserId
 
 trait UserLink[T <: UserLinkRow, I] extends Table[T] {
 	def id: Column[I]

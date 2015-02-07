@@ -1,14 +1,13 @@
 package controllers.support
 
-import models.user.Users
-import play.api.db.slick.Config.driver.simple.Session
-import securesocial.core.Authorization
-import securesocial.core.Identity
-import play.api.db.slick.DB
-import play.api.Play.current
-import service._
-import models.support._
 import models.organization._
+import models.support._
+import models.user.Users
+import play.api.Play.current
+import play.api.db.slick.Config.driver.simple.Session
+import play.api.db.slick.DB
+import securesocial.core.{Authorization, Identity}
+import service._
 
 case class RequireAccess(level: Access, secured: Session => Option[Secured]) extends Authorization {
 

@@ -1,11 +1,12 @@
 package models.organization.table
 
-import org.joda.time.DateTime
-import play.api.db.slick.Config.driver.simple._
-import scala.slick.model.ForeignKeyAction
-import models.support._
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import models.quiz.table.quizzesTable
+import models.support._
+import org.joda.time.DateTime
+import play.api.db.slick.Config.driver.simple._
+
+import scala.slick.model.ForeignKeyAction
 
 case class Course2Quiz(courseId: CourseId, quizId: QuizId, startDate: Option[DateTime] = None, endDate: Option[DateTime] = None)
 

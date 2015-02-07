@@ -3,8 +3,8 @@ package controllers.game
 import models.game._
 import models.quiz.Quiz
 import models.quiz.answer.DerivativeAnswer
-import models.quiz.question.{Question, DerivativeQuestion}
-import models.support.{QuestionId, GameId}
+import models.quiz.question.{DerivativeQuestion, Question}
+import models.support.{GameId, QuestionId}
 import models.user.User
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc.Result

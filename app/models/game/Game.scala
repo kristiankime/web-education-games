@@ -1,15 +1,13 @@
 package models.game
 
 import com.artclod.slick.JodaUTC
+import models.game.GameRole._
 import models.organization.Courses
-import models.quiz.{Quizzes, Quiz}
+import models.quiz.{Quiz, Quizzes}
 import models.support._
-import models.user.{Users, User}
+import models.user.{User, Users}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service.{Login}
-import service.table.LoginsTable
-import models.game.GameRole._
 
 case class Game(id: GameId = null,
                 requestDate: DateTime,

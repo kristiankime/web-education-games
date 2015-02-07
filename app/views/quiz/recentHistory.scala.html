@@ -1,9 +1,9 @@
 @(user: models.user.User)(implicit session: play.api.db.slick.Config.driver.simple.Session)
 
-@import models.quiz.answer.result.DerivativeQuestionResults
+@import models.quiz.answer.result.QuestionResults
 
-@defining(models.quiz.question.DerivativeQuestions.incorrectResults(user, 5)) { incorrectQuestions: List[(DerivativeQuestionResults, org.joda.time.DateTime)] =>
-@defining(models.quiz.question.DerivativeQuestions.correctResults(user, 5)) { correctQuestions: List[(DerivativeQuestionResults, org.joda.time.DateTime)] =>
+@defining(models.quiz.question.Questions.incorrectResults(user, 5)) { incorrectQuestions: List[(QuestionResults, org.joda.time.DateTime)] =>
+@defining(models.quiz.question.Questions.correctResults(user, 5)) { correctQuestions: List[(QuestionResults, org.joda.time.DateTime)] =>
 
     <section class="secondary-content recent-history">
         <h4> Other Player's History </h4>

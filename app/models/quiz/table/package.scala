@@ -18,4 +18,10 @@ package object table {
   val tangentAnswersTable = TableQuery[TangentAnswersTable]
   val answerTables = MustHandle(derivativeAnswersTable, tangentAnswersTable)
 
+  case class QuestionAndAnswer[Q,A](question: Q, answer: A)
+
+  val questionAndAnswerTables = MustHandle(
+    QuestionAndAnswer(derivativeQuestionsTable, derivativeAnswersTable),
+    QuestionAndAnswer(tangentQuestionsTable, tangentAnswersTable))
+
 }

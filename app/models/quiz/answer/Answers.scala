@@ -18,4 +18,3 @@ object Answers {
     answerTables.->(_.where(_.id === answerId).firstOption, _.where(_.id === answerId).firstOption).map(v => v._1 ++ v._2 headOption)
 
 }
-

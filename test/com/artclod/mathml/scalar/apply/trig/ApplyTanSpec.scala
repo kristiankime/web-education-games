@@ -15,7 +15,7 @@ class ApplyTanSpec extends Specification {
 
 	"eval" should {
 		"do sin" in {
-			ApplyTan(π).eval(Map()).get must beEqualTo(math.tan(math.Pi))
+			ApplyTan(π).eval().get must beEqualTo(math.tan(math.Pi))
 		}
 	}
 

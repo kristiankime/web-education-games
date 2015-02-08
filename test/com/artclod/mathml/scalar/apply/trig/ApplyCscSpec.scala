@@ -15,7 +15,7 @@ class ApplyCscSpec extends Specification {
 
 	"eval" should {
 		"do csc" in {
-			ApplyCsc(π).eval(Map()).get must beEqualTo(Trigonometry.csc(math.Pi))
+			ApplyCsc(π).eval().get must beEqualTo(Trigonometry.csc(math.Pi))
 		}
 	}
 

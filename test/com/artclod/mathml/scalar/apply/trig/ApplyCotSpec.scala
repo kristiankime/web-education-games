@@ -15,7 +15,7 @@ class ApplyCotSpec extends Specification {
 
 	"eval" should {
 		"do cot" in {
-			ApplyCot(π).eval(Map()).get must beEqualTo(Trigonometry.cot(math.Pi))
+			ApplyCot(π).eval().get must beEqualTo(Trigonometry.cot(math.Pi))
 		}
 	}
 

@@ -9,18 +9,19 @@ import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
+import com.artclod.slick.JodaUTC._
 
 import scala.slick.model.ForeignKeyAction
 
-class DerivativeQuestionsTable(tag: Tag) extends Table[DerivativeQuestion](tag, "derivative_questions") {
-	def id = column[QuestionId]("id", O.PrimaryKey)
-	def ownerId = column[UserId]("owner")
+class DerivativeQuestionsTable(tag: Tag) extends Table[DerivativeQuestion](tag, "derivative_questions") with QuestionsTable[DerivativeQuestion] {
+//	def id = column[QuestionId]("id", O.PrimaryKey)
+//	def ownerId = column[UserId]("owner")
 	def mathML = column[MathMLElem]("mathml")
 	def rawStr = column[String]("rawstr")
-	def creationDate = column[DateTime]("creation_date")
-	def atCreationDifficulty = column[Double]("at_creation_difficulty")
-	def quizId = column[Option[QuizId]]("quiz_id")
-	def order = column[Int]("order")
+//	def creationDate = column[DateTime]("creation_date")
+//	def atCreationDifficulty = column[Double]("at_creation_difficulty")
+//	def quizId = column[Option[QuizId]]("quiz_id")
+//	def order = column[Int]("order")
 
 	def * = (id, ownerId, mathML, rawStr, creationDate, atCreationDifficulty, quizId, order) <> (DerivativeQuestion.tupled, DerivativeQuestion.unapply _)
 

@@ -34,6 +34,6 @@ trait QuestionResults {
 
   def studentScore = if(correct) 1d else 0d
 
-  def teacherScore(studentSkill: Double): Double // = QuestionScore.teacherScore(question, correct, studentSkill)
+  def teacherScore(studentSkill: Double): Double
 
 }

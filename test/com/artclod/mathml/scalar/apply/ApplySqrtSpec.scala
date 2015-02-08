@@ -14,8 +14,8 @@ import org.specs2.runner.JUnitRunner
 class ApplySqrtSpec extends Specification {
 
 	"eval" should {
-		"do sqare root" in {
-			ApplySqrt(4).eval(Map()).get must beEqualTo(2)
+		"do square root" in {
+			ApplySqrt(4).eval().get must beEqualTo(2)
 		}
 	}
 

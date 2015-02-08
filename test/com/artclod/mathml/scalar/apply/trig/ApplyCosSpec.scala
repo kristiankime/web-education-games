@@ -15,7 +15,7 @@ class ApplyCosSpec extends Specification {
 
 	"eval" should {
 		"do sin" in {
-			ApplyCos(π).eval(Map()).get must beEqualTo(-1)
+			ApplyCos(π).eval().get must beEqualTo(-1)
 		}
 	}
 

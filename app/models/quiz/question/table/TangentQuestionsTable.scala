@@ -12,17 +12,17 @@ import service.table.LoginsTable
 
 import scala.slick.model.ForeignKeyAction
 
-class TangentQuestionsTable(tag: Tag) extends Table[TangentQuestion](tag, "tangent_questions") {
-	def id = column[QuestionId]("id", O.PrimaryKey)
-	def ownerId = column[UserId]("owner")
+class TangentQuestionsTable(tag: Tag) extends Table[TangentQuestion](tag, "tangent_questions") with QuestionsTable[TangentQuestion] {
+//	def id = column[QuestionId]("id", O.PrimaryKey)
+//	def ownerId = column[UserId]("owner")
 	def function = column[MathMLElem]("function")
 	def functionStr = column[String]("function_str")
 	def atPointX = column[MathMLElem]("at_point_x")
 	def atPointXStr = column[String]("at_point_x_str")
-	def creationDate = column[DateTime]("creation_date")
-	def atCreationDifficulty = column[Double]("at_creation_difficulty")
-	def quizId = column[Option[QuizId]]("quiz_id")
-	def order = column[Int]("order")
+//	def creationDate = column[DateTime]("creation_date")
+//	def atCreationDifficulty = column[Double]("at_creation_difficulty")
+//	def quizId = column[Option[QuizId]]("quiz_id")
+//	def order = column[Int]("order")
 
 	def * = (id, ownerId, function, functionStr, atPointX, atPointXStr, creationDate, atCreationDifficulty, quizId, order) <> (TangentQuestion.tupled, TangentQuestion.unapply _)
 

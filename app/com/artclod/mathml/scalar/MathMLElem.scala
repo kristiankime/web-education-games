@@ -17,9 +17,8 @@ abstract class MathMLElem(
 	child: Node*)
 	extends Elem(prefix, label, attributes1, scope, minimizeEmpty, child: _*) {
 
-  def eval : Try[Double] = eval(Map[String, Double]())
-
-  def eval(boundVariables: (String, Double)*) : Try[Double] = eval(Map(boundVariables:_*))
+  // LATER it would be nice if this was just called eval but Map[A,B] is Iterable[(A,B)] so the signatures conflict
+  def evalT(boundVariables: (String, Double)*) : Try[Double] = eval(Map(boundVariables:_*))
 
 	def eval(boundVariables: Map[String, Double] = Map()): Try[Double]
 

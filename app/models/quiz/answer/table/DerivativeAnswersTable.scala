@@ -12,14 +12,14 @@ import service.table.LoginsTable
 
 import scala.slick.model.ForeignKeyAction
 
-class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "derivative_answers") {
-	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)
-	def questionId = column[QuestionId]("question_id")
-	def ownerId = column[UserId]("owner")
+class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "derivative_answers") with  AnswersTable[DerivativeAnswer] {
+//	def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)
+//	def questionId = column[QuestionId]("question_id")
+//	def ownerId = column[UserId]("owner")
 	def mathML = column[MathMLElem]("mathml")
 	def rawStr = column[String]("rawstr")
-	def correct = column[Short]("correct") // Note this represent a Boolean in the Answers Class, kept as a number for aggregation purposes
-	def creationDate = column[DateTime]("creation_date")
+//	def correct = column[Short]("correct") // Note this represent a Boolean in the Answers Class, kept as a number for aggregation purposes
+//	def creationDate = column[DateTime]("creation_date")
 
 	def * = (id, ownerId, questionId, mathML, rawStr, correct, creationDate) <> (DerivativeAnswer.tupled, DerivativeAnswer.unapply _)
 

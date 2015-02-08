@@ -15,7 +15,7 @@ class ApplySecSpec extends Specification {
 
 	"eval" should {
 		"do csc" in {
-			ApplySec(π).eval(Map()).get must beEqualTo(Trigonometry.sec(math.Pi))
+			ApplySec(π).eval().get must beEqualTo(Trigonometry.sec(math.Pi))
 		}
 	}
 

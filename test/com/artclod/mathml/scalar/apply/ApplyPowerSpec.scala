@@ -15,15 +15,15 @@ class ApplyPowerSpec extends Specification {
 
 	"eval" should {
 		"raise value to power" in {
-			ApplyPower(`2`, `3`).eval(Map()).get must beEqualTo(8)
+			ApplyPower(`2`, `3`).eval().get must beEqualTo(8)
 		}
 		
 		"return 0 if base is 0" in {
-			ApplyPower(`0`, e).eval(Map()).get must beEqualTo(0)
+			ApplyPower(`0`, e).eval().get must beEqualTo(0)
 		}
 		
 		"fail if base is nonzero and power results is 0" in {
-			ApplyPower(e, `-1000`).eval(Map()) must beFailedTry
+			ApplyPower(e, `-1000`).eval() must beFailedTry
 		}
 	}
 

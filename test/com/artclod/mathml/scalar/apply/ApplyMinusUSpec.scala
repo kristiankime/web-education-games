@@ -15,7 +15,7 @@ class ApplyMinusUSpec extends Specification {
 
 	"eval" should {
 		"return negative of value" in {
-			ApplyMinusU(`6`).eval(Map()).get must beEqualTo(-6)
+			ApplyMinusU(`6`).eval().get must beEqualTo(-6)
 		}
 	}
 	

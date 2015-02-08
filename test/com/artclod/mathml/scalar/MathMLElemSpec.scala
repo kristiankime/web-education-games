@@ -87,7 +87,7 @@ class MathMLElemSpec extends Specification {
 
 	"eval" should {
 		"turn Cn into a number if possible" in {
-			`5`.eval(Map()).get must beEqualTo(5)
+			`5`.eval().get must beEqualTo(5)
 		}
 
 		"fail if a Cn can't be parsed into a number" in {
@@ -95,51 +95,51 @@ class MathMLElemSpec extends Specification {
 		}
 
 		"turn Ci into the number specified by the bound parameters" in {
-			x.eval(Map("x" -> 3)).get must beEqualTo(3)
+			x.eval(Map("x" -> 3d)).get must beEqualTo(3)
 		}
 
 		"fail if there is no entry for a Ci variable name in the bound parameters" in {
-			x.eval(Map("no entry for X" -> 3)).isFailure must beTrue
+			x.eval(Map("no entry for X" -> 3d)).isFailure must beTrue
 		}
 
 		"fail if there is only an applyable" in {
-			Plus.eval(Map()).isFailure must beTrue
+			Plus.eval().isFailure must beTrue
 		}
 
 		"add 2 numbers correctly for apply+plus " in {
-			ApplyPlus(`5`, `5`).eval(Map()).get must beEqualTo(10)
+			ApplyPlus(`5`, `5`).eval().get must beEqualTo(10)
 		}
 
 		"add > 2 numbers correctly for apply+plus " in {
-			ApplyPlus(`5`, `5`, `5`, `5`).eval(Map()).get must beEqualTo(20)
+			ApplyPlus(`5`, `5`, `5`, `5`).eval().get must beEqualTo(20)
 		}
 
 		"subtract 1 number correctly for apply+minus " in {
-			ApplyMinusU(`6`).eval(Map()).get must beEqualTo(-6)
+			ApplyMinusU(`6`).eval().get must beEqualTo(-6)
 		}
 
 		"subtract 2 numbers correctly for apply+minus " in {
-			ApplyMinusB(`6`, `5`).eval(Map()).get must beEqualTo(1)
+			ApplyMinusB(`6`, `5`).eval().get must beEqualTo(1)
 		}
 
 		"multiply 2 numbers correctly for apply+times " in {
-			ApplyTimes(`3`, `-2`).eval(Map()).get must beEqualTo(-6)
+			ApplyTimes(`3`, `-2`).eval().get must beEqualTo(-6)
 		}
 
 		"multiply > 2 numbers correctly for apply+times " in {
-			ApplyTimes(`-12`, `.5`, `-2`, `2`).eval(Map()).get must beEqualTo(24)
+			ApplyTimes(`-12`, `.5`, `-2`, `2`).eval().get must beEqualTo(24)
 		}
 
 		"divide 2 numbers correctly for apply+divide " in {
-			ApplyDivide(`8`, `4`).eval(Map()).get must beEqualTo(2)
+			ApplyDivide(`8`, `4`).eval().get must beEqualTo(2)
 		}
 
 		"raise a number to another numbers correctly for apply+power" in {
-			ApplyPower(`3`, `2`).eval(Map()).get must beEqualTo(9)
+			ApplyPower(`3`, `2`).eval().get must beEqualTo(9)
 		}
 
 		"nested applys work" in {
-			ApplyPlus(`1`, ApplyPlus(`2`, `3`)).eval(Map()).get must beEqualTo(6)
+			ApplyPlus(`1`, ApplyPlus(`2`, `3`)).eval().get must beEqualTo(6)
 		}
 	}
 

@@ -6,7 +6,10 @@ import models.DBTest
 import models.DBTest._
 import models.quiz._
 import models.quiz.answer.result.{DerivativeQuestionResults, DerivativeQuestionScores}
-import models.quiz.answer.{DerivativeAnswers, TestDerivativeAnswer}
+import models.quiz.answer.table.DerivativeAnswersTable
+import models.quiz.answer.{DerivativeAnswer, DerivativeAnswers, TestDerivativeAnswer}
+import models.quiz.question.table.DerivativeQuestionsTable
+import models.quiz.table._
 import models.support.QuestionId
 import models.user.User
 import org.joda.time.{DateTime, DateTimeZone}
@@ -323,7 +326,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         questionAndAnswers(otherUser, (true, d(0)))
 
-        DerivativeQuestions.correct(user.id) must beEmpty
+        Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEmpty
       }
     }
 
@@ -332,7 +335,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         questionAndAnswers(user, (false, d(0)))
 
-        DerivativeQuestions.correct(user.id) must beEmpty
+        Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEmpty
       }
     }
 
@@ -341,7 +344,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (true, d(0)))
 
-        DerivativeQuestions.correct(user.id) must beEqualTo(List((q1.id, d(0))))
+        Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List((q1.id, d(0))))
       }
     }
 
@@ -350,7 +353,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (false, d(0)), (true, d(1)), (false, d(2)), (true, d(3)) )
 
-        DerivativeQuestions.correct(user.id) must beEqualTo(List((q1.id, d(1))))
+        Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List((q1.id, d(1))))
       }
     }
 
@@ -360,7 +363,7 @@ class QuestionsSpec extends Specification {
         val q1 = questionAndAnswers(user, (true, d(4)) )
         val q2 = questionAndAnswers(user, (false, d(0)), (true, d(1)), (false, d(2)), (true, d(7)) )
 
-        DerivativeQuestions.correct(user.id) must beEqualTo(List((q1.id, d(4)), (q2.id, d(1))))
+        Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List((q1.id, d(4)), (q2.id, d(1))))
       }
     }
   }
@@ -373,7 +376,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         questionAndAnswers(otherUser, (true, d(0)))
 
-        DerivativeQuestions.incorrect(user.id) must beEmpty
+        Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEmpty
       }
     }
 
@@ -382,7 +385,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (false, d(0)))
 
-        DerivativeQuestions.incorrect(user.id) must beEqualTo(List((q1.id, d(0))))
+        Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List((q1.id, d(0))))
       }
     }
 
@@ -391,7 +394,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         questionAndAnswers(user, (false, d(0)), (true, d(1)))
 
-        DerivativeQuestions.incorrect(user.id) must beEmpty
+        Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEmpty
       }
     }
 
@@ -400,7 +403,7 @@ class QuestionsSpec extends Specification {
         val user = DBTest.newFakeUser(UserTest())
         val q1 = questionAndAnswers(user, (false, d(0)), (false, d(1)), (false, d(2)), (false, d(3)) )
 
-        DerivativeQuestions.incorrect(user.id) must beEqualTo(List((q1.id, d(3))))
+        Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List((q1.id, d(3))))
       }
     }
 
@@ -410,7 +413,7 @@ class QuestionsSpec extends Specification {
         val q1 = questionAndAnswers(user, (false, d(4)) )
         val q2 = questionAndAnswers(user, (false, d(0)), (false, d(1)), (false, d(2)), (false, d(7)) )
 
-        DerivativeQuestions.incorrect(user.id) must beEqualTo(List((q2.id, d(7)), (q1.id, d(4))))
+        Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List((q2.id, d(7)), (q1.id, d(4))))
       }
     }
   }

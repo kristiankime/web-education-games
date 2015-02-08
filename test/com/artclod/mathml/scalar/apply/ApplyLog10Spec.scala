@@ -16,7 +16,7 @@ class ApplyLog10Spec extends Specification {
 
 	"eval" should {
 		"do natural log" in {
-			ApplyLog10(Cn(100)).eval(Map()).get must beEqualTo(2)
+			ApplyLog10(Cn(100)).eval().get must beEqualTo(2)
 		}
 	}
 

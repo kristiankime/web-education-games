@@ -15,11 +15,11 @@ class ApplyPlusSpec extends Specification {
 
 	"eval" should {
 		"add two numbers" in {
-			ApplyPlus(`8`, `6`).eval(Map()).get must beEqualTo(14)
+			ApplyPlus(`8`, `6`).eval().get must beEqualTo(14)
 		}
 
 		"add many numbers" in {
-			ApplyPlus(`3`, `-1`, `6`, `5`).eval(Map()).get must beEqualTo(13)
+			ApplyPlus(`3`, `-1`, `6`, `5`).eval().get must beEqualTo(13)
 		}
 	}
 

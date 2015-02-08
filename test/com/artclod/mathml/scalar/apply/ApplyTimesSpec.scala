@@ -14,19 +14,19 @@ class ApplyTimesSpec extends Specification {
 
 	"eval" should {
 		"multiply two numbers" in {
-			ApplyTimes(`3`, `-2`).eval(Map()).get must beEqualTo(-6)
+			ApplyTimes(`3`, `-2`).eval().get must beEqualTo(-6)
 		}
 
 		"multiply many numbers" in {
-			ApplyTimes(`3`, `2`, `4`).eval(Map()).get must beEqualTo(24)
+			ApplyTimes(`3`, `2`, `4`).eval().get must beEqualTo(24)
 		}
 		
 		"return 0 if any numbers are 0" in {
-			ApplyTimes(`.5`, `2`, `0`).eval(Map()).get must beEqualTo(0)
+			ApplyTimes(`.5`, `2`, `0`).eval().get must beEqualTo(0)
 		}
 		
 		"fail if non zero numbers produce a 0 output" in {
-			ApplyTimes(Cn(1E-300), Cn(1E-300)).eval(Map()) must beFailedTry
+			ApplyTimes(Cn(1E-300), Cn(1E-300)).eval() must beFailedTry
 		}
 	}
 

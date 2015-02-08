@@ -22,11 +22,11 @@ object TangentAnswers {
 
   def correct(question: TangentQuestion, slopeAnswer: MathMLElem, interceptAnswer: MathMLElem) = {
     // TODO better error handling on .gets
-    val x0 = question.atPointX.eval.get
-    val m = question.function.dx.eval("x" -> x0).get
-    val y0 = question.function.eval("x" -> x0).get
+    val x0 = question.atPointX.eval().get
+    val m = question.function.dx.evalT("x" -> x0).get
+    val y0 = question.function.evalT("x" -> x0).get
 
-    matchCombine( doubleCloseEnough(slopeAnswer.eval.get, m), doubleCloseEnough(interceptAnswer.eval.get, -(m * x0) + y0) )
+    matchCombine( doubleCloseEnough(slopeAnswer.eval().get, m), doubleCloseEnough(interceptAnswer.eval().get, -(m * x0) + y0) )
   }
 
   // ======= CREATE ======

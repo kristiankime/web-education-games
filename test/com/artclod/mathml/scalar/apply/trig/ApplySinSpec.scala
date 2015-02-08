@@ -14,7 +14,7 @@ class ApplySinSpec extends Specification {
 
 	"eval" should {
 		"do sin" in {
-			ApplySin(π / `2`).eval(Map()).get must beEqualTo(1)
+			ApplySin(π / `2`).eval().get must beEqualTo(1)
 		}
 	}
 

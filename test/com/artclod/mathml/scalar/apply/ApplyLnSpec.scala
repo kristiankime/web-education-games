@@ -15,7 +15,7 @@ class ApplyLnSpec extends Specification {
 
 	"eval" should {
 		"do natural log" in {
-			ApplyLn(e).eval(Map()).get must beEqualTo(1)
+			ApplyLn(e).eval().get must beEqualTo(1)
 		}
 	}
 

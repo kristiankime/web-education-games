@@ -15,7 +15,7 @@ class ApplyMinusBSpec extends Specification {
 
 	"eval" should {
 		"subtract numbers" in {
-			ApplyMinusB(`8`, `6`).eval(Map()).get must beEqualTo(2)
+			ApplyMinusB(`8`, `6`).eval().get must beEqualTo(2)
 		}
 	}
 	

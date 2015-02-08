@@ -16,7 +16,7 @@ class ApplyRootSpec extends Specification {
 
 	"eval" should {
 		"do nth root" in {
-			ApplyRoot(3, 8).eval(Map()).get must beEqualTo(2)
+			ApplyRoot(3, 8).eval().get must beEqualTo(2)
 		}
 	}
 

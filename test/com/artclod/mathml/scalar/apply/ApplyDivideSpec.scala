@@ -15,15 +15,15 @@ class ApplyDivideSpec extends Specification {
 
 	"eval" should {
 		"do division" in {
-			ApplyDivide(`1`, `2`).eval(Map()).get must beEqualTo(.5)
+			ApplyDivide(`1`, `2`).eval().get must beEqualTo(.5)
 		}
 
 		"be zero if numerator is zero" in {
-			ApplyDivide(`0`, `2`).eval(Map()).get must beEqualTo(0)
+			ApplyDivide(`0`, `2`).eval().get must beEqualTo(0)
 		}
 
 		"be failure double divisions evals to zero but numerator is not zero" in {
-			ApplyDivide(Cn(1E-300), Cn(1E+300)).eval(Map()) must beFailedTry
+			ApplyDivide(Cn(1E-300), Cn(1E+300)).eval() must beFailedTry
 		}
 	}
 

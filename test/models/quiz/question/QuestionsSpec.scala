@@ -276,7 +276,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.summary(user, quiz) must beEqualTo(List(DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
+        DerivativeQuestions.summary(user, None, Some(quiz)) must beEqualTo(List(DerivativeQuestionScores(question1.id, 2, question1.mathML, question1.rawStr, true, answer1_1.creationDate)))
       }
     }
 
@@ -292,7 +292,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.summary(user, JodaUTC(1)) must beEqualTo(List(
+        DerivativeQuestions.summary(user, Some(JodaUTC(1))) must beEqualTo(List(
           DerivativeQuestionScores(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate),
           DerivativeQuestionScores(question2.id, 1, question2.mathML, question2.rawStr, false, answer2_1.creationDate)
         ))
@@ -312,7 +312,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.summary(user, JodaUTC(1), quiz) must beEqualTo(List(DerivativeQuestionScores(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
+        DerivativeQuestions.summary(user, Some(JodaUTC(1)), Some(quiz)) must beEqualTo(List(DerivativeQuestionScores(question1.id, 1, question1.mathML, question1.rawStr, false, answer1_1.creationDate)))
       }
     }
 

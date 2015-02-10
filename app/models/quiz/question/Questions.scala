@@ -55,7 +55,6 @@ object Questions {
     questionAndTimeSorted.list.map(r => (r._1, r._2.get))
   }
 
-
   def incorrect[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](userId: UserId, questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
     // Type information provided here to help IDE
     val questionAndAllAnswers : Query[(QT, AT), (Q, A)] =

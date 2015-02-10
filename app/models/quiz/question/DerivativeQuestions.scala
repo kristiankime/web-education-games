@@ -16,6 +16,7 @@ import models.user.User
 import models.user.table.userTable
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.{Query, _}
+import com.artclod.util.optionElse
 
 object DerivativeQuestions {
 
@@ -71,36 +72,15 @@ object DerivativeQuestions {
     derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= Summary ======
-  def summary(user: User)(implicit session: Session) = {
-    val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
-    summaryFor(q)
-  }
 
-  def summary(user: User, asOf: DateTime)(implicit session: Session) = {
-    val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf } yield (q, a))
-    summaryFor(q)
-  }
-
-  def summary(user: User, quiz: Quiz)(implicit session: Session) = {
-    val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- derivativeQuestionsTable if q.quizId === quiz.id; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
-    summaryFor(q)
-  }
-
-  def summary(user: User, asOf: DateTime, quiz: Quiz)(implicit session: Session) = {
-    val q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] =
-      (for { q <- derivativeQuestionsTable if q.quizId === quiz.id; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id && a.creationDate <= asOf} yield (q, a))
-    summaryFor(q)
-  }
-
-  private def summaryFor(q: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)])(implicit session: Session) : List[DerivativeQuestionScores] = {
-    // This line is mostly type information for the IDE
-    val q2 : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)]),(QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)])] = q.groupBy(_._1.id)
-    val q3 = q2.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._1.rawStr).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
-    val q4 = q3.sortBy(_._6)
-    q4.list.map(r => DerivativeQuestionScores(r._1, r._2, r._3.get, r._4.get, NumericBoolean(r._5.get), r._6.get))
+  def summary(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
+    val questionsAndAnswers: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
+    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
+    val groupedByQuestion : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)]),(QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)])] = answersForQuiz.groupBy(_._1.id)
+    val groupAggregation = groupedByQuestion.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._1.rawStr).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
+    val summaryDataSorted = groupAggregation.sortBy(_._6)
+    summaryDataSorted.list.map(r => DerivativeQuestionScores(r._1, r._2, r._3.get, r._4.get, NumericBoolean(r._5.get), r._6.get))
   }
 
 }

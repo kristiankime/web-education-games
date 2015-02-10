@@ -36,7 +36,7 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
 
   def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(this))
 
-  def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(this, asOf))
+  def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(this, Some(asOf)))
 
   private def studentSkillLevelPrivate(questionSummaries: List[DerivativeQuestionScores]) : Double = {
     val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)

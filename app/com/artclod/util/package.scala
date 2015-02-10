@@ -2,6 +2,13 @@ package com.artclod
 
 package object util {
 
+  def optionElse[V, R](option : Option[V])(f : V => R)(or : R) =
+    if(option.nonEmpty){
+      f(option.get)
+    } else {
+      or
+    }
+
   case class BooleanOption(opt: Option[Boolean]){
     def noneFalse = opt match {
       case None => false

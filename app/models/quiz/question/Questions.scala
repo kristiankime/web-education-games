@@ -12,7 +12,9 @@ import models.quiz.question.table.QuestionsTable
 import models.quiz.table._
 import models.support._
 import models.user.User
+import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import com.artclod.util.optionElse
 
 import scala.language.postfixOps
 
@@ -43,7 +45,9 @@ object Questions {
     }
   }
 
-  // ======= GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS =======
+  // ========================================================
+  //GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS
+  // ========================================================
   def correct[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](userId: UserId, questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
     // Type information provided here to help IDE
     val questionsAndCorrectAnswers : Query[(QT, AT), (Q, A)] =
@@ -66,5 +70,14 @@ object Questions {
     val questionAndTimeSorted = allAnswersIncorrect.sortBy(_._3.desc)
     questionAndTimeSorted.list.map(r => (r._1, r._3.get))
   }
+
+  def results[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
+    val questionsAndAnswers: Query[(QT, AT), (Q, A)] = (for { q <- questionTable; a <- answerTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
+    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
+    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
+    summaryDataSorted.list
+  }
+
 }
 

@@ -84,16 +84,16 @@ object DerivativeQuestions {
   }
 
   // ======= Results =======
-  def resultsQuery(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
-    val questionsAndAnswers: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
-    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
-    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
-    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
-    summaryDataSorted.list
-  }
+//  def resultsQuery(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
+//    val questionsAndAnswers: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+//    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
+//    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
+//    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
+//    summaryDataSorted.list
+//  }
 
   def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
-    val resultsRelational = resultsQuery(user, asOfOp, quizOp)
+    val resultsRelational = Questions.results[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user, asOfOp, quizOp)(derivativeQuestionsTable, derivativeAnswersTable) //resultsQuery(user, asOfOp, quizOp)
     val grouped = listGroupBy(resultsRelational)(_._1, _._2)
     grouped.map(v => DerivativeQuestionResults(user, v.key, v.values))
   }

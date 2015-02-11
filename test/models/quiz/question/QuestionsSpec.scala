@@ -208,7 +208,119 @@ class QuestionsSpec extends Specification {
     }
   }
 
-  "summary" should {
+
+  "results" should {
+
+    "find nothing if user has never answered any questions " in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+
+        DerivativeQuestions.results(user) must beEmpty
+      }
+    }
+
+    "find one answer if that's all the user has done" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question.id, correct = false))
+
+        DerivativeQuestions.results(user) must beEqualTo(List(DerivativeQuestionResults(user, question, List(answer1))))
+      }
+    }
+
+    "find multiple answers to multiple questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        DerivativeQuestions.results(user) must beEqualTo(List(
+          DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2)),
+          DerivativeQuestionResults(user, question2, List(answer2_1))
+        ))
+      }
+    }
+
+    "ignore answers other users have made" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        DerivativeQuestions.results(user) must beEqualTo(List(
+          DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2)),
+          DerivativeQuestionResults(user, question2, List(answer2_1))
+        ))
+      }
+    }
+
+
+    "summarize answers from the specified quiz only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val quiz = Quizzes.create(TestQuiz(owner = user.id)) // NOTE: In the quiz
+        val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
+        val answer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id)) // NOTE: Not in quiz
+        val answer2_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        DerivativeQuestions.results(user, None, Some(quiz)) must beEqualTo(List(DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2))))
+      }
+    }
+
+    "summarize answers before asOf date only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+        val answer2_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        DerivativeQuestions.results(user, Some(JodaUTC(1))) must beEqualTo(List(
+          DerivativeQuestionResults(user, question1, List(answer1_1)),
+          DerivativeQuestionResults(user, question2, List(answer2_1))
+        ))
+      }
+    }
+
+    "summarize answers from the specified quiz and before asOf date only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user = DBTest.newFakeUser(UserTest())
+        val quiz = Quizzes.create(TestQuiz(owner = user.id)) // NOTE: In the quiz
+        val question1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id), quiz.id)
+        val answer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+        val answer1_2 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question1.id, correct = true, creationDate = JodaUTC(2)))
+        val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id)) // NOTE: Not in quiz
+        val answer2_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
+
+        val otherUser = DBTest.newFakeUser(UserTest())
+        val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
+
+        DerivativeQuestions.results(user, Some(JodaUTC(1)), Some(quiz)) must beEqualTo(List(DerivativeQuestionResults(user, question1, List(answer1_1))))
+      }
+    }
+
+  }
+
+    "summary" should {
 
     "find nothing if user has never answered any questions " in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>

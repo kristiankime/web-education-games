@@ -88,7 +88,7 @@ object DerivativeQuestions {
     val questionsAndAnswers: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
     val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
     val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
-    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate.desc))
+    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
     summaryDataSorted.list
   }
 

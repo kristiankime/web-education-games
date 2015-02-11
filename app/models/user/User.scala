@@ -34,15 +34,17 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
 
   def courses()(implicit session: Session) = Courses(id)
 
-  def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(this))
+  def studentSkillLevel(implicit session: Session) : Double = 1d
+    //studentSkillLevelPrivate(DerivativeQuestions.summary(this))
 
-  def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.summary(this, Some(asOf)))
+  def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = 1d
+    //studentSkillLevelPrivate(DerivativeQuestions.summary(this, Some(asOf)))
 
-  private def studentSkillLevelPrivate(questionSummaries: List[DerivativeQuestionScores]) : Double = {
-    val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)
-    math.max(1d,
-      if(top5.isEmpty) 1d
-      else top5.sum.toDouble / top5.size.toDouble
-    )
-  }
+//  private def studentSkillLevelPrivate(questionSummaries: List[DerivativeQuestionScores]) : Double = {
+//    val top5 = questionSummaries.filter(_.correct).map(s => QuestionDifficulty(s.mathML)).sortWith( _ > _).take(5)
+//    math.max(1d,
+//      if(top5.isEmpty) 1d
+//      else top5.sum.toDouble / top5.size.toDouble
+//    )
+//  }
 }

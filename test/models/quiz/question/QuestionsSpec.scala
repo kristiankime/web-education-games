@@ -19,9 +19,12 @@ import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick.DB
 import play.api.test._
 import service._
+import models.quiz.table.{derivativeAnswersTable, derivativeQuestionsTable}
+
 
 @RunWith(classOf[JUnitRunner])
 class QuestionsSpec extends Specification {
+
 
   "results" should {
     "find all the answers by the user and record false if all of the answers were wrong" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
@@ -50,6 +53,7 @@ class QuestionsSpec extends Specification {
       }
     }
   }
+
 
   "answers" should {
     "find all the answers by the user" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
@@ -100,6 +104,7 @@ class QuestionsSpec extends Specification {
     }
   }
 
+
   "Questions" should {
     "create a new questions when asked" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
@@ -137,14 +142,13 @@ class QuestionsSpec extends Specification {
   }
 
 
-
   "results" should {
 
     "find nothing if user has never answered any questions " in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = DBTest.newFakeUser(UserTest())
 
-        DerivativeQuestions.results(user) must beEmpty
+        DerivativeQuestions.results(user)(derivativeQuestionsTable, derivativeAnswersTable) must beEmpty
       }
     }
 
@@ -154,7 +158,7 @@ class QuestionsSpec extends Specification {
         val question = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
         val answer1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question.id, correct = false))
 
-        DerivativeQuestions.results(user) must beEqualTo(List(DerivativeQuestionResults(user, question, List(answer1))))
+        DerivativeQuestions.results(user)(derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List(DerivativeQuestionResults(user, question, List(answer1))))
       }
     }
 
@@ -167,7 +171,7 @@ class QuestionsSpec extends Specification {
         val question2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
         val answer2_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = user.id, questionId = question2.id, correct = false, creationDate = JodaUTC(1)))
 
-        DerivativeQuestions.results(user) must beEqualTo(List(
+        DerivativeQuestions.results(user)(derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List(
           DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2)),
           DerivativeQuestionResults(user, question2, List(answer2_1))
         ))
@@ -186,7 +190,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.results(user) must beEqualTo(List(
+        DerivativeQuestions.results(user)(derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List(
           DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2)),
           DerivativeQuestionResults(user, question2, List(answer2_1))
         ))
@@ -207,7 +211,7 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.results(user, None, Some(quiz)) must beEqualTo(List(DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2))))
+        DerivativeQuestions.results(user, None, Some(quiz))(derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List(DerivativeQuestionResults(user, question1, List(answer1_1, answer1_2))))
       }
     }
 
@@ -223,12 +227,13 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.results(user, Some(JodaUTC(1))) must beEqualTo(List(
+        DerivativeQuestions.results(user, Some(JodaUTC(1)))(derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List(
           DerivativeQuestionResults(user, question1, List(answer1_1)),
           DerivativeQuestionResults(user, question2, List(answer2_1))
         ))
       }
     }
+
 
     "summarize answers from the specified quiz and before asOf date only" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
@@ -243,11 +248,12 @@ class QuestionsSpec extends Specification {
         val otherUser = DBTest.newFakeUser(UserTest())
         val otherAnswer1_1 = DerivativeAnswers.createAnswer(TestDerivativeAnswer(owner = otherUser.id, questionId = question1.id, correct = false, creationDate = JodaUTC(0)))
 
-        DerivativeQuestions.results(user, Some(JodaUTC(1)), Some(quiz)) must beEqualTo(List(DerivativeQuestionResults(user, question1, List(answer1_1))))
+        DerivativeQuestions.results(user, Some(JodaUTC(1)), Some(quiz))(derivativeQuestionsTable, derivativeAnswersTable) must beEqualTo(List(DerivativeQuestionResults(user, question1, List(answer1_1))))
       }
     }
 
   }
+
 
   "correct" should {
     "find nothing if user has never answered any questions (even if other users have)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
@@ -298,6 +304,7 @@ class QuestionsSpec extends Specification {
       }
     }
   }
+
 
   "incorrect" should {
     "find nothing if user has never answered any questions (even if other users have)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {

@@ -2,7 +2,7 @@ package models.user
 
 import models.game.Games
 import models.organization.Courses
-import models.quiz.question.{QuestionResults, DerivativeQuestion, DerivativeQuestions, QuestionDifficulty}
+import models.quiz.question._
 import models.support.{CourseId, UserId}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
@@ -33,9 +33,9 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
 
   def courses()(implicit session: Session) = Courses(id)
 
-  def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.results(this))
+  def studentSkillLevel(implicit session: Session) : Double = studentSkillLevelPrivate(Questions.results(this))
 
-  def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(DerivativeQuestions.results(this, Some(asOf)))
+  def studentSkillLevel(asOf: DateTime)(implicit session: Session) : Double = studentSkillLevelPrivate(Questions.results(this, Some(asOf)))
 
   private def studentSkillLevelPrivate(questionSummaries: List[QuestionResults]) : Double = {
     val top5 = questionSummaries.filter(_.correct).map(_.question.atCreationDifficulty).sortWith( _ > _).take(5)

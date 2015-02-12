@@ -38,17 +38,17 @@ case class Quiz(id: QuizId, ownerId: UserId, name: String, creationDate: DateTim
   protected def linkAccess(implicit user: User, session: Session) = Quizzes.linkAccess(this)
 
   // === TODO update code below for multiple question types ===
-  def summary(student: User)(implicit session: Session) =  DerivativeQuestions.results(student, None, Some(this))
+  def summary(student: User)(implicit session: Session) =  Questions.results(student, None, Some(this))
 
-  def summary(student: User, asOf: DateTime)(implicit session: Session) = DerivativeQuestions.results(student, Some(asOf), Some(this))
+  def summary(student: User, asOf: DateTime)(implicit session: Session) = Questions.results(student, Some(asOf), Some(this))
 
   def studentScore(student: User)(implicit session: Session) = {
-    val summaries = DerivativeQuestions.results(student, None, Some(this))
+    val summaries = Questions.results(student, None, Some(this))
     summaries.map(_.studentScore).sum / questions.size.toDouble
   }
 
   def teacherScore(student: User, studentSkillLevel: Double)(implicit session: Session) = {
-    val summaries = DerivativeQuestions.results(student, None, Some(this))
+    val summaries = Questions.results(student, None, Some(this))
     summaries.map(_.teacherScore(studentSkillLevel)).sum / questions.size.toDouble
   }
 

@@ -11,7 +11,9 @@ import models.quiz.table._
 import models.support._
 import models.user.User
 import models.user.table._
+import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import com.artclod.slick.listGroupBy
 
 object TangentQuestions {
 
@@ -21,10 +23,6 @@ object TangentQuestions {
     tangentQuestionsTable += toInsert
     toInsert
   }
-
-  // ======= REMOVE ======
-  def remove(quiz: Quiz, question: TangentQuestion)(implicit session: Session) =
-    tangentQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= FIND ======
   def list()(implicit session: Session) = tangentQuestionsTable.list
@@ -41,10 +39,21 @@ object TangentQuestions {
       u <- userTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
-  def correctResults(user: User, num: Int, questionTable: TableQuery[TangentQuestionsTable], answerTable: TableQuery[TangentAnswersTable])(implicit session: Session) =
+  // ======= REMOVE ======
+  def remove(quiz: Quiz, question: TangentQuestion)(implicit session: Session) =
+    tangentQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+
+  // ======= RESULTS =======
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[TangentQuestionsTable], answerTable: TableQuery[TangentAnswersTable])(implicit session: Session) = {
+    val resultsRelational = Questions.resultsQuery[TangentQuestion, TangentQuestionsTable, TangentAnswer, TangentAnswersTable](user, asOfOp, quizOp)(questionTable, answerTable)
+    val grouped = listGroupBy(resultsRelational)(_._1, _._2)
+    grouped.map(v => TangentQuestionResults(user, v.key, v.values))
+  }
+
+  def correctResults(user: User, num: Int)(questionTable: TableQuery[TangentQuestionsTable], answerTable: TableQuery[TangentAnswersTable])(implicit session: Session) =
     Questions.correct[TangentQuestion, TangentQuestionsTable, TangentAnswer, TangentAnswersTable](user.id, questionTable, answerTable).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
-  def incorrectResults(user: User, num: Int, questionTable: TableQuery[TangentQuestionsTable], answerTable: TableQuery[TangentAnswersTable])(implicit session: Session) =
+  def incorrectResults(user: User, num: Int)(questionTable: TableQuery[TangentQuestionsTable], answerTable: TableQuery[TangentAnswersTable])(implicit session: Session) =
     Questions.incorrect[TangentQuestion, TangentQuestionsTable, TangentAnswer, TangentAnswersTable](user.id, questionTable, answerTable).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
 }

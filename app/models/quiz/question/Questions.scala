@@ -27,16 +27,6 @@ object Questions {
   def apply(questionId: QuestionId)(implicit session: Session) : Option[Question] =
     questionTables.->(_.where(_.id === questionId).firstOption, _.where(_.id === questionId).firstOption).map(v => v._1 ++ v._2 headOption)
 
-  def correctResults(user: User, num: Int)(implicit session: Session) =
-    questionAndAnswerTables.->(
-      t => DerivativeQuestions.correctResults(user, num, t.question, t.answer),
-      t => TangentQuestions.correctResults(user, num, t.question, t.answer) ).map(v => v._1 ++ v._2)
-
-  def incorrectResults(user: User, num: Int)(implicit session: Session) =
-    questionAndAnswerTables.->(
-      t => DerivativeQuestions.incorrectResults(user, num, t.question, t.answer),
-      t => TangentQuestions.incorrectResults(user, num, t.question, t.answer) ).map(v => v._1 ++ v._2)
-
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = {
     question match {
@@ -45,9 +35,33 @@ object Questions {
     }
   }
 
+  // ======= RESULTS ======
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) =
+    questionAndAnswerTables.->(
+      t => DerivativeQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
+      t => TangentQuestions.results(user, asOfOp, quizOp)(t.question, t.answer) ).map(v => v._1 ++ v._2)
+
+  def correctResults(user: User, num: Int)(implicit session: Session) =
+    questionAndAnswerTables.->(
+      t => DerivativeQuestions.correctResults(user, num)(t.question, t.answer),
+      t => TangentQuestions.correctResults(user, num)(t.question, t.answer) ).map(v => v._1 ++ v._2)
+
+  def incorrectResults(user: User, num: Int)(implicit session: Session) =
+    questionAndAnswerTables.->(
+      t => DerivativeQuestions.incorrectResults(user, num)(t.question, t.answer),
+      t => TangentQuestions.incorrectResults(user, num)(t.question, t.answer) ).map(v => v._1 ++ v._2)
+
   // ========================================================
-  //GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS
+  //GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS (SEE DerivativeQuestions, TangentQuestions ...)
   // ========================================================
+  def resultsQuery[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
+    val questionsAndAnswers: Query[(QT, AT), (Q, A)] = (for { q <- questionTable; a <- answerTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
+    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
+    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
+    summaryDataSorted.list
+  }
+
   def correct[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](userId: UserId, questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
     // Type information provided here to help IDE
     val questionsAndCorrectAnswers : Query[(QT, AT), (Q, A)] =
@@ -71,13 +85,6 @@ object Questions {
     questionAndTimeSorted.list.map(r => (r._1, r._3.get))
   }
 
-  def results[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
-    val questionsAndAnswers: Query[(QT, AT), (Q, A)] = (for { q <- questionTable; a <- answerTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
-    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
-    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
-    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
-    summaryDataSorted.list
-  }
 
 }
 

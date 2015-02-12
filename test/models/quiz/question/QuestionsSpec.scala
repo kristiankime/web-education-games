@@ -5,7 +5,7 @@ import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest._
 import models.quiz._
-import models.quiz.answer.result.{DerivativeQuestionResults, DerivativeQuestionScores}
+import models.quiz.answer.result.{DerivativeQuestionResults}
 import models.quiz.answer.table.DerivativeAnswersTable
 import models.quiz.answer.{DerivativeAnswer, DerivativeAnswers, TestDerivativeAnswer}
 import models.quiz.question.table.DerivativeQuestionsTable

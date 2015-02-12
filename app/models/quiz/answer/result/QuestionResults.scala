@@ -4,6 +4,7 @@ import models.quiz.Status
 import models.quiz.answer.Answer
 import models.quiz.question.Question
 import models.user.User
+import org.joda.time.DateTime
 
 trait QuestionResults {
   val answerer: User
@@ -16,11 +17,17 @@ trait QuestionResults {
 
   def numAttempts = answers.size
 
+  def attempts = answers.size
+
+  def questionId = question.id
+
   val correct = answers.foldLeft(false)(_ || _.correct)
 
   val status = Status(attempted, correct)
 
   val firstCorrect = answers.find(_.correct)
+
+  val firstAttempt = answers.headOption.map(_.creationDate)
 
   val numAttemptsToCorrect = {
     val num = answers.indexWhere(_.correct)

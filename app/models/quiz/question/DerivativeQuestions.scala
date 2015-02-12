@@ -62,35 +62,16 @@ object DerivativeQuestions {
     users.list
   }
 
+  // ======= REMOVE ======
+  def remove(quiz: Quiz, question: DerivativeQuestion)(implicit session: Session) =
+    derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+
+  // ======= Results =======
   def correctResults(user: User, num: Int, questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable])(implicit session: Session) =
     Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, questionTable, answerTable).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
   def incorrectResults(user: User, num: Int, questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable])(implicit session: Session) =
     Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, questionTable, answerTable).take(num).map(e => (apply(e._1).get.results(user), e._2))
-
-  // ======= REMOVE ======
-  def remove(quiz: Quiz, question: DerivativeQuestion)(implicit session: Session) =
-    derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
-
-  // ======= Summary ======
-  def summary(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
-    val questionsAndAnswers: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
-    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
-    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
-    val groupedByQuestion : Query[(Column[QuestionId], Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)]),(QuestionId, Query[(DerivativeQuestionsTable, DerivativeAnswersTable),(DerivativeQuestion, DerivativeAnswer)])] = answersForQuiz.groupBy(_._1.id)
-    val groupAggregation = groupedByQuestion.map { case (questionId, qAndA) => (questionId, qAndA.length, qAndA.map(_._1.mathML).max, qAndA.map(_._1.rawStr).max, qAndA.map(_._2.correct).max, qAndA.map(_._2.creationDate).min) }
-    val summaryDataSorted = groupAggregation.sortBy(_._6)
-    summaryDataSorted.list.map(r => DerivativeQuestionScores(r._1, r._2, r._3.get, r._4.get, NumericBoolean(r._5.get), r._6.get))
-  }
-
-  // ======= Results =======
-//  def resultsQuery(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
-//    val questionsAndAnswers: Query[(DerivativeQuestionsTable, DerivativeAnswersTable), (DerivativeQuestion, DerivativeAnswer)] = (for { q <- derivativeQuestionsTable; a <- derivativeAnswersTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
-//    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
-//    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
-//    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
-//    summaryDataSorted.list
-//  }
 
   def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
     val resultsRelational = Questions.results[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user, asOfOp, quizOp)(derivativeQuestionsTable, derivativeAnswersTable) //resultsQuery(user, asOfOp, quizOp)

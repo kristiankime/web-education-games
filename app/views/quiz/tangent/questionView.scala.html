@@ -1,6 +1,6 @@
 @(course: models.organization.Course,
   quiz: models.quiz.Quiz,
-  results: models.quiz.answer.result.TangentQuestionResults,
+  results: models.quiz.question.TangentQuestionResults,
   currentAnswer: Option[Either[models.quiz.answer.TangentAnswer, models.quiz.answer.TangentAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.routes.AnswersController

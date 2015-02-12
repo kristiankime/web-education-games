@@ -1,8 +1,7 @@
 package models.quiz
 
 import com.artclod.collection.PimpedSeq
-import models.quiz.answer.result.QuestionResults
-import models.quiz.question.Question
+import models.quiz.question.{QuestionResults, Question}
 import models.user.User
 
 case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]) {

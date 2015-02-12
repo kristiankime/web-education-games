@@ -1,6 +1,6 @@
 @(course: models.organization.Course,
   quiz: models.quiz.Quiz,
-  results: models.quiz.answer.result.DerivativeQuestionResults,
+  results: models.quiz.question.DerivativeQuestionResults,
   currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.routes.AnswersController

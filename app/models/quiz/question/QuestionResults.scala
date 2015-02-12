@@ -1,8 +1,7 @@
-package models.quiz.answer.result
+package models.quiz.question
 
 import models.quiz.Status
-import models.quiz.answer.{TangentAnswer, DerivativeAnswer, Answer}
-import models.quiz.question.{TangentQuestion, QuestionScoring, DerivativeQuestion, Question}
+import models.quiz.answer.{Answer, DerivativeAnswer, TangentAnswer}
 import models.user.User
 
 sealed trait QuestionResults {

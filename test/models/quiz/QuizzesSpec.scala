@@ -3,8 +3,7 @@ package models.quiz
 import models.DBTest._
 import models.organization._
 import models.quiz.answer.{TestDerivativeAnswer, DerivativeAnswers}
-import models.quiz.answer.result.DerivativeQuestionResults
-import models.quiz.question.{TestDerivativeQuestion, DerivativeQuestions}
+import models.quiz.question.{DerivativeQuestionResults, TestDerivativeQuestion, DerivativeQuestions}
 import models.support.CourseId
 import org.junit.runner._
 import org.specs2.mutable._

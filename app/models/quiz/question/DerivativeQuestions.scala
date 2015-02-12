@@ -7,7 +7,6 @@ import com.artclod.slick.JodaUTC.timestamp2DateTime
 import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.DerivativeAnswer
-import models.quiz.answer.result.{DerivativeQuestionResults}
 import models.quiz.answer.table.DerivativeAnswersTable
 import models.quiz.question.table.DerivativeQuestionsTable
 import models.quiz.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}

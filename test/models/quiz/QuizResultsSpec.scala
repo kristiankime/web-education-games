@@ -2,9 +2,8 @@ package models.quiz
 
 import models.DBTest._
 import models.quiz.answer.TestDerivativeAnswer
-import models.quiz.answer.result.DerivativeQuestionResults
 import models.quiz.question.QuestionDifficulty.Diff
-import models.quiz.question.{DerivativeQuestion, QuestionDifficulty, QuestionScoring, TestDerivativeQuestion}
+import models.quiz.question._
 import models.user.{UserSettingTest, User}
 import org.junit.runner._
 import org.specs2.mutable._

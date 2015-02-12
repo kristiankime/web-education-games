@@ -1,11 +1,11 @@
 package models.quiz.answer.result
 
 import models.quiz.Status
-import models.quiz.answer.Answer
-import models.quiz.question.Question
+import models.quiz.answer.{TangentAnswer, DerivativeAnswer, Answer}
+import models.quiz.question.{TangentQuestion, QuestionScoring, DerivativeQuestion, Question}
 import models.user.User
 
-trait QuestionResults {
+sealed trait QuestionResults {
   val answerer: User
   val question: Question
   val answers: List[Answer]
@@ -42,4 +42,13 @@ trait QuestionResults {
 
   def teacherScore(studentSkill: Double): Double
 
+}
+
+
+case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults {
+  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
+}
+
+case class TangentQuestionResults(answerer: User, question: TangentQuestion, answers: List[TangentAnswer]) extends QuestionResults {
+  def teacherScore(studentSkill: Double): Double = 0d // TODO  QuestionScoring.teacherScore(question, correct, studentSkill)
 }

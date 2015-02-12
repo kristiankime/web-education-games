@@ -67,16 +67,16 @@ object DerivativeQuestions {
     derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= Results =======
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
+    val resultsRelational = Questions.results[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user, asOfOp, quizOp)(derivativeQuestionsTable, derivativeAnswersTable)
+    val grouped = listGroupBy(resultsRelational)(_._1, _._2)
+    grouped.map(v => DerivativeQuestionResults(user, v.key, v.values))
+  }
+
   def correctResults(user: User, num: Int, questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable])(implicit session: Session) =
     Questions.correct[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, questionTable, answerTable).take(num).map(e => (apply(e._1).get.results(user), e._2))
 
   def incorrectResults(user: User, num: Int, questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable])(implicit session: Session) =
     Questions.incorrect[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user.id, questionTable, answerTable).take(num).map(e => (apply(e._1).get.results(user), e._2))
-
-  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) = {
-    val resultsRelational = Questions.results[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user, asOfOp, quizOp)(derivativeQuestionsTable, derivativeAnswersTable) //resultsQuery(user, asOfOp, quizOp)
-    val grouped = listGroupBy(resultsRelational)(_._1, _._2)
-    grouped.map(v => DerivativeQuestionResults(user, v.key, v.values))
-  }
 
 }

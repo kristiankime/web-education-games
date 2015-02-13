@@ -43,6 +43,11 @@
         } else {
         <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
 
+        @views.html.quiz.derivative.questionEditor(GamesRequestorController.createDerivativeQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
+
+        @* @views.html.quiz.tangent.questionEditor(GamesRequestorController.createTangentQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": } *@
+
+        @*
         <p>
             Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
             @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp=Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
@@ -64,7 +69,7 @@
             alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
         }
         }
-        </script>
+        </script>*@
         }
 
         @if(numQuestionRemaining == 0){

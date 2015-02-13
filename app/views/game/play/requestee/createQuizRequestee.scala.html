@@ -22,7 +22,7 @@
         }
 
         @for(quiz <- quizOp){
-        <table>
+        <table class="pure-table pure-table-striped">
             <th>Question</th> <th> Remove </th>
             @for(question <- questions){
             <tr>
@@ -37,7 +37,6 @@
         <h4> Your quiz has all the questions it needs. You can finalize the quiz if you want. Or remove a question and add another if you don't like one.</h4>
         } else {
         <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
-
 
         @views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
 

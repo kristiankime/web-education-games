@@ -36,7 +36,7 @@ object GamesRequestorController extends GamesPlayerController {
   }
 
   protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.User, session: Session) : Result =
-    Ok(views.html.game.play.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
+    Ok(views.html.game.play.requestee.answeringQuestionRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer(false)))))
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     GamesRequesteeController(gameId, questionId)

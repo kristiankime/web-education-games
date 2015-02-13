@@ -71,19 +71,19 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right(game) =>
         if(game.isRequestor(user)) game.toState match {
           case state: GameRejected => Ok(views.html.game.request.rejectedRequestor(state))
-          case state: RequestorDoneAnswering => Ok(views.html.game.play.gameDoneRequestor(state))
-          case state: RequestorQuiz => Ok(views.html.game.play.createQuizRequestor(state))
-          case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.awaitingQuizRequestor(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestor(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
+          case state: RequestorDoneAnswering => Ok(views.html.game.play.requestor.gameDoneRequestor(state))
+          case state: RequestorQuiz => Ok(views.html.game.play.requestor.createQuizRequestor(state))
+          case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.requestor.awaitingQuizRequestor(state))
+          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestor.answeringQuizRequestor(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
         }
         else if(game.isRequestee(user)) game.toState match {
           case state: GameRejected => Ok(views.html.game.request.rejectedRequestee(state))
-          case state: RequesteeDoneAnswering => Ok(views.html.game.play.gameDoneRequestee(state))
+          case state: RequesteeDoneAnswering => Ok(views.html.game.play.requestee.gameDoneRequestee(state))
           case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
-          case state: RequesteeQuiz => Ok(views.html.game.play.createQuizRequestee(state))
-          case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.awaitingQuizRequestee(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.answeringQuizRequestee(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
+          case state: RequesteeQuiz => Ok(views.html.game.play.requestee.createQuizRequestee(state))
+          case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.requestee.awaitingQuizRequestee(state))
+          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestee.answeringQuizRequestee(state, answerIdOp.flatMap(id => DerivativeAnswers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
         }
         else throw new IllegalStateException("TODO code up teacher view")
@@ -128,12 +128,12 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => Ok(views.html.game.play.answeringQuestionRequestor(game.toState, quiz, question, None))
+            case Right((game, quiz, question)) => Ok(views.html.game.play.requestor.answeringQuestionRequestor(game.toState, quiz, question, None))
           }
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => Ok(views.html.game.play.answeringQuestionRequestee(game.toState, quiz, question, None))
+            case Right((game, quiz, question)) => Ok(views.html.game.play.requestee.answeringQuestionRequestee(game.toState, quiz, question, None))
           }
         else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
       }
@@ -148,13 +148,13 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) + AnswersController(questionId, answerId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) => Ok(views.html.game.play.answeringQuestionRequestor(game.toState, quiz, question, Some(Right(answer))))
+            case Right((game, quiz, question, answer)) => Ok(views.html.game.play.requestor.answeringQuestionRequestor(game.toState, quiz, question, Some(Right(answer))))
           }
 
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId)  + AnswersController(questionId, answerId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) => Ok(views.html.game.play.answeringQuestionRequestee(game.toState, quiz, question, Some(Right(answer))))
+            case Right((game, quiz, question, answer)) => Ok(views.html.game.play.requestee.answeringQuestionRequestee(game.toState, quiz, question, Some(Right(answer))))
           }
         else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
       }

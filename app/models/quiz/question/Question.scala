@@ -1,6 +1,8 @@
 package models.quiz.question
 
 import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.slick.JodaUTC
+import controllers.quiz.tangent.TangentQuestionForm
 import models.organization.Course
 import models.quiz._
 import models.quiz.answer.{Answer, TangentAnswer}
@@ -65,4 +67,10 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 
   def atPointXViewableMath = new ViewableMath { val mathML = atPointX; val rawStr = atPointXStr }
+}
+
+object TangentQuestionHelper {
+
+  def fromForm(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
+
 }

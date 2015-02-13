@@ -76,8 +76,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            val (function, functionStr, atPointX, atPointXStr) = (MathML(form._1).get, form._2, MathML(form._3).get, form._4) // TODO handle errors for .get
-            TangentQuestions.create(TangentQuestion(null, user.id, function, functionStr, atPointX, atPointXStr, JodaUTC.now, QuestionDifficulty(function)), quiz.id)
+            TangentQuestions.create(TangentQuestionHelper.fromForm(user, form), quiz.id)
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }

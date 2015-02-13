@@ -4,7 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{QuestionDifficulty, TangentQuestion, TangentQuestions}
+import models.quiz.question.{TangentQuestionHelper, QuestionDifficulty, TangentQuestion, TangentQuestions}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -19,8 +19,7 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
         TangentQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
-            val (function, functionStr, atPointX, atPointXStr) = (MathML(form._1).get, form._2, MathML(form._3).get, form._4) // TODO handle errors for .get
-            TangentQuestions.create(TangentQuestion(null, user.id, function, functionStr, atPointX, atPointXStr, JodaUTC.now, QuestionDifficulty(function)), quizId) // TODO better handle on error for MathML().get
+            TangentQuestions.create(TangentQuestionHelper.fromForm(user, form), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
@@ -34,5 +33,17 @@ object TangentQuestionForm {
   val functionStr = "functionStr"
   val atPointX = "atPointX"
   val atPointXStr = "atPointXStr"
-  val values = Form(tuple(function -> nonEmptyText, functionStr -> nonEmptyText, atPointX -> nonEmptyText, atPointXStr -> nonEmptyText))
+
+  val values = Form(mapping(
+    function -> nonEmptyText,
+    functionStr -> nonEmptyText,
+    atPointX -> nonEmptyText,
+    atPointXStr -> nonEmptyText)
+    (TangentQuestionForm.apply)(TangentQuestionForm.unapply))
+}
+
+case class TangentQuestionForm(function: String, functionStr : String, atPointX: String, atPointXStr: String) {
+  // TODO handle errors for .get
+  def functionMathML = MathML(function).get
+  def atPointXMathML = MathML(atPointX).get
 }

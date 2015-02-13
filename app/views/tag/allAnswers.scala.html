@@ -9,7 +9,7 @@
         <tr> <th> User Name </th> <th> Answer </th> <th> Result </th> <th> Time </th> </tr>
         @for(answer <- allAnswers) {
         <tr>
-            <td> @answer._2.name </td>
+            <td> @answer._2.nameDisplay </td>
             <td> @answer._1.display </td>
             <td> @mathml.correct(answer._1.correct) </td>
             <td> @views.html.tag.datetime(answer._1.creationDate) </td>

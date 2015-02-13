@@ -49,7 +49,6 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
   def display : Html = views.html.quiz.derivative.questionDisplay(this)
-
 }
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {

@@ -4,7 +4,7 @@
         currentAnswer: Option[Either[models.quiz.answer.Answer, models.quiz.answer.Answer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesRequesteeController, GamesController}
-@import controllers.game.GameAnswerQuestion
+@import controllers.quiz.derivative.DerivativeQuestionForm
 @import helper._
 @import com.artclod.play.s
 @import views.html.tag._
@@ -37,8 +37,8 @@
 
     <section>
         @form(GamesRequesteeController.answerDerivativeQuestion(gameState.game.id, question.id), 'id -> "answerForm", 'class -> "pure-form") {
-            <input type="hidden" name="@GameAnswerQuestion.mathML" id="answerMathML">
-            <input type="hidden" name="@GameAnswerQuestion.rawStr" id="answerRawStr">
+            <input type="hidden" name="@DerivativeQuestionForm.mathML" id="answerMathML">
+            <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="answerRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="answerFormSubmit()">
             @gameLink(Html("Back to the Quiz"), gameState.game)
         }

@@ -8,7 +8,8 @@ import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.game.GamesEmail._
 import controllers.quiz.QuestionsController
-import controllers.quiz.derivative.DerivativeQuestionForm
+import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
+import controllers.quiz.tangent.TangentQuestionForm
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.quiz.Quiz
@@ -67,6 +68,21 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
+  def createTangentQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) =>
+        TangentQuestionForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val (updatedGame, quiz) = createdQuizEnsured(game)
+            val (function, functionStr, atPointX, atPointXStr) = (MathML(form._1).get, form._2, MathML(form._3).get, form._4) // TODO handle errors for .get
+            TangentQuestions.create(TangentQuestion(null, user.id, function, functionStr, atPointX, atPointXStr, JodaUTC.now, QuestionDifficulty(function)), quiz.id)
+            Redirect(routes.GamesController.game(updatedGame.id, None))
+          })
+    }
+  }
+
   def removeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
@@ -100,7 +116,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question : DerivativeQuestion)) => {
-        GameAnswerQuestion.values.bindFromRequest.fold(
+        DerivativeAnswerForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val math: MathMLElem = MathML(form._1).get // TODO better error handling
@@ -137,10 +153,4 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 object GameRemoveQuestion {
   val removeId = "removeId"
   val form = Form(removeId -> questionId)
-}
-
-object GameAnswerQuestion {
-  val mathML = "mathML"
-  val rawStr = "rawStr"
-  val values = Form(tuple(mathML -> text, rawStr -> text))
 }

@@ -4,7 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{DerivativeQuestion, DerivativeQuestions, QuestionDifficulty}
+import models.quiz.question.{DerivativeQuestionHelper, DerivativeQuestion, DerivativeQuestions, QuestionDifficulty}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -21,8 +21,7 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
         DerivativeQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
-            val mathML = MathML(form._1).get // TODO better handle on error
-            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now, QuestionDifficulty(mathML)), quizId)
+            DerivativeQuestions.create(DerivativeQuestionHelper.fromForm(user, form))
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
@@ -32,7 +31,15 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
 }
 
 object DerivativeQuestionForm {
-  val mathML = "mathML"
-  val rawStr = "rawStr"
-  val values = Form(tuple(mathML -> nonEmptyText, rawStr -> nonEmptyText))
+  val function = "function"
+  val functionStr = "functionStr"
+
+  val values = Form(mapping(
+    function -> nonEmptyText,
+    functionStr -> nonEmptyText)
+    (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply))
+}
+
+case class DerivativeQuestionForm(function: String, functionStr: String) {
+  def functionMathML = MathML(function).get // TODO better handle on error for .get
 }

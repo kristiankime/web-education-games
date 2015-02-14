@@ -2,6 +2,7 @@ package models.quiz.question
 
 import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
+import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
 import models.organization.Course
 import models.quiz._
@@ -49,6 +50,12 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
   def display : Html = views.html.quiz.derivative.questionDisplay(this)
+}
+
+object DerivativeQuestionHelper {
+
+  def fromForm(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
+
 }
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {

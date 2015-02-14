@@ -61,8 +61,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            val mathML = MathML(form._1).get // TODO better handle on error
-            DerivativeQuestions.create(DerivativeQuestion(null, user.id, mathML, form._2, JodaUTC.now, QuestionDifficulty(mathML)), quiz.id)
+            DerivativeQuestions.create(DerivativeQuestionHelper.fromForm(user, form))
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }

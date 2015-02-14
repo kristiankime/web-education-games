@@ -36,8 +36,8 @@
 
     <section>
         @form(GamesRequestorController.answerDerivativeQuestion(gameState.game.id, question.id), 'id -> "answerForm", 'class -> "pure-form") {
-            <input type="hidden" name="@DerivativeQuestionForm.mathML" id="answerMathML">
-            <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="answerRawStr">
+            <input type="hidden" name="@DerivativeQuestionForm.function" id="answerMathML">
+            <input type="hidden" name="@DerivativeQuestionForm.functionStr" id="answerRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="answerFormSubmit()">
             @tag.gameLink(Html("Back to the Quiz"), gameState.game)
         }

@@ -40,6 +40,7 @@ trait DerivativeAnswersControllon extends Controller with SecureSocialConsented 
 object DerivativeAnswerForm {
   val mathML = "mathML"
   val rawStr = "rawStr"
+
   val values = Form(tuple(mathML -> text, rawStr -> text))
 
   def apply(v : (String, String)) = (MathML(v._1).get, v._2) // TODO better error handling for .get

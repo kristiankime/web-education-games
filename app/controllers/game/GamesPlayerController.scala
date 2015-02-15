@@ -9,11 +9,11 @@ import com.artclod.util._
 import controllers.game.GamesEmail._
 import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
-import controllers.quiz.tangent.TangentQuestionForm
+import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
 import models.game._
 import models.quiz.Quiz
-import models.quiz.answer.{DerivativeAnswer, DerivativeAnswerUnfinished, DerivativeAnswers}
+import models.quiz.answer._
 import models.quiz.question._
 import models.support._
 import models.user.User
@@ -39,7 +39,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
-  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: DerivativeQuestion, unfinishedAnswer: (Boolean) => DerivativeAnswer)(implicit user: models.user.User, session: Session) : Result
+  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
 
@@ -121,11 +121,30 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             DerivativeAnswers.correct(question, form.functionMathML) match {
               case Yes => Redirect(routes.GamesController.game(game.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer)
+              case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer(false))
             }
           })
       }
       case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a derivative question " + questionId))
+    }
+  }
+
+  def answerTangentQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+    questionToAnswer(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question: TangentQuestion)) => {
+        TangentAnswerForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val unfinishedAnswer = TangentAnswerForm.toAnswerUnfinished(user, question, form)
+            TangentAnswers.correct(question, form.slopeMathML, form.interceptMathML) match {
+              case Yes => Redirect(routes.GamesController.game(game.id, Some(TangentAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case No => Redirect(routes.GamesController.answer(game.id, question.id, TangentAnswers.createAnswer(unfinishedAnswer(false)).id))
+              case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer(false))
+            }
+          })
+      }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
     }
   }
 

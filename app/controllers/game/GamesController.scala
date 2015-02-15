@@ -9,9 +9,11 @@ import controllers.support.SecureSocialConsented
 import models.game.GameRole._
 import models.game._
 import models.organization._
-import models.quiz.answer.DerivativeAnswers
+import models.quiz.Quiz
+import models.quiz.answer.{TangentAnswer, DerivativeAnswer, Answer, DerivativeAnswers}
+import models.quiz.question.{TangentQuestion, DerivativeQuestion, Question}
 import models.support._
-import models.user.Users
+import models.user.{User, Users}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -128,12 +130,12 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => Ok(views.html.game.play.requestor.answeringQuestionRequestor(game.toState, quiz, question, None))
+            case Right((game, quiz, question)) => questionViewRequestor(game.toState, quiz, question, None)
           }
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => Ok(views.html.game.play.requestee.answeringQuestionRequestee(game.toState, quiz, question, None))
+            case Right((game, quiz, question)) => questionViewRequestee(game.toState, quiz, question, None)
           }
         else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
       }
@@ -144,22 +146,36 @@ object GamesController extends Controller with SecureSocialConsented {
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
-
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) + AnswersController(questionId, answerId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) => Ok(views.html.game.play.requestor.answeringQuestionRequestor(game.toState, quiz, question, Some(Right(answer))))
+            case Right((game, quiz, question, answer)) =>  questionViewRequestor(game.toState, quiz, question, Some(Right(answer)))
           }
-
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId)  + AnswersController(questionId, answerId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) => Ok(views.html.game.play.requestee.answeringQuestionRequestee(game.toState, quiz, question, Some(Right(answer))))
+            case Right((game, quiz, question, answer)) => questionViewRequestee(game.toState, quiz, question, Some(Right(answer)))
           }
         else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
       }
     }
   }
+
+  def questionViewRequestor(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
+    (question, answer) match {
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestor.answeringQuestionRequestor(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was [" + answer.getClass.getName + "]")
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]]) => Ok(views.html.game.play.requestor.answeringTangentQuestionRequestor(gameState, quiz, q, a))
+      case (q : TangentQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was [" + answer.getClass.getName + "]")
+    }
+
+  def questionViewRequestee(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
+    (question, answer) match {
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestee.answeringQuestionRequestee(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was [" + answer.getClass.getName + "]")
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]]) => Ok(views.html.game.play.requestee.answeringTangentQuestionRequestee(gameState, quiz, q, a))
+      case (q : TangentQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was[ " + answer.getClass.getName + "]")
+    }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {

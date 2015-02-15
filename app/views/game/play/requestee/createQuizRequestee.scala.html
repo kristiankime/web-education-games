@@ -40,31 +40,8 @@
 
         @views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
 
-        @* @views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": } *@
+        @views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": }
 
-        @*
-        <p>
-            Enter a function (of x) that your partner will need to differentiate. When you are done hit "Save Question": <br>
-            @mathml.mathmlEditor(editorName = "QUESTION", characterLimitOp = Some(40), callbackSuccessOp = Some("editorSuccess")) <br>
-        </p>
-
-        @form(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), 'id -> "derivativeqForm", 'class -> "pure-form" ) {
-            <input type="hidden" name="@DerivativeQuestionForm.mathML" id="derivativeQuestionMathML">
-            <input type="hidden" name="@DerivativeQuestionForm.rawStr" id="derivativeQuestionRawStr">
-            <input type="button" class="pure-button pure-button-primary" value="Save Question" onclick="formSubmit()">
-        }
-
-        <script>
-        formSubmit = function() {
-        if(QUESTION.valid){
-            $("#derivativeQuestionMathML").val(QUESTION.mathML);
-            $("#derivativeQuestionRawStr").val(QUESTION.rawStr);
-            $("#derivativeqForm").submit();
-        } else {
-            alert("Sorry we couldn't create a questions since we couldn't understand your equation. Please try fixing it and resubmitting. There is a red astrix next to the input box if the system can't understand what you typed.")
-        }
-        }
-        </script>*@
         }
 
         @if(numQuestionRemaining == 0){

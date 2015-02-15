@@ -1,10 +1,10 @@
 @(gameState: models.game.GameState,
         quiz: models.quiz.Quiz,
-        question: models.quiz.question.DerivativeQuestion,
-        currentAnswer: Option[Either[models.quiz.answer.DerivativeAnswer, models.quiz.answer.DerivativeAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+        question: models.quiz.question.TangentQuestion,
+        currentAnswer: Option[Either[models.quiz.answer.TangentAnswer, models.quiz.answer.TangentAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.{GamesRequesteeController, GamesController}
-@import controllers.quiz.derivative.DerivativeQuestionForm
+@import controllers.quiz.tangent.TangentQuestionForm
 @import helper._
 @import com.artclod.play.s
 @import views.html.tag._
@@ -13,7 +13,7 @@
 
     <h2>You are answering Question for a game with @gameState.game.requestor.nameView </h2>
 
-    <h4>What is the Derivative of:</h4>
+    <h4>What is the Tangent of:</h4>
 
     @question.display
 
@@ -28,7 +28,7 @@
     </section>
     }
 
-    @views.html.quiz.derivative.answerEditor(GamesRequesteeController.answerDerivativeQuestion(gameState.game.id, question.id), currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
+    @views.html.quiz.tangent.answerEditor(GamesRequesteeController.answerTangentQuestion(gameState.game.id, question.id), currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results =>

@@ -52,12 +52,6 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
   def display : Html = views.html.quiz.derivative.questionDisplay(this)
 }
 
-object DerivativeQuestionHelper {
-
-  def fromForm(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
-
-}
-
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
   def answersAndOwners(implicit session: Session) : List[(TangentAnswer, User)] = TangentQuestions.answersAndOwners(id)
@@ -73,10 +67,4 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 
   def atPointXViewableMath = new ViewableMath { val mathML = atPointX; val rawStr = atPointXStr }
-}
-
-object TangentQuestionHelper {
-
-  def fromForm(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
-
 }

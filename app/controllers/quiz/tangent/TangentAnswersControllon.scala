@@ -54,6 +54,7 @@ object TangentAnswerForm {
 }
 
 case class TangentAnswerForm(slope : String, slopeRawStr : String, intercept : String, interceptRawStr : String) {
-  def slopeMathML = MathML(slope).get // TODO better error handling for .get(s)
+  // TODO better error handling for .get(s)
+  def slopeMathML = MathML(slope).get
   def interceptMathML = MathML(intercept).get
 }

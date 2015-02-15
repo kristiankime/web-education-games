@@ -4,8 +4,9 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{TangentQuestionHelper, QuestionDifficulty, TangentQuestion, TangentQuestions}
+import models.quiz.question.{QuestionDifficulty, TangentQuestion, TangentQuestions}
 import models.support._
+import models.user.User
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
@@ -19,7 +20,7 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
         TangentQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
-            TangentQuestions.create(TangentQuestionHelper.fromForm(user, form), quizId)
+            TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
@@ -40,6 +41,8 @@ object TangentQuestionForm {
     atPointX -> nonEmptyText,
     atPointXStr -> nonEmptyText)
     (TangentQuestionForm.apply)(TangentQuestionForm.unapply))
+
+  def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
 }
 
 case class TangentQuestionForm(function: String, functionStr : String, atPointX: String, atPointXStr: String) {

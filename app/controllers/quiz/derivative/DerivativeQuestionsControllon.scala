@@ -4,8 +4,9 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{DerivativeQuestionHelper, DerivativeQuestion, DerivativeQuestions, QuestionDifficulty}
+import models.quiz.question.{DerivativeQuestion, DerivativeQuestions, QuestionDifficulty}
 import models.support._
+import models.user.User
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Controller
@@ -21,7 +22,7 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
         DerivativeQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
-            DerivativeQuestions.create(DerivativeQuestionHelper.fromForm(user, form))
+            DerivativeQuestions.create(DerivativeQuestionForm.toQuestion(user, form), quiz.id)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
@@ -38,6 +39,8 @@ object DerivativeQuestionForm {
     function -> nonEmptyText,
     functionStr -> nonEmptyText)
     (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply))
+
+  def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
 }
 
 case class DerivativeQuestionForm(function: String, functionStr: String) {

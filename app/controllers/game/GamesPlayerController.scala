@@ -61,7 +61,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            DerivativeQuestions.create(DerivativeQuestionHelper.fromForm(user, form))
+            DerivativeQuestions.create(DerivativeQuestionForm.toQuestion(user, form), quiz.id)
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }
@@ -75,7 +75,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
-            TangentQuestions.create(TangentQuestionHelper.fromForm(user, form), quiz.id)
+            TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quiz.id)
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }

@@ -117,10 +117,8 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         DerivativeAnswerForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
-            val math: MathMLElem = MathML(form._1).get // TODO better error handling
-            val rawStr = form._2
-            val unfinishedAnswer = DerivativeAnswerUnfinished(user.id, question.id, math, rawStr, JodaUTC.now) _
-            DerivativeAnswers.correct(question, math) match {
+            val unfinishedAnswer = DerivativeAnswerForm.toAnswerUnfinished(user, question, form)
+            DerivativeAnswers.correct(question, form.functionMathML) match {
               case Yes => Redirect(routes.GamesController.game(game.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer)

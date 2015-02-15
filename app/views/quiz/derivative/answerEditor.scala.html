@@ -9,8 +9,8 @@
 
     @helper.form(action, 'id -> "derivativeAnswerForm", 'class -> "pure-form") {
         <fieldset>
-            <input type="hidden" name="@DerivativeAnswerForm.mathML" id="derivativeAnswerMathML">
-            <input type="hidden" name="@DerivativeAnswerForm.rawStr" id="derivativeAnswerRawStr">
+            <input type="hidden" name="@DerivativeAnswerForm.function" id="derivativeAnswerMathML">
+            <input type="hidden" name="@DerivativeAnswerForm.functionStr" id="derivativeAnswerRawStr">
             <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="DERIVATIVE_ANSWER.formSubmit()">
             @link
         </fieldset>

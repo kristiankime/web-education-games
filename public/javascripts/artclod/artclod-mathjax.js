@@ -67,12 +67,23 @@ ARTC.mathJax.update = (function() {
             return;
         }
 
-        elem.innerHTML = math
+        elem.innerHTML = math;
 
-        MathJax.Hub.queue.Push(
-            MathJax.Hub.Queue([ "Typeset", MathJax.Hub, id ]),
-            function () { safeCallback({ success: true, reason: "success", details: "" }); }
-        );
+        var oldDisplay = elem.style.display;
+        if(oldDisplay == "") { oldDisplay = 'inline'; }
+        if(oldDisplay == "none") {
+            MathJax.Hub.Queue(
+                [ "Typeset", MathJax.Hub, elem ],
+                safeCallback({ success: true, reason: "success", details: ""})
+            );
+        } else {
+            MathJax.Hub.Queue(
+                function () {elem.style.display='none'},
+                [ "Typeset", MathJax.Hub, elem ],
+                function () {elem.style.display=oldDisplay},
+                safeCallback({ success: true, reason: "success", details: ""})
+            );
+        }
     }
 
     return update;

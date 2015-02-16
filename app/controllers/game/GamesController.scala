@@ -161,20 +161,18 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
+  // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
   def questionViewRequestor(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestor.answeringQuestionRequestor(gameState, quiz, q, a))
-      case (q : DerivativeQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was [" + answer.getClass.getName + "]")
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestor.answeringDerivativeQuestionRequestor(gameState, quiz, q, a))
       case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]]) => Ok(views.html.game.play.requestor.answeringTangentQuestionRequestor(gameState, quiz, q, a))
-      case (q : TangentQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was [" + answer.getClass.getName + "]")
     }
 
+  // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
   def questionViewRequestee(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestee.answeringQuestionRequestee(gameState, quiz, q, a))
-      case (q : DerivativeQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was [" + answer.getClass.getName + "]")
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestee.answeringDerivativeQuestionRequestee(gameState, quiz, q, a))
       case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]]) => Ok(views.html.game.play.requestee.answeringTangentQuestionRequestee(gameState, quiz, q, a))
-      case (q : TangentQuestion, _) => throw new IllegalStateException("Question and Answer type did not match Question was [" + question.getClass.getName + "] Answer was[ " + answer.getClass.getName + "]")
     }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>

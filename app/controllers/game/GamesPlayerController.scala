@@ -39,7 +39,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
-  protected def answerViewInconclusive(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result
+  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
 
@@ -121,7 +121,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             DerivativeAnswers.correct(question, form.functionMathML) match {
               case Yes => Redirect(routes.GamesController.game(game.id, Some(DerivativeAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, DerivativeAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer(false))
+              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
             }
           })
       }
@@ -140,7 +140,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             TangentAnswers.correct(question, form.slopeMathML, form.interceptMathML) match {
               case Yes => Redirect(routes.GamesController.game(game.id, Some(TangentAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, TangentAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => answerViewInconclusive(game, quiz, question, unfinishedAnswer(false))
+              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
             }
           })
       }

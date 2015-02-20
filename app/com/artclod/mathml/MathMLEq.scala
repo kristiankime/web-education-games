@@ -21,9 +21,9 @@ object MathMLEq {
 
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = checkEval(variableName, eq1, eq2, vals)
 
-	def checkEval(vn: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
-		val eq1s = vals.map(v => eq1.eval(Map(vn -> v.doubleValue())))
-		val eq2s = vals.map(v => eq2.eval(Map(vn -> v.doubleValue())))
+	def checkEval(variable: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {
+		val eq1s = vals.map(value => eq1.evalT(variable -> value))
+		val eq2s = vals.map(value => eq2.evalT(variable -> value))
 		val matches = eq1s.zip(eq2s).map(v => closeEnough(v._1, v._2))
 
 //    System.err.println("eq1")

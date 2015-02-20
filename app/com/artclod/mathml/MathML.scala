@@ -67,6 +67,6 @@ object MathML {
 	}
 
 	private implicit class PimpedElem(e: Elem) {
-		def childElem = e.child.collect(_ match { case x: Elem => x })
+		def childElem : Seq[Elem] = e.child.collect(_ match { case x: Elem => x })
 	}
 }

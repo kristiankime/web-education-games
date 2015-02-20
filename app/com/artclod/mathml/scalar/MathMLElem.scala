@@ -107,4 +107,6 @@ abstract class MathMLElem(
 
 	def ?=(e: MathMLElem) = MathMLEq.checkEq("x", this, e)
 
+  def isDefinedAt(boundVariables: (String, Double)*) = MathMLDefined.isDefinedAt(this, boundVariables:_*)
+
 }

@@ -18,7 +18,8 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         TangentQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+//          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, errors)),
           form => {
             TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
@@ -35,14 +36,20 @@ object TangentQuestionForm {
   val atPointX = "atPointX"
   val atPointXStr = "atPointXStr"
 
+  val tangentUndefined = "tangentUndefined"
+
   val values = Form(mapping(
-    function -> nonEmptyText,
+    function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
     functionStr -> nonEmptyText,
-    atPointX -> nonEmptyText,
+    atPointX -> nonEmptyText.verifying(f => MathML(f).isSuccess),
     atPointXStr -> nonEmptyText)
-    (TangentQuestionForm.apply)(TangentQuestionForm.unapply))
+    (TangentQuestionForm.apply)(TangentQuestionForm.unapply)
+    verifying(tangentUndefined, fields => fields match { case f => tangentDefined(f) })
+  )
 
   def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
+
+  def tangentDefined(f: TangentQuestionForm) = f.functionMathML.isDefinedAt("x" -> f.atPointXMathML.evalT().get)
 }
 
 case class TangentQuestionForm(function: String, functionStr : String, atPointX: String, atPointXStr: String) {

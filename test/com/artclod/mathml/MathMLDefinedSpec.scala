@@ -25,7 +25,7 @@ class MathMLDefinedSpec extends Specification {
     }
 
     "return false if not defined" in {
-      MathMLDefined.isDefinedAt(`-1` / x, "x" -> 0) must beFalse
+      MathMLDefined.isDefinedAt(`0` / x, "x" -> 0) must beFalse
     }
 
     "return false on Failure" in {

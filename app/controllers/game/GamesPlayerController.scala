@@ -11,6 +11,7 @@ import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
+import models.game.GameRole._
 import models.game._
 import models.quiz.Quiz
 import models.quiz.answer._
@@ -72,7 +73,12 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
         TangentQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          errors =>
+            (game.gameRole(user), game.toState) match {
+              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, errors))
+              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, errors))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quiz.id)

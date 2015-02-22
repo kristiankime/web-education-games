@@ -1,21 +1,21 @@
 @(editorName: String,
-  initialValueOp: Option[String] = None,
-  characterLimitOp: Option[Int] = None,
-  callbackSuccessOp : Option[String] = None,
-  callbackfailureOp : Option[String] = None,
+  initialValue: Option[String] = None,
+  characterLimit: Option[Int] = None,
+  successCallback : Option[String] = None,
+  failureCallback : Option[String] = None,
   mathParser: String = "ARTC.mathJS.defaultParser")
 
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
     @mathml.mathmlEditorHelp()
 
     <span id="@editorName"> @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
-        <input id="mathMLInput" type="text" size="@characterLimitOp.getOrElse(80)" @for(lim <- characterLimitOp){maxlength="@lim"} onchange="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
+        <input id="mathMLInput" type="text" size="@characterLimit.getOrElse(80)" @for(lim <- characterLimit){maxlength="@lim"} onchange="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
         <span style:visibility="hidden" id="@{editorName+"Indicator"}"> @tag.icon("icon-warning2", 'class -> "warning", 'data_ot -> "Equation could not be parsed (or is empty)") </span>
         <span id="@{editorName+"View"}"> $$ $$ </span>
     </span>
 
     <script>
-    @if(characterLimitOp.nonEmpty){
+    @if(characterLimit.nonEmpty){
     function limitText(limitField, limitNum) {
         if (limitField.value.length > limitNum) {
             limitField.value = limitField.value.substring(0, limitNum);
@@ -39,17 +39,17 @@
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
                 ARTC.mathJax.update("@{editorName+"View"}", ARTC.mathJax.tex(mathResult.node.toTex()));
-                @for(callbackSuccess <- callbackSuccessOp){@{callbackSuccess}(result)}
+                @for(onSuccess <- successCallback){@{onSuccess}(result)}
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();
-                @for(callbackfailure <- callbackfailureOp){@{callbackfailure}(result)}
+                @for(onFailure <- failureCallback){@{onFailure}(result)}
             }
         };
 
-        @for(initialValue <- initialValueOp){
-        $("#@{editorName} #mathMLInput").val("@initialValue")
-        result.updateAnswer("@initialValue")
+        @for(value <- initialValue){
+        $("#@{editorName} #mathMLInput").val("@value")
+        result.updateAnswer("@value")
         }
 
         return result;

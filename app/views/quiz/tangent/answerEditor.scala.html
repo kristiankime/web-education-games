@@ -5,9 +5,9 @@
     <section>
     Type in your answer, and then hit the submit button @tag.answerWarning()<br>
 
-    Slope: @mathml.mathmlEditor("TANGENT_ANSWER_SLOPE", currentAnswer.map(_.fold(_.slopeRawStr, _.slopeRawStr)), characterLimitOp=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
+    Slope: @mathml.mathmlEditor("TANGENT_ANSWER_SLOPE", currentAnswer.map(_.fold(_.slopeRawStr, _.slopeRawStr)), characterLimit=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
 
-    Intercept: @mathml.mathmlEditor("TANGENT_ANSWER_INTERCEPT", currentAnswer.map(_.fold(_.interceptRawStr, _.interceptRawStr)), characterLimitOp=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
+    Intercept: @mathml.mathmlEditor("TANGENT_ANSWER_INTERCEPT", currentAnswer.map(_.fold(_.interceptRawStr, _.interceptRawStr)), characterLimit=Some(20), mathParser = "CALC.mathJS.constantParser") <br>
 
     @helper.form(action, 'id -> "tangentAnswerForm", 'class -> "pure-form") {
         <fieldset>

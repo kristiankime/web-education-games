@@ -1,6 +1,7 @@
 package com.artclod
 
 import _root_.play.api.templates.Html
+import _root_.play.api.data.Form
 
 import scala.collection.mutable.LinkedHashMap
 
@@ -32,5 +33,17 @@ package object play {
   }
 
   def asAtt(symbol: scala.Symbol) = symbol.toString.replace('_', '-').substring(1)
+
+  implicit class FormEnhanced(form: Form[_]) {
+
+    def errorByMessage(message: String) = form.errors.filter(_.message == message).headOption
+
+    def hasMessage(message: String) = errorByMessage(message).nonEmpty
+
+    def dataFor(field: String) = form.data.get(field)
+
+    def dataOrElse(field: String, default: String) = form.data.getOrElse(field, default)
+
+  }
 
 }

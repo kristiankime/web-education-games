@@ -1,14 +1,17 @@
-@(action: play.api.mvc.Call, form: Form[controllers.quiz.tangent.TangentQuestionForm])(explanation: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(explanation: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.tangent.TangentQuestionForm
+@import com.artclod.play.FormEnhanced
 
 <section>
     @explanation <br>
 
-    Function: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_FUNCTION", characterLimitOp=Some(40), mathParser = "CALC.mathJS.functionOfXParser") <br>
+    @if(tangentForm.hasMessage(TangentQuestionForm.tangentUndefined)){<span> We were unable to create your question since the tangent line not defined at the point you gave, please try another point or function. </span><br>}
 
-    Tangent @@ x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", characterLimitOp=Some(10), mathParser = "CALC.mathJS.constantParser") <br>
+    Function: @mathml.mathmlEditor(editorName="TANGENT_QUESTION_FUNCTION", initialValueOp=tangentForm.dataFor(TangentQuestionForm.functionStr), characterLimitOp=Some(40), mathParser = "CALC.mathJS.functionOfXParser") <br>
+
+    Tangent @@ x value: @mathml.mathmlEditor(editorName = "TANGENT_QUESTION_X", initialValueOp=tangentForm.dataFor(TangentQuestionForm.atPointXStr), characterLimitOp=Some(10), mathParser = "CALC.mathJS.constantParser") <br>
 
     @form(action, 'id -> "tangentQuestionForm", 'class -> "pure-form") {
         <fieldset>

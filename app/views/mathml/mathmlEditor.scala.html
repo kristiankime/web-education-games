@@ -1,5 +1,5 @@
 @(editorName: String,
-  initialAnswerOp: Option[String] = None,
+  initialValueOp: Option[String] = None,
   characterLimitOp: Option[Int] = None,
   callbackSuccessOp : Option[String] = None,
   callbackfailureOp : Option[String] = None,
@@ -47,9 +47,9 @@
             }
         };
 
-        @for(initialAnswer <- initialAnswerOp){
-        $("#@{editorName} #mathMLInput").val("@initialAnswer")
-        result.updateAnswer("@initialAnswer")
+        @for(initialValue <- initialValueOp){
+        $("#@{editorName} #mathMLInput").val("@initialValue")
+        result.updateAnswer("@initialValue")
         }
 
         return result;

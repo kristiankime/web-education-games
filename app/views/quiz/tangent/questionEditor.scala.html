@@ -7,7 +7,7 @@
 <section>
     @explanation <br>
 
-    @if(tangentForm.hasMessage(TangentQuestionForm.tangentUndefined)){<span> We were unable to create your question since the tangent line not defined at the point you gave, please try another point or function. </span><br>}
+    @if(tangentForm.hasMessage(TangentQuestionForm.tangentUndefined)){<span class="form-error"> We were unable to create your question since the tangent line is not defined at the point you gave, please try another point (or function). </span><br>}
 
     Function: @mathml.mathmlEditor(editorName="TANGENT_QUESTION_FUNCTION", initialValue=tangentForm.dataFor(TangentQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser") <br>
 

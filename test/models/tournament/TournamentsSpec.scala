@@ -47,6 +47,26 @@ class TournamentsSpec extends Specification {
 			}
 		}
 
+    "return average score of top 5 question difficulties if there are more then 5" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val questioner = DBTest.newFakeUser(UserTest())
+        val answerer = DBTest.newFakeUser(UserTest(fullName="answerer"))
+        TestDerivativeQuestion.create(questioner.id, difficulty=10d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=10d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=10d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=10d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=10d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=5d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=5d, answered=Some(answerer.id))
+        TestDerivativeQuestion.create(questioner.id, difficulty=5d, answered=Some(answerer.id))
+
+        val rankings = Tournaments.studentScoresRankingFor(answerer.id, 3)
+
+        rankings.ranks must beEqualTo(List(Rank(answerer.id, testName(answerer), 10d, 1)))
+        rankings.user must beEmpty
+      }
+    }
+
 		"return scores of all players" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
 			DB.withSession { implicit session: Session =>
 				val questioner = newFakeUser(UserTest())

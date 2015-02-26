@@ -9,32 +9,35 @@ import play.api.test.{FakeApplication, WithApplication}
 import com.artclod.util.TryUtil._
 
 @RunWith(classOf[JUnitRunner])
-class UserSettingsSpec extends Specification {
+class UsersSpec extends Specification {
 
   // LATER We are not currently requiring unique names
   skipAll
 
   "validName" should {
 
-    "return the starting name if it does not conflict" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
-      val newName = Users.validName("name")
+    "return the starting name if it does not conflict" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val newName = Users.validName("name")
 
-      newName must beEqualTo("name")
-    }  }
+        newName must beEqualTo("name")
+      }
+    }
 
-    "create a unique name if the name already exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {  DB.withSession { implicit session: Session =>
-      val user1 = newFakeUserNoConsent
-      val user1Settings = User(id = user1.id, name = "name")
-      Users.create(user1Settings)
+    "create a unique name if the name already exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      DB.withSession { implicit session: Session =>
+        val user1 = newFakeUserNoConsent
+        val user1Settings = User(id = user1.id, name = "name")
+        Users.create(user1Settings)
 
-      val newName = Users.validName(user1Settings.name)
+        val newName = Users.validName(user1Settings.name)
 
-      newName mustNotEqual(user1Settings.name)
-    }  }
+        newName mustNotEqual(user1Settings.name)
+      }
+    }
 
 
     "create multiple unique names, in series" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
         val firstUserSettings = User(id = firstUser.id, name = "name")

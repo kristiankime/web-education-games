@@ -31,16 +31,16 @@ class UserSpec extends Specification {
       }
     }
 
-    "return average of the top 5 most difficul of questions if more then 5 have been answered correctly" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+    "return average of the top 5 most difficult questions if more then 5 have been answered correctly" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = newFakeUser
         TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
         TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
-        TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
-        TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
-        TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
         TestDerivativeQuestion.create(user.id, difficulty = 5d, answered = Some(user.id))
         TestDerivativeQuestion.create(user.id, difficulty = 5d, answered = Some(user.id))
+        TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
+        TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
+        TestDerivativeQuestion.create(user.id, difficulty = 10d, answered = Some(user.id))
 
         user.studentSkillLevel must beEqualTo(10d)
       }

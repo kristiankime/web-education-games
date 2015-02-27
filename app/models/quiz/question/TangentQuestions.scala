@@ -36,7 +36,7 @@ object TangentQuestions {
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- tangentAnswersTable if a.questionId === qid;
-      u <- userTable if u.userId === a.ownerId
+      u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
   // ======= REMOVE ======

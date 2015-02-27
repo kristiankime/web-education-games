@@ -4,7 +4,7 @@ import models.organization.table._
 import models.quiz.Quizzes
 import models.support._
 import models.user.User
-import models.user.table.userTable
+import models.user.table.usersTable
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 import service._
@@ -59,12 +59,12 @@ object Courses {
 
   def students(courseId: CourseId)(implicit session: Session) =
   (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-        u <- userTable if u.userId === uc.userId
+        u <- usersTable if u.userId === uc.userId
   ) yield u).sortBy(_.name).list
 
   def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) =
    (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
-         u <- userTable if (u.userId === uc.userId) && (u.userId =!= userId)
+         u <- usersTable if (u.userId === uc.userId) && (u.userId =!= userId)
    ) yield u).sortBy(_.name).list
 
 

@@ -7,7 +7,7 @@ import service.table.LoginsTable
 
 import scala.slick.model.ForeignKeyAction
 
-class UserSettingsTable(tag: Tag) extends Table[User](tag, "application_user_settings") {
+class UsersTable(tag: Tag) extends Table[User](tag, "application_users") {
   def userId = column[UserId]("user_id", O.PrimaryKey)
   def consented = column[Boolean]("consented")
   def name = column[String]("name")
@@ -17,9 +17,8 @@ class UserSettingsTable(tag: Tag) extends Table[User](tag, "application_user_set
 
   def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates) <> (User.tupled, User.unapply _)
 
-  def userFK = foreignKey("application_user_settings__user_fk", userId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def userFK = foreignKey("application_users__user_fk", userId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-//  def nameIndex = index("application_user_settings__name_index", name, unique = true)
-  def nameIndex = index("application_user_settings__name_index", name)
+  def nameIndex = index("application_users__name_index", name)
 }
 

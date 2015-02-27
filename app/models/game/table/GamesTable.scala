@@ -32,9 +32,7 @@ class GamesTable(tag: Tag) extends Table[Game](tag, "games") {
   def requestorTeacherPoints = column[Option[Double]]("requestor_teacher_points")
   def finishedDate = column[Option[DateTime]]("finished_date")
 
-  def * = (id, requestDate, requestor, requestorSkill, requestee, requesteeSkill, response, course,
-    requestorQuiz, requestorQuizDone, requesteeQuiz, requesteeQuizDone,
-    requesteeFinished, requestorFinished, requesteeStudentPoints, requesteeTeacherPoints, requestorStudentPoints, requestorTeacherPoints, finishedDate) <> (Game.tupled, Game.unapply _)
+  def * = (id, requestDate, requestor, requestorSkill, requestee, requesteeSkill, response, course, requestorQuiz, requestorQuizDone, requesteeQuiz, requesteeQuizDone, requesteeFinished, requestorFinished, requesteeStudentPoints, requesteeTeacherPoints, requestorStudentPoints, requestorTeacherPoints, finishedDate) <> (Game.tupled, Game.unapply _)
 
   def requestorFK = foreignKey("games__requestor_fk", requestor, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def requesteeFK = foreignKey("games__requestee_fk", requestee, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)

@@ -9,7 +9,7 @@ import service.table.LoginsTable
 
 import scala.slick.model.ForeignKeyAction
 
-class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "derivative_quizzes") {
+class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "quizzes") {
 	def id = column[QuizId]("id", O.PrimaryKey, O.AutoInc)
 	def ownerId = column[UserId]("owner")
 	def name = column[String]("name")
@@ -17,5 +17,5 @@ class QuizzesTable(tag: Tag) extends Table[Quiz](tag, "derivative_quizzes") {
 	def updateDate = column[DateTime]("update_date")
 	def * = (id, ownerId, name, creationDate, updateDate) <> (Quiz.tupled, Quiz.unapply _)
 
-	def ownerFK = foreignKey("derivative_quizzes__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def ownerFK = foreignKey("quizzes__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

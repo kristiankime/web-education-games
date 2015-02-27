@@ -12,7 +12,7 @@ import models.quiz.question.table.DerivativeQuestionsTable
 import models.quiz.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
 import models.support._
 import models.user.User
-import models.user.table.userTable
+import models.user.table.usersTable
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.{Query, _}
 import com.artclod.util.optionElse
@@ -46,7 +46,7 @@ object DerivativeQuestions {
   def answersAndOwners(qid: QuestionId)(implicit session: Session) =
     (for (
       a <- derivativeAnswersTable if a.questionId === qid;
-      u <- userTable if u.userId === a.ownerId
+      u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
   def quizFor(questionId: QuestionId)(implicit session: Session) =

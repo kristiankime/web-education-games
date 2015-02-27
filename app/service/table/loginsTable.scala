@@ -9,7 +9,7 @@ import service._
 import service.table.SecurityMapper._
 
 // Adapted from http://blog.lunatech.com/2013/07/04/play-securesocial-slick
-class LoginsTable(tag: Tag) extends Table[Login](tag, "secure_social_users") {
+class LoginsTable(tag: Tag) extends Table[Login](tag, "secure_social_logins") {
   // General
   def id = column[UserId]("id", O.PrimaryKey, O.AutoInc)
   def userId = column[String]("user_id")

@@ -107,7 +107,7 @@ ARTC.mathJS.buildParser = (function(){
             }
         }
 
-        return function(string) {
+        var ret = function(string) {
             try {
                 var mathJSNode = math.parse(string);
 
@@ -128,6 +128,10 @@ ARTC.mathJS.buildParser = (function(){
                 }
             }
         }
+        ret.functions = functions;
+        ret.operators = operators;
+        ret.symbols = symbols;
+        return ret
     }
 }());
 

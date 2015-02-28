@@ -136,6 +136,9 @@ Make sure to make the app publicly available
 http://stackoverflow.com/questions/21329250/the-developers-of-this-app-have-not-set-up-this-app-properly-for-facebook-login
 
 ##### Google
+
+Google Switching Oauth: https://developers.google.com/+/api/auth-migration
+
 https://developers.google.com/accounts/docs/OAuth2Login#registeringyourapp
 https://cloud.google.com/console#/project
 http://stackoverflow.com/questions/19384906/secure-social-connect-provider
@@ -187,8 +190,6 @@ http://www.playframework.com/documentation/2.1.x/IDE
 heroku create
 git push heroku master
 
-##### Start a project on Heroku
-
 set the environment variables for heroku
 
 * look in heroku_environment_variables_EXAMPLE.sh
@@ -196,8 +197,12 @@ set the environment variables for heroku
 * rename the script to heroku_environment_variables.sh (this should be git ignored)
 * run the script
 
+You will also need to add shared memory cached. memcachier seems to be the default choice. Here's how to add it to heroku:
+* https://devcenter.heroku.com/articles/memcachier
 
-
+And information about using it with play2
+* https://github.com/mumoshu/play2-memcached
+* http://stackoverflow.com/questions/23632722/shared-cache-for-play-framework-on-heroku
 
 ##### Problems with Evolutions
 When the evolution file is generated for a string field it defaults to VARCHAR but TEXT is preferable
@@ -218,6 +223,8 @@ https://devcenter.heroku.com/articles/scala-support
 https://devcenter.heroku.com/articles/add-java-version-to-an-existing-maven-app 
 
 ##### Character encoding problems
+NOTE: THIS PROBLEM WAS NOT SOLVED
+I eventually switched to doing something else, here is a log of what I tried
 https://groups.google.com/forum/?fromgroups#!topic/play-framework/QsC0LubU_30
 
 previous config:

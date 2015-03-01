@@ -30,4 +30,11 @@ class TrigonometryFixSpec extends Specification {
     "return  0 for     π" in { tan0(π)     must beEqualTo(0d) }
     "return -1 for π*3/2" in { tan0(π*3/2) must beEqualTo(Double.PositiveInfinity) }
   }
+
+  "sec0" should {
+    "return  0 for     0" in { sec0(0d)    must beEqualTo(1d) }
+    "return  1 for   π/2" in { sec0(π/2)   must beEqualTo(Double.PositiveInfinity) }
+    "return  0 for     π" in { sec0(π)     must beEqualTo(-1d) }
+    "return -1 for π*3/2" in { sec0(π*3/2) must beEqualTo(Double.PositiveInfinity) }
+  }
 }

@@ -7,7 +7,7 @@ import scala.util._
 
 case class ApplySin(value: MathMLElem) extends UnaryFunction(value, Sin) {
 
-	override def eval(b: Map[String, Double]) = Try(math.sin(v.eval(b).get))
+	override def eval(b: Map[String, Double]) = Try(Trigonometry.sin(v.eval(b).get))
 
 	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.sin(v))

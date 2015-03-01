@@ -36,9 +36,9 @@ class MathMLDefinedSpec extends Specification {
       MathMLDefined.isDefinedAt(x ^ (`-2` / `3`), "x" -> 0) must beFalse
     }
 
-//    "tan(x/2) @ pi is not defined" in {
-//      MathMLDefined.isDefinedAt(  (sec(x / 2) ^ 2) * (`1` / `2`), "x" -> math.Pi) must beFalse
-//    }
+    "tan(x/2)' @ pi is not defined" in {
+      MathMLDefined.isDefinedAt(  (sec(x / 2) ^ 2) * (`1` / `2`), "x" -> math.Pi) must beFalse
+    }
   }
 
 }

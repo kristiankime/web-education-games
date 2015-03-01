@@ -39,34 +39,11 @@ object TrigonometryFix {
       case _ => tan(x)
     }
 
-  def main(args: Array[String]) {
+  def cot0(x: Double) = 1d / tan0(x)
 
-//    for(i <- -10 until 10) {
-//      val x = i * π/2
-//      println(
-//        "x = [" + i + " * π/2] " +
-//        "sin(x) = [" + sin(x) + "] " +
-//        "cos(π/2 - x) = [" + cos(π/2 - x) + "] " +
-//        "cos(-x) = [" + cos(-x) + "]" )
-//    }
+  def csc0(x: Double) = 1d / sin0(x)
 
-//    for(i <- -10 until 10) {
-//      val x = i * π/2
-//      println(
-//        "x = [" + i + " * π/2] " +
-//          "cos(x) = [" + cos(x) + "] " +
-//          "sin(x + π/2) = [" + sin(x + π/2) + "] " +
-//          "sin(x) = [" + sin(x) + "]" )
-//    }
-
-    for(i <- -10 until 10) {
-      val x = i * π/2
-      println(
-        "x = [" + i + " * π/2] " +
-          "tan(x) = [" + tan(x) + "] " +
-          "sin(x) = [" + sin(x) + "]" )
-    }
-  }
-
+  def sec0(x: Double) = 1d / cos0(x)
+  
 }
 

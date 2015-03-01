@@ -15,13 +15,13 @@ class ApplyCotSpec extends Specification {
 
 	"eval" should {
 		"do cot" in {
-			ApplyCot(π).eval().get must beEqualTo(Trigonometry.cot(math.Pi))
+			ApplyCot(π/2).eval().get must beEqualTo(Trigonometry.cot(math.Pi/2))
 		}
 	}
 
 	"c" should {
 		"return correct cot" in {
-			ApplyCot(π).c.get must beEqualTo(Cn(Trigonometry.cot(math.Pi)))
+			ApplyCot(π/2).c.get must beEqualTo(Cn(Trigonometry.cot(math.Pi/2)))
 		}
 
 		"fail if not a constant " in {

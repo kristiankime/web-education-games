@@ -15,13 +15,13 @@ class ApplyTanSpec extends Specification {
 
 	"eval" should {
 		"do sin" in {
-			ApplyTan(π).eval().get must beEqualTo(math.tan(math.Pi))
+			ApplyTan(π).eval().get must beEqualTo(Trigonometry.tan(math.Pi))
 		}
 	}
 
 	"c" should {
 		"return correct tan" in {
-			ApplyTan(π).c.get must beEqualTo(Cn(math.tan(math.Pi)))
+			ApplyTan(π).c.get must beEqualTo(Cn(Trigonometry.tan(math.Pi)))
 		}
 
 		"fail if not a constant " in {

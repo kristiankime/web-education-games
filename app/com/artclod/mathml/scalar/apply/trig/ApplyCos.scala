@@ -7,7 +7,7 @@ import scala.util._
 
 case class ApplyCos(value: MathMLElem) extends UnaryFunction(value, Cos) {
 
-	override def eval(b: Map[String, Double]) = Try(math.cos(v.eval(b).get))
+	override def eval(b: Map[String, Double]) = Try(Trigonometry.cos(v.eval(b).get))
 
 	override def constant: Option[Constant] = v.c match {
 		case Some(v) => Some(Trigonometry.cos(v))

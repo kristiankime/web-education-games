@@ -15,13 +15,13 @@ class ApplyCscSpec extends Specification {
 
 	"eval" should {
 		"do csc" in {
-			ApplyCsc(π).eval().get must beEqualTo(Trigonometry.csc(math.Pi))
+			ApplyCsc(π/2).eval().get must beEqualTo(Trigonometry.csc(math.Pi/2))
 		}
 	}
 
 	"c" should {
 		"return correct cot" in {
-			ApplyCsc(π).c.get must beEqualTo(Cn(Trigonometry.csc(math.Pi)))
+			ApplyCsc(π/2).c.get must beEqualTo(Cn(Trigonometry.csc(math.Pi/2)))
 		}
 
 		"fail if not a constant " in {

@@ -48,7 +48,7 @@ object TangentQuestionForm {
 
   def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
 
-  def tangentDefined(f: TangentQuestionForm) = f.functionMathML.isDefinedAt("x" -> f.atPointXMathML.evalT().get)
+  def tangentDefined(f: TangentQuestionForm) = f.functionMathML.dx.isDefinedAt("x" -> f.atPointXMathML.evalT().get)
 }
 
 case class TangentQuestionForm(function: String, functionStr : String, atPointX: String, atPointXStr: String) {

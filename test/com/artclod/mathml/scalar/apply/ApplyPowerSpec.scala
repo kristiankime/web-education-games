@@ -46,10 +46,6 @@ class ApplyPowerSpec extends Specification {
 	}
 	
 	"c" should {
-		"return 0 if base is 0" in {
-			ApplyPower(`0`, x).c.get must beEqualTo(`0`)
-		}
-
 		"return 1 if base is 1" in {
 			ApplyPower(`1`, x).c.get must beEqualTo(`1`)
 		}
@@ -68,10 +64,6 @@ class ApplyPowerSpec extends Specification {
 	}
 
 	"s" should {
-		"return 0 if base is zero" in {
-			ApplyPower(`0`, x).s must beEqualTo(`0`)
-		}
-
 		"return 1 if base is 1" in {
 			ApplyPower(`1`, x).s must beEqualTo(`1`)
 		}

@@ -96,13 +96,13 @@ package object scalar {
 	def ∜(e : MathMLElem) = ApplyRoot(4, e)
 	def `n√`(n: BigDecimal)(e : MathMLElem) = ApplyRoot(n, e)
 	
-	type ln = ApplyLn
-	type log = ApplyLog
+	val ln = ApplyLn
+	val log = ApplyLog
 	
-	type cos = trig.ApplyCos
-	type cot = trig.ApplyCot
-	type csc = trig.ApplyCsc
-	type sec = trig.ApplySec
-	type sin = trig.ApplySin
-	type tan = trig.ApplyTan
+	val cos = trig.ApplyCos
+	val cot = trig.ApplyCot
+	val csc = trig.ApplyCsc
+	val sec = trig.ApplySec
+	val sin = trig.ApplySin
+	val tan = trig.ApplyTan
 }

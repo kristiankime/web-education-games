@@ -22,7 +22,7 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	 * So count 0 as Failure here unless the base is 0.
 	 */
 	private def mathPowFailOnZero(bv: Double, ev: Double): Try[Double] = {
-		if (bv == 0d) { return Success(0d) }
+		if (bv == 0d && ev > 0d) { return Success(0d) }
 		else {
 			val ret = math.pow(bv, ev)
 			if (ret == 0d) { Failure(new IllegalStateException("power returned 0 for " + this)) }
@@ -31,7 +31,6 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 	}
 
 	def constant: Option[Constant] = (base.c, exp.c) match {
-		case (Some(b), _) if (b.isZero) => Some(`0`)
 		case (Some(b), _) if (b.isOne) => Some(`1`)
 		case (_, Some(e)) if (e.isZero) => Some(`1`)
 		case (Some(b), Some(e)) => Some(b ^ e)

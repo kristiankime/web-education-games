@@ -31,6 +31,14 @@ class MathMLDefinedSpec extends Specification {
     "return false on Failure" in {
       MathMLDefined.isDefinedAt(e ^ x, "x" -> Double.MinValue) must beFalse
     }
+
+    "x^(1/3) @ 0 is not defined" in {
+      MathMLDefined.isDefinedAt(x ^ (`-2` / `3`), "x" -> 0) must beFalse
+    }
+
+//    "tan(x/2) @ pi is not defined" in {
+//      MathMLDefined.isDefinedAt(  (sec(x / 2) ^ 2) * (`1` / `2`), "x" -> math.Pi) must beFalse
+//    }
   }
 
 }

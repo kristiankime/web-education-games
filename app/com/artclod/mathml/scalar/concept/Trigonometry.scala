@@ -6,9 +6,9 @@ object Trigonometry {
 
 	def csc(v: Double) : Double = 1d / math.sin(v)
 	
-	def sec(v: Double) : Double =  1d / math.cos(v)
+	def sec(v: Double) : Double = 1d / math.cos(v)
 	
-	def cot(v: Double) : Double=  1d / math.tan(v)
+	def cot(v: Double) : Double = 1d / math.tan(v)
 	
 	def sin(value: Constant) = value match {
 		case c: ConstantInteger => Cn(math.sin(c.v.doubleValue))

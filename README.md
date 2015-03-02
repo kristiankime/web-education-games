@@ -148,10 +148,23 @@ https://developers.google.com/accounts/docs/OAuth2InstalledApp
 https://groups.google.com/forum/#!topic/instagram-api-developers/XOp42EUFzDo
 http://stackoverflow.com/questions/11485271/google-oauth-2-authorization-error-redirect-uri-mismatch
 
+make sure to add these to Enabled APIs
+* Google+ API
+* Contacts API
+
 Local Setup
 create "Client ID for web application"
 Redirect URIs = http://localhost:9000/authenticate/google
 Javascript Origins = https://www.localhost.com
+
+for staging/production
+create "Client ID for web application"
+Redirect URIs = 
+    https://your.app.here/authenticate/google,
+    http://your.app.here/authenticate/google
+
+Javascript Origins = https://www.localhost.com
+    https://your.app.here/
 
 oauth without registration
 http://googlecode.blogspot.com/2009/11/oauth-enhancements.html

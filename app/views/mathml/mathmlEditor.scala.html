@@ -6,7 +6,7 @@
   mathParser: String = "ARTC.mathJS.defaultParser")
 
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
-    @mathml.mathmlEditorHelp()
+    @mathml.mathmlEditorHelp(editorName, mathParser)
 
     <span id="@editorName"> @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
         <input id="mathMLInput" type="text" size="@characterLimit.getOrElse(80)" @for(lim <- characterLimit){maxlength="@lim"} onchange="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>

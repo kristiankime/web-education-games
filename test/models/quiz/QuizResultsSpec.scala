@@ -2,7 +2,7 @@ package models.quiz
 
 import models.DBTest._
 import models.quiz.answer.TestDerivativeAnswer
-import models.quiz.question.QuestionDifficulty.Diff
+import models.quiz.question.DerivativeDifficulty.Diff
 import models.quiz.question._
 import models.user.{UserSettingTest, User}
 import org.junit.runner._

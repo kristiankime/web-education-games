@@ -66,7 +66,7 @@ object QuestionsController extends Controller with SecureSocialConsented with De
           MathML(difficultyRequest.mathML) match {
             case Failure(e) => BadRequest("Could not parse [" + difficultyRequest.mathML + "] as mathml\n" + e.getStackTraceString)
             case Success(mathML) => {
-              val diff = QuestionDifficulty(mathML)
+              val diff = DerivativeDifficulty(mathML)
               val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
               val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
               Ok(Json.toJson(DifficultyResponse(difficultyRequest.rawStr, mathML.toString, diff, correct, incorrect)))

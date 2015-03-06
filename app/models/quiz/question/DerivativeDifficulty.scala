@@ -7,7 +7,7 @@ import com.artclod.mathml.{Math, MathML}
 
 import scala.util.Failure
 
-object QuestionDifficulty {
+object DerivativeDifficulty {
   private val chainRulePoints = 13
 
   private object MathType extends Enumeration {
@@ -20,7 +20,7 @@ object QuestionDifficulty {
       case (_, _) => Fun
     }
   }
-  import models.quiz.question.QuestionDifficulty.MathType._
+  import models.quiz.question.DerivativeDifficulty.MathType._
 
   def apply(e: MathMLElem): Double = e match {
       case m: Diff => m.diff // This object is designed for testing

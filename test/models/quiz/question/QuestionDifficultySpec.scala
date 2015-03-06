@@ -9,7 +9,7 @@ import org.specs2.runner._
 class QuestionDifficultySpec extends Specification {
 
   private implicit class QD(eq: MathMLElem){
-    def difficulty = QuestionDifficulty(eq)
+    def difficulty = DerivativeDifficulty(eq)
   }
 
 	"difficulty" should {

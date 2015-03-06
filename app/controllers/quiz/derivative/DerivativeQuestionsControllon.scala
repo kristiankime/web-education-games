@@ -4,7 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{DerivativeQuestion, DerivativeQuestions, QuestionDifficulty}
+import models.quiz.question.{DerivativeQuestion, DerivativeQuestions, DerivativeDifficulty}
 import models.support._
 import models.user.User
 import play.api.data.Form
@@ -40,7 +40,7 @@ object DerivativeQuestionForm {
     functionStr -> nonEmptyText)
     (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply))
 
-  def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, QuestionDifficulty(form.functionMathML))
+  def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, DerivativeDifficulty(form.functionMathML))
 }
 
 case class DerivativeQuestionForm(function: String, functionStr: String) {

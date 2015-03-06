@@ -7,7 +7,7 @@ object QuestionScoring {
   @VisibleForTesting
   val zoneOfProximalDevelopmentFactor = 1.25
 
-  def teacherScore(question: DerivativeQuestion, correct: Boolean, studentSkillLevel: Double) : Double = teacherScore(QuestionDifficulty(question.mathML), correct, studentSkillLevel)
+  def teacherScore(question: DerivativeQuestion, correct: Boolean, studentSkillLevel: Double) : Double = teacherScore(DerivativeDifficulty(question.mathML), correct, studentSkillLevel)
 
   def teacherScore(difficulty : Double, correct: Boolean, studentSkillLevel: Double) : Double = {
     val l = studentSkillLevel

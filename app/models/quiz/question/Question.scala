@@ -43,7 +43,7 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def answersAndOwners(implicit session: Session) = DerivativeQuestions.answersAndOwners(id)
 
-  def difficulty : Double = QuestionDifficulty(mathML)
+  def difficulty : Double = DerivativeDifficulty(mathML)
 
   def results(user: User)(implicit session: Session) = DerivativeQuestionResults(user, this, answers(user))
 

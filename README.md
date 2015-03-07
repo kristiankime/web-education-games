@@ -217,6 +217,11 @@ And information about using it with play2
 * https://github.com/mumoshu/play2-memcached
 * http://stackoverflow.com/questions/23632722/shared-cache-for-play-framework-on-heroku
 
+Heroku also seems to have memory issues with Play 2.2 apps so you may need to set JAVA_OPTS as per
+* http://stackoverflow.com/questions/13370694/heroku-memory-leak-with-play2-scala
+The short versions is do
+* heroku config:add JAVA_OPTS='-Xmx384m -Xms384m -Xss512k -XX:+UseCompressedOops'
+
 ##### Problems with Evolutions
 When the evolution file is generated for a string field it defaults to VARCHAR but TEXT is preferable
     http://blog.jonanin.com/2013/11/20/postgresql-char-varchar/

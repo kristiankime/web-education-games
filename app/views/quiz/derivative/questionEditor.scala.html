@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call)(explanation: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, successCallback : Option[String] = None)(explanation: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivative.DerivativeQuestionForm
@@ -6,7 +6,7 @@
 <section>
     @explanation <br>
 
-    @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser")
+    @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback)
 
     @form(action, 'id -> "derivativeQuestionForm", 'class -> "pure-form") {
         <fieldset>

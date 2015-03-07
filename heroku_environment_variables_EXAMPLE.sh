@@ -20,3 +20,7 @@ heroku config:set DATABASE_PASSWORD=put_db_password_here
 # Cache configuration
 heroku config:set EHCACHE_ENABLED=disabled
 heroku config:set MEMCACHE_ENABLED=enabled
+
+# Heroku seems to allow the JVM to ask for too much memory with Play 2.2 with default (http://stackoverflow.com/questions/13370694/heroku-memory-leak-with-play2-scala)
+# heroku config:set java_opts='-Xmx384m -Xms384m -Xss512k -XX:+UseCompressedOops'
+# heroku config:set JAVA_OPTS='-Xmx384m -Xms384m -Xss512k -XX:+UseCompressedOops'

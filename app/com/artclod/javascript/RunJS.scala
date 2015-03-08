@@ -21,6 +21,7 @@ object RunJS {
   def mathJS2Tex(math: String) = {
     implicit val cx = Context.enter()
     try {
+      cx.setOptimizationLevel(-1) // http://t32717.mozilla-development-jseng.mozillatalk.us/memory-leak-with-rhino-class-loader-t32717.html
       implicit val scope = cx.initStandardObjects()
       loadJSLibrary("public/javascripts/mathjs/", "math.js")
       val result = cx.evaluateString(scope, "math.parse(\""  + math + "\").toTex()", "<cmd>", 1, null)

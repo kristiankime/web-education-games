@@ -40,12 +40,15 @@
 
         <h4>Add a new Question</h4>
 
-        @views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess")){
-            Enter a function (of x) to differentiate. When you are done hit "Save Question": }
-        @mathml.mathmlScoring("derivativeEditorSuccess", gameState.game.requesteeSkill)
-
-        @views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm){
-            Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": }
+        @tag.switch("createQuestion",
+            ("Create a Derivative Question",
+                views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess"))(
+                    Html("""Enter a function (of x) to differentiate. When you are done hit "Save Question":""") ) +=
+                mathml.mathmlScoring("derivativeEditorSuccess", gameState.game.requesteeSkill)),
+            ("Create a Tangent Question",
+                views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm)(
+                    Html("""Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question":""") ))
+        )
 
         }
 

@@ -34,7 +34,7 @@
             @if(access.write){<th> Remove </th>}
         </tr>
         @for(result <- results.results){<tr>
-            <td> <a class="pure-button" href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)"> @result.question.display </a> </td>
+            <td> <a class="pure-button" href="@QuestionsController.view(course.organizationId, course.id, quiz.id, result.question.id)"> @result.question.display() </a> </td>
             <td> @tag.status(result.status) @tag.maybeIndicateCorrect(result.question, answerOp) </td>
             @if(access.write){<td> @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "pure-form") { <input class="pure-button" type="submit" value="remove" > } </td> }
         </tr>}

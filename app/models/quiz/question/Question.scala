@@ -36,7 +36,7 @@ sealed trait Question extends Owned {
 
   def difficulty : Double
 
-  def display : Html
+  def display(explanation : Boolean = true) : Html
 }
 
 case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
@@ -49,7 +49,7 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
-  def display : Html = views.html.quiz.derivative.questionDisplay(this)
+  def display(explanation : Boolean = true) : Html = views.html.quiz.derivative.questionDisplay(this, explanation)
 }
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
@@ -62,7 +62,7 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
 
   def answers(user: User)(implicit session: Session) = TangentQuestions(id, user)
 
-  def display : Html = views.html.quiz.tangent.questionDisplay(this)
+  def display(explanation : Boolean = true) : Html = views.html.quiz.tangent.questionDisplay(this, explanation)
 
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 

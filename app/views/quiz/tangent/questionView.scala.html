@@ -11,10 +11,10 @@
 @mainWithBorder("Question Page", tag.courseLink(course), tag.courseQuizLink(course, quiz, None)) {
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
-    <h4>Find the equation for the tangent line:</h4>
+    <h4>Find the equation for the tangent line of:</h4>
 
     <section>
-        @results.question.display
+        @results.question.display(false)
     </section>
     <br>
 

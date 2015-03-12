@@ -38,9 +38,14 @@
         } else {
         <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
 
-        @views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id)){ <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question": }
+        <h4>Add a new Question</h4>
 
-        @views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm){ <h4>Add a new Question</h4> Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": }
+        @views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess")){
+            Enter a function (of x) to differentiate. When you are done hit "Save Question": }
+        @mathml.mathmlScoring("derivativeEditorSuccess", gameState.game.requesteeSkill)
+
+        @views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm){
+            Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": }
 
         }
 
@@ -48,8 +53,6 @@
         @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "pure-form") {
             <input type="submit" class="pure-button pure-button-primary" value="Finalize Quiz" >
         }
-        } else {
-        @mathml.mathmlScoring("editorSuccess", gameState.game.requestorSkill)
         }
     </section>
 }{  @* ===== Minor Content Here ==== *@

@@ -30,10 +30,10 @@
         <table class="pure-table pure-table-striped">
             <th>Question</th> <th> Remove </th>
             @for(question <- questions){
-                <tr>
-                    <td> @question.display() </td>
-                    <td> @form(GamesRequestorController.removeQuestion(gameState.game.id), 'class -> "pure-form") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" class="pure-button" value="remove" > } </td>
-                </tr>
+            <tr>
+                <td> @question.display() </td>
+                <td> @form(GamesRequestorController.removeQuestion(gameState.game.id), 'class -> "pure-form") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" class="pure-button" value="remove" > } </td>
+            </tr>
             }
         </table>
         }
@@ -43,14 +43,14 @@
         } else {
         <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
 
+        <h4>Add a new Question</h4>
+
         @views.html.quiz.derivative.questionEditor(GamesRequestorController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess")){
-            <h4>Add a new Question</h4> Enter a function (of x) to differentiate. When you are done hit "Save Question":
-        }
+            Enter a function (of x) to differentiate. When you are done hit "Save Question": }
         @mathml.mathmlScoring("derivativeEditorSuccess", gameState.game.requesteeSkill)
 
         @views.html.quiz.tangent.questionEditor(GamesRequestorController.createTangentQuestion(gameState.game.id), tangentForm){
-            <h4>Add a new Question</h4> Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question":
-        }
+            Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": }
 
         }
 

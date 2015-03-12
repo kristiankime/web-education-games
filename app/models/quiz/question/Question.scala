@@ -43,7 +43,7 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def answersAndOwners(implicit session: Session) = DerivativeQuestions.answersAndOwners(id)
 
-  def difficulty : Double = DerivativeDifficulty(mathML)
+  def difficulty : Double = DerivativeQuestionDifficulty(mathML)
 
   def results(user: User)(implicit session: Session) = DerivativeQuestionResults(user, this, answers(user))
 
@@ -56,7 +56,7 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
 
   def answersAndOwners(implicit session: Session) : List[(TangentAnswer, User)] = TangentQuestions.answersAndOwners(id)
 
-  def difficulty : Double = 1d // TODO
+  def difficulty : Double = TangentQuestionDifficulty(function)
 
   def results(user: User)(implicit session: Session) = TangentQuestionResults(user, this, answers(user))
 

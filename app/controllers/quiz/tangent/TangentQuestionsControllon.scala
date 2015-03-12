@@ -4,7 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{DerivativeDifficulty, TangentQuestion, TangentQuestions}
+import models.quiz.question.{TangentQuestionDifficulty, DerivativeDifficulty, TangentQuestion, TangentQuestions}
 import models.support._
 import models.user.User
 import play.api.data.Form
@@ -46,7 +46,7 @@ object TangentQuestionForm {
     verifying(tangentUndefined, fields => tangentDefined(fields) )
   )
 
-  def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, DerivativeDifficulty(form.functionMathML))
+  def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, TangentQuestionDifficulty(form.functionMathML))
 
   def tangentDefined(f: TangentQuestionForm) = {
     val xVal = f.atPointXMathML.evalT().get

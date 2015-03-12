@@ -13,10 +13,6 @@ sealed trait QuestionResults {
 
   def attempted = answers.nonEmpty
 
-  def numAttempts = answers.size
-
-  def attempts = answers.size
-
   def questionId = question.id
 
   val correct = answers.foldLeft(false)(_ || _.correct)
@@ -40,9 +36,7 @@ sealed trait QuestionResults {
   def studentScore = if(correct) 1d else 0d
 
   def teacherScore(studentSkill: Double): Double
-
 }
-
 
 case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults {
   def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)

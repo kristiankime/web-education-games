@@ -1,11 +1,11 @@
 @(gameState: models.game.GameState with models.game.RequesteeQuiz, tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesRequesteeController
-@import controllers.quiz.derivative.DerivativeQuestionForm
 @import controllers.game.GameRemoveQuestion
 @import helper._
 @import com.artclod.collection.PimpedOptionList
 @import models.game.GameState.numberOfQuestions
+@import views.html.quiz._
 
 @defining(gameState.game.requesteeQuiz) { quizOp =>
 @defining(quizOp.map(_.questions).dropOption) { questions =>
@@ -43,12 +43,8 @@
         <h4>Add a new Question</h4>
 
         @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
-            ("Create a Derivative Question",
-                views.html.quiz.derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess"))() +=
-                    views.html.quiz.derivative.scoringHints("derivativeEditorSuccess", gameState.game.requestorSkill)),
-            ("Create a Tangent Question",
-                views.html.quiz.tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm, successCallback = Some("tangentEditorSuccess"))()+=
-                    views.html.quiz.tangent.scoringHints("tangentEditorSuccess", gameState.game.requestorSkill))
+            ("Create a Derivative Question", derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess", gameState.game.requestorSkill)),
+            ("Create a Tangent Question", tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm, successCallback = Some("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess", gameState.game.requestorSkill))
         )
 
         }

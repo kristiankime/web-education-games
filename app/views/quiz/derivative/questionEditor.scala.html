@@ -1,10 +1,10 @@
-@(action: play.api.mvc.Call, successCallback : Option[String] = None)(explanation: Html = Html("Enter a function (of x) to differentiate. When you are done hit \"Save Question\": "))(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, successCallback : Option[String] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivative.DerivativeQuestionForm
 
 <section>
-    @explanation <br>
+    Enter a function (of x) to differentiate. When you are done hit "Save Question": <br>
 
     @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback)
 

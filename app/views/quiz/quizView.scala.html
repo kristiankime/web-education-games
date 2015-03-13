@@ -45,11 +45,11 @@
     @if(access.write){
     <h4>Add a new Question</h4>
 
-    @tag.switch("createQuestion",
+    @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
     ("Create a Derivative Question",
-            views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id))(Html("Enter a function (of x) to differentiate. When you are done hit \"Save Question\": "))),
+            views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id))()),
     ("Create a Tangent Question",
-            views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm)(Html("Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit \"Save Question\": ")))
+            views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm)()))
     )
 
     @defining(quiz.results(course)) { quizResults =>

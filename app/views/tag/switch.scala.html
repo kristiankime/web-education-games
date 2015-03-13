@@ -1,6 +1,6 @@
-@(name: String, optionOne: (String, Html), optionsRest: (String, Html)*)
+@(name: String, selected: Int, optionsRaw: (String, Html)*)
 
-@defining( (optionOne +: optionsRest).zipWithIndex.map(v => (v._2, v._1._1, v._1._2)) ){ options =>
+@defining( optionsRaw.zipWithIndex.map(v => (v._2, v._1._1, v._1._2)) ){ options =>
 
 <script>
     var @{name}Update = function(button){
@@ -15,16 +15,12 @@
     }
 </script>
 <form class="pure-form">
-    <label> <input type="radio" name="@name" id="@{name+"0B"}" value="@{name+0}" onclick="@{name}Update(this)" checked> @optionOne._1 </label>
-    @for(option <- options.tail) {<label> <input type="radio" name="@name" id="@{name + option._1 + "B"}" value="@{name + option._1}" onclick="@{name}Update(this)"> @option._2</label>}
+    @for(option <- options) {<label> <input type="radio" name="@name" value="@{name + option._1}" onclick="@{name}Update(this)" @if(option._1 == selected){checked} > @option._2</label>}
 </form>
 <br>
 
-<div id="@{name + "0"}">
-    @optionOne._2
-</div>
-@for(option <- options.tail) {
-<div id="@{name + option._1}" style="display:none">
+@for(option <- options) {
+<div id="@{name + option._1}" @if(option._1 != selected){style="display:none"}>
     @option._3
 </div>
 }

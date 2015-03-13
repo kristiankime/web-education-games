@@ -82,7 +82,7 @@ POST        /games/:g/questions/:q/requestor/tangent                            
 GET         /games/:g/quizzes/:z                                                  controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
 # Question Difficulty service (ajax)
-POST        /question/difficulty/derivative                                         controllers.quiz.QuestionsController.derivativeQuestionDifficulty
+POST        /question/difficulty/derivative                                       controllers.quiz.QuestionsController.derivativeQuestionDifficulty
 
 # ======== START Routes for Secure Social ========
 # Login page

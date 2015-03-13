@@ -48,10 +48,11 @@
         };
 
         @for(value <- initialValue){
-        $("#@{editorName} #mathMLInput").val("@value")
-        result.updateAnswer("@value")
+        ARTC.addLoadEvent(function(){
+            $("#@{editorName} #mathMLInput").val("@value");
+            result.updateAnswer("@value");
+        });
         }
-
         return result;
     })();
     </script>

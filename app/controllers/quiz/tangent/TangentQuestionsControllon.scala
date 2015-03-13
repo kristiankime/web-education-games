@@ -30,6 +30,29 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
     }
   }
 
+  case class TangentDifficultyRequest(functionStr: String, function: String, atPointXStr: String, atPointX: String, partnerSkill: Double)
+  case class TangentDifficultyResponse(functionStr: String, function: String, atPointXStr: String, atPointX: String, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
+  implicit val formatTangentDifficultyRequest = Json.format[TangentDifficultyRequest]
+  implicit val formatTangentDifficultyResponse = Json.format[TangentDifficultyResponse]
+
+  def tangentQuestionDifficulty = Action { request =>
+    request.body.asJson.map { configJson =>
+      configJson.validate[TangentDifficultyRequest]
+        .map { difficultyRequest =>
+        (MathML(difficultyRequest.function), MathML(difficultyRequest.atPointX)) match {
+          case (Failure(e), _) => BadRequest("Could not parse function [" + difficultyRequest.function + "] as mathml\n" + e.getStackTraceString)
+          case (_, Failure(e)) => BadRequest("Could not parse atPointX [" + difficultyRequest.atPointX + "] as mathml\n" + e.getStackTraceString)
+          case (Success(function), Success(atPointX)) => {
+            val diff = TangentQuestionDifficulty(function)
+            val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
+            val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
+            Ok(Json.toJson(TangentDifficultyResponse(difficultyRequest.functionStr, difficultyRequest.function, difficultyRequest.atPointXStr, difficultyRequest.atPointX, diff, correct, incorrect)))
+          }
+        }
+      }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
+    }.getOrElse(BadRequest("Expecting Json data"))
+  }
+
 }
 
 object TangentQuestionForm {

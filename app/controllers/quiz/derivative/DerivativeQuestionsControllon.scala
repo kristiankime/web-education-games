@@ -45,7 +45,7 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
             val diff = DerivativeQuestionDifficulty(mathML)
             val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
             val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
-            Ok(Json.toJson(DerivativeDifficultyResponse(difficultyRequest.functionStr, mathML.toString, diff, correct, incorrect)))
+            Ok(Json.toJson(DerivativeDifficultyResponse(difficultyRequest.functionStr, difficultyRequest.function, diff, correct, incorrect)))
           }
         }
       }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }

@@ -1,11 +1,11 @@
 @(name: String, skillLevel: Double)
 
 @import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
-@import controllers.quiz.derivative.DerivativeQuestionForm.{function, functionStr}
+@import controllers.quiz.tangent.TangentQuestionForm.{function, functionStr, atPointX, atPointXStr}
 
 @defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 
-    <!-- ========= DERIVATIVE MATH SCORING STARTS HERE ======= -->
+    <!-- ========= TANGENT MATH SCORING STARTS HERE ======= -->
     <section>
     <h4>Scoring Information @tag.icon("icon-help", 'data_ot -> infoText)</h4>
 
@@ -30,6 +30,8 @@
         var ajaxData = {
             @functionStr : result.rawStr,
             @function : result.mathML,
+            @atPointXStr : "0", // TODO set this real
+            @atPointX : "<cn>0</cn>", // TODO set this real
             @partnerSkill : @skillLevel
         };
 
@@ -41,7 +43,7 @@
 
         $.ajax({
             type : "POST",
-            url : "/question/difficulty/derivative",
+            url : "/question/difficulty/tangent",
             dataType : "json",
             data : JSON.stringify(ajaxData),
             contentType: "application/json",
@@ -51,5 +53,5 @@
         }
     </script>
     </section>
-    <!-- ========= DERIVATIVE MATH SCORING ENDS HERE ======= -->
+    <!-- ========= TANGENT MATH SCORING ENDS HERE ======= -->
 }

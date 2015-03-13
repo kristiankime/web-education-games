@@ -15,8 +15,8 @@
     }
 </script>
 <form class="pure-form">
-    <input type="radio" name="@name" value="@{name+0}" onclick="@{name}Update(this)" checked> @optionOne._1
-    @for(option <- options.tail) {<input type="radio" name="@name" value="@{name + option._1}" onclick="@{name}Update(this)"> @option._2}
+    <label> <input type="radio" name="@name" id="@{name+"0B"}" value="@{name+0}" onclick="@{name}Update(this)" checked> @optionOne._1 </label>
+    @for(option <- options.tail) {<label> <input type="radio" name="@name" id="@{name + option._1 + "B"}" value="@{name + option._1}" onclick="@{name}Update(this)"> @option._2</label>}
 </form>
 <br>
 

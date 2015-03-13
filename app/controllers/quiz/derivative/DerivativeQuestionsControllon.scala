@@ -4,14 +4,15 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{DerivativeQuestionDifficulty, DerivativeQuestion, DerivativeQuestions, DerivativeDifficulty}
+import models.quiz.question._
 import models.support._
 import models.user.User
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.Controller
+import play.api.libs.json.{JsError, Json}
+import play.api.mvc.{Action, Controller}
 
-import scala.util.Left
+import scala.util.{Success, Failure, Left}
 
 trait DerivativeQuestionsControllon extends Controller with SecureSocialConsented {
 
@@ -27,6 +28,28 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
           })
       }
     }
+  }
+
+  case class DerivativeDifficultyRequest(functionStr: String, function: String, partnerSkill: Double)
+  case class DerivativeDifficultyResponse(functionStr: String, function: String, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
+  implicit val formatDerivativeDifficultyRequest = Json.format[DerivativeDifficultyRequest]
+  implicit val formatDerivativeDifficultyResponse = Json.format[DerivativeDifficultyResponse]
+
+  def derivativeQuestionDifficulty = Action { request =>
+    request.body.asJson.map { configJson =>
+      configJson.validate[DerivativeDifficultyRequest]
+        .map { difficultyRequest =>
+        MathML(difficultyRequest.function) match {
+          case Failure(e) => BadRequest("Could not parse [" + difficultyRequest.function + "] as mathml\n" + e.getStackTraceString)
+          case Success(mathML) => {
+            val diff = DerivativeQuestionDifficulty(mathML)
+            val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
+            val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
+            Ok(Json.toJson(DerivativeDifficultyResponse(difficultyRequest.functionStr, mathML.toString, diff, correct, incorrect)))
+          }
+        }
+      }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
+    }.getOrElse(BadRequest("Expecting Json data"))
   }
 
 }

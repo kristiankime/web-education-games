@@ -1,6 +1,7 @@
 @(name: String, skillLevel: Double)
 
-@import controllers.quiz.QuestionsController.{rawStr, mathML, partnerSkill, difficulty, correctPoints, incorrectPoints}
+@import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
+@import controllers.quiz.tangent.TangentQuestionForm.{function, functionStr}
 
 @defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 
@@ -27,8 +28,8 @@
         var @name = function ( result ) {
 
         var ajaxData = {
-            @rawStr : result.rawStr,
-            @mathML : result.mathML,
+            @functionStr : result.rawStr,
+            @function : result.mathML,
             @partnerSkill : @skillLevel
         };
 
@@ -40,7 +41,7 @@
 
         $.ajax({
             type : "POST",
-            url : "/questiondifficulty",
+            url : "/question/difficulty/derivative",
             dataType : "json",
             data : JSON.stringify(ajaxData),
             contentType: "application/json",

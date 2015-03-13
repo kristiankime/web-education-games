@@ -47,33 +47,9 @@ object QuestionsController extends Controller with SecureSocialConsented with De
     }
 	}
 
-  // Meta Information for difficulty ajax call
-  val mathML = "mathML"
-  val rawStr = "rawStr"
+  // These fields are for the ajax requests for questions scores (see
   val difficulty = "difficulty"
   val partnerSkill = "partnerSkill"
   val correctPoints = "correctPoints"
   val incorrectPoints = "incorrectPoints"
-  case class DifficultyRequest(rawStr: String, mathML: String, partnerSkill: Double)
-  case class DifficultyResponse(rawStr: String, mathML: String, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
-  implicit val formatDifficultyRequest = Json.format[DifficultyRequest]
-  implicit val formatDifficultyResponse = Json.format[DifficultyResponse]
-
-  def questionDifficulty = Action { request =>
-    request.body.asJson.map { configJson =>
-      configJson.validate[DifficultyRequest]
-        .map { difficultyRequest =>
-          MathML(difficultyRequest.mathML) match {
-            case Failure(e) => BadRequest("Could not parse [" + difficultyRequest.mathML + "] as mathml\n" + e.getStackTraceString)
-            case Success(mathML) => {
-              val diff = DerivativeQuestionDifficulty(mathML)
-              val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
-              val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
-              Ok(Json.toJson(DifficultyResponse(difficultyRequest.rawStr, mathML.toString, diff, correct, incorrect)))
-            }
-          }
-      }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
-    }.getOrElse(BadRequest("Expecting Json data"))
-  }
-
 }

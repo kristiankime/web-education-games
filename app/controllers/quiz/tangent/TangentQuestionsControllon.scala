@@ -4,12 +4,15 @@ import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
 import controllers.support.SecureSocialConsented
-import models.quiz.question.{TangentQuestionDifficulty, DerivativeDifficulty, TangentQuestion, TangentQuestions}
+import models.quiz.question._
 import models.support._
 import models.user.User
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.Controller
+import play.api.libs.json.{JsError, Json}
+import play.api.mvc.{Action, Controller}
+
+import scala.util.{Success, Failure}
 
 trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
 

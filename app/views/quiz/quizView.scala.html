@@ -47,7 +47,7 @@
 
     @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
         ("Create a Derivative Question", views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id))),
-        ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm)))
+        ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm))
     )
 
     @defining(quiz.results(course)) { quizResults =>

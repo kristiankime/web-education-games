@@ -5,9 +5,9 @@ import java.lang.ref.WeakReference
 import play.api.mvc.{Action, Controller}
 
 object Application extends Controller {
-	val version = Version(0, 5, 6)
-	
-	/**
+	val version = Version(0, 6, 0)
+
+  /**
 	 * Application does not use trailing slashes so indicate to browsers
 	 */
 	def untrail(path: String) = Action {
@@ -19,20 +19,6 @@ object Application extends Controller {
    */
   def backTrack(path: String) = Action {
     Redirect(("/" + path).substring(0, ("/" + path).lastIndexOf("/") + 1))
-  }
-
-  def forceGarbageCollection = Action {
-    gc
-    Ok("GCed")
-  }
-
-  private def gc() {
-    var obj = new Object()
-    val ref = new WeakReference[Object](obj);
-    obj = null;
-    while(ref.get() != null) {
-      System.gc();
-    }
   }
 
 }

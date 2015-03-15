@@ -4,7 +4,7 @@ import com.artclod.mathml.scalar._
 import com.artclod.mathml.slick.MathMLMapper.string2mathML
 import com.artclod.slick.JodaUTC._
 import models.quiz.answer.TangentAnswer
-import models.quiz.table.tangentQuestionsTable
+import models.quiz.table.{AnswerIdNext, tangentQuestionsTable}
 import models.support._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
@@ -20,6 +20,7 @@ class TangentAnswersTable(tag: Tag) extends Table[TangentAnswer](tag, "tangent_a
 
 	def * = (id, ownerId, questionId, slopeMathML, slopeRawStr, interceptMathML, interceptRawStr, correct, creationDate) <> (TangentAnswer.tupled, TangentAnswer.unapply _)
 
-	def ownerFK = foreignKey("tangent_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def idFK  = foreignKey("tangent_answers__id_fk", id, AnswerIdNext.answerIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+  def ownerFK = foreignKey("tangent_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def questionFK = foreignKey("tangent_answers__question_fk", questionId, tangentQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

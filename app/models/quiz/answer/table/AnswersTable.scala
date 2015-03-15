@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 
 trait AnswersTable[A <: Answer] extends Table[A] {
-  def id = column[AnswerId]("id", O.PrimaryKey, O.AutoInc)
+  def id = column[AnswerId]("id", O.PrimaryKey)
   def ownerId = column[UserId]("owner")
   def questionId = column[QuestionId]("question_id")
   def correct = column[Short]("correct") // Note this represent a Boolean in the Answers Class, kept as a number for aggregation purposes

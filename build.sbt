@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   anorm,
   cache,
   "postgresql"              %  "postgresql"          % "9.1-901-1.jdbc4" withSources,
-  "com.typesafe.play"       %% "play-slick"          % "0.6.0.1" withSources,
+  "com.typesafe.play"       %% "play-slick"          % "0.6.1" withSources,
   "ws.securesocial"         %% "securesocial"        % "2.1.4" withSources,
   "com.typesafe"            %% "play-plugins-mailer" % "2.2.0" withSources,
   "org.mozilla"             %  "rhino"               % "1.7R4" withSources,

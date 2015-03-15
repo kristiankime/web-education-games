@@ -4,7 +4,6 @@ import com.artclod.slick.JodaUTC
 import models.DBTest
 import models.DBTest._
 import models.quiz.answer.DerivativeAnswers
-import DerivativeAnswers.AnswersSummary
 import models.quiz.table.QuestionIdNext
 import models.support._
 import org.junit.runner._

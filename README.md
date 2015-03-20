@@ -301,3 +301,17 @@ Heroku will keep left over build files. If you get errors due to files that shou
 It can be turned off later
     heroku config:unset SBT_CLEAN
 for more info : https://devcenter.heroku.com/articles/scala-support
+
+
+###### Looking into Memory Leaks In Heroku
+
+Simple way to add metric
+    https://devcenter.heroku.com/articles/log-runtime-metrics
+
+Generate a Heap Dump:
+    https://devcenter.heroku.com/articles/java-memory-issues
+Heroku can print to the logs if you add "with_jmap" to the Procfile i.e.
+if your old file was:
+    web: target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true
+then you have
+    web: with_jmap target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true

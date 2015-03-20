@@ -315,3 +315,5 @@ if your old file was:
     web: target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true
 then you have
     web: with_jmap target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true
+
+heroku config:set JMAP_INTERVAL=30

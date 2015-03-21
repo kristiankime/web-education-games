@@ -38,7 +38,7 @@
                 result.mathML = mathResult.content;
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
-                ARTC.mathJax.update("@{editorName+"View"}", ARTC.mathJax.tex(mathResult.node.toTex()));
+                ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(mathResult.node.toTex()));
                 @for(onSuccess <- successCallback){@{onSuccess}(result)}
             } else {
                 result.valid = false;

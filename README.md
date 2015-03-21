@@ -316,4 +316,7 @@ if your old file was:
 then you have
     web: with_jmap target/universal/stage/bin/web-education-games -Dhttp.port=${PORT} -DapplyEvolutions.default=true
 
-heroku config:set JMAP_INTERVAL=30
+Setting this will start mem dumps to the heroku log every 30 seconds
+    heroku config:set JMAP_INTERVAL=30
+This should stop it
+    heroku config:unset JMAP_INTERVAL

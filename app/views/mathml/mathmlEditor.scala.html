@@ -11,7 +11,7 @@
     <span id="@editorName"> @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
         <input id="mathMLInput" type="text" size="@characterLimit.getOrElse(80)" @for(lim <- characterLimit){maxlength="@lim"} onchange="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
         <span style:visibility="hidden" id="@{editorName+"Indicator"}"> @tag.icon("icon-warning2", 'class -> "warning", 'data_ot -> "Equation could not be parsed (or is empty)") </span>
-        <span id="@{editorName+"View"}"> $$ $$ </span>
+        <span id="@{editorName+"View"}"> </span>
     </span>
 
     <script>

@@ -5,7 +5,7 @@ import java.lang.ref.WeakReference
 import play.api.mvc.{Action, Controller}
 
 object Application extends Controller {
-	val version = Version(0, 6, 3)
+	val version = Version(0, 6, 4)
 
   /**
 	 * Application does not use trailing slashes so indicate to browsers

@@ -49,7 +49,7 @@ ARTC.mathJS.buildParser = (function(){
     }
 
     // The main function
-    return function(functions, operators, symbols){
+    return function(functions, operators, symbols, rejectFunc){
         // If we don't have values passed in use defaults
         var functionsSafe = ARTC.mathJS.parserDefaults.functions;
         if(functions){ functionsSafe = functions; }
@@ -59,6 +59,9 @@ ARTC.mathJS.buildParser = (function(){
 
         var symbolsSafe = ARTC.mathJS.parserDefaults.symbols;
         if(symbols){ symbolsSafe = symbols; }
+
+        var rejectFuncSafe = function(node){ return false; };
+        if(rejectFunc){ rejectFuncSafe = rejectFunc; }
 
         // ==============  Function Handling ==============
         var fncMap = argMapCreate(functionsSafe);
@@ -111,6 +114,9 @@ ARTC.mathJS.buildParser = (function(){
             try {
                 var mathJSNode = math.parse(string);
 
+                var reject = rejectFuncSafe(mathJSNode);
+                if(reject){ throw reject; }
+
                 return {
                     success: true,
                     node: mathJSNode,
@@ -128,9 +134,10 @@ ARTC.mathJS.buildParser = (function(){
                 }
             }
         }
-        ret.functions = functions;
-        ret.operators = operators;
-        ret.symbols = symbols;
+        ret.functions = functionsSafe;
+        ret.operators = operatorsSafe;
+        ret.symbols = symbolsSafe;
+        ret.rejectFunc = rejectFuncSafe;
         return ret
     }
 }());

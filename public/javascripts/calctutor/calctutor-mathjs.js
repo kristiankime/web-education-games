@@ -6,6 +6,23 @@ if(!CALC.mathJS){
     CALC.mathJS = {};
 }
 
+CALC.mathJS.rejectLogsWithBaseUsingX = function(node){
+    var nodeIsLog = function (n) { return n.type === 'FunctionNode' && (n.name === 'ln' || n.name === 'log'); };
+    var hasBase = function (n) { return n.args.length > 1; };
+    var toBase = function (n) { return n.args[1]; };
+    var nodeUsesX = function (n) { return n.type == 'SymbolNode' && n.name === 'x'; };
+    var usesX = function (nodes) { return nodes.filter(nodeUsesX).length > 0; };
+
+    // Note we are using both _.filter and mathjsnode.filter
+    var logs = node.filter(nodeIsLog);
+    var logsWithBases = _.filter(logs, hasBase);
+    var bases = _.map(logsWithBases, toBase);
+    var basesUsingX = _.filter(bases, usesX);
+    var doesAnyBaseUseX = _.reduce(basesUsingX, function(a, b){ return a || b; }, false);
+
+    return doesAnyBaseUseX;
+};
+
 CALC.mathJS.functionOfXInputs = {
     // All functions here take (node, parseNode)
     functions: {
@@ -40,7 +57,7 @@ CALC.mathJS.functionOfXInputs = {
     }
 };
 
-CALC.mathJS.functionOfXParser = ARTC.mathJS.buildParser(CALC.mathJS.functionOfXInputs.functions, CALC.mathJS.functionOfXInputs.operators, CALC.mathJS.functionOfXInputs.symbols);
+CALC.mathJS.functionOfXParser = ARTC.mathJS.buildParser(CALC.mathJS.functionOfXInputs.functions, CALC.mathJS.functionOfXInputs.operators, CALC.mathJS.functionOfXInputs.symbols, CALC.mathJS.rejectLogsWithBaseUsingX);
 
 
 CALC.mathJS.constantInputs = {
@@ -77,3 +94,4 @@ CALC.mathJS.constantInputs = {
 };
 
 CALC.mathJS.constantParser = ARTC.mathJS.buildParser(CALC.mathJS.constantInputs.functions, CALC.mathJS.constantInputs.operators, CALC.mathJS.constantInputs.symbols);
+

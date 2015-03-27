@@ -34,14 +34,6 @@ object MathMLEq {
 //		System.err.println((vals, eq1s.zip(eq2s), matches).zipped.map((a, b, c) => "val=[" + a + "] evals=[" + b + "] match=[" + c + "]\n"))
 
     matches.reduce(matchCombine)
-
-//		matches.reduce( (a : Match.Value, b: Match.Value) => (a , b) match {
-//			case (No, _) => No
-//			case (_, No) => No // If we ever see a No they are not a match
-//			case (Yes, _) => Yes
-//			case (_, Yes) => Yes // If we have Inconclusive and yes conclude yes
-//			case (Inconclusive, Inconclusive) => Inconclusive // If we only have Inconclusive...
-//		})
 	}
 
   def matchCombine(a : Match.Value, b: Match.Value) : Match = (a , b) match {

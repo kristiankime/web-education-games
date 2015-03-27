@@ -10,12 +10,18 @@ import com.artclod.mathml.scalar._
 import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.apply.trig._
 import com.artclod.mathml.Match._
+import com.artclod.mathml.scalar.apply.{ ApplyLn => ln, ApplyLog => log, ApplyRoot => rt }
+
 
 // LATER try out http://rlegendi.github.io/specs2-runner/ and remove RunWith
 @RunWith(classOf[JUnitRunner])
 class MathMLEqSpec extends Specification {
 
 	"checkEq" should {
+
+    "confirm rt(2, x^2) != x (abs of negatives)" in {
+      MathMLEq.checkEq("x", rt(2, x ^2), x) must beEqualTo(No)
+    }
 
 		"be true for two equal cns" in {
 			MathMLEq.checkEq("x", `3`, `3`) must beEqualTo(Yes)
@@ -74,6 +80,7 @@ class MathMLEqSpec extends Specification {
 		"be false for two logs with different bases" in {
 			MathMLEq.checkEq("x", ApplyLog10(x), ApplyLn(x)) must beEqualTo(No)
 		}
+
 	}
 
 	"doubleNumbersCloseEnough" should {
@@ -89,7 +96,7 @@ class MathMLEqSpec extends Specification {
 		"be false for two different numbers (near 1)" in {
 			MathMLEq.doubleNumbersCloseEnough(1.24e+1, 1.23e+1) must beFalse
 		}
-		
+
 		"be true for two identical very large numbers " in {
 			MathMLEq.doubleNumbersCloseEnough(1.23e+100, 1.23e+100) must beTrue
 		}
@@ -97,11 +104,11 @@ class MathMLEqSpec extends Specification {
 		"be true for two close very large numbers" in {
 			MathMLEq.doubleNumbersCloseEnough(1.2300005e+100, 1.23e+100) must beTrue
 		}
-		
+
 		"be false for two different very large numbers" in {
 			MathMLEq.doubleNumbersCloseEnough(1.24e+100, 1.23e+100) must beFalse
 		}
-		
+
 		"be true for two identical very small numbers" in {
 			MathMLEq.doubleNumbersCloseEnough(1.23e-100, 1.23e-100) must beTrue
 		}
@@ -109,13 +116,14 @@ class MathMLEqSpec extends Specification {
 		"be true for two close very small numbers" in {
 			MathMLEq.doubleNumbersCloseEnough(1.2300005e-100, 1.23e-100) must beTrue
 		}
-		
+
 		"be false for two different very small numbers" in {
 			MathMLEq.doubleNumbersCloseEnough(1.24e-100, 1.23e-100) must beFalse
 		}
-		
+
 		"be false for one large and one small number" in {
 			MathMLEq.doubleNumbersCloseEnough(1.24e+100, 1.23e-100) must beFalse
 		}
 	}
+
 }

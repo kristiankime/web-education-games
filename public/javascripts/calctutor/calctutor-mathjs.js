@@ -23,6 +23,25 @@ CALC.mathJS.rejectLogsWithBaseUsingX = function(node){
     return doesAnyBaseUseX;
 };
 
+CALC.mathJS.rejectRootsUsingX = function(node){
+    var nodeIsRoot = function (n) { return n.type === 'FunctionNode' && n.name === 'nthRoot'; };
+    var hasNth = function (n) { return n.args.length > 1; };
+    var toNth = function (n) { return n.args[1]; };
+    var nodeUsesX = function (n) { return n.type == 'SymbolNode' && n.name === 'x'; };
+    var usesX = function (nodes) { return nodes.filter(nodeUsesX).length > 0; };
+
+    // Note we are using both _.filter and mathjsnode.filter
+    var roots = node.filter(nodeIsRoot);
+    var rootsWithNth = _.filter(roots, hasNth);
+    var nths = _.map(rootsWithNth, toNth);
+    var rootsUsingX = _.filter(nths, usesX);
+    var doesAnyRootUseX = _.reduce(rootsUsingX, function(a, b){ return a || b; }, false);
+
+    return doesAnyRootUseX;
+};
+
+CALC.mathJS.rejectOddX = function(node) { return false || CALC.mathJS.rejectLogsWithBaseUsingX(node) || CALC.mathJS.rejectRootsUsingX(node) };
+
 CALC.mathJS.functionOfXInputs = {
     // All functions here take (node, parseNode)
     functions: {
@@ -57,7 +76,7 @@ CALC.mathJS.functionOfXInputs = {
     }
 };
 
-CALC.mathJS.functionOfXParser = ARTC.mathJS.buildParser(CALC.mathJS.functionOfXInputs.functions, CALC.mathJS.functionOfXInputs.operators, CALC.mathJS.functionOfXInputs.symbols, CALC.mathJS.rejectLogsWithBaseUsingX);
+CALC.mathJS.functionOfXParser = ARTC.mathJS.buildParser(CALC.mathJS.functionOfXInputs.functions, CALC.mathJS.functionOfXInputs.operators, CALC.mathJS.functionOfXInputs.symbols, CALC.mathJS.rejectOddX);
 
 
 CALC.mathJS.constantInputs = {

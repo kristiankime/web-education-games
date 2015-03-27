@@ -11,11 +11,8 @@ import play.api.db.slick.Config.driver.simple.Session
 
 object TestDerivativeQuestion {
 
-	def apply(owner: UserId,
-		mathML: MathMLElem = `6`,
-		rawStr: String = "6",
-		creationDate: DateTime = JodaUTC.zero) =
-		DerivativeQuestion(null, owner, mathML, rawStr, creationDate, 0d)
+	def apply(owner: UserId, mathML: MathMLElem = `6`, rawStr: String = "6", creationDate: DateTime = JodaUTC.zero, difficulty: Double = 0d) =
+		DerivativeQuestion(null, owner, mathML, rawStr, creationDate, difficulty)
 
 	def create(owner: UserId, mathML: MathMLElem = `6`, text: String = "6", creationDate: DateTime = JodaUTC.zero, difficulty: Double = 0d, answered : Option[UserId] = None)(implicit session: Session) = {
 		val question = DerivativeQuestions.create(DerivativeQuestion(null, owner, mathML, text, creationDate, difficulty))

@@ -66,12 +66,13 @@ class QuizResultsSpec extends Specification {
     "be 1 if all of the questions were hard and answered correctly" in {
       val (answerer, asker) = (UserSettingTest(name = "answerer"), UserSettingTest(name = "asker"))
       val studentSkill = 1d
+      val highDiff: Double = highDifficulty(studentSkill)
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDiff), difficulty = highDiff)
       val question1Results = questionResults(answerer, question1, correct = true, numberOfAnswers = 2)
 
-      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDiff), difficulty = highDiff)
       val question2Results = questionResults(answerer, question2, correct = true, numberOfAnswers = 1)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
@@ -83,12 +84,13 @@ class QuizResultsSpec extends Specification {
     "be 0 if all of the questions were hard and answered incorrectly" in {
       val (answerer, asker) = (UserSettingTest(name = "answerer"), UserSettingTest(name = "asker"))
       val studentSkill = 1d
+      val highDiff = highDifficulty(studentSkill)
 
       val quiz = TestQuiz(asker.id)
-      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question1 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDiff), difficulty = highDiff)
       val question1Results = questionResults(answerer, question1, correct = false, numberOfAnswers = 2)
 
-      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val question2 = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDiff), difficulty = highDiff)
       val question2Results = questionResults(answerer, question2, correct = false, numberOfAnswers = 1)
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))

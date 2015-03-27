@@ -37,7 +37,8 @@ class DerivativeQuestionResultsSpec extends Specification {
     "be 0 for a high difficulty question if the question was never answered" in {
       val (answerer, asker) = (UserSettingTest(name = "answerer"), UserSettingTest(name = "asker"))
       val studentSkill = 1d
-      val question = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val highDiff: Double = highDifficulty(studentSkill)
+      val question = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDiff), difficulty = highDiff)
       val results = DerivativeQuestionResults(answerer, question, List())
 
       results.teacherScore(studentSkill) must beEqualTo(0d)
@@ -46,7 +47,8 @@ class DerivativeQuestionResultsSpec extends Specification {
     "be 1 for a high difficulty question if the question was was answered correctly" in {
       val (answerer, asker) = (UserSettingTest(name = "answerer"), UserSettingTest(name = "asker"))
       val studentSkill = 1d
-      val question = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDifficulty(studentSkill)))
+      val highDiff: Double = highDifficulty(studentSkill)
+      val question = TestDerivativeQuestion(owner = asker.id, mathML = Diff(highDiff), difficulty = highDiff)
       val answer = TestDerivativeAnswer(owner = answerer.id, questionId = question.id, correct = true) // question.id is null here but will work for testing
       val results = DerivativeQuestionResults(answerer, question, List(answer))
 
@@ -56,7 +58,8 @@ class DerivativeQuestionResultsSpec extends Specification {
     "be .5 for a high medium question if the question was was answered correctly" in {
       val (answerer, asker) = (UserSettingTest(name = "answerer"), UserSettingTest(name = "asker"))
       val studentSkill = 1d
-      val question = TestDerivativeQuestion(owner = asker.id, mathML = Diff(mediumDifficulty(studentSkill)))
+      val medDiff: Double = mediumDifficulty(studentSkill)
+      val question = TestDerivativeQuestion(owner = asker.id, mathML = Diff(medDiff), difficulty = medDiff)
       val answer = TestDerivativeAnswer(owner = answerer.id, questionId = question.id, correct = true) // question.id is null here but will work for testing
       val results = DerivativeQuestionResults(answerer, question, List(answer))
 

@@ -22,6 +22,10 @@ class MathMLCheckEqZeroSpec extends Specification {
       ((log(2, `2`^x) - x) ?= `0`) must beEqualTo(Yes)
     }
 
+    "confirm log(10^x, 10) - x = 0" in {
+      ((log(10, `10`^x) - x) ?= `0`) must beEqualTo(Yes)
+    }
+
     "confirm log(2^x, 2) - x != 0.0000000001 (ensure non zero doesn't equal zero)" in {
       ((log(2, `2`^x) - x) ?= Cn(0.0000000001)) must beEqualTo(No)
     }

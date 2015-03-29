@@ -74,7 +74,7 @@ object Tournaments {
     val countsUnion = requstorCounts.unionAll(requsteeCounts)
     val counts = countsUnion.groupBy(g => g._1).map { case (id, group) => (id, group.map(_._2).sum)}
     val joinNames = for {(c, s) <- counts innerJoin usersTable on (_._1 === _.userId)} yield (c._1, s.name, c._2)
-    val sorted = joinNames.sortBy(_._2)
+    val sorted = joinNames.sortBy(_._3.desc)
     sorted.list
   }
 

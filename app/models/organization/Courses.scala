@@ -63,7 +63,7 @@ object Courses {
   ) yield u).sortBy(_.name).list
 
   def studentsExcept(courseId: CourseId, userId: UserId)(implicit session: Session) =
-   (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
+   (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === Access.view;
          u <- usersTable if (u.userId === uc.userId) && (u.userId =!= userId)
    ) yield u).sortBy(_.name).list
 

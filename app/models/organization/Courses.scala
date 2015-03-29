@@ -58,7 +58,7 @@ object Courses {
   def list(organizationId: OrganizationId)(implicit session: Session) = coursesTable.where(_.organization === organizationId).list
 
   def students(courseId: CourseId)(implicit session: Session) =
-  (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === View.asInstanceOf[Access];
+  (for (uc <- usersCoursesTable if uc.id === courseId && uc.access === Access.view;
         u <- usersTable if u.userId === uc.userId
   ) yield u).sortBy(_.name).list
 

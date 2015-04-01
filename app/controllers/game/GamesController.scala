@@ -68,6 +68,13 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
+  def summary(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) => Ok(views.html.game.review.summary(game))
+    }
+  }
+
   def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult

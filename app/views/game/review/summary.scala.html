@@ -1,0 +1,7 @@
+@(game: models.game.Game)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@mainWithBorder("Game Summary", tag.courseOpLink(game.course), tag.gameLink(Html("game"), game)) {
+
+    <h2> Game Summary </h2>
+
+}

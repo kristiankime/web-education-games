@@ -60,6 +60,7 @@ POST        /orgs/:o/courses/:c/games/request                                   
 
 # Games
 GET         /games/:g                                                             controllers.game.GamesController.game(g: GameId, a: Option[models.support.AnswerId])
+GET         /games/:g/summary                                                     controllers.game.GamesController.summary(g: GameId)
 POST        /games/:g/respond                                                     controllers.game.GamesController.respond(g: GameId)
 POST        /games/:g/questions/create/requestor/derivative                       controllers.game.GamesRequestorController.createDerivativeQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/tangent                          controllers.game.GamesRequestorController.createTangentQuestion(g: GameId)

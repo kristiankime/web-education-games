@@ -56,8 +56,10 @@
     @* >>>>> Start Access > Non *@
     @if(course.access > Non) {
 
-        @if(course.name == "Pilot"){@views.html.organization.pilotInfo()}
-        @if(course.name == "FACE OFF"){@views.html.organization.faceOffInfo()}
+        @if(course.name == "Pilot"){ @views.html.organization.pilotInfo() }
+        @if(course.name == "FACE OFF"){ @views.html.organization.faceOffInfo() }
+        @if(course.name == "Math 10A"){ @views.html.organization.math10A() }
+
 
         @* ======= Quizzes ======= *@
         @defining(course.quizzes) { quizzes =>

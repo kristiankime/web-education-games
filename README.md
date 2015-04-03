@@ -173,6 +173,25 @@ http://googlecode.blogspot.com/2009/11/oauth-enhancements.html
 https://devcenter.heroku.com/articles/pgbackups
 https://devcenter.heroku.com/articles/heroku-postgres-import-export#export
 
+###### make a backup:
+    heroku pgbackups:capture
+list backups:
+    heroku pgbackups
+find the url:
+    heroku pgbackups:url
+copy that to local
+    curl -o latest.dump `heroku pgbackups:url`
+
+###### To restore the db in a postgres instance
+http://stackoverflow.com/questions/10761073/how-to-restore-postgresql-dump-file-into-postgres-databases
+http://stackoverflow.com/questions/10787794/heroku-pgbackups-syntax-errors-on-localhost-restore
+
+inside psql create a new db (replace mydb)
+    CREATE DATABASE mydb;
+
+import the dump file from the comment line (replace all the myXXXs)
+    pg_restore --verbose --clean --no-acl --no-owner -h myhost -U myuser -d mydb latest.dump
+
 ## Starting a new Project
 Once all the tools are installed the following steps will start a blank project.
 
@@ -320,3 +339,9 @@ Setting this will start mem dumps to the heroku log every 30 seconds
     heroku config:set JMAP_INTERVAL=30
 This should stop it
     heroku config:unset JMAP_INTERVAL
+    
+you can then see the jmap print in the logs
+number of lines:
+    heroku logs --num 1500
+tail the log:
+    heroku logs --tail

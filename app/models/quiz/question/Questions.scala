@@ -22,10 +22,13 @@ object Questions {
 
   // ======= FIND ======
   def list()(implicit session: Session) : List[Question] =
-    questionTables.->(_.list, _.list).map(v => v._1 ++ v._2)
+    questionTables.->(_.list, _.list, _.list).map(v => v._1 ++ v._2 ++ v._3)
 
   def apply(questionId: QuestionId)(implicit session: Session) : Option[Question] =
-    questionTables.->(_.where(_.id === questionId).firstOption, _.where(_.id === questionId).firstOption).map(v => v._1 ++ v._2 headOption)
+    questionTables.->(
+      _.where(_.id === questionId).firstOption,
+      _.where(_.id === questionId).firstOption,
+      _.where(_.id === questionId).firstOption).map(v => v._1 ++ v._2 ++ v._3 headOption)
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) = {
@@ -39,17 +42,20 @@ object Questions {
   def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) =
     questionAndAnswerTables.->(
       t => DerivativeQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => TangentQuestions.results(user, asOfOp, quizOp)(t.question, t.answer) ).map(v => v._1 ++ v._2)
+      t => DerivativeGraphQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
+      t => TangentQuestions.results(user, asOfOp, quizOp)(t.question, t.answer) ).map(v => v._1 ++ v._2 ++ v._3)
 
   def correctResults(user: User, num: Int)(implicit session: Session) =
     questionAndAnswerTables.->(
       t => DerivativeQuestions.correctResults(user, num)(t.question, t.answer),
-      t => TangentQuestions.correctResults(user, num)(t.question, t.answer) ).map(v => v._1 ++ v._2)
+      t => DerivativeGraphQuestions.correctResults(user, num)(t.question, t.answer),
+      t => TangentQuestions.correctResults(user, num)(t.question, t.answer) ).map(v => v._1 ++ v._2 ++ v._3)
 
   def incorrectResults(user: User, num: Int)(implicit session: Session) =
     questionAndAnswerTables.->(
       t => DerivativeQuestions.incorrectResults(user, num)(t.question, t.answer),
-      t => TangentQuestions.incorrectResults(user, num)(t.question, t.answer) ).map(v => v._1 ++ v._2)
+      t => DerivativeGraphQuestions.incorrectResults(user, num)(t.question, t.answer),
+      t => TangentQuestions.incorrectResults(user, num)(t.question, t.answer) ).map(v => v._1 ++ v._2 ++ v._3)
 
   // ========================================================
   //GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS (SEE DerivativeQuestions, TangentQuestions ...)

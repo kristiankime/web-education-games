@@ -136,6 +136,7 @@ Make sure to make the app publicly available
 http://stackoverflow.com/questions/21329250/the-developers-of-this-app-have-not-set-up-this-app-properly-for-facebook-login
 
 ##### Google
+https://console.developers.google.com
 
 Google Switching Oauth: https://developers.google.com/+/api/auth-migration
 

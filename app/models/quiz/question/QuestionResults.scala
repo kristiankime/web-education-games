@@ -1,7 +1,7 @@
 package models.quiz.question
 
 import models.quiz.Status
-import models.quiz.answer.{Answer, DerivativeAnswer, TangentAnswer}
+import models.quiz.answer.{DerivativeGraphAnswer, Answer, DerivativeAnswer, TangentAnswer}
 import models.user.User
 
 sealed trait QuestionResults {
@@ -39,6 +39,10 @@ sealed trait QuestionResults {
 }
 
 case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults {
+  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
+}
+
+case class DerivativeGraphQuestionResults(answerer: User, question: DerivativeGraphQuestion, answers: List[DerivativeGraphAnswer]) extends QuestionResults {
   def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
 }
 

@@ -7,6 +7,7 @@ import controllers.quiz.tangent.TangentQuestionForm
 import models.organization.Course
 import models.quiz._
 import models.quiz.answer.{Answer, TangentAnswer}
+import models.quiz.question.support.DerivativeOrder
 import models.support.{Owned, QuestionId, QuizId, UserId}
 import models.user.User
 import org.joda.time.DateTime
@@ -67,4 +68,20 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 
   def atPointXViewableMath = new ViewableMath { val mathML = atPointX; val rawStr = atPointXStr }
+}
+
+case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, creationDate: DateTime, derivativeOrder: DerivativeOrder, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
+
+  def answersAndOwners(implicit session: Session) = DerivativeGraphQuestions.answersAndOwners(id)
+
+  def difficulty : Double = DerivativeGraphQuestionDifficulty(function)
+
+  def results(user: User)(implicit session: Session) = DerivativeGraphQuestionResults(user, this, answers(user))
+
+  def answers(user: User)(implicit session: Session) = DerivativeGraphQuestions(id, user)
+
+  def display(explanation : Boolean = true) : Html = views.html.quiz.derivativegraph.questionDisplay(this, explanation)
+
+  val mathML = function
+  val rawStr = functionStr
 }

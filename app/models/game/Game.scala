@@ -130,8 +130,6 @@ case class Game(id: GameId = null,
     if(requesteeFinished && requestorFinished) this.copy(finishedDate = Some(JodaUTC.now))
     else this
 
-  def gameDone = finishedDate.nonEmpty
-
   def isFinished = finishedDate.nonEmpty
 
   def notFinished = finishedDate.isEmpty

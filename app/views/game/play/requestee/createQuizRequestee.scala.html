@@ -1,4 +1,6 @@
-@(gameState: models.game.GameState with models.game.RequesteeQuiz, tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(gameState: models.game.GameState with models.game.RequesteeQuiz,
+        derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm],
+        tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesRequesteeController
 @import controllers.game.GameRemoveQuestion

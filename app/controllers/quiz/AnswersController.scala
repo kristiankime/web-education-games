@@ -2,6 +2,7 @@ package controllers.quiz
 
 import com.artclod.util._
 import controllers.quiz.derivative.DerivativeAnswersControllon
+import controllers.quiz.derivativegraph.DerivativeGraphAnswersControllon
 import controllers.quiz.tangent.TangentAnswersControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.answer._
@@ -12,7 +13,10 @@ import play.api.mvc.{Controller, Result}
 
 import scala.util._
 
-object AnswersController extends DerivativeAnswersControllon with TangentAnswersControllon with Controller with SecureSocialConsented {
+object AnswersController extends Controller with SecureSocialConsented
+  with DerivativeAnswersControllon
+  with DerivativeGraphAnswersControllon
+  with TangentAnswersControllon {
 
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
     Answers(answerId) match {

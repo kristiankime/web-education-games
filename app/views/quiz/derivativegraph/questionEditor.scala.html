@@ -1,0 +1,41 @@
+@(action: play.api.mvc.Call, tangentForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : Option[String] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
+@import com.artclod.play.FormEnhanced
+
+<section>
+    Enter a function (of x) and the order in which you want the function, its first derivative and its second to be displayed. When you are done hit "Save Question": <br>
+
+    @if(tangentForm.hasMessage(DerivativeGraphQuestionForm.rangeValid)){<span class="form-error"> We were unable to create your question since the range you specified is invalid. </span><br>}
+
+    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_FUNCTION", initialValue=tangentForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback) <br>
+
+    @form(action, 'id -> "tangentQuestionForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="hidden" name="@DerivativeGraphQuestionForm.function"    id="tangentQuestionFunctionMathML">
+            <input type="hidden" name="@DerivativeGraphQuestionForm.functionStr" id="tangentQuestionFunctionRawStr">
+            <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION.formSubmit()">
+        </fieldset>
+    }
+
+    <script>
+    var DERIVATIVE_GRAPH_QUESTION = {}
+    DERIVATIVE_GRAPH_QUESTION.formSubmit = function() {
+        var ready = true;
+
+        if(DERIVATIVE_GRAPH_QUESTION_FUNCTION.valid){
+            $("#tangentQuestionFunctionMathML").val(DERIVATIVE_GRAPH_QUESTION_FUNCTION.mathML);
+            $("#tangentQuestionFunctionRawStr").val(DERIVATIVE_GRAPH_QUESTION_FUNCTION.rawStr);
+        } else {
+            ready = false;
+            alert("Sorry we couldn't understand the function that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+        }
+
+        if(ready) {
+            $("#tangentQuestionForm").submit();
+        }
+    }
+    </script>
+
+</section>

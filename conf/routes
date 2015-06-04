@@ -36,7 +36,6 @@ POST        /orgs/:o/courses/:c/join                                            
 # Tournaments
 GET         /leaderboard                                                          controllers.tournament.TournamentsController.leaderBoard
 
-
 # Course Quizzes
 GET         /orgs/:o/courses/:c/quizzes/create                                    controllers.quiz.QuizzesController.createForm(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/quizzes                                           controllers.quiz.QuizzesController.createSubmit(o: OrganizationId, c: CourseId)
@@ -46,12 +45,14 @@ POST        /orgs/:o/courses/:c/quizzes/:z/rename                               
 # Course Quizzes Questions
 GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q                           controllers.quiz.QuestionsController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivative                   controllers.quiz.QuestionsController.createDerivative(o: OrganizationId, c: CourseId, z: QuizId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivativegraph              controllers.quiz.QuestionsController.createDerivativeGraph(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/tangent                      controllers.quiz.QuestionsController.createTangent(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove                    controllers.quiz.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Course Quizzes Answers
 GET         /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/:a                controllers.quiz.AnswersController.view(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId, a: AnswerId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivative        controllers.quiz.AnswersController.createDerivative(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivativegraph   controllers.quiz.AnswersController.createDerivativeGraph(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/tangent           controllers.quiz.AnswersController.createTangent(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
@@ -63,11 +64,13 @@ GET         /games/:g                                                           
 GET         /games/:g/summary                                                     controllers.game.GamesController.summary(g: GameId)
 POST        /games/:g/respond                                                     controllers.game.GamesController.respond(g: GameId)
 POST        /games/:g/questions/create/requestor/derivative                       controllers.game.GamesRequestorController.createDerivativeQuestion(g: GameId)
+POST        /games/:g/questions/create/requestor/derivativegraph                  controllers.game.GamesRequestorController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/tangent                          controllers.game.GamesRequestorController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestor                                  controllers.game.GamesRequestorController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestor                                     controllers.game.GamesRequestorController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestor                                  controllers.game.GamesRequestorController.finalizeAnswers(g: GameId)
 POST        /games/:g/questions/create/requestee/derivative                       controllers.game.GamesRequesteeController.createDerivativeQuestion(g: GameId)
+POST        /games/:g/questions/create/requestee/derivativegraph                  controllers.game.GamesRequesteeController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/tangent                          controllers.game.GamesRequesteeController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestee                                  controllers.game.GamesRequesteeController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestee                                     controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
@@ -76,14 +79,17 @@ POST        /games/:g/finalize/answers/requestee                                
 GET         /games/:g/questions/:q                                                controllers.game.GamesController.question(g: GameId, q: QuestionId)
 GET         /games/:g/questions/:q/:a                                             controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
 POST        /games/:g/questions/:q/requestee/derivative                           controllers.game.GamesRequesteeController.answerDerivativeQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestee/derivativegraph                      controllers.game.GamesRequesteeController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/tangent                              controllers.game.GamesRequesteeController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivative                           controllers.game.GamesRequestorController.answerDerivativeQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor/derivativegraph                      controllers.game.GamesRequestorController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/tangent                              controllers.game.GamesRequestorController.answerTangentQuestion(g: GameId, q: QuestionId)
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                                  controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
 # Question Difficulty service (ajax)
 POST        /question/difficulty/derivative                                       controllers.quiz.QuestionsController.derivativeQuestionDifficulty
+POST        /question/difficulty/derivativegraph                                  controllers.quiz.QuestionsController.derivativeGraphQuestionDifficulty
 POST        /question/difficulty/tangent                                          controllers.quiz.QuestionsController.tangentQuestionDifficulty
 
 # ======== START Routes for Secure Social ========

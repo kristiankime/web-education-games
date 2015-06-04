@@ -2,6 +2,7 @@
 	course: models.organization.Course,
     quiz: models.quiz.Quiz,
     answerOp: Option[models.quiz.answer.Answer],
+    derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm],
     tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.routes.{ QuestionsController, QuizzesController}
@@ -47,6 +48,7 @@
 
     @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
         ("Create a Derivative Question", views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id))),
+        ("Create a Derivative Graph Question", views.html.quiz.derivative.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id))),
         ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm))
     )
 

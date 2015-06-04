@@ -3,6 +3,7 @@ package controllers.quiz.tangent
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
 import controllers.quiz.QuizzesController
+import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.support.SecureSocialConsented
 import models.quiz.question._
 import models.support._
@@ -21,7 +22,7 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         TangentQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, errors)),
+          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, DerivativeGraphQuestionForm.values, errors)),
           form => {
             TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))

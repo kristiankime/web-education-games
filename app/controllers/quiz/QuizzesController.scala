@@ -3,6 +3,7 @@ package controllers.quiz
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.organization.CoursesController
+import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
 import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.organization._
@@ -53,7 +54,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
   def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, answerIdOp: Option[models.support.AnswerId]) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, quiz)) => Ok(views.html.quiz.quizView(course.access, course, quiz, answerIdOp.flatMap(id => Answers(id)), TangentQuestionForm.values))
+      case Right((organization, course, quiz)) => Ok(views.html.quiz.quizView(course.access, course, quiz, answerIdOp.flatMap(id => Answers(id)), DerivativeGraphQuestionForm.values, TangentQuestionForm.values))
     }
   }
 
@@ -75,5 +76,5 @@ object QuizzesController extends Controller with SecureSocialConsented {
 object QuizForm {
   val name = "name"
 
-  val values = Form(name -> nonEmptyText)
+  val values : Form[String] = Form(name -> nonEmptyText)
 }

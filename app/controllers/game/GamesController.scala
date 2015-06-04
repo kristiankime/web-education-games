@@ -5,6 +5,8 @@ import com.artclod.util._
 import controllers.game.GamesEmail._
 import controllers.organization.CoursesController
 import controllers.quiz.AnswersController
+import controllers.quiz.derivative.DerivativeQuestionForm
+import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
 import controllers.support.SecureSocialConsented
 import models.game.GameRole._
@@ -82,7 +84,7 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user)) game.toState match {
           case state: GameRejected => Ok(views.html.game.request.rejectedRequestor(state))
           case state: RequestorDoneAnswering => Ok(views.html.game.play.requestor.gameDoneRequestor(state))
-          case state: RequestorQuiz => Ok(views.html.game.play.requestor.createQuizRequestor(state, TangentQuestionForm.values))
+          case state: RequestorQuiz => Ok(views.html.game.play.requestor.createQuizRequestor(state, DerivativeGraphQuestionForm.values, TangentQuestionForm.values))
           case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.requestor.awaitingQuizRequestor(state))
           case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestor.answeringQuizRequestor(state, answerIdOp.flatMap(id => Answers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
@@ -91,7 +93,7 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: GameRejected => Ok(views.html.game.request.rejectedRequestee(state))
           case state: RequesteeDoneAnswering => Ok(views.html.game.play.requestee.gameDoneRequestee(state))
           case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
-          case state: RequesteeQuiz => Ok(views.html.game.play.requestee.createQuizRequestee(state, TangentQuestionForm.values))
+          case state: RequesteeQuiz => Ok(views.html.game.play.requestee.createQuizRequestee(state, DerivativeGraphQuestionForm.values, TangentQuestionForm.values))
           case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.requestee.awaitingQuizRequestee(state))
           case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestee.answeringQuizRequestee(state, answerIdOp.flatMap(id => Answers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")

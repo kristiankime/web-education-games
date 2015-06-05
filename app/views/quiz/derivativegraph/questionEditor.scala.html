@@ -23,7 +23,9 @@
 
     <script>
     var DERIVATIVE_GRAPH_QUESTION_UPDATE = function(result){
-        DERIVATIVE_GRAPH_QUESTION_GRAPHS.setFunction( function(x) { return Math.tan(x); } );
+        var newF = ARTC.mathJS.node2FunctionOfX(result.node);
+//        var newF = function(x) { return Math.tan(x); };
+        DERIVATIVE_GRAPH_QUESTION_GRAPHS.setFunction( newF );
         @for(onSuccess <- successCallback){@{onSuccess}(result);}
     }
 

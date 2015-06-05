@@ -6,6 +6,14 @@ if(!ARTC.mathJS){
     ARTC.mathJS = {};
 }
 
+ARTC.mathJS.node2FunctionOfX = function(mathJSNode) {
+    return function(x) {
+        var code = mathJSNode.compile(math)
+        var scope = { x : x };
+        return code.eval(scope);
+    };
+};
+
 /*
  * ARTC.buildMathJSParser is a builder for parsers.
  * The main goal of these parsers turn a MathJS style string into Content MathML.

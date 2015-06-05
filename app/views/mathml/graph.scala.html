@@ -1,0 +1,24 @@
+@(name: String)
+
+<div id='@{name}_box' class='jxgbox' style='width:500px; height:500px;'></div>
+
+<script type='text/javascript'>
+var @name = function() {
+    var ret = {}
+    //<![CDATA[
+    var f = function(x) { return Math.sin(x); };
+    var brd = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: 250, originY: 250, unitX: 50, unitY: 25, showCopyright: false});
+    brd.suspendUpdate();
+    var g = brd.create('functiongraph', [f, -10, 10], {strokeWidth: 3});
+    brd.unsuspendUpdate();
+    //]]>
+    ret.brd = brd;
+
+    ret.setFunction = function(newFunction) {
+        g.Y = newFunction;
+        brd.update();
+    }
+
+    return ret;
+}();
+</script>

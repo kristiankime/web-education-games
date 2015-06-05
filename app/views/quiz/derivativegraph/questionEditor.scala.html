@@ -9,7 +9,7 @@
 
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.rangeValid)){<span class="form-error"> We were unable to create your question since the range you specified is invalid. </span><br>}
 
-    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_EDITOR", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback) <br>
+    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_EDITOR", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = Some("DERIVATIVE_GRAPH_QUESTION_UPDATE")) <br>
 
     @form(action, 'id -> "derivativeGraphQuestionForm", 'class -> "pure-form") {
         <fieldset>
@@ -19,7 +19,14 @@
         </fieldset>
     }
 
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS")
+
     <script>
+    var DERIVATIVE_GRAPH_QUESTION_UPDATE = function(result){
+        DERIVATIVE_GRAPH_QUESTION_GRAPHS.setFunction( function(x) { return Math.tan(x); } );
+        @for(onSuccess <- successCallback){@{onSuccess}(result);}
+    }
+
     var DERIVATIVE_GRAPH_QUESTION_FORM = {}
     DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit = function() {
         var ready = true;

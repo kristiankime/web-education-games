@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : Option[String] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
@@ -9,7 +9,7 @@
 
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.rangeValid)){<span class="form-error"> We were unable to create your question since the range you specified is invalid. </span><br>}
 
-    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_EDITOR", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = Some("DERIVATIVE_GRAPH_QUESTION_UPDATE")) <br>
+    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_EDITOR", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "DERIVATIVE_GRAPH_QUESTION_UPDATE" :: successCallback) <br>
 
     @form(action, 'id -> "derivativeGraphQuestionForm", 'class -> "pure-form") {
         <fieldset>
@@ -26,7 +26,6 @@
         var newF = ARTC.mathJS.node2FunctionOfX(result.node);
 //        var newF = function(x) { return Math.tan(x); };
         DERIVATIVE_GRAPH_QUESTION_GRAPHS.setFunction( newF );
-        @for(onSuccess <- successCallback){@{onSuccess}(result);}
     }
 
     var DERIVATIVE_GRAPH_QUESTION_FORM = {}

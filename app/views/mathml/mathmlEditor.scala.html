@@ -1,8 +1,8 @@
 @(editorName: String,
   initialValue: Option[String] = None,
   characterLimit: Option[Int] = None,
-  successCallback : Option[String] = None,
-  failureCallback : Option[String] = None,
+  successCallback : List[String] = List(),
+  failureCallback : List[String] = List(),
   mathParser: String = "ARTC.mathJS.defaultParser")
 
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
@@ -41,11 +41,11 @@
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
                 ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(mathResult.node.toTex()));
-                @for(onSuccess <- successCallback){@{onSuccess}(result);}
+                @for(onSuccess <- successCallback){@{onSuccess}(result); }
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();
-                @for(onFailure <- failureCallback){@{onFailure}(result);}
+                @for(onFailure <- failureCallback){@{onFailure}(result); }
             }
         };
 

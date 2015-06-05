@@ -45,8 +45,8 @@
         <h4>Add a new Question</h4>
 
         @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
-            ("Create a Derivative Question", derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = Some("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess", gameState.game.requestorSkill)),
-            ("Create a Tangent Question", tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm, successCallback = Some("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess", gameState.game.requestorSkill))
+            ("Create a Derivative Question", derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id), successCallback = List("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess", gameState.game.requestorSkill)),
+            ("Create a Tangent Question", tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id), tangentForm, successCallback = List("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess", gameState.game.requestorSkill))
         )
 
         }

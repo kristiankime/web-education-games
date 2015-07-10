@@ -1,6 +1,7 @@
 package controllers
 
 import com.artclod.mathml.MathML
+import com.artclod.mathml.scalar.MathMLElem
 import controllers.support.SecureSocialConsented
 import models.quiz.question.{QuestionScoring, DerivativeQuestionDifficulty}
 import play.api.mvc.Controller
@@ -12,6 +13,11 @@ import scala.util.{Success, Failure}
 
 object MathController extends Controller with SecureSocialConsented {
 
+  val functionStr = "functionStr"
+  val function = "function"
+  val firstDerivative = "firstDerivative"
+  val secondDerivative = "secondDerivative"
+
   case class FunctionDerivativeRequest(functionStr: String, function: String)
 
   case class FunctionDerivativeResponse(functionStr: String, function: String, firstDerivative: String, secondDerivative: String)
@@ -20,7 +26,7 @@ object MathController extends Controller with SecureSocialConsented {
 
   implicit val formatFunctionDerivativeResponse = Json.format[FunctionDerivativeResponse]
 
-  def derivativeQuestionDifficulty = Action { request =>
+  def functionDerivatives = Action { request =>
     request.body.asJson.map { configJson =>
       configJson.validate[FunctionDerivativeRequest]
         .map { difficultyRequest =>
@@ -29,11 +35,13 @@ object MathController extends Controller with SecureSocialConsented {
           case Success(mathML) => {
             val firstDerivative = mathML.dx
             val secondDerivative = firstDerivative.dx
-            Ok(Json.toJson(FunctionDerivativeResponse(difficultyRequest.functionStr, difficultyRequest.function, firstDerivative.toText, secondDerivative.toText)))
+            Ok(Json.toJson(FunctionDerivativeResponse(difficultyRequest.functionStr, difficultyRequest.function, fnc(firstDerivative), fnc(secondDerivative))))
           }
         }
       }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
     }.getOrElse(BadRequest("Expecting Json data"))
   }
+
+  private def fnc(body: MathMLElem) = body.toText
 
 }

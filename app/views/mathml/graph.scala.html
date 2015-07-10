@@ -6,17 +6,17 @@
 var @name = function() {
     var ret = {}
     //<![CDATA[
-    var f = function(x) { return Math.sin(x); };
-    var brd = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: 250, originY: 250, unitX: 50, unitY: 25, showCopyright: false});
-    brd.suspendUpdate();
-    var g = brd.create('functiongraph', [f, -10, 10], {strokeWidth: 3});
-    brd.unsuspendUpdate();
+    var f = function(x) { return 0; };
+    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: 250, originY: 250, unitX: 25, unitY: 25, showCopyright: false});
+    board.suspendUpdate();
+    var g = board.create('functiongraph', [f, -10, 10], {strokeWidth: 3});
+    board.unsuspendUpdate();
     //]]>
-    ret.brd = brd;
+    ret.brd = board;
 
     ret.setFunction = function(newFunction) {
         g.Y = newFunction;
-        brd.update();
+        board.update();
     }
 
     return ret;

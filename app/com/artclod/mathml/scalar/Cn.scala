@@ -22,7 +22,7 @@ object Cn {
 
 	def apply(value: Node): Try[Constant] = apply(value.text)
 
-	def apply(value: Short) = CnInteger(value)
+	def apply(value: Short) = CnInteger(value.toInt)
 
 	def apply(value: Int) = CnInteger(value)
 

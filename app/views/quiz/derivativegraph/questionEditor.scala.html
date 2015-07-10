@@ -3,6 +3,7 @@
 @import helper._
 @import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 @import com.artclod.play.FormEnhanced
+@import controllers.MathController
 
 <section>
     Enter a function (of x) and the order in which you want the function, its first derivative and its second to be displayed. When you are done hit "Save Question": <br>
@@ -18,31 +19,60 @@
             <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit()">
         </fieldset>
     }
-
-    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS")
+    <h5>Function</h5>
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION") <br>
+    <h5>First Derivative</h5>
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE") <br>
+    <h5>Second Derivative</h5>
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_SECOND_DERIVATIVE") <br>
 
     <script>
-    var DERIVATIVE_GRAPH_QUESTION_UPDATE = function(result){
-        var newF = ARTC.mathJS.node2FunctionOfX(result.node);
-        DERIVATIVE_GRAPH_QUESTION_GRAPHS.setFunction( newF );
-    }
+        var DERIVATIVE_GRAPH_QUESTION_UPDATE = function(result){
+            var ajaxData = {
+                @MathController.functionStr : result.rawStr,
+                @MathController.function : result.mathML
+            };
 
-    var DERIVATIVE_GRAPH_QUESTION_FORM = {}
-    DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit = function() {
-        var ready = true;
+            var ajaxSuccess = function( data ) {
+                DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION.setFunction( ARTC.mathJS.node2FunctionOfX(result.node) );
 
-        if(DERIVATIVE_GRAPH_QUESTION_FORM.valid){
-            $("#derivativeGraphQuestionMathML").val(DERIVATIVE_GRAPH_QUESTION_FORM.mathML);
-            $("#derivativeGraphQuestionRawStr").val(DERIVATIVE_GRAPH_QUESTION_FORM.rawStr);
-        } else {
-            ready = false;
-            alert("Sorry we couldn't understand the function that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+                console.log(data.@{MathController.firstDerivative});
+                var firstDerv = ARTC.mathJS.text2FunctionOfX(data.@{MathController.firstDerivative});
+                console.log(firstDerv);
+                DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE.setFunction( firstDerv );
+
+                console.log(data.@{MathController.secondDerivative});
+                var secondDerv = ARTC.mathJS.text2FunctionOfX(data.@{MathController.secondDerivative});
+                console.log(secondDerv);
+                DERIVATIVE_GRAPH_QUESTION_GRAPHS_SECOND_DERIVATIVE.setFunction( secondDerv );
+            };
+
+            $.ajax({
+                type : "POST",
+                url : "/question/derivatives",
+                dataType : "json",
+                data : JSON.stringify(ajaxData),
+                contentType: "application/json",
+                success : ajaxSuccess,
+                processData: false
+                });
         }
 
-        if(ready) {
-            $("#derivativeGraphQuestionForm").submit();
+        var DERIVATIVE_GRAPH_QUESTION_FORM = {}
+        DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit = function() {
+            var ready = true;
+
+            if(DERIVATIVE_GRAPH_QUESTION_FORM.valid){
+                $("#derivativeGraphQuestionMathML").val(DERIVATIVE_GRAPH_QUESTION_FORM.mathML);
+                $("#derivativeGraphQuestionRawStr").val(DERIVATIVE_GRAPH_QUESTION_FORM.rawStr);
+            } else {
+                ready = false;
+                alert("Sorry we couldn't understand the function that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+            }
+
+            if(ready) {
+                $("#derivativeGraphQuestionForm").submit();
+            }
         }
-    }
     </script>
-
 </section>

@@ -7,11 +7,16 @@ if(!ARTC.mathJS){
 }
 
 ARTC.mathJS.node2FunctionOfX = function(mathJSNode) {
+    var code = mathJSNode.compile(math);
     return function(x) {
-        var code = mathJSNode.compile(math)
         var scope = { x : x };
         return code.eval(scope);
     };
+};
+
+ARTC.mathJS.text2FunctionOfX = function(mathText) {
+    var node = math.parse(mathText)
+    return  ARTC.mathJS.node2FunctionOfX(node);
 };
 
 /*

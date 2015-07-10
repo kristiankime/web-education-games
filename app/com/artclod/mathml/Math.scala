@@ -24,6 +24,8 @@ case class Math(
 	def variables: Set[String] = value.variables
 
 	def derivative(wrt: String) = Math(prefix, attributes, scope, minimizeEmpty, value.d(wrt).s)
+
+	override def toText: String = value.toText
 }
 
 object Math {

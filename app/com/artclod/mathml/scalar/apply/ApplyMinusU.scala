@@ -24,4 +24,6 @@ case class ApplyMinusU(val value: MathMLElem)
 	def variables: Set[String] = value.variables
 
 	def derivative(x: String) = -(value.d(x))
+
+	def toText: String = "-" + value.toText
 }

@@ -23,6 +23,8 @@ case class Logbase(val value: Constant)
 		case c: CnInteger => BigDecimal(c.v)
 		case c: CnReal => c.v
 	}
+
+	override def toText: String = value.toText
 }
 
 object Logbase {

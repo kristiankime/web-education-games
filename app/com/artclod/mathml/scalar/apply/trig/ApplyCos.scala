@@ -18,4 +18,6 @@ case class ApplyCos(value: MathMLElem) extends UnaryFunction(value, Cos) {
 
 	def derivative(x: String) = -ApplySin(v.s) * v.d(x)
 
+	override def toText: String = "cos(" + value.toText + ")"
+
 }

@@ -55,4 +55,10 @@ class ApplyLnSpec extends Specification {
 		}
 	}
 
+	"toText" should {
+		"handle log(7)" in {
+			ApplyLn(7).toText must beEqualTo("log(7)")
+		}
+	}
+
 }

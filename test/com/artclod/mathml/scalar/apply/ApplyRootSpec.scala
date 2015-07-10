@@ -60,4 +60,9 @@ class ApplyRootSpec extends Specification {
 		}
 	}
 
+	"toText" should {
+		"handle nthRoot" in {
+			ApplyRoot(3, 5).toText must beEqualTo("nthRoot(5, 3)")
+		}
+	}
 }

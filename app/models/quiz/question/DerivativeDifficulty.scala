@@ -163,6 +163,8 @@ object DerivativeDifficulty {
 
     def derivative(wrt: String) = Cn(0)
 
+    override def toText: String = throw new UnsupportedOperationException
+
   }
 }
 

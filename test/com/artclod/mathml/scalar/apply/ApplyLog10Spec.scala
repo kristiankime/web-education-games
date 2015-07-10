@@ -56,4 +56,10 @@ class ApplyLog10Spec extends Specification {
 		}
 	}
 
+	"toText" should {
+		"handle log(3, 10)" in {
+			ApplyLog10(3).toText must beEqualTo("log(3, 10)")
+		}
+	}
+
 }

@@ -92,6 +92,9 @@ POST        /question/difficulty/derivative                                     
 POST        /question/difficulty/derivativegraph                                  controllers.quiz.QuestionsController.derivativeGraphQuestionDifficulty
 POST        /question/difficulty/tangent                                          controllers.quiz.QuestionsController.tangentQuestionDifficulty
 
+# Function Derivative service (ajax)
+
+
 # ======== START Routes for Secure Social ========
 # Login page
 GET         /login                                                                securesocial.controllers.LoginPage.login

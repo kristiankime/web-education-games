@@ -95,4 +95,10 @@ class ApplyPlusSpec extends Specification {
 		}
 	}
 
+	"toText" should {
+		"handle 3 + 5" in {
+			ApplyPlus(3, 5).toText must beEqualTo("(3 + 5)")
+		}
+	}
+
 }

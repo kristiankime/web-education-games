@@ -78,7 +78,6 @@ class ApplyPowerSpec extends Specification {
 	}
 
 	"d" should {
-
 		"obey the elementary power rule: (x^n)' = n*x^(n-1)" in {
 			ApplyPower(x, `3`).dx must beEqualTo(`3` * (x ^ `2`))
 		}
@@ -91,7 +90,12 @@ class ApplyPowerSpec extends Specification {
 		"obey the generalized power rule: (f^g)' =  f^(g-1)    * (g * f'  + f * log(f)     * g')" in {
       ApplyPower(F, G).dx must beEqualTo(   ((F^(G-`1`)) * (G * Fdx + F * ApplyLn(F) * Gdx))s )
 		}
+	}
 
+	"toText" should {
+		"handle 3 ^ 5" in {
+			ApplyPower(3, 5).toText must beEqualTo("(3 ^ 5)")
+		}
 	}
 
 }

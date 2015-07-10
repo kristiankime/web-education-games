@@ -58,4 +58,6 @@ case class ApplyPower(val base: MathMLElem, val exp: MathMLElem)
 
 		(first * second).s
 	}
+
+	override def toText: String = "(" + base.toText + " ^ " + exp.toText + ")"
 }

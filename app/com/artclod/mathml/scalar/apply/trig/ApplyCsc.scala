@@ -18,4 +18,5 @@ case class ApplyCsc(value: MathMLElem) extends UnaryFunction(value, Csc) {
 
 	def derivative(x: String) = -ApplyCot(v.s) * ApplyCsc(v.s) * v.d(x)
 
+	override def toText: String = "csc(" + value.toText + ")"
 }

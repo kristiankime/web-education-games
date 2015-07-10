@@ -45,6 +45,12 @@ class ApplyTanSpec extends Specification {
 		}
 	}
 
+	"toText" should {
+		"handle tan(3)" in {
+			ApplyTan(3).toText must beEqualTo("tan(3)")
+		}
+	}
+
 }
 
 

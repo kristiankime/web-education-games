@@ -18,4 +18,6 @@ case class ApplyCot(value: MathMLElem) extends UnaryFunction(value, Cot) {
 
 	def derivative(x: String) = -(ApplyCsc(v) ^ 2) * v.d(x)
 
+	override def toText: String = "cot(" + value.toText + ")"
+
 }

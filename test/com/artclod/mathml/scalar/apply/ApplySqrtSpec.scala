@@ -55,4 +55,9 @@ class ApplySqrtSpec extends Specification {
 		}
 	}
 
+	"toText" should {
+		"handle sqrt(7)" in {
+			ApplySqrt(7).toText must beEqualTo("sqrt(7)")
+		}
+	}
 }

@@ -37,4 +37,6 @@ case class ApplyPlus(val values: MathMLElem*)
 	def variables: Set[String] = values.foldLeft(Set[String]())(_ ++ _.variables)
 
 	def derivative(x: String) = ApplyPlus(values.map(_.d(x)): _*).s
+
+	def toText = values.map(_.toText).mkString("(", " + " ,")")
 }

@@ -22,4 +22,6 @@ object F extends MathMLElem(MathML.h.prefix, "F", MathML.h.attributes, MathML.h.
 
 	def derivative(wrt: String) = if (wrt == "x") Fdx else Cn(0)
 
+	override def toText: String = throw new UnsupportedOperationException
+
 }

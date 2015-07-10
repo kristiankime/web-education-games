@@ -49,4 +49,6 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 		// (f/g)' = (f'g - g'f)/g^2
 		(fP * g - gP * f) / (g ^ `2`)
 	}
+
+	override def toText: String = "(" + numerator.toText + " / " + denominator.toText + ")"
 }

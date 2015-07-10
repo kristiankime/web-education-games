@@ -65,4 +65,6 @@ case class ApplyTimes(val values: MathMLElem*)
 		val items = for (i <- 0 until values.size) yield { if (i == pos) { values(i).d(x) } else { values(i).s } }
 		ApplyTimes(items: _*)
 	}
+
+	def toText = values.map(_.toText).mkString("(", " * " ,")")
 }

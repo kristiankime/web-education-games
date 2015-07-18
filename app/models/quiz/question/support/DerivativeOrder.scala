@@ -35,12 +35,13 @@ object DerivativeOrder {
 
 sealed trait DerivativeOrder {
   val asString : String
+  val niceString : String
 }
 
-object OneTwoThree extends DerivativeOrder { val asString = "1-2-3" }
-object OneThreeTwo extends DerivativeOrder { val asString = "1-3-2" }
-object TwoOneThree extends DerivativeOrder { val asString = "2-1-3" }
-object TwoThreeOne extends DerivativeOrder { val asString = "2-3-1" }
-object ThreeOneTwo extends DerivativeOrder { val asString = "3-1-2" }
-object ThreeTwoOne extends DerivativeOrder { val asString = "3-2-1" }
+object OneTwoThree extends DerivativeOrder { val asString = "F-1-2"; val niceString = "Function, 1st Derivative, 2nd Derivative" }
+object OneThreeTwo extends DerivativeOrder { val asString = "F-2-1"; val niceString = "Function, 2nd Derivative, 1st Derivative" }
+object TwoOneThree extends DerivativeOrder { val asString = "2-F-1"; val niceString = "2st Derivative, Function, 1st Derivative" }
+object TwoThreeOne extends DerivativeOrder { val asString = "1-2-F"; val niceString = "Function, 2st Derivative, 1st Derivative" }
+object ThreeOneTwo extends DerivativeOrder { val asString = "2-F-1"; val niceString = "2st Derivative, Function, 1st Derivative" }
+object ThreeTwoOne extends DerivativeOrder { val asString = "2-1-F"; val niceString = "2st Derivative, 1st Derivative, Function" }
 

@@ -35,6 +35,7 @@ object QuestionsController extends Controller with SecureSocialConsented
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course , quiz, question)) => question match {
           case derivative : DerivativeQuestion => Ok(views.html.quiz.derivative.questionView(course, quiz, derivative.results(user), None))
+          case derivativeGraph : DerivativeGraphQuestion => Ok(views.html.quiz.derivativegraph.questionView(course, quiz, derivativeGraph.results(user), None))
           case tangent : TangentQuestion => Ok(views.html.quiz.tangent.questionView(course, quiz, tangent.results(user), None))
         }
     }

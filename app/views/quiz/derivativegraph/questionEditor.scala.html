@@ -2,6 +2,8 @@
 
 @import helper._
 @import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
+@import models.quiz.question.support.OneTwoThree
+@import models.quiz.question.support.DerivativeOrder
 @import com.artclod.play.FormEnhanced
 @import controllers.MathController
 
@@ -10,15 +12,24 @@
 
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.rangeValid)){<span class="form-error"> We were unable to create your question since the range you specified is invalid. </span><br>}
 
-    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_EDITOR", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "DERIVATIVE_GRAPH_QUESTION_UPDATE" :: successCallback) <br>
+    Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_FORM", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "DERIVATIVE_GRAPH_QUESTION_UPDATE" :: successCallback) <br>
 
-    @form(action, 'id -> "derivativeGraphQuestionForm", 'class -> "pure-form") {
-        <fieldset>
-            <input type="hidden" name="@DerivativeGraphQuestionForm.function"    id="derivativeGraphQuestionMathML">
-            <input type="hidden" name="@DerivativeGraphQuestionForm.functionStr" id="derivativeGraphQuestionRawStr">
-            <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit()">
-        </fieldset>
+    @form(action, 'id -> "derivativeGraphQuestionForm", 'class -> "pure-form"){
+    <fieldset>
+        <input type="hidden" name="@DerivativeGraphQuestionForm.function"    id="derivativeGraphQuestionMathML">
+        <input type="hidden" name="@DerivativeGraphQuestionForm.functionStr" id="derivativeGraphQuestionRawStr">
+        <input type="hidden" name="@DerivativeGraphQuestionForm.rangeLow"    id="derivativeGraphQuestionRangeLow"  value="-10">
+        <input type="hidden" name="@DerivativeGraphQuestionForm.rangeHigh"   id="derivativeGraphQuestionRangeHigh" value="10">
+        @for(order <- DerivativeOrder.all) {
+        <label for="@order.asString" class="pure-radio">
+            <input id="@order.asString" type="radio" name="@DerivativeGraphQuestionForm.derivativeOrder" value="@order.asString" @if(order == OneTwoThree){checked} >
+            @order.niceString
+        </label>
+        }
+        <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit()">
+    </fieldset>
     }
+
     <h5>Function</h5>
     @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION") <br>
     <h5>First Derivative</h5>
@@ -36,14 +47,10 @@
             var ajaxSuccess = function( data ) {
                 DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION.setFunction( ARTC.mathJS.node2FunctionOfX(result.node) );
 
-                console.log(data.@{MathController.firstDerivative});
                 var firstDerv = ARTC.mathJS.text2FunctionOfX(data.@{MathController.firstDerivative});
-                console.log(firstDerv);
                 DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE.setFunction( firstDerv );
 
-                console.log(data.@{MathController.secondDerivative});
                 var secondDerv = ARTC.mathJS.text2FunctionOfX(data.@{MathController.secondDerivative});
-                console.log(secondDerv);
                 DERIVATIVE_GRAPH_QUESTION_GRAPHS_SECOND_DERIVATIVE.setFunction( secondDerv );
             };
 
@@ -58,7 +65,6 @@
                 });
         }
 
-        var DERIVATIVE_GRAPH_QUESTION_FORM = {}
         DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit = function() {
             var ready = true;
 

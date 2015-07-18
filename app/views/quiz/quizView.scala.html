@@ -2,6 +2,7 @@
 	course: models.organization.Course,
     quiz: models.quiz.Quiz,
     answerOp: Option[models.quiz.answer.Answer],
+    derivativeForm: Form[controllers.quiz.derivative.DerivativeQuestionForm],
     derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm],
     tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
@@ -46,7 +47,7 @@
     @if(access.write){
     <h4>Add a new Question</h4>
 
-    @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
+    @tag.switch("createQuestion", com.artclod.play.errorIndex(derivativeForm, derivativeGraphForm, tangentForm),
         ("Create a Derivative Question", views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id))),
         ("Create a Derivative Graph Question", views.html.quiz.derivativegraph.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id), derivativeGraphForm)),
         ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm))

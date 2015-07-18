@@ -31,12 +31,12 @@ object Questions {
       _.where(_.id === questionId).firstOption).map(v => v._1 ++ v._2 ++ v._3 headOption)
 
   // ======= REMOVE ======
-  def remove(quiz: Quiz, question: Question)(implicit session: Session) = {
+  def remove(quiz: Quiz, question: Question)(implicit session: Session) =
     question match {
       case q: DerivativeQuestion => DerivativeQuestions.remove(quiz, q)
+      case q: DerivativeGraphQuestion => DerivativeGraphQuestions.remove(quiz, q)
       case q: TangentQuestion => TangentQuestions.remove(quiz, q)
     }
-  }
 
   // ======= RESULTS ======
   def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) =
@@ -90,7 +90,6 @@ object Questions {
     val questionAndTimeSorted = allAnswersIncorrect.sortBy(_._3.desc)
     questionAndTimeSorted.list.map(r => (r._1, r._3.get))
   }
-
 
 }
 

@@ -1,10 +1,11 @@
 package models.quiz
 
+import com.artclod.tuple._
 import com.google.common.annotations.VisibleForTesting
 import models.organization._
 import models.organization.table._
 import models.quiz.question.Question
-import models.quiz.table.{derivativeQuestionsTable, quizzesTable, tangentQuestionsTable, usersQuizzesTable}
+import models.quiz.table._
 import models.support._
 import models.user.User
 import play.api.db.slick.Config.driver.simple._
@@ -12,6 +13,7 @@ import service._
 
 
 object Quizzes {
+
   // ======= CREATE ======
   @VisibleForTesting
   def create(quiz: Quiz)(implicit session: Session) : Quiz = {
@@ -34,10 +36,11 @@ object Quizzes {
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
     ) yield q).sortBy(_.creationDate).list
 
-  def questions(quizId: QuizId)(implicit session: Session) : List[Question] = {
-    derivativeQuestionsTable.where(_.quizId === quizId).sortBy(_.creationDate).list ++:
-    tangentQuestionsTable.where(_.quizId === quizId).sortBy(_.creationDate).list
-  }
+  def questions(quizId: QuizId)(implicit session: Session) : List[Question] =
+    questionTables.->(
+      _.filter(_.quizId === quizId).list,
+      _.filter(_.quizId === quizId).list,
+      _.filter(_.quizId === quizId).list).map(v => v._1 ++ v._2 ++ v._3)
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (

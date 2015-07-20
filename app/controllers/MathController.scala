@@ -42,6 +42,6 @@ object MathController extends Controller with SecureSocialConsented {
     }.getOrElse(BadRequest("Expecting Json data"))
   }
 
-  private def fnc(body: MathMLElem) = body.toText
+  private def fnc(body: MathMLElem) = body.toMathJS
 
 }

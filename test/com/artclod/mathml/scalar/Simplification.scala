@@ -22,7 +22,7 @@ object NeedsSimp extends MathMLElem(MathML.h.prefix, "NeedsSimp", MathML.h.attri
 
 	def derivative(wrt: String) = throw new UnsupportedOperationException()
 
-	override def toText: String = throw new UnsupportedOperationException
+	override def toMathJS: String = throw new UnsupportedOperationException
 
 }
 
@@ -39,6 +39,6 @@ object Simplified extends MathMLElem(MathML.h.prefix, "Simplified", MathML.h.att
 
 	def derivative(wrt: String) = throw new UnsupportedOperationException()
 
-	override def toText: String = throw new UnsupportedOperationException
+	override def toMathJS: String = throw new UnsupportedOperationException
 
 }

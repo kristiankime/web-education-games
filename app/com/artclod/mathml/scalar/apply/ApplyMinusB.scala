@@ -28,5 +28,5 @@ case class ApplyMinusB(val value1: MathMLElem, val value2: MathMLElem)
 
 	def derivative(x: String): MathMLElem = (value1.d(x)) - (value2.d(x))
 
-	override def toText: String = "(" + value1.toText + " - " + value2.toText + ")"
+	override def toMathJS: String = "(" + value1.toMathJS + " - " + value2.toMathJS + ")"
 }

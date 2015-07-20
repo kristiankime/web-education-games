@@ -23,5 +23,5 @@ case class ApplyLn(value: MathMLElem) extends Logarithm(ExponentialE.v, value, S
 		fP / f
 	}
 
-	override def toText: String = "log(" + value.toText + ")"
+	override def toMathJS: String = "log(" + value.toMathJS + ")"
 }

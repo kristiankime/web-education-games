@@ -69,7 +69,7 @@ class ApplyMinusUSpec extends Specification {
 
 	"toText" should {
 		"handle -4" in {
-			ApplyMinusU(4).toText must beEqualTo("-4")
+			ApplyMinusU(4).toMathJS must beEqualTo("-4")
 		}
 	}
 

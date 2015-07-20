@@ -47,7 +47,7 @@ class ApplyCotSpec extends Specification {
 
 	"toText" should {
 		"handle cot(3)" in {
-			ApplyCot(3).toText must beEqualTo("cot(3)")
+			ApplyCot(3).toMathJS must beEqualTo("cot(3)")
 		}
 	}
 

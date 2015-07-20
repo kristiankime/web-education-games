@@ -17,6 +17,6 @@ case class DummyUnaryFunction(override val v: MathMLElem) extends UnaryFunction(
 
 	def derivative(x: String) = throw new UnsupportedOperationException
 
-	override def toText: String = throw new UnsupportedOperationException
+	override def toMathJS: String = throw new UnsupportedOperationException
 
 }

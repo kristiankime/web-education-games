@@ -46,7 +46,7 @@ class ApplySinSpec extends Specification {
 
 	"toText" should {
 		"handle sin(3)" in {
-			ApplySin(3).toText must beEqualTo("sin(3)")
+			ApplySin(3).toMathJS must beEqualTo("sin(3)")
 		}
 	}
 

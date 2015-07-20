@@ -58,7 +58,7 @@ class ApplyLogSpec extends Specification {
 
 	"toText" should {
 		"handle log(4,2)" in {
-			ApplyLog(2, 4).toText must beEqualTo("log(4, 2)")
+			ApplyLog(2, 4).toMathJS must beEqualTo("log(4, 2)")
 		}
 	}
 

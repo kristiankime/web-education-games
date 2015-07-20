@@ -71,7 +71,7 @@ abstract class ConstantInteger(name: String, attributes1: MetaData, minimizeEmpt
 		case m: ConstantDecimal => Cn(math.pow(v.doubleValue, m.v.doubleValue))
 	}
 
-	def toText = v.toString()
+	def toMathJS = v.toString()
 }
 
 abstract class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpty: Boolean, override val v: BigDecimal, override val child: Node*)
@@ -108,5 +108,5 @@ abstract class ConstantDecimal(name: String, attributes1: MetaData, minimizeEmpt
 		case m: ConstantDecimal => Cn(math.pow(v.doubleValue, m.v.doubleValue))
 	}
 
-	def toText = v.toString()
+	def toMathJS = v.toString()
 }

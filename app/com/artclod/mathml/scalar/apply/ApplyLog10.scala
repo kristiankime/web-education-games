@@ -24,5 +24,5 @@ case class ApplyLog10(value: MathMLElem) extends Logarithm(10, value, Seq(Log): 
 		fP / (ln_10 * f)
 	}
 
-	override def toText: String = "log(" + value.toText + ", 10)"
+	override def toMathJS: String = "log(" + value.toMathJS + ", 10)"
 }

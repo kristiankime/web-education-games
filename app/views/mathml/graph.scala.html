@@ -1,12 +1,12 @@
-@(name: String)
+@(name: String, initialFunction: String = "0")
 
 <div id='@{name}_box' class='jxgbox' style='width:500px; height:500px;'></div>
 
 <script type='text/javascript'>
-var @name = function() {
+    var @{name} = function() {
     var ret = {}
     //<![CDATA[
-    var f = function(x) { return 0; };
+    var f = ARTC.mathJS.text2FunctionOfX("@{initialFunction}");
     var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: 250, originY: 250, unitX: 25, unitY: 25, showCopyright: false});
     board.suspendUpdate();
     var g = board.create('functiongraph', [f, -10, 10], {strokeWidth: 3});

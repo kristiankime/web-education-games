@@ -8,6 +8,7 @@ import models.organization.Course
 import models.quiz._
 import models.quiz.answer.{Answer, TangentAnswer}
 import models.quiz.question.support.DerivativeOrder
+import models.quiz.question.support._
 import models.support.{Owned, QuestionId, QuizId, UserId}
 import models.user.User
 import org.joda.time.DateTime
@@ -84,4 +85,18 @@ case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: Ma
 
   val mathML = function
   val rawStr = functionStr
+
+  def functionMathJs = function.toMathJS
+  def firstDerivativeMathJS = function.dx.toMathJS
+  def secondDerivativeMathJS = function.dx.dx.toMathJS
+
+  def mathJS = derivativeOrder match {
+    case FuncFirstSecond => (functionMathJs, firstDerivativeMathJS, secondDerivativeMathJS)
+    case FuncSecondFirst => (functionMathJs, secondDerivativeMathJS, firstDerivativeMathJS)
+    case FirstFuncSecond => (firstDerivativeMathJS, functionMathJs, secondDerivativeMathJS)
+    case FirstSecondFunc => (firstDerivativeMathJS, secondDerivativeMathJS, functionMathJs)
+    case SecondFuncFirst => (secondDerivativeMathJS, functionMathJs, firstDerivativeMathJS)
+    case SecondFirstFunc => (secondDerivativeMathJS, firstDerivativeMathJS, functionMathJs)
+  }
+
 }

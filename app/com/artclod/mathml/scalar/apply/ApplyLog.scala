@@ -15,7 +15,7 @@ case class ApplyLog(base: BigDecimal, value: MathMLElem) extends Logarithm(base,
 		fP / (log_b * f)
 	}
 
-	override def toText: String = "log(" + value.toText + ", " + base.toString() + ")"
+	override def toMathJS: String = "log(" + value.toMathJS + ", " + base.toString() + ")"
 }
 
 object ApplyLog {

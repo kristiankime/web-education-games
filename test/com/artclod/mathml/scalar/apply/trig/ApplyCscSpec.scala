@@ -47,7 +47,7 @@ class ApplyCscSpec extends Specification {
 
 	"toText" should {
 		"handle csc(3)" in {
-			ApplyCsc(3).toText must beEqualTo("csc(3)")
+			ApplyCsc(3).toMathJS must beEqualTo("csc(3)")
 		}
 	}
 

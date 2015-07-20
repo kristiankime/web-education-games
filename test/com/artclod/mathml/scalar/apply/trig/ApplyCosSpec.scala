@@ -51,7 +51,7 @@ class ApplyCosSpec extends Specification {
 
 	"toText" should {
 		"handle cos(3)" in {
-			ApplyCos(3).toText must beEqualTo("cos(3)")
+			ApplyCos(3).toMathJS must beEqualTo("cos(3)")
 		}
 	}
 

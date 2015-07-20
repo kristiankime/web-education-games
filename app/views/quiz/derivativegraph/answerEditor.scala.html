@@ -2,52 +2,17 @@
 
 @import controllers.quiz.derivativegraph.DerivativeGraphAnswerForm
 
-    <section>
-    Type in your answer, and then hit the submit button @tag.answerWarning()<br>
-
-    @*Slope: @mathml.mathmlEditor("TANGENT_ANSWER_SLOPE", currentAnswer.map(_.fold(_.slopeRawStr, _.slopeRawStr)), characterLimit=Some(20), mathParser = "CALC.mathJS.constantParser") <br>*@
-
-    @*Intercept: @mathml.mathmlEditor("TANGENT_ANSWER_INTERCEPT", currentAnswer.map(_.fold(_.interceptRawStr, _.interceptRawStr)), characterLimit=Some(20), mathParser = "CALC.mathJS.constantParser") <br>*@
+<section>
+    Selecy your answer, and then hit the submit button @tag.answerWarning()<br>
 
     @helper.form(action, 'id -> "tangentAnswerForm", 'class -> "pure-form") {
         <fieldset>
-            @*<input type="hidden" name="@TangentAnswerForm.slopeMathML" id="tangentSlopeAnswerMathML">*@
-            @*<input type="hidden" name="@TangentAnswerForm.slopeRawStr" id="tangentSlopeAnswerRawStr">*@
-            @*<input type="hidden" name="@TangentAnswerForm.interceptMathML" id="tangentInterceptAnswerMathML">*@
-            @*<input type="hidden" name="@TangentAnswerForm.interceptRawStr" id="tangentInterceptAnswerRawStr">*@
-            <select name="@DerivativeGraphAnswerForm.">
+            <select name="@{DerivativeGraphAnswerForm.derivativeOrder}">
                 @for(derOrd <- models.quiz.question.support.DerivativeOrder.all){<option value="@derOrd.asString"> @derOrd.asString </option>}
             </select>
-            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="TANGENT_ANSWER.formSubmit()">
+            <input type="submit" class="pure-button pure-button-primary" value="Submit">
             @link
         </fieldset>
     }
 
-    <script>
-    var TANGENT_ANSWER = {};
-    TANGENT_ANSWER.formSubmit = function () {
-        var ready = true;
-
-        if(TANGENT_ANSWER_SLOPE.valid) {
-            $("#tangentSlopeAnswerMathML").val(TANGENT_ANSWER_SLOPE.mathML);
-            $("#tangentSlopeAnswerRawStr").val(TANGENT_ANSWER_SLOPE.rawStr);
-        } else {
-            ready = false;
-            alert("Sorry we couldn't understand your slope. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
-        }
-
-        if(TANGENT_ANSWER_SLOPE.valid) {
-            $("#tangentInterceptAnswerMathML").val(TANGENT_ANSWER_INTERCEPT.mathML);
-            $("#tangentInterceptAnswerRawStr").val(TANGENT_ANSWER_INTERCEPT.rawStr);
-        } else {
-            ready = false;
-            alert("Sorry we couldn't understand your intercept. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
-        }
-
-        if(ready){
-            $("#tangentAnswerForm").submit();
-        }
-
-    }
-    </script>
 </section>

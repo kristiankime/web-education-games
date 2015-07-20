@@ -22,6 +22,6 @@ object Hdx extends MathMLElem(MathML.h.prefix, "Hdx", MathML.h.attributes, MathM
 
 	def derivative(wrt: String) = if (wrt == "x") throw new UnsupportedOperationException() else Cn(0)
 
-	override def toText: String = throw new UnsupportedOperationException
+	override def toMathJS: String = throw new UnsupportedOperationException
 
 }

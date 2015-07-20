@@ -47,7 +47,7 @@ class ApplySecSpec extends Specification {
 
 	"toText" should {
 		"handle sec(3)" in {
-			ApplySec(3).toText must beEqualTo("sec(3)")
+			ApplySec(3).toMathJS must beEqualTo("sec(3)")
 		}
 	}
 

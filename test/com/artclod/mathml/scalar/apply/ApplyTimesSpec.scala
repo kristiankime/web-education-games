@@ -109,7 +109,7 @@ class ApplyTimesSpec extends Specification {
 
 	"toText" should {
 		"handle 3 * 5" in {
-			ApplyTimes(3, 5).toText must beEqualTo("(3 * 5)")
+			ApplyTimes(3, 5).toMathJS must beEqualTo("(3 * 5)")
 		}
 	}
 

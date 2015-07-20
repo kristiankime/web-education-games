@@ -109,5 +109,5 @@ abstract class MathMLElem(
 
   def isDefinedAt(boundVariables: (String, Double)*) = MathMLDefined.isDefinedAt(this, boundVariables:_*)
 
-	def toText : String
+	def toMathJS : String
 }

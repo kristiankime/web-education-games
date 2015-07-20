@@ -23,7 +23,7 @@ case class ApplyRoot(degree: BigDecimal, value: MathMLElem) extends NthRoot(degr
 		fP / (c * ApplyRoot(n, f))
 	}
 
-	override def toText: String = "nthRoot(" + value.toText + ", " + degree + ")"
+	override def toMathJS: String = "nthRoot(" + value.toMathJS + ", " + degree + ")"
 }
 
 object ApplyRoot {

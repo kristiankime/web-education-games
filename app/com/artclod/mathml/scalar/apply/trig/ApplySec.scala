@@ -18,6 +18,6 @@ case class ApplySec(value: MathMLElem) extends UnaryFunction(value, Sec) {
 
 	def derivative(x: String) = ApplyTan(v.s) * ApplySec(v.s)* v.d(x)
 
-	override def toText: String = "sec(" + value.toText + ")"
+	override def toMathJS: String = "sec(" + value.toMathJS + ")"
 
 }

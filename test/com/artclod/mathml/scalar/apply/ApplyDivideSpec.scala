@@ -97,7 +97,7 @@ class ApplyDivideSpec extends Specification {
 
 	"toText" should {
 		"handle 3 / 7" in {
-			ApplyDivide(3, 7).toText must beEqualTo("(3 / 7)")
+			ApplyDivide(3, 7).toMathJS must beEqualTo("(3 / 7)")
 		}
 	}
 

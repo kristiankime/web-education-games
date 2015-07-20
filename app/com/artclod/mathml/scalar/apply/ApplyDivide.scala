@@ -50,5 +50,5 @@ case class ApplyDivide(val numerator: MathMLElem, val denominator: MathMLElem)
 		(fP * g - gP * f) / (g ^ `2`)
 	}
 
-	override def toText: String = "(" + numerator.toText + " / " + denominator.toText + ")"
+	override def toMathJS: String = "(" + numerator.toMathJS + " / " + denominator.toMathJS + ")"
 }

@@ -66,5 +66,5 @@ case class ApplyTimes(val values: MathMLElem*)
 		ApplyTimes(items: _*)
 	}
 
-	def toText = values.map(_.toText).mkString("(", " * " ,")")
+	def toMathJS = values.map(_.toMathJS).mkString("(", " * " ,")")
 }

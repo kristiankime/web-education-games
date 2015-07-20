@@ -81,7 +81,7 @@ class ApplyMinusBSpec extends Specification {
 
 	"toText" should {
 		"handle 3 - 5" in {
-			ApplyMinusB(3, 5).toText must beEqualTo("(3 - 5)")
+			ApplyMinusB(3, 5).toMathJS must beEqualTo("(3 - 5)")
 		}
 	}
 

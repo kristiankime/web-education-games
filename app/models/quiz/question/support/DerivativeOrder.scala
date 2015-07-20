@@ -5,7 +5,7 @@ import play.api.data.format.Formatter
 import play.api.db.slick.Config.driver.simple._
 
 object DerivativeOrder {
-  val all = Vector(OneTwoThree, OneThreeTwo, TwoOneThree, TwoThreeOne, ThreeOneTwo, ThreeTwoOne)
+  val all = Vector(FuncFirstSecond, FuncSecondFirst, FirstFuncSecond, FirstSecondFunc, SecondFuncFirst, SecondFirstFunc)
 
   def apply(in: String) = all.find( _.asString == in) match {
     case Some(out) => out
@@ -36,12 +36,12 @@ object DerivativeOrder {
 sealed trait DerivativeOrder {
   val asString : String
   val niceString : String
+  override def toString = asString
 }
 
-object OneTwoThree extends DerivativeOrder { val asString = "F-1-2"; val niceString = "Function, 1st Derivative, 2nd Derivative" }
-object OneThreeTwo extends DerivativeOrder { val asString = "F-2-1"; val niceString = "Function, 2nd Derivative, 1st Derivative" }
-object TwoOneThree extends DerivativeOrder { val asString = "2-F-1"; val niceString = "2st Derivative, Function, 1st Derivative" }
-object TwoThreeOne extends DerivativeOrder { val asString = "1-2-F"; val niceString = "Function, 2st Derivative, 1st Derivative" }
-object ThreeOneTwo extends DerivativeOrder { val asString = "2-F-1"; val niceString = "2st Derivative, Function, 1st Derivative" }
-object ThreeTwoOne extends DerivativeOrder { val asString = "2-1-F"; val niceString = "2st Derivative, 1st Derivative, Function" }
-
+object FuncFirstSecond extends DerivativeOrder { val asString = "F-1-2"; val niceString = "Function, 1st Derivative, 2nd Derivative" }
+object FuncSecondFirst extends DerivativeOrder { val asString = "F-2-1"; val niceString = "Function, 2nd Derivative, 1st Derivative" }
+object FirstFuncSecond extends DerivativeOrder { val asString = "1-F-2"; val niceString = "1st Derivative, Function, 2nd Derivative" }
+object FirstSecondFunc extends DerivativeOrder { val asString = "1-2-F"; val niceString = "1st Derivative, 2nd Derivative, Function" }
+object SecondFuncFirst extends DerivativeOrder { val asString = "2-F-1"; val niceString = "2nd Derivative, Function, 1st Derivative" }
+object SecondFirstFunc extends DerivativeOrder { val asString = "2-1-F"; val niceString = "2nd Derivative, 1st Derivative, Function" }

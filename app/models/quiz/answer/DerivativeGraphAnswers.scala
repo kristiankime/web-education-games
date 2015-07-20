@@ -6,10 +6,11 @@ import models.quiz.question.support.DerivativeOrder
 import models.quiz.question.{DerivativeGraphQuestion, DerivativeQuestion}
 import models.quiz.table.{AnswerIdNext, derivativeGraphAnswersTable}
 import play.api.db.slick.Config.driver.simple._
+import com.artclod.mathml.Match._
 
 object DerivativeGraphAnswers {
 
-  def correct(question: DerivativeGraphQuestion, derivativeOrder: DerivativeOrder) = question.derivativeOrder == derivativeOrder
+  def correct(question: DerivativeGraphQuestion, derivativeOrder: DerivativeOrder) = if(question.derivativeOrder == derivativeOrder) { Yes } else { No }
 
   // ======= CREATE ======
   def createAnswer(answer: DerivativeGraphAnswer)(implicit session: Session) = {

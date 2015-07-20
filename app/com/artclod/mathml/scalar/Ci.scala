@@ -23,7 +23,7 @@ case class Ci(val identifier: IdentifierText)
 
 	def derivative(wrt: String): MathMLElem = if (text.trim == wrt) Cn(1) else Cn(0)
 
-	def toText = identifier.name.trim
+	def toMathJS = identifier.name.trim
 }
 
 object Ci {

@@ -24,7 +24,7 @@ case class Logbase(val value: Constant)
 		case c: CnReal => c.v
 	}
 
-	override def toText: String = value.toText
+	override def toMathJS: String = value.toMathJS
 }
 
 object Logbase {

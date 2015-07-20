@@ -1,0 +1,11 @@
+@(question: models.quiz.question.DerivativeGraphQuestion)
+
+@defining(question.mathJS){ mathJS : (String, String, String) =>
+
+@mathml.graph("GRAPH_1", mathJS._1) <br>
+
+@mathml.graph("GRAPH_2", mathJS._2) <br>
+
+@mathml.graph("GRAPH_3", mathJS._3)
+
+}

@@ -23,5 +23,5 @@ case class ApplySqrt(value: MathMLElem) extends NthRoot(2, value, Seq(Root): _*)
 		fP / (`2` * ApplySqrt(f))
 	}
 
-	def toText: String = "sqrt(" + value.toText + ")"
+	def toMathJS: String = "sqrt(" + value.toMathJS + ")"
 }

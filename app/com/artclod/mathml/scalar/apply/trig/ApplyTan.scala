@@ -18,6 +18,6 @@ case class ApplyTan(value: MathMLElem) extends UnaryFunction(value, Tan) {
 
 	def derivative(x: String) = (ApplySec(v.s) ^ `2`) * v.d(x)
 
-	override def toText: String = "tan(" + value.toText + ")"
+	override def toMathJS: String = "tan(" + value.toMathJS + ")"
 
 }

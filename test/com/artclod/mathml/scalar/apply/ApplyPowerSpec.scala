@@ -94,7 +94,7 @@ class ApplyPowerSpec extends Specification {
 
 	"toText" should {
 		"handle 3 ^ 5" in {
-			ApplyPower(3, 5).toText must beEqualTo("(3 ^ 5)")
+			ApplyPower(3, 5).toMathJS must beEqualTo("(3 ^ 5)")
 		}
 	}
 

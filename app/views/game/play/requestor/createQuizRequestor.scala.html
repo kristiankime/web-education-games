@@ -1,4 +1,5 @@
 @(gameState: models.game.GameState with models.game.RequestorQuiz,
+        derivativeForm: Form[controllers.quiz.derivative.DerivativeQuestionForm],
         derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm],
         tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
@@ -49,9 +50,10 @@
 
         <h4>Add a new Question</h4>
 
-        @tag.switch("createQuestion", if(!tangentForm.hasErrors){0}else{1},
-            ("Create a Derivative Question", derivative.questionEditor(GamesRequestorController.createDerivativeQuestion(gameState.game.id), successCallback = List("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess", gameState.game.requesteeSkill)),
-            ("Create a Tangent Question", tangent.questionEditor(GamesRequestorController.createTangentQuestion(gameState.game.id), tangentForm, successCallback = List("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess", gameState.game.requesteeSkill))
+        @tag.switch("createQuestion", com.artclod.play.errorIndex(derivativeForm, derivativeGraphForm, tangentForm),
+            ("Create a Derivative Question",       derivative.questionEditor(GamesRequestorController.createDerivativeQuestion(gameState.game.id),                                successCallback = List("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess",           gameState.game.requesteeSkill)),
+            ("Create a Derivative Graph Question", derivativegraph.questionEditor(GamesRequestorController.createDerivativeGraphQuestion(gameState.game.id), derivativeGraphForm, successCallback = List("derivativeGraphEditorSuccess")) += derivative.scoringHints("derivativeGraphEditorSuccess", gameState.game.requesteeSkill)),
+            ("Create a Tangent Question",          tangent.questionEditor(GamesRequestorController.createTangentQuestion(gameState.game.id),                 tangentForm,         successCallback = List("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess",                    gameState.game.requesteeSkill))
         )
 
         }

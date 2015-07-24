@@ -55,7 +55,7 @@ object QuizzesController extends Controller with SecureSocialConsented {
   def view(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, answerIdOp: Option[models.support.AnswerId]) = ConsentedAction(RequireAccess(courseId)) { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
-      case Right((organization, course, quiz)) => Ok(views.html.quiz.quizView(course.access, course, quiz, answerIdOp.flatMap(id => Answers(id)), DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values))
+      case Right((organization, course, quiz)) => Ok(views.html.quiz.quizView(course.access, course, quiz, answerIdOp.flatMap(id => Answers(id)), controllers.quiz.QuestionForms.empty))
     }
   }
 

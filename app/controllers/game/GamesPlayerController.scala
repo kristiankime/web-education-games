@@ -76,8 +76,8 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         DerivativeGraphQuestionForm.values.bindFromRequest.fold(
           errors =>
             (game.gameRole(user), game.toState) match {
-              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, DerivativeQuestionForm.values, errors, TangentQuestionForm.values))
-              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, DerivativeQuestionForm.values, errors, TangentQuestionForm.values))
+              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.derivativeGraph(errors)))
+              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.derivativeGraph(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
           form => {
@@ -95,8 +95,8 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         TangentQuestionForm.values.bindFromRequest.fold(
           errors =>
             (game.gameRole(user), game.toState) match {
-              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, errors))
-              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, errors))
+              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.tangent(errors)))
+              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.tangent(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
           form => {

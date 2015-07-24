@@ -23,7 +23,7 @@ trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         TangentQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, errors)),
+          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, controllers.quiz.QuestionForms.tangent(errors))),
           form => {
             TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))

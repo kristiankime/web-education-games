@@ -48,4 +48,5 @@ package object play {
 
   def errorIndex(forms: Form[_] *) = forms.indexWhere(_.hasErrors).max(0)
 
+  def hasError(forms: Form[_] *) = forms.find(_.hasErrors).isDefined
 }

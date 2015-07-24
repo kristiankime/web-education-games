@@ -2,9 +2,7 @@
 	course: models.organization.Course,
     quiz: models.quiz.Quiz,
     answerOp: Option[models.quiz.answer.Answer],
-    derivativeForm: Form[controllers.quiz.derivative.DerivativeQuestionForm],
-    derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm],
-    tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+    forms: controllers.quiz.QuestionForms)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.routes.{ QuestionsController, QuizzesController}
 @import controllers.quiz.QuizForm
@@ -22,7 +20,7 @@
     }
     }
 
-    @views.html.quiz.questionCreationError(tangentForm)
+    @views.html.quiz.questionCreationError(forms)
 
     @defining(quiz.results(user)){ results =>
     @defining(results.questions){ questions =>
@@ -47,10 +45,10 @@
     @if(access.write){
     <h4>Add a new Question</h4>
 
-    @tag.switch("createQuestion", com.artclod.play.errorIndex(derivativeForm, derivativeGraphForm, tangentForm),
+    @tag.switch("createQuestion", forms.errorIndex,
         ("Create a Derivative Question", views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id))),
-        ("Create a Derivative Graph Question", views.html.quiz.derivativegraph.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id), derivativeGraphForm)),
-        ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), tangentForm))
+        ("Create a Derivative Graph Question", views.html.quiz.derivativegraph.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id), forms.derivativeGraph)),
+        ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), forms.tangent))
     )
 
     @defining(quiz.results(course)) { quizResults =>

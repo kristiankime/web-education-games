@@ -19,6 +19,8 @@ object NumericBoolean {
 
   def apply(b: Boolean) : Short = if(b) 1 else 0
 
+  def asDouble(b: Boolean) : Double = if(b) 1d else 0d
+
 //  implicit def boolean2DBNumber = MappedColumnType.base[Boolean, Short](
 //    bool => if(bool) 1 else 0,
 //    dbShort => if(dbShort == 1){ true } else if(dbShort == 0) { false } else { throw new IllegalStateException("DB returned [" + dbShort + "] for boolean, must be either 0 or 1")}

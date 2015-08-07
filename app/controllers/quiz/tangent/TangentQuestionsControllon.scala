@@ -2,7 +2,7 @@ package controllers.quiz.tangent
 
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
-import controllers.quiz.QuizzesController
+import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.support.SecureSocialConsented
@@ -62,8 +62,9 @@ object TangentQuestionForm {
   val functionStr = "functionStr"
   val atPointX = "atPointX"
   val atPointXStr = "atPointXStr"
-
+  // Validation Check Names
   val tangentUndefined = "tangentUndefined"
+  val functionInvalid = "functionInvalid"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
@@ -72,6 +73,7 @@ object TangentQuestionForm {
             atPointXStr -> nonEmptyText)
     (TangentQuestionForm.apply)(TangentQuestionForm.unapply)
     verifying(tangentUndefined, fields => tangentDefined(fields) )
+    verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
   )
 
   def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, TangentQuestionDifficulty(form.functionMathML))

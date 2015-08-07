@@ -8,6 +8,7 @@
     Enter a function (of x) and a point to find the equation for the tangent line at. When you are done hit "Save Question": <br>
 
     @if(tangentForm.hasMessage(TangentQuestionForm.tangentUndefined)){<span class="form-error"> We were unable to create your question since the tangent line is not defined at the point you gave, please try another point (or function). </span><br>}
+    @if(tangentForm.hasMessage(TangentQuestionForm.functionInvalid)){<span class="form-error"> Sorry we were unable to create your question since the function is undefined at too many points. </span><br>}
 
     Function: @mathml.mathmlEditor(editorName="TANGENT_QUESTION_FUNCTION", initialValue=tangentForm.dataFor(TangentQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback) <br>
 

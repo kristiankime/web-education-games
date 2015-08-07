@@ -13,7 +13,7 @@ import com.artclod.mathml.Match._
 
 object MathMLEq {
 	private val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
-	private val vals = (Vector.fill(20)((ran.nextDouble * 1000d) - 500d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
+	val vals = (Vector.fill(20)((ran.nextDouble * 1000d) - 500d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
 	private val tooSmall = 1E-154 // LATER figure out how small is too small :( i.e. 1e-312 works for most tests...
 	private val tooBig = 1E154 // LATER figure out how big is too big
 	private val ε = .00001d

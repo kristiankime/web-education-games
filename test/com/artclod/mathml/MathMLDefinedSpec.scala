@@ -43,4 +43,22 @@ class MathMLDefinedSpec extends Specification {
     }
   }
 
+  "isDefinedFor" should {
+    "return true for x (for 100%)" in {
+      MathMLDefined.isDefinedFor( x , 1.00d) must beTrue
+    }
+
+    "return true for 1/x (for 99%)" in {
+      MathMLDefined.isDefinedFor( `1` / x , 0.99d) must beTrue
+    }
+
+    "return true for ln(x) (for 40%)" in {
+      MathMLDefined.isDefinedFor( ln(x) , 0.40d) must beTrue
+    }
+
+    "return false for ln(x) (for 60%)" in {
+      MathMLDefined.isDefinedFor( ln(x) , 0.60d) must beFalse
+    }
+  }
+
 }

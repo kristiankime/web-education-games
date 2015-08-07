@@ -2,7 +2,7 @@ package controllers.quiz.derivativegraph
 
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
-import controllers.quiz.QuizzesController
+import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.tangent.{TangentQuestionForm, TangentAnswerForm}
 import controllers.support.SecureSocialConsented
@@ -69,6 +69,7 @@ object DerivativeGraphQuestionForm {
   val rangeHigh = "rangeHigh"
   // Validation Check Names
   val rangeValid = "rangeValid"
+  val functionInvalid = "functionInvalid"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
@@ -78,11 +79,12 @@ object DerivativeGraphQuestionForm {
             rangeHigh -> of[Double])
     (DerivativeGraphQuestionForm.apply)(DerivativeGraphQuestionForm.unapply)
     verifying(rangeValid, fields => verifyRangeValid(fields) )
+    verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
   )
 
   def toQuestion(user: User, form: DerivativeGraphQuestionForm) = DerivativeGraphQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, form.derivativeOrder, DerivativeGraphQuestionDifficulty(form.functionMathML))
 
-  def verifyRangeValid(f: DerivativeGraphQuestionForm) = f.rangeLow < f.rangeHigh
+  private def verifyRangeValid(f: DerivativeGraphQuestionForm) = f.rangeLow < f.rangeHigh
 }
 
 case class DerivativeGraphQuestionForm(function: String, functionStr : String, derivativeOrder: DerivativeOrder, rangeLow: Double, rangeHigh: Double) {

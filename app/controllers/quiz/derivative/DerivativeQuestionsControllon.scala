@@ -1,8 +1,8 @@
 package controllers.quiz.derivative
 
-import com.artclod.mathml.MathML
+import com.artclod.mathml.{MathMLDefined, MathML}
 import com.artclod.slick.JodaUTC
-import controllers.quiz.QuizzesController
+import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.support.SecureSocialConsented
 import models.quiz.question._
 import models.support._
@@ -21,7 +21,7 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
         DerivativeQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, controllers.quiz.QuestionForms.derivative(errors))),
           form => {
             DerivativeQuestions.create(DerivativeQuestionForm.toQuestion(user, form), quiz.id)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
@@ -57,11 +57,15 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
 object DerivativeQuestionForm {
   val function = "function"
   val functionStr = "functionStr"
+  // Validation Check Names
+  val functionInvalid = "functionInvalid"
 
-  val values = Form(mapping(
-    function -> nonEmptyText,
-    functionStr -> nonEmptyText)
-    (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply))
+  val values = Form(
+    mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
+            functionStr -> nonEmptyText)
+    (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply)
+    verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
+  )
 
   def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, DerivativeQuestionDifficulty(form.functionMathML))
 }

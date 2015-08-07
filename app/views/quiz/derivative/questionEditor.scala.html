@@ -1,10 +1,13 @@
-@(action: play.api.mvc.Call, successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, derivativeForm: Form[controllers.quiz.derivative.DerivativeQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivative.DerivativeQuestionForm
+@import com.artclod.play.FormEnhanced
 
 <section>
     Enter a function (of x) to differentiate. When you are done hit "Save Question": <br>
+
+    @if(derivativeForm.hasMessage(DerivativeQuestionForm.functionInvalid)){<span class="form-error"> Sorry we were unable to create your question since the function is undefined at too many points. </span><br>}
 
     @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimit = Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback)
 

@@ -1,5 +1,7 @@
 package controllers.quiz
 
+import com.artclod.mathml.MathMLDefined
+import com.artclod.mathml.scalar.MathMLElem
 import play.api.data.Form
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
@@ -33,4 +35,5 @@ object QuestionForms {
 
   def tangent(tangent: Form[TangentQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, tangent)
 
+  def verifyFunctionValid(f: MathMLElem) = MathMLDefined.isDefinedFor(f, .10d)
 }

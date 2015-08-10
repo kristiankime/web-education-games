@@ -1,6 +1,6 @@
 package controllers.quiz.derivativegraph
 
-import com.artclod.mathml.MathML
+import com.artclod.mathml.{Match, MathML}
 import com.artclod.slick.JodaUTC
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
@@ -70,6 +70,7 @@ object DerivativeGraphQuestionForm {
   // Validation Check Names
   val rangeValid = "rangeValid"
   val functionInvalid = "functionInvalid"
+  val functionsSame = "functionsSame"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
@@ -80,11 +81,23 @@ object DerivativeGraphQuestionForm {
     (DerivativeGraphQuestionForm.apply)(DerivativeGraphQuestionForm.unapply)
     verifying(rangeValid, fields => verifyRangeValid(fields) )
     verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
+    verifying(functionsSame, fields => verifyFunctionsDifferent(fields))
   )
 
   def toQuestion(user: User, form: DerivativeGraphQuestionForm) = DerivativeGraphQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, form.derivativeOrder, DerivativeGraphQuestionDifficulty(form.functionMathML))
 
   private def verifyRangeValid(f: DerivativeGraphQuestionForm) = f.rangeLow < f.rangeHigh
+
+  private def verifyFunctionsDifferent(form: DerivativeGraphQuestionForm) = {
+    val f = form.functionMathML
+    val fp = f.dx
+    val fpp = fp.dx
+
+    if(      (f  ?= fp)  == Match.Yes ) { false }
+    else if( (f  ?= fpp) == Match.Yes ) { false }
+    else if( (fp ?= fpp) == Match.Yes ) { false }
+    else { true }
+  }
 }
 
 case class DerivativeGraphQuestionForm(function: String, functionStr : String, derivativeOrder: DerivativeOrder, rangeLow: Double, rangeHigh: Double) {

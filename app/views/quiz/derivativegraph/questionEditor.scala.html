@@ -12,6 +12,7 @@
 
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.rangeValid)){<span class="form-error"> We were unable to create your question since the range you specified is invalid. </span><br>}
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.functionInvalid)){<span class="form-error"> Sorry we were unable to create your question since the function is undefined at too many points. </span><br>}
+    @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.functionsSame)){<span class="form-error"> Sorry we were unable to create your question since the function and at least one of its derivatives are the same. </span><br>}
 
     Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_FORM", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "DERIVATIVE_GRAPH_QUESTION_UPDATE" :: successCallback) <br>
 

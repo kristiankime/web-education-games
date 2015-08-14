@@ -11,14 +11,37 @@ object Match extends Enumeration {
 
 import com.artclod.mathml.Match._
 
+/**
+ * This object has methods for checking to see if two functions (of a single variable) are the same.
+ * To test equality between functions we evaluate them a series of random points and check to see if the values are the same.
+ * Currently we use a fixed set of random values so the process is "deterministic".
+ * Note that it is possible for the function to not evaluate (i.e. 0/0, -1/0 etc) at any of the points.
+ * For this reason we can return Yes, No or Inconclusive.
+ */
 object MathMLEq {
-	private val ran = new Random(0L) // At least for now use a fixed set of pseudo random values
-	val vals = (Vector.fill(20)((ran.nextDouble * 1000d) - 500d) ++ Vector.fill(20)((ran.nextDouble * 10d) - 5d)).sorted
+	// At least for now use a fixed set of pseudo random values
+	private val ran = new Random(0L)
+	// We generate our random numbers from two buckets
+	// a "tight" range from -10 to 10
+	val tightRange = 10d;
+	private val tightRange2 = tightRange * 2d;
+	// and a "wide" range from -500 to 500
+	val wideRange = 400d;
+	val wideRange2 = wideRange * 2;
+	// which then get appended together
+	val valsTight = Vector.fill(40)((ran.nextDouble * tightRange2) - tightRange)
+	val vals = (Vector.fill(20)((ran.nextDouble * wideRange2) - wideRange) ++ valsTight).sorted
+
+	// Since Double arithmetic is not exact we must decide things like "how close is good enough",
+  // And generally ignore numbers that are too large or small, etc
 	private val tooSmall = 1E-154 // LATER figure out how small is too small :( i.e. 1e-312 works for most tests...
 	private val tooBig = 1E154 // LATER figure out how big is too big
 	private val ε = .00001d
   private val closeEnoughTo0 = 1E-13 // LATER how close is close enough :(
 
+	/**
+	 * The main method that checks for equality of two functions (of one specified variable)
+	 */
 	def checkEq(variableName: String, eq1: MathMLElem, eq2: MathMLElem) = checkEval(variableName, eq1, eq2, vals)
 
 	def checkEval(variable: String, eq1: MathMLElem, eq2: MathMLElem, vals: Seq[Double]): Match = {

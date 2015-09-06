@@ -1,0 +1,2 @@
+@(question: models.quiz.question.GraphMatchQuestion, explanation : Boolean)@if(explanation){which function is graphed:} @views.html.mathml.mathmlDisplay(question.mathView1), @views.html.mathml.mathmlDisplay(question.mathView2), @views.html.mathml.mathmlDisplay(question.mathView3)
+

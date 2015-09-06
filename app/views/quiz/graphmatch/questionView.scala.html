@@ -1,0 +1,60 @@
+@(course: models.organization.Course,
+  quiz: models.quiz.Quiz,
+  results: models.quiz.question.GraphMatchQuestionResults,
+  currentAnswer: Option[Either[models.quiz.answer.GraphMatchAnswer, models.quiz.answer.GraphMatchAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.quiz.routes.AnswersController
+@import com.artclod.play.s
+
+@defining(quiz.access){ access =>
+
+@mainWithBorder("Question Page", tag.courseLink(course), tag.courseQuizLink(course, quiz, None)) {
+    <h2>Welcome to a question page for quiz: @quiz.name </h2>
+
+    <h4>Below are a set of functions and a graph, figure out which function's graph is being displayed:</h4>
+
+    <section>
+        @results.question.display(false)
+    </section>
+    <br>
+
+    @for(answerEither <- currentAnswer) {
+    <section align="center">
+        <h4>
+        @answerEither match {
+            case Right(answer) => {You answered @answer.display that answer was @mathml.correct(answer.correct)}
+            case Left(answerTmp) => {You answered @answerTmp.display Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+        }
+        </h4>
+    </section>
+    }
+
+    @views.html.quiz.graphmatch.answerEditor(AnswersController.createGraphMatch(course.organizationId, course.id, quiz.id, results.question.id), currentAnswer){@tag.courseQuizLink(course, quiz, Some("Back to Quiz"))}
+
+    @* ===== Results ===== *@
+    @if(results.answers.nonEmpty) {
+        <section>
+            <h4>You answered this question @results.answers.size time@s(results.answers)</h4>
+            @if(results.answers.nonEmpty) {
+            <table class="pure-table pure-table-striped">
+                <tr>
+                    <th>Answer</th>
+                    <th>Result</th>
+                </tr>
+                @for(answer <- results.answers) {
+                <tr>
+                    <td>@answer.display</td>
+                    <td>@mathml.correct(answer.correct)</td>
+                </tr>
+                }
+            </table>
+            }
+        </section>
+    }
+
+    @if(access.write) {
+        @tag.allAnswers(results.question)
+    }
+}
+
+}

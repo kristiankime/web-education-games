@@ -100,3 +100,40 @@ case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: Ma
   }
 
 }
+
+case class GraphMatchQuestion(id: QuestionId, ownerId: UserId, function1Math: MathMLElem, function1Raw: String, function2Math: MathMLElem, function2Raw: String, function3Math: MathMLElem, function3Raw: String, graphThis: Short, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+  GraphMatchQuestionWhich.validWhichValue(graphThis)
+
+  def answersAndOwners(implicit session: Session) = GraphMatchQuestions.answersAndOwners(id)
+
+  def difficulty : Double = GraphMatchQuestionDifficulty(function1Math, function2Math, function3Math, graphThis)
+
+  def results(user: User)(implicit session: Session) = GraphMatchQuestionResults(user, this, answers(user))
+
+  def answers(user: User)(implicit session: Session) = GraphMatchQuestions(id, user)
+
+  def display(explanation : Boolean = true) : Html = views.html.quiz.graphmatch.questionDisplay(this, explanation)
+
+  def mathView1 : models.quiz.ViewableMath = new models.quiz.ViewableMath { val mathML = function1Math; val rawStr = function1Raw;  }
+
+  def mathView2 : models.quiz.ViewableMath = new models.quiz.ViewableMath { val mathML = function2Math; val rawStr = function2Raw;  }
+
+  def mathView3 : models.quiz.ViewableMath = new models.quiz.ViewableMath { val mathML = function3Math; val rawStr = function3Raw;  }
+
+  def graphThisMathJs = graphThis match {
+    case 1 => function1Math.toMathJS
+    case 2 => function2Math.toMathJS
+    case 3 => function3Math.toMathJS
+    case _ => throw new IllegalStateException("graphThis was " + graphThis + " should have been between " + GraphMatchQuestionWhich.whichMin + " and " + GraphMatchQuestionWhich.whichMax)
+  }
+}
+
+object GraphMatchQuestionWhich {
+  val whichMin = 1;
+  val whichMax = 3;
+
+  def validWhichValue(v: Short): Unit = {
+    if(v < whichMin) throw new IllegalStateException("graphThis was " + v + " should have been between " + GraphMatchQuestionWhich.whichMin + " and " + GraphMatchQuestionWhich.whichMax)
+    if(v > whichMax) throw new IllegalStateException("graphThis was " + v + " should have been between " + GraphMatchQuestionWhich.whichMin + " and " + GraphMatchQuestionWhich.whichMax)
+  }
+}

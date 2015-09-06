@@ -17,8 +17,8 @@ trait SecureSocialConsented extends SecureSocial {
       Redirect(routes.Consent.consent(Some(path), None))
 
     private def run(request: SecuredRequest[AnyContent], f: SecuredRequest[AnyContent] => User => Session => Result)(implicit session: Session) = {
-      val user = Login(request)
-      Users(user.id) match {
+      val login = Login(request)
+      Users(login.id) match {
         case None => consentForm(request.path)
         case Some(setting) => {
             if(!setting.consented) { consentForm(request.path) }

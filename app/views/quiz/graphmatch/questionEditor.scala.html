@@ -1,0 +1,83 @@
+@(action: play.api.mvc.Call, graphMatchForm: Form[controllers.quiz.graphmatch.GraphMatchQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.quiz.graphmatch.GraphMatchQuestionForm
+@import com.artclod.play.FormEnhanced
+@import controllers.MathController
+@import com.artclod.mathml.MathMLEq.tightRange
+@import models.quiz.question.GraphMatchQuestionWhich
+
+<section>
+    Enter three functions (of x) and which one you want the graph to show up for. Try and have the functions display nicely in -@{tightRange} to @{tightRange} on both x and y. When you are done hit "Save Question": <br>
+
+    @if(graphMatchForm.hasMessage(GraphMatchQuestionForm.function1Invalid)){<span class="form-error"> Sorry we were unable to create your question since the first function is undefined at too many points. </span><br>}
+    @if(graphMatchForm.hasMessage(GraphMatchQuestionForm.function2Invalid)){<span class="form-error"> Sorry we were unable to create your question since the second function is undefined at too many points. </span><br>}
+    @if(graphMatchForm.hasMessage(GraphMatchQuestionForm.function3Invalid)){<span class="form-error"> Sorry we were unable to create your question since the third function is undefined at too many points. </span><br>}
+    @if(graphMatchForm.hasMessage(GraphMatchQuestionForm.function1BadDisplay)){<span class="form-error"> Sorry we were unable to create your question since the first function would not display in the graph area. </span><br>}
+    @if(graphMatchForm.hasMessage(GraphMatchQuestionForm.function2BadDisplay)){<span class="form-error"> Sorry we were unable to create your question since the second function would not display in the graph area. </span><br>}
+    @if(graphMatchForm.hasMessage(GraphMatchQuestionForm.function3BadDisplay)){<span class="form-error"> Sorry we were unable to create your question since the third function would not display in the graph area. </span><br>}
+
+    Function 1: @mathml.mathmlEditor(editorName="GRAPH_MATCH_FUNCTION_1_QUESTION_FORM", initialValue=graphMatchForm.dataFor(GraphMatchQuestionForm.functionStr1), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "GRAPH_MATCH_QUESTION_UPDATE_1" :: successCallback) <br>
+    Function 2: @mathml.mathmlEditor(editorName="GRAPH_MATCH_FUNCTION_2_QUESTION_FORM", initialValue=graphMatchForm.dataFor(GraphMatchQuestionForm.functionStr2), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "GRAPH_MATCH_QUESTION_UPDATE_2" :: successCallback) <br>
+    Function 3: @mathml.mathmlEditor(editorName="GRAPH_MATCH_FUNCTION_3_QUESTION_FORM", initialValue=graphMatchForm.dataFor(GraphMatchQuestionForm.functionStr3), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "GRAPH_MATCH_QUESTION_UPDATE_3" :: successCallback) <br>
+
+    @form(action, 'id -> "graphMatchQuestionForm", 'class -> "pure-form"){
+    <fieldset>
+        <input type="hidden" name="@GraphMatchQuestionForm.function1"    id="graphMatchQuestionMathML1">
+        <input type="hidden" name="@GraphMatchQuestionForm.functionStr1" id="graphMatchQuestionRawStr1">
+        <input type="hidden" name="@GraphMatchQuestionForm.function2"    id="graphMatchQuestionMathML2">
+        <input type="hidden" name="@GraphMatchQuestionForm.functionStr2" id="graphMatchQuestionRawStr2">
+        <input type="hidden" name="@GraphMatchQuestionForm.function3"    id="graphMatchQuestionMathML3">
+        <input type="hidden" name="@GraphMatchQuestionForm.functionStr3" id="graphMatchQuestionRawStr3">
+        @for(which <- GraphMatchQuestionWhich.whichMin to GraphMatchQuestionWhich.whichMax) {
+        <label for="@which" class="pure-radio">
+            <input id="@which" type="radio" name="@GraphMatchQuestionForm.graphThis" value="@which" @if(which == 1){checked} >
+            @which
+        </label>
+        }
+        <input type="button" class="pure-button" value="Save Question" onclick="GRAPH_MATCH_QUESTION_FORM.formSubmit()">
+    </fieldset>
+    }
+
+    <h5>Function 1 graph</h5>
+    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_1") <br>
+    <h5>Function 2 graph</h5>
+    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_2") <br>
+    <h5>Function 3 graph</h5>
+    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_3") <br>
+
+    <script>
+        var GRAPH_MATCH_QUESTION_UPDATE_1 = function(result) {
+            GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_1.setFunction( ARTC.mathJS.node2FunctionOfX(result.node) );
+        };
+
+        var GRAPH_MATCH_QUESTION_UPDATE_2 = function(result) {
+            GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_2.setFunction( ARTC.mathJS.node2FunctionOfX(result.node) );
+        };
+
+        var GRAPH_MATCH_QUESTION_UPDATE_3 = function(result) {
+            GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_3.setFunction( ARTC.mathJS.node2FunctionOfX(result.node) );
+        }
+
+        var GRAPH_MATCH_QUESTION_FORM = {}
+        GRAPH_MATCH_QUESTION_FORM.formSubmit = function() {
+            var ready = true;
+
+            if(GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.valid) {
+                $("#graphMatchQuestionMathML1").val(GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.mathML);
+                $("#graphMatchQuestionRawStr1").val(GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.rawStr);
+                $("#graphMatchQuestionMathML2").val(GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.mathML);
+                $("#graphMatchQuestionRawStr2").val(GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.rawStr);
+                $("#graphMatchQuestionMathML3").val(GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.mathML);
+                $("#graphMatchQuestionRawStr3").val(GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.rawStr);
+            } else {
+                ready = false;
+                alert("Sorry we couldn't understand one of the functions that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+            }
+
+            if(ready) {
+                $("#graphMatchQuestionForm").submit();
+            }
+        }
+    </script>
+</section>

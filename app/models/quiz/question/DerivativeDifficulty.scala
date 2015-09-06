@@ -168,14 +168,18 @@ object DerivativeDifficulty {
   }
 }
 
-object DerivativeQuestionDifficulty{
+object DerivativeQuestionDifficulty {
   def apply(e: MathMLElem): Double = DerivativeDifficulty(e)
 }
 
-object DerivativeGraphQuestionDifficulty{
+object DerivativeGraphQuestionDifficulty {
   def apply(e: MathMLElem): Double = 10d
 }
 
-object TangentQuestionDifficulty{
+object TangentQuestionDifficulty {
   def apply(e: MathMLElem): Double = DerivativeDifficulty(e) + 5d
+}
+
+object GraphMatchQuestionDifficulty {
+  def apply(e1: MathMLElem, e2: MathMLElem, e3: MathMLElem, graphThis: Short): Double = 10d
 }

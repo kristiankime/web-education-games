@@ -1,5 +1,7 @@
 @(name: String, initialFunction: String = "0")
 
+@import com.artclod.mathml.MathMLEq.tightRange
+
 <div id='@{name}_box' class='jxgbox' style='width:500px; height:500px;'></div>
 
 <script type='text/javascript'>
@@ -9,7 +11,7 @@
     var f = ARTC.mathJS.text2FunctionOfX("@{initialFunction}");
     var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: 250, originY: 250, unitX: 25, unitY: 25, showCopyright: false});
     board.suspendUpdate();
-    var g = board.create('functiongraph', [f, -10, 10], {strokeWidth: 3});
+    var g = board.create('functiongraph', [f, -@{tightRange}, @{tightRange}], {strokeWidth: 3});
     board.unsuspendUpdate();
     //]]>
     ret.brd = board;

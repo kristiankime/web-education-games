@@ -46,7 +46,14 @@ package object play {
 
   }
 
-  def errorIndex(forms: Form[_] *) = forms.indexWhere(_.hasErrors).max(0)
+//  def errorIndex(forms: Form[_] *) = forms.indexWhere(_.hasErrors).max(0)
+//
+//  def hasError(forms: Form[_] *) = forms.find(_.hasErrors).isDefined
 
-  def hasError(forms: Form[_] *) = forms.find(_.hasErrors).isDefined
+  def firstTrue(t: Tuple1[Boolean]) = if(t._1){0} else{-1}
+  def firstTrue(t: (Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else{-1}
+  def firstTrue(t: (Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else{-1}
+  def firstTrue(t: (Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else{-1}
+  def firstTrue(t: (Boolean, Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else if(t._5){4} else{-1}
+
 }

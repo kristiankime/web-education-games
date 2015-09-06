@@ -4,6 +4,7 @@ import com.artclod.mathml.MathML
 import com.artclod.util._
 import controllers.quiz.derivative.DerivativeQuestionsControllon
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionsControllon
+import controllers.quiz.graphmatch.GraphMatchQuestionsControllon
 import controllers.quiz.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.question._
@@ -17,7 +18,8 @@ import scala.util.{Failure, Success}
 object QuestionsController extends Controller with SecureSocialConsented
   with DerivativeQuestionsControllon
   with DerivativeGraphQuestionsControllon
-  with TangentQuestionsControllon {
+  with TangentQuestionsControllon
+  with GraphMatchQuestionsControllon {
 
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {

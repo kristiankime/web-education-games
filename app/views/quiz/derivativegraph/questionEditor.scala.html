@@ -6,13 +6,15 @@
 @import models.quiz.question.support.DerivativeOrder
 @import com.artclod.play.FormEnhanced
 @import controllers.MathController
+@import com.artclod.mathml.MathMLEq.tightRange
 
 <section>
-    Enter a function (of x) and the order in which you want the function, its first derivative and its second to be displayed. When you are done hit "Save Question": <br>
+    Enter a function (of x) and the order in which you want the function, its first derivative and its second to be displayed. Try and have the function (and it's derivatives) display nicely in -@{tightRange} to @{tightRange} on both x and y. When you are done hit "Save Question": <br>
 
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.rangeValid)){<span class="form-error"> We were unable to create your question since the range you specified is invalid. </span><br>}
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.functionInvalid)){<span class="form-error"> Sorry we were unable to create your question since the function is undefined at too many points. </span><br>}
     @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.functionsSame)){<span class="form-error"> Sorry we were unable to create your question since the function and at least one of its derivatives are the same. </span><br>}
+    @if(derivativeGraphForm.hasMessage(DerivativeGraphQuestionForm.functionsDisplayNicely)){<span class="form-error"> Sorry we were unable to create your question since the function would not display in the graph area. </span><br>}
 
     Function: @mathml.mathmlEditor(editorName="DERIVATIVE_GRAPH_QUESTION_FORM", initialValue=derivativeGraphForm.dataFor(DerivativeGraphQuestionForm.functionStr), characterLimit=Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = "DERIVATIVE_GRAPH_QUESTION_UPDATE" :: successCallback) <br>
 
@@ -20,8 +22,6 @@
     <fieldset>
         <input type="hidden" name="@DerivativeGraphQuestionForm.function"    id="derivativeGraphQuestionMathML">
         <input type="hidden" name="@DerivativeGraphQuestionForm.functionStr" id="derivativeGraphQuestionRawStr">
-        <input type="hidden" name="@DerivativeGraphQuestionForm.rangeLow"    id="derivativeGraphQuestionRangeLow"  value="-10">
-        <input type="hidden" name="@DerivativeGraphQuestionForm.rangeHigh"   id="derivativeGraphQuestionRangeHigh" value="10">
         @for(order <- DerivativeOrder.all) {
         <label for="@order.asString" class="pure-radio">
             <input id="@order.asString" type="radio" name="@DerivativeGraphQuestionForm.derivativeOrder" value="@order.asString" @if(order == FuncFirstSecond){checked} >

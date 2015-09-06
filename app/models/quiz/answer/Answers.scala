@@ -11,12 +11,13 @@ object Answers {
 
   // ======= FIND ======
   def list()(implicit session: Session) : List[Answer] =
-    answerTables.->(_.list, _.list, _.list).map(v => v._1 ++ v._2 ++ v._3)
+    answerTables.->(_.list, _.list, _.list, _.list).map(v => v._1 ++ v._2 ++ v._3 ++ v._4)
 
   def apply(answerId: AnswerId)(implicit session: Session) : Option[Answer] =
     answerTables.->(
       _.where(_.id === answerId).firstOption,
       _.where(_.id === answerId).firstOption,
-      _.where(_.id === answerId).firstOption).map(v => v._1 ++ v._2 headOption)
+      _.where(_.id === answerId).firstOption,
+      _.where(_.id === answerId).firstOption).map(v => v._1 ++ v._2 ++ v._3 ++ v._4 headOption)
 
 }

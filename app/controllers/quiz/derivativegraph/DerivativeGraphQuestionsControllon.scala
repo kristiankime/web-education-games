@@ -1,6 +1,6 @@
 package controllers.quiz.derivativegraph
 
-import com.artclod.mathml.{Match, MathML}
+import com.artclod.mathml.{MathMLEq, MathMLRange, Match, MathML}
 import com.artclod.slick.JodaUTC
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
@@ -16,6 +16,7 @@ import play.api.libs.json.{JsError, Json}
 import play.api.mvc.{Action, Controller}
 import play.api.data.format.Formats._
 import models.quiz.question.support.DerivativeOrder.derivativeOrderFormatter
+import com.artclod.mathml.MathMLEq.tightRange
 
 import scala.util.{Success, Failure}
 
@@ -65,23 +66,21 @@ object DerivativeGraphQuestionForm {
   val function = "function"
   val functionStr = "functionStr"
   val derivativeOrder = "derivativeOrder"
-  val rangeLow = "rangeLow"
-  val rangeHigh = "rangeHigh"
   // Validation Check Names
   val rangeValid = "rangeValid"
   val functionInvalid = "functionInvalid"
   val functionsSame = "functionsSame"
+  val functionsDisplayNicely = "functionsDisplayNicely"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
             functionStr -> nonEmptyText,
-            derivativeOrder -> of[DerivativeOrder],
-            rangeLow -> of[Double],
-            rangeHigh -> of[Double])
+            derivativeOrder -> of[DerivativeOrder])
     (DerivativeGraphQuestionForm.apply)(DerivativeGraphQuestionForm.unapply)
     verifying(rangeValid, fields => verifyRangeValid(fields) )
     verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
     verifying(functionsSame, fields => verifyFunctionsDifferent(fields))
+    verifying(functionsDisplayNicely, fields => QuestionForms.verifyFunctionDisplaysNicely(fields.functionMathML))
   )
 
   def toQuestion(user: User, form: DerivativeGraphQuestionForm) = DerivativeGraphQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, form.derivativeOrder, DerivativeGraphQuestionDifficulty(form.functionMathML))
@@ -96,11 +95,14 @@ object DerivativeGraphQuestionForm {
     if(      (f  ?= fp)  == Match.Yes ) { false }
     else if( (f  ?= fpp) == Match.Yes ) { false }
     else if( (fp ?= fpp) == Match.Yes ) { false }
-    else { true }
+    else                                { true  }
   }
+
 }
 
-case class DerivativeGraphQuestionForm(function: String, functionStr : String, derivativeOrder: DerivativeOrder, rangeLow: Double, rangeHigh: Double) {
+case class DerivativeGraphQuestionForm(function: String, functionStr : String, derivativeOrder: DerivativeOrder) {
+  val rangeLow = -1d * tightRange
+  val rangeHigh = tightRange
   // TODO handle errors for .get
   def functionMathML = MathML(function).get
 }

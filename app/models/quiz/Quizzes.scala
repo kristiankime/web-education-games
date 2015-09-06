@@ -40,7 +40,8 @@ object Quizzes {
     questionTables.->(
       _.filter(_.quizId === quizId).list,
       _.filter(_.quizId === quizId).list,
-      _.filter(_.quizId === quizId).list).map(v => v._1 ++ v._2 ++ v._3)
+      _.filter(_.quizId === quizId).list,
+      _.filter(_.quizId === quizId).list).map(v => v._1 ++ v._2 ++ v._3 ++ v._4)
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (

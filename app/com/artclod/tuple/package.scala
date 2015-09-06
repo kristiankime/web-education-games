@@ -14,4 +14,12 @@ package object tuple {
     def map[O](f : ((T1, T2, T3, T4)) => O) = f(t)
   }
 
+  implicit class MapTuple5[T1, T2, T3, T4, T5](t :(T1, T2, T3, T4, T5)){
+    def map[O](f : ((T1, T2, T3, T4, T5)) => O) = f(t)
+  }
+
+  implicit class MapTuple6[T1, T2, T3, T4, T5, T6](t :(T1, T2, T3, T4, T5, T6)){
+    def map[O](f : ((T1, T2, T3, T4, T5, T6)) => O) = f(t)
+  }
+
 }

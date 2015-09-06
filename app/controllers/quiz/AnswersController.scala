@@ -3,6 +3,7 @@ package controllers.quiz
 import com.artclod.util._
 import controllers.quiz.derivative.DerivativeAnswersControllon
 import controllers.quiz.derivativegraph.DerivativeGraphAnswersControllon
+import controllers.quiz.graphmatch.GraphMatchAnswersControllon
 import controllers.quiz.tangent.TangentAnswersControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.answer._
@@ -16,7 +17,8 @@ import scala.util._
 object AnswersController extends Controller with SecureSocialConsented
   with DerivativeAnswersControllon
   with DerivativeGraphAnswersControllon
-  with TangentAnswersControllon {
+  with TangentAnswersControllon
+  with GraphMatchAnswersControllon {
 
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
     Answers(answerId) match {

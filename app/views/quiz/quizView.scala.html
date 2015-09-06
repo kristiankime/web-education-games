@@ -45,10 +45,11 @@
     @if(access.write){
     <h4>Add a new Question</h4>
 
-    @tag.switch("createQuestion", forms.errorIndex,
+    @tag.switch("createQuestion", forms.errorIndexOrZero,
         ("Create a Derivative Question", views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id), forms.derivative)),
         ("Create a Derivative Graph Question", views.html.quiz.derivativegraph.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id), forms.derivativeGraph)),
-        ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), forms.tangent))
+        ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), forms.tangent)),
+        ("Create a Graph Match Question", views.html.quiz.graphmatch.questionEditor(QuestionsController.createGraphMatch(course.organizationId, course.id, quiz.id), forms.graphMatch))
     )
 
     @defining(quiz.results(course)) { quizResults =>

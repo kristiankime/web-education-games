@@ -62,3 +62,13 @@ object DerivativeGraphAnswerUnfinished {
   def apply(ownerId: UserId, questionId: QuestionId, derivativeOrder: DerivativeOrder, creationDate: DateTime)(correct: Boolean): DerivativeGraphAnswer =
     DerivativeGraphAnswer(null, ownerId, questionId, derivativeOrder, if(correct) 1 else 0, creationDate)
 }
+
+// ==== Graph Match ===
+case class GraphMatchAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, guessIndex: Short, correctNum: Short, creationDate: DateTime) extends Answer {
+  def display : Html = views.html.quiz.graphmatch.answerDisplay(this)
+}
+
+object GraphMatchAnswerUnfinished {
+  def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, creationDate: DateTime)(correct: Boolean): GraphMatchAnswer =
+    GraphMatchAnswer(null, ownerId, questionId, guessIndex, if(correct) 1 else 0, creationDate)
+}

@@ -44,15 +44,17 @@
             $("#@{name}Incorrect").text(ARTC.fmtPercent(data.@{incorrectPoints}));
         };
 
-        $.ajax({
-            type : "POST",
-            url : "/question/difficulty/graphmatch",
-            dataType : "json",
-            data : JSON.stringify(ajaxData),
-            contentType: "application/json",
-            success : ajaxSuccess,
-            processData: false
-            });
+        if(GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.valid) {
+            $.ajax({
+                type : "POST",
+                url : "/question/difficulty/graphmatch",
+                dataType : "json",
+                data : JSON.stringify(ajaxData),
+                contentType: "application/json",
+                success : ajaxSuccess,
+                processData: false
+                });
+            }
         }
     </script>
     </section>

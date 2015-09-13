@@ -33,7 +33,7 @@
             @atPointXStr  : TANGENT_QUESTION_X.rawStr,
             @atPointX     : TANGENT_QUESTION_X.mathML,
             @partnerSkill : @skillLevel
-        };
+        }
 
         var ajaxSuccess = function( data ) {
             $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
@@ -41,16 +41,20 @@
             $("#@{name}Incorrect").text(ARTC.fmtPercent(data.@{incorrectPoints}));
         };
 
-        $.ajax({
-            type : "POST",
-            url : "/question/difficulty/tangent",
-            dataType : "json",
-            data : JSON.stringify(ajaxData),
-            contentType: "application/json",
-            success : ajaxSuccess,
-            processData: false
-            });
+        if(TANGENT_QUESTION_FUNCTION.valid && TANGENT_QUESTION_X.valid) {
+            $.ajax({
+                type : "POST",
+                url : "/question/difficulty/tangent",
+                dataType : "json",
+                data : JSON.stringify(ajaxData),
+                contentType: "application/json",
+                success : ajaxSuccess,
+                processData: false
+                });
+            }
         }
+
+
     </script>
     </section>
     <!-- ========= TANGENT MATH SCORING ENDS HERE ======= -->

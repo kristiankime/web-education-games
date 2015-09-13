@@ -1,7 +1,7 @@
 @(name: String, skillLevel: Double)
 
 @import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
-@import controllers.quiz.tangent.TangentQuestionForm.{function, functionStr, atPointX, atPointXStr}
+@import controllers.quiz.graphmatch.GraphMatchQuestionForm.{ function1, functionStr1, function2, functionStr2, function3, functionStr3, graphThis }
 
 @defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 
@@ -28,10 +28,13 @@
         var @name = function ( result ) {
 
         var ajaxData = {
-            @functionStr  : TANGENT_QUESTION_FUNCTION.rawStr,
-            @function     : TANGENT_QUESTION_FUNCTION.mathML,
-            @atPointXStr  : TANGENT_QUESTION_X.rawStr,
-            @atPointX     : TANGENT_QUESTION_X.mathML,
+            @function1    : GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.mathML,
+            @functionStr1 : GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.rawStr,
+            @function2    : GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.mathML,
+            @functionStr2 : GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.rawStr,
+            @function3    : GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.mathML,
+            @functionStr3 : GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.rawStr,
+            @graphThis    : parseInt($("input[name=@{graphThis}]:checked").val()),
             @partnerSkill : @skillLevel
         };
 
@@ -43,7 +46,7 @@
 
         $.ajax({
             type : "POST",
-            url : "/question/difficulty/tangent",
+            url : "/question/difficulty/graphmatch",
             dataType : "json",
             data : JSON.stringify(ajaxData),
             contentType: "application/json",

@@ -1,0 +1,50 @@
+@(gameState: models.game.GameState,
+        quiz: models.quiz.Quiz,
+        question: models.quiz.question.GraphMatchQuestion,
+        currentAnswer: Option[Either[models.quiz.answer.GraphMatchAnswer, models.quiz.answer.GraphMatchAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.{GamesRequesteeController, GamesController}
+@import controllers.quiz.tangent.TangentQuestionForm
+@import helper._
+@import com.artclod.play.s
+@import views.html.tag._
+
+@mainWithBorder("Answering Question", tag.courseOpLink(gameState.game.course), gameLink(Html("game"), gameState.game)) {
+
+    <h2>You are answering Question for a game with @gameState.game.requestor.nameView </h2>
+
+    <h4>Below are a set of functions and a graph, figure out which function's graph is being displayed:</h4>
+
+    <section>
+    @question.display(false)
+    </section>
+    <br>
+
+    @for(answerEither <- currentAnswer) {
+    <section align="center">
+        <h4>
+        @answerEither match {
+            case Right(answer) => {You answered @answer.display that answer was @mathml.correct(answer.correct)}
+            case Left(answerTmp) => {You answered @answerTmp.display Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+        }
+        </h4>
+    </section>
+    }
+
+    @views.html.quiz.graphmatch.answerEditor(GamesRequesteeController.answerGraphMatchQuestion(gameState.game.id, question.id), currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
+
+    @* ===== Results ===== *@
+    @defining(question.results(user)) { results =>
+    @if(results.answers.nonEmpty) {
+    <section>
+        <h4>You have answered this questions @results.answers.size time@s(results.answers)</h4>
+        <ul>
+        @for(answer <- results.answers) {
+            <li> @answer.display this answer was @mathml.correct(answer.correct) </li>
+        }
+        </ul>
+    </section>
+    }
+    }
+
+}

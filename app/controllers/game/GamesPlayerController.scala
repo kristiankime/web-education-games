@@ -10,6 +10,7 @@ import controllers.game.GamesEmail._
 import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
 import controllers.quiz.derivativegraph.{DerivativeGraphQuestionForm, DerivativeGraphAnswerForm}
+import controllers.quiz.graphmatch.{GraphMatchAnswerForm, GraphMatchQuestionForm}
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
 import models.game.GameRole._
@@ -55,6 +56,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       }
     }
 
+  // ===== Start Create =====
   def createDerivativeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
@@ -107,6 +109,26 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
+  def createGraphMatchQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) =>
+        GraphMatchQuestionForm.values.bindFromRequest.fold(
+          errors =>
+            (game.gameRole(user), game.toState) match {
+              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.graphMatch(errors)))
+              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.graphMatch(errors)))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
+          form => {
+            val (updatedGame, quiz) = createdQuizEnsured(game)
+            GraphMatchQuestions.create(GraphMatchQuestionForm.toQuestion(user, form), quiz.id)
+            Redirect(routes.GamesController.game(updatedGame.id, None))
+          })
+    }
+  }
+  // ===== End Create =====
+
   def removeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
@@ -136,6 +158,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
+  // ===== Start Answer =====
   def answerDerivativeQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
@@ -192,6 +215,26 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
     }
   }
+
+  def answerGraphMatchQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+    questionToAnswer(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question: GraphMatchQuestion)) => {
+        GraphMatchAnswerForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val unfinishedAnswer = GraphMatchAnswerForm.toAnswerUnfinished(user, question, form)
+            GraphMatchAnswers.correct(question, form.guessIndex) match {
+              case Yes => Redirect(routes.GamesController.game(game.id, Some(GraphMatchAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case No => Redirect(routes.GamesController.answer(game.id, question.id, GraphMatchAnswers.createAnswer(unfinishedAnswer(false)).id))
+              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
+            }
+          })
+      }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
+    }
+  }
+  // ===== End Answer =====
 
   def finalizeAnswers(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {

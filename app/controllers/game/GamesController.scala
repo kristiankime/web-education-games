@@ -14,7 +14,7 @@ import models.game._
 import models.organization._
 import models.quiz.Quiz
 import models.quiz.answer._
-import models.quiz.question.{DerivativeGraphQuestion, TangentQuestion, DerivativeQuestion, Question}
+import models.quiz.question._
 import models.support._
 import models.user.{User, Users}
 import play.api.data.Form
@@ -174,17 +174,19 @@ object GamesController extends Controller with SecureSocialConsented {
   // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
   def questionViewRequestor(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestor.answeringDerivativeQuestionRequestor(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.play.requestor.answeringDerivativeQuestionRequestor(gameState, quiz, q, a))
       case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.play.requestor.answeringDerivativeGraphQuestionRequestor(gameState, quiz, q, a))
-      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]]) => Ok(views.html.game.play.requestor.answeringTangentQuestionRequestor(gameState, quiz, q, a))
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.play.requestor.answeringTangentQuestionRequestor(gameState, quiz, q, a))
+      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.play.requestor.answeringGraphMatchQuestionRequestor(gameState, quiz, q, a))
     }
 
   // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
   def questionViewRequestee(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]]) => Ok(views.html.game.play.requestee.answeringDerivativeQuestionRequestee(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.play.requestee.answeringDerivativeQuestionRequestee(gameState, quiz, q, a))
       case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.play.requestee.answeringDerivativeGraphQuestionRequestee(gameState, quiz, q, a))
-      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]]) => Ok(views.html.game.play.requestee.answeringTangentQuestionRequestee(gameState, quiz, q, a))
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.play.requestee.answeringTangentQuestionRequestee(gameState, quiz, q, a))
+      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.play.requestee.answeringGraphMatchQuestionRequestee(gameState, quiz, q, a))
     }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>

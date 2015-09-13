@@ -40,7 +40,7 @@ trait GraphMatchAnswersControllon extends Controller with SecureSocialConsented 
 object GraphMatchAnswerForm {
   val guessIndex = "guessIndex"
 
-  val values = Form(mapping(guessIndex -> number(min=GraphMatchQuestionWhich.whichMin, max=GraphMatchQuestionWhich.whichMin))
+  val values = Form(mapping(guessIndex -> number (min=GraphMatchQuestionWhich.whichMin, max=GraphMatchQuestionWhich.whichMax))
     (GraphMatchAnswerForm.apply)(GraphMatchAnswerForm.unapply))
 
   def toAnswerUnfinished(user: User, question: GraphMatchQuestion, form: GraphMatchAnswerForm) = GraphMatchAnswerUnfinished(user.id, question.id, form.guessIndex, JodaUTC.now)_

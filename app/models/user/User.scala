@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
 import service.Logins
 
-case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true) {
+case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true, lastAccess : DateTime) {
 
   def nameView = views.html.tag.name(this)
 

@@ -1,5 +1,6 @@
 package models
 
+import com.artclod.slick.JodaUTC
 import models.user.{User, Users}
 import play.api.test.Helpers.inMemoryDatabase
 import service.table.LoginsTable
@@ -18,7 +19,7 @@ object DBTest {
 	def newFakeUser(userNoId: Login)(implicit session: Session) : User = {
     val user = LoginsTable.insert(userNoId)
 
-    val createSettings = (() => Users.create(User(user.id, consented = true, name = Users.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false)))
+    val createSettings = (() => Users.create(User(user.id, consented = true, name = Users.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false, lastAccess = JodaUTC.zero)))
     val settings = createSettings.retryOnFail()
 
     settings.get

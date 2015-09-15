@@ -1,22 +1,35 @@
 package models.user
 
+import com.artclod.slick.JodaUTC
 import models.support.UserId
 import models.user.table._
+import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 
-import scala.util.Try
+import scala.Option
+import scala.util.{Failure, Success, Try}
 
 object Users {
 
   def nameDisplay(name:String, id: UserId) = name + "-" + id.v
 
-  def create(userSetting: User)(implicit session: Session) =
-    Try(session.withTransaction { usersTable.insert(userSetting); userSetting })
+  def create(user: User)(implicit session: Session) =
+    Try(session.withTransaction { usersTable.insert(user); user } )
 
-  def update(userSetting: User)(implicit session: Session) =
-    Try(session.withTransaction {usersTable.where(_.userId === userSetting.id).update(userSetting); userSetting })
+  def update(user: User)(implicit session: Session) =
+    Try(session.withTransaction { usersTable.where(_.userId === user.id).update(user); user } )
 
   def apply(userId: UserId)(implicit session: Session) : Option[User] = usersTable.where(_.userId === userId).firstOption
+
+  def access(userId: UserId)(implicit session: Session) : Try[User] = {
+    val userOp = usersTable.where(_.userId === userId).firstOption
+    val userTry = userOp match {
+      case Some(user) => Success(user)
+      case None => Failure(new IllegalArgumentException("no user found for id " + userId))
+    }
+    userTry.flatMap( user => update(user.copy(lastAccess = JodaUTC.now)))
+  }
+
 
   /**
    * Produces a name that was unique at the time that this call was made.

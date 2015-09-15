@@ -1,5 +1,6 @@
 package models.user
 
+import com.artclod.slick.JodaUTC
 import models.DBTest._
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
@@ -27,7 +28,7 @@ class UsersSpec extends Specification {
     "create a unique name if the name already exists" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user1 = newFakeUserNoConsent
-        val user1Settings = User(id = user1.id, name = "name")
+        val user1Settings = User(id = user1.id, name = "name", lastAccess = JodaUTC.zero)
         Users.create(user1Settings)
 
         val newName = Users.validName(user1Settings.name)
@@ -40,7 +41,7 @@ class UsersSpec extends Specification {
     "create multiple unique names, in series" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
-        val firstUserSettings = User(id = firstUser.id, name = "name")
+        val firstUserSettings = User(id = firstUser.id, name = "name", lastAccess = JodaUTC.zero)
         Users.create(firstUserSettings)
         firstUserSettings
       }
@@ -50,7 +51,7 @@ class UsersSpec extends Specification {
           val newUserName = Users.validName(settings.name)
           newUserName mustNotEqual (settings.name)
           val newUser = newFakeUserNoConsent
-          val newUserSettings = User(id = newUser.id, name = newUserName)
+          val newUserSettings = User(id = newUser.id, name = newUserName, lastAccess = JodaUTC.zero)
           Users.create(newUserSettings).get.name
         }
       }
@@ -62,7 +63,7 @@ class UsersSpec extends Specification {
 
       val settings = DB.withSession { implicit session: Session =>
         val firstUser = newFakeUserNoConsent
-        val firstUserSettings = User(id = firstUser.id, name = "name")
+        val firstUserSettings = User(id = firstUser.id, name = "name", lastAccess = JodaUTC.zero)
         Users.create(firstUserSettings)
         firstUserSettings
       }
@@ -72,7 +73,7 @@ class UsersSpec extends Specification {
           val newUserName = Users.validName(settings.name)
           newUserName mustNotEqual (settings.name)
           val newUser = newFakeUserNoConsent
-          val newUserSettings = User(id = newUser.id, name = newUserName)
+          val newUserSettings = User(id = newUser.id, name = newUserName, lastAccess = JodaUTC.zero)
           Users.create(newUserSettings)
         }
       }).par.map(_.retryOnFail(10)).seq.map(_.get.name) // run in parallel but also retry on fail

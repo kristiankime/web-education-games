@@ -9,17 +9,19 @@ import play.api.db.slick.DB
 import securesocial.core.{Authorization, Identity}
 import service._
 
+import scala.util.{Success, Failure}
+
 case class RequireAccess(level: Access, secured: Session => Option[Secured]) extends Authorization {
 
 	def isAuthorized(identity: Identity) = DB.withSession { implicit session: Session =>
 		(identity, secured(session)) match {
 			case (login: Login, Some(s)) =>
-				Users(login.id) match {
-					case None => false
-					case Some(user) => s.access(user, session) >= level
+				Users.access(login.id) match {
+					case Failure(_) => false
+					case Success(user) => s.access(user, session) >= level
 				}
 			case (login: Login, None) => false
-			case _ => throw new IllegalStateException("Identity was not the expected type this should not happen, programatic error")
+			case _ => throw new IllegalStateException("Identity was not the expected type (" + Login.getClass.getSimpleName + ") this should not happen, programatic error")
 		}
 	}
 

@@ -1,9 +1,11 @@
 package models.user.table
 
-import models.support.{UserId, _}
+import models.support._
+import org.joda.time.DateTime
 import models.user.User
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
+import com.artclod.slick.JodaUTC._
 
 import scala.slick.model.ForeignKeyAction
 
@@ -14,8 +16,9 @@ class UsersTable(tag: Tag) extends Table[User](tag, "application_users") {
   def allowAutoMatch = column[Boolean]("allow_auto_match")
   def seenHelp = column[Boolean]("seen_help")
   def emailGameUpdates = column[Boolean]("email_game_updates")
+  def lastAccess = column[DateTime]("last_access")
 
-  def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates) <> (User.tupled, User.unapply _)
+  def * = (userId, consented, name, allowAutoMatch, seenHelp, emailGameUpdates, lastAccess) <> (User.tupled, User.unapply _)
 
   def userFK = foreignKey("application_users__user_fk", userId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 

@@ -17,14 +17,16 @@ case class Login(id: UserId,
 	passwordInfo: Option[PasswordInfo],
 	creationDate: DateTime,
 	updateDate: DateTime) extends Identity {
+
 	def user = this
+
 }
 
 object Login {
 	def apply(implicit request: SecuredRequest[_]) = {
 		request.user match {
-			case user: Login => user
-			case _ => throw new IllegalStateException("User was not the expected type this should not happen, programmatic error")
+			case identity: Login => identity
+			case _ => throw new IllegalStateException("Identity was not the expected type (" + Login.getClass.getSimpleName + ") this should not happen, programmatic error")
 		}
 	}
 

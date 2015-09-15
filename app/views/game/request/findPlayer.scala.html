@@ -2,9 +2,10 @@
 
 @import controllers.game.routes.GamesController
 @import controllers.game.GameRequest
+@import models.user.User
 @import helper._
 
-@defining(user.studentsToPlayWith(course.id)) { students =>
+@defining(user.studentsToPlayWith(course.id)) { students : List[models.user.User] =>
 
 @mainWithBorder("Find a player for a game in course " + course.name,  views.html.tag.courseLink(course)) {
 
@@ -16,12 +17,22 @@
     <h5>Please select the player you want to play with (an invitation will be sent to them):</h5>
 
     @form(action = GamesController.requestGame(organization.id, course.id), 'class -> "pure-form") {
-        @for(student <- students.zipWithIndex){
-        <label for="player@student._2" class="pure-checkbox">
-            <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
-            @student._1.nameDisplay
-        </label>
-        }
+        <table class="pure-table pure-table-striped">
+            <tr><th>Player</th><th>Last Login</th></tr>
+            @for(student <- students.zipWithIndex) {
+            <tr>
+                <td>
+                    <label for="player@student._2" class="pure-checkbox">
+                    <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
+                    @student._1.nameDisplay
+                    </label>
+                </td>
+                <td>
+                    @tag.datetime(student._1.lastAccess)
+                </td>
+            }
+            </tr>
+        </table>
 	    <input type="submit" class="pure-button pure-button-primary" value="Submit">
     }
     }

@@ -9,6 +9,8 @@ import play.api.mvc.{AnyContent, Result}
 import securesocial.core.{Authorization, SecureSocial, SecuredRequest}
 import service.Login
 
+import scala.util.{Success, Failure}
+
 trait SecureSocialConsented extends SecureSocial {
 
   object ConsentedAction {
@@ -18,11 +20,11 @@ trait SecureSocialConsented extends SecureSocial {
 
     private def run(request: SecuredRequest[AnyContent], f: SecuredRequest[AnyContent] => User => Session => Result)(implicit session: Session) = {
       val login = Login(request)
-      Users(login.id) match {
-        case None => consentForm(request.path)
-        case Some(setting) => {
-            if(!setting.consented) { consentForm(request.path) }
-            else { f(request)(setting)(session) }
+      Users.access(login.id) match {
+        case Failure(_) => consentForm(request.path)
+        case Success(user) => {
+            if(!user.consented) { consentForm(request.path) }
+            else { f(request)(user)(session) }
         }
       }
     }

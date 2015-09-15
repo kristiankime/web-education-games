@@ -5,7 +5,7 @@
 # --- !Ups
 
 create table "answer_id" ("id" SERIAL NOT NULL PRIMARY KEY,"dummy" SMALLINT NOT NULL);
-create table "application_users" ("user_id" BIGINT NOT NULL PRIMARY KEY,"consented" BOOLEAN NOT NULL,"name" TEXT NOT NULL,"allow_auto_match" BOOLEAN NOT NULL,"seen_help" BOOLEAN NOT NULL,"email_game_updates" BOOLEAN NOT NULL);
+create table "application_users" ("user_id" BIGINT NOT NULL PRIMARY KEY,"consented" BOOLEAN NOT NULL,"name" TEXT NOT NULL,"allow_auto_match" BOOLEAN NOT NULL,"seen_help" BOOLEAN NOT NULL,"email_game_updates" BOOLEAN NOT NULL,"last_access" TIMESTAMP NOT NULL);
 create index "application_users__name_index" on "application_users" ("name");
 create table "courses" ("id" SERIAL NOT NULL PRIMARY KEY,"name" TEXT NOT NULL,"organization" BIGINT NOT NULL,"owner" BIGINT NOT NULL,"edit_code" TEXT NOT NULL,"view_code" TEXT,"creation_Date" TIMESTAMP NOT NULL,"update_date" TIMESTAMP NOT NULL);
 create table "courses_2_quizzes" ("course_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL,"start_date" TIMESTAMP,"end_date" TIMESTAMP);

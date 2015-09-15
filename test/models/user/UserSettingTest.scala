@@ -2,6 +2,7 @@ package models.user
 
 import java.util.concurrent.atomic.AtomicLong
 
+import com.artclod.slick.JodaUTC
 import models.support.UserId
 
 object UserSettingTest {
@@ -12,6 +13,6 @@ object UserSettingTest {
             allowAutoMatch: Boolean = true,
             seenHelp: Boolean = false,
             emailGameUpdates: Boolean = true) = {
-    User(UserId(id.getAndDecrement), consented, name, allowAutoMatch, seenHelp, emailGameUpdates)
+    User(UserId(id.getAndDecrement), consented, name, allowAutoMatch, seenHelp, emailGameUpdates, lastAccess = JodaUTC.zero)
   }
 }

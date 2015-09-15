@@ -2,6 +2,7 @@ package controllers
 
 import java.io.{PrintWriter, StringWriter}
 
+import com.artclod.slick.JodaUTC
 import com.google.common.annotations.VisibleForTesting
 import controllers.support.SecureSocialDB
 import models.user.{User, Users}
@@ -35,7 +36,7 @@ object Consent extends Controller with SecureSocialDB {
 
         val settings = (Users(user.id) match {
           case Some(setting) => Users.update(setting.copy(consented = consented))
-          case None => Users.create(User(id = user.id, consented = consented, name = defaultName(user), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true))
+          case None => Users.create(User(id = user.id, consented = consented, name = defaultName(user), allowAutoMatch = true, seenHelp = false, emailGameUpdates = true, lastAccess = JodaUTC.now))
         })
 
         (settings, consented, goTo) match {

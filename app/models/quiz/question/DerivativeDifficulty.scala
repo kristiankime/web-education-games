@@ -173,7 +173,7 @@ object DerivativeQuestionDifficulty {
 }
 
 object DerivativeGraphQuestionDifficulty {
-  def apply(e: MathMLElem): Double = 10d
+  def apply(e: MathMLElem): Double = DerivativeDifficulty(e)
 }
 
 object TangentQuestionDifficulty {

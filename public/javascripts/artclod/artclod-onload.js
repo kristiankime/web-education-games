@@ -2,7 +2,7 @@ if (!ARTC) {
     var ARTC = {};
 }
 
-// Take from: http://www.htmlgoodies.com/beyond/javascript/article.php/3724571/Using-Multiple-JavaScript-Onload-Functions.htm
+// Taken from: http://www.htmlgoodies.com/beyond/javascript/article.php/3724571/Using-Multiple-JavaScript-Onload-Functions.htm
 ARTC.addLoadEvent = function(func) {
     var oldonload = window.onload;
     if (typeof window.onload != 'function') {

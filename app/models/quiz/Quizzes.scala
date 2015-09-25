@@ -41,7 +41,9 @@ object Quizzes {
       _.filter(_.quizId === quizId).list,
       _.filter(_.quizId === quizId).list,
       _.filter(_.quizId === quizId).list,
-      _.filter(_.quizId === quizId).list).map(v => v._1 ++ v._2 ++ v._3 ++ v._4)
+      _.filter(_.quizId === quizId).list)
+      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
+
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (

@@ -37,34 +37,46 @@ case class MustHandle1[T1](v1: T1) {
   def ->[O1](f1: (T1) => O1) = f1(v1)
 
   def zip[Z1](z : MustHandle1[Z1]) = MustHandle( (v1, z.v1) )
+
+  def size = 1
 }
 
 case class MustHandle2[T1, T2](v1: T1, v2: T2) {
   def ->[O1, O2](f1: (T1) => O1, f2: (T2) => O2) = (f1(v1), f2(v2))
 
   def zip[Z1, Z2](z : MustHandle2[Z1, Z2]) = MustHandle( (v1, z.v1), (v2, z.v2) )
+
+  def size = 2
 }
 
 case class MustHandle3[T1, T2, T3](v1: T1, v2: T2, v3: T3) {
   def ->[O1, O2, O3](f1: (T1) => O1, f2: (T2) => O2, f3: (T3) => O3) = (f1(v1), f2(v2), f3(v3))
 
   def zip[Z1, Z2, Z3](z : MustHandle3[Z1, Z2, Z3]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3) )
+
+  def size = 3
 }
 
 case class MustHandle4[T1, T2, T3, T4](v1: T1, v2: T2, v3: T3, v4: T4) {
   def ->[O1, O2, O3, O4](f1: (T1) => O1, f2: (T2) => O2, f3: (T3) => O3, f4: (T4) => O4) = (f1(v1), f2(v2), f3(v3), f4(v4))
 
   def zip[Z1, Z2, Z3, Z4](z : MustHandle4[Z1, Z2, Z3, Z4]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4) )
+
+  def size = 4
 }
 
 case class MustHandle5[T1, T2, T3, T4, T5](v1: T1, v2: T2, v3: T3, v4: T4, v5: T5) {
   def ->[O1, O2, O3, O4, O5](f1: (T1) => O1, f2: (T2) => O2, f3: (T3) => O3, f4: (T4) => O4, f5: (T5) => O5) = (f1(v1), f2(v2), f3(v3), f4(v4), f5(v5))
 
   def zip[Z1, Z2, Z3, Z4, Z5](z : MustHandle5[Z1, Z2, Z3, Z4, Z5]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5) )
+
+  def size = 5
 }
 
 case class MustHandle6[T1, T2, T3, T4, T5, T6](v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) {
   def ->[O1, O2, O3, O4, O5, O6](f1: (T1) => O1, f2: (T2) => O2, f3: (T3) => O3, f4: (T4) => O4, f5: (T5) => O5, f6: (T6) => O6) = (f1(v1), f2(v2), f3(v3), f4(v4), f5(v5), f6(v6))
 
-  def zip[Z1, Z2, Z3, Z4, Z5, Z6](z : MustHandle6[Z1, Z2, Z3, Z4, Z5, Z5]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5), (v6, z.v6) )
+  def zip[Z1, Z2, Z3, Z4, Z5, Z6](z : MustHandle6[Z1, Z2, Z3, Z4, Z5, Z6]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5), (v6, z.v6) )
+
+  def size = 6
 }

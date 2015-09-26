@@ -39,6 +39,7 @@
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();
+                if(mathStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }
                 @for(onFailure <- failureCallback){@{onFailure}(result); }
             }
         };

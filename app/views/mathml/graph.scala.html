@@ -1,15 +1,18 @@
-@(name: String, initialFunction: String = "0")
+@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, xSize : Int = 300, ySize : Int = 300)
 
 @import com.artclod.mathml.MathMLEq.tightRange
 
-<div id='@{name}_box' class='jxgbox' style='width:500px; height:500px;'></div>
+<div class='inline secondary-content-bordered center-text'>
+    @for(title <- titleOp){<h4>@title</h4>}
+    <div id='@{name}_box' class='jxgbox' style='width:@{xSize}px; height:@{ySize}px;'></div>
+</div>
 
 <script type='text/javascript'>
     var @{name} = function() {
     var ret = {}
     //<![CDATA[
     var f = ARTC.mathJS.text2FunctionOfX("@{initialFunction}");
-    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: 250, originY: 250, unitX: 25, unitY: 25, showCopyright: false});
+    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(com.artclod.mathml.MathMLEq.tightRange*2)}, unitY: @{ySize/(com.artclod.mathml.MathMLEq.tightRange*2)}, showCopyright: false});
     board.suspendUpdate();
     var g = board.create('functiongraph', [f, -@{tightRange}, @{tightRange}], {strokeWidth: 3});
     board.unsuspendUpdate();

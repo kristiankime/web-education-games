@@ -39,12 +39,10 @@
     </fieldset>
     }
 
-    <h5>Function 1 graph</h5>
-    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_1") <br>
-    <h5>Function 2 graph</h5>
-    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_2") <br>
-    <h5>Function 3 graph</h5>
-    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_3") <br>
+    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_1", titleOp = Some("Function 1 graph"))
+    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_2", titleOp = Some("Function 2 graph"))
+    @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_3", titleOp = Some("Function 3 graph"))
+    <br class="clearBoth" />
 
     <script>
         var GRAPH_MATCH_QUESTION_UPDATE_1 = function(result) {

@@ -8,7 +8,7 @@
     @helper.form(action, 'id -> "tangentAnswerForm", 'class -> "pure-form") {
         <fieldset>
             <select name="@{DerivativeGraphAnswerForm.derivativeOrder}">
-                @for(derOrd <- models.quiz.question.support.DerivativeOrder.all){<option value="@derOrd.asString"> @derOrd.asString </option>}
+                @for(derOrd <- models.quiz.question.support.DerivativeOrder.all){<option value="@derOrd.asString"> @derOrd.niceString </option>}
             </select>
             <input type="submit" class="pure-button pure-button-primary" value="Submit">
             @link

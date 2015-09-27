@@ -32,12 +32,10 @@
     </fieldset>
     }
 
-    <h5>Function</h5>
-    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION") <br>
-    <h5>First Derivative</h5>
-    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE") <br>
-    <h5>Second Derivative</h5>
-    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_SECOND_DERIVATIVE") <br>
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION", titleOp = Some("Function"))
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE", titleOp = Some("First Derivative"))
+    @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_SECOND_DERIVATIVE", titleOp = Some("Second Derivative"))
+    <br class="clearBoth" />
 
     <script>
         var DERIVATIVE_GRAPH_QUESTION_UPDATE = function(result){

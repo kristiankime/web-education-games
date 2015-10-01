@@ -71,11 +71,11 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
   def atPointXViewableMath = new ViewableMath { val mathML = atPointX; val rawStr = atPointXStr }
 }
 
-case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, creationDate: DateTime, derivativeOrder: DerivativeOrder, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
+case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, showFunction: Boolean, creationDate: DateTime, derivativeOrder: DerivativeOrder, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
 
   def answersAndOwners(implicit session: Session) = DerivativeGraphQuestions.answersAndOwners(id)
 
-  def difficulty : Double = DerivativeGraphQuestionDifficulty(function)
+  def difficulty : Double = DerivativeGraphQuestionDifficulty(function, showFunction)
 
   def results(user: User)(implicit session: Session) = DerivativeGraphQuestionResults(user, this, answers(user))
 

@@ -11,6 +11,7 @@ trait AnswersTable[A <: Answer] extends Table[A] {
   def id = column[AnswerId]("id", O.PrimaryKey)
   def ownerId = column[UserId]("owner")
   def questionId = column[QuestionId]("question_id")
+  def comment = column[String]("comment")
   def correct = column[Short]("correct") // Note this represent a Boolean in the Answers Class, kept as a number for aggregation purposes
   def creationDate = column[DateTime]("creation_date")
 }

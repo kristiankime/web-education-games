@@ -13,6 +13,8 @@
 
     <h4>Below are graphs of a Function, its first and second derivative, figure out the order in which they are displayed:</h4>
 
+    The function is @if(results.question.showFunction){ @views.html.mathml.mathmlDisplay(results.question)} <br>
+
     <section>
         @results.question.display(false)
     </section>

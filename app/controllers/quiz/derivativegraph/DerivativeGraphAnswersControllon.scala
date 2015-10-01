@@ -45,7 +45,7 @@ object DerivativeGraphAnswerForm {
   val values = Form(mapping(derivativeOrder -> of[DerivativeOrder])
     (DerivativeGraphAnswerForm.apply)(DerivativeGraphAnswerForm.unapply))
 
-  def toAnswerUnfinished(user: User, question: DerivativeGraphQuestion, form: DerivativeGraphAnswerForm) = DerivativeGraphAnswerUnfinished(user.id, question.id, form.derivativeOrder, JodaUTC.now)_
+  def toAnswerUnfinished(user: User, question: DerivativeGraphQuestion, form: DerivativeGraphAnswerForm) = DerivativeGraphAnswerUnfinished(user.id, question.id, form.derivativeOrder, "", JodaUTC.now)_
 }
 
 case class DerivativeGraphAnswerForm(derivativeOrder: DerivativeOrder)

@@ -14,9 +14,10 @@ import scala.slick.model.ForeignKeyAction
 class DerivativeGraphQuestionsTable(tag: Tag) extends Table[DerivativeGraphQuestion](tag, "derivative_graph_questions") with QuestionsTable[DerivativeGraphQuestion] {
 	def mathML = column[MathMLElem]("mathml")
 	def rawStr = column[String]("rawstr")
+	def showFunction = column[Boolean]("show_function")
 	def derivativeOrder = column[DerivativeOrder]("derivativeOrder")
 
-	def * = (id, ownerId, mathML, rawStr, creationDate, derivativeOrder, atCreationDifficulty, quizId, order) <> (DerivativeGraphQuestion.tupled, DerivativeGraphQuestion.unapply _)
+	def * = (id, ownerId, mathML, rawStr, showFunction, creationDate, derivativeOrder, atCreationDifficulty, quizId, order) <> (DerivativeGraphQuestion.tupled, DerivativeGraphQuestion.unapply _)
 
 	def idFK = foreignKey("derivative_graph_questions__id_fk", id, QuestionIdNext.questionIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("derivative_graph_questions__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)

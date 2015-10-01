@@ -23,7 +23,7 @@ class PackageSpec extends Specification {
 		}
 
 		"get math string from Answer" in {
-			mathMLStr(Some(Right(DerivativeAnswer(AnswerId(0), UserId(0), QuestionId(0), Cn(0), "rawStr", NumericBoolean(false), JodaUTC.now)))) must beEqualTo(Some("rawStr"))
+			mathMLStr(Some(Right(DerivativeAnswer(AnswerId(0), UserId(0), QuestionId(0), Cn(0), "rawStr", "comment", NumericBoolean(false), JodaUTC.now)))) must beEqualTo(Some("rawStr"))
 		}
 	}
 	

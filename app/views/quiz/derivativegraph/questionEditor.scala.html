@@ -28,6 +28,11 @@
             @order.niceString
         </label>
         }
+
+        Display the Function formula, as well as the graph, when players are answering (this makes the question easier):
+        <label for="showFunctionTrue"  class="pure-radio"> <input id="showFunctionTrue"  type="radio" name="@DerivativeGraphQuestionForm.showFunction" value="true"          @for(c <- successCallback){onchange="@{c}();"}> Yes </label>
+        <label for="showFunctionFalse" class="pure-radio"> <input id="showFunctionFalse" type="radio" name="@DerivativeGraphQuestionForm.showFunction" value="false" checked @for(c <- successCallback){onchange="@{c}();"}> No </label>
+
         <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit()">
     </fieldset>
     }

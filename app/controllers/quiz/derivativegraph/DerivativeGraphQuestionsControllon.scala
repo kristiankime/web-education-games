@@ -36,8 +36,8 @@ trait DerivativeGraphQuestionsControllon extends Controller with SecureSocialCon
     }
   }
 
-  case class DerivativeGraphDifficultyRequest(functionStr: String, function: String, atPointXStr: String, atPointX: String, partnerSkill: Double)
-  case class DerivativeGraphDifficultyResponse(functionStr: String, function: String, atPointXStr: String, atPointX: String, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
+  case class DerivativeGraphDifficultyRequest(functionStr: String, function: String, derivativeOrder: String, showFunction: Boolean, partnerSkill: Double)
+  case class DerivativeGraphDifficultyResponse(functionStr: String, function: String, derivativeOrder: String, showFunction: Boolean, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
   implicit val formatDerivativeGraphDifficultyRequest = Json.format[DerivativeGraphDifficultyRequest]
   implicit val formatDerivativeGraphDifficultyResponse = Json.format[DerivativeGraphDifficultyResponse]
 
@@ -45,14 +45,13 @@ trait DerivativeGraphQuestionsControllon extends Controller with SecureSocialCon
     request.body.asJson.map { configJson =>
       configJson.validate[DerivativeGraphDifficultyRequest]
         .map { difficultyRequest =>
-        (MathML(difficultyRequest.function), MathML(difficultyRequest.atPointX)) match {
-          case (Failure(e), _) => BadRequest("Could not parse function [" + difficultyRequest.function + "] as mathml\n" + e.getStackTraceString)
-          case (_, Failure(e)) => BadRequest("Could not parse atPointX [" + difficultyRequest.atPointX + "] as mathml\n" + e.getStackTraceString)
-          case (Success(function), Success(atPointX)) => {
-            val diff = DerivativeGraphQuestionDifficulty(function)
+        (MathML(difficultyRequest.function)) match {
+          case (Failure(e)) => BadRequest("Could not parse function [" + difficultyRequest.function + "] as mathml\n" + e.getStackTraceString)
+          case (Success(function)) => {
+            val diff = DerivativeGraphQuestionDifficulty(function, difficultyRequest.showFunction)
             val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
             val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
-            Ok(Json.toJson(DerivativeGraphDifficultyResponse(difficultyRequest.functionStr, difficultyRequest.function, difficultyRequest.atPointXStr, difficultyRequest.atPointX, diff, correct, incorrect)))
+            Ok(Json.toJson(DerivativeGraphDifficultyResponse(difficultyRequest.functionStr, difficultyRequest.function, difficultyRequest.derivativeOrder, difficultyRequest.showFunction, diff, correct, incorrect)))
           }
         }
       }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
@@ -66,6 +65,7 @@ object DerivativeGraphQuestionForm {
   val function = "function"
   val functionStr = "functionStr"
   val derivativeOrder = "derivativeOrder"
+  val showFunction = "showFunction"
   // Validation Check Names
   val rangeValid = "rangeValid"
   val functionInvalid = "functionInvalid"
@@ -75,7 +75,8 @@ object DerivativeGraphQuestionForm {
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
             functionStr -> nonEmptyText,
-            derivativeOrder -> of[DerivativeOrder])
+            derivativeOrder -> of[DerivativeOrder],
+            showFunction -> boolean)
     (DerivativeGraphQuestionForm.apply)(DerivativeGraphQuestionForm.unapply)
     verifying(rangeValid, fields => verifyRangeValid(fields) )
     verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
@@ -83,7 +84,7 @@ object DerivativeGraphQuestionForm {
     verifying(functionsDisplayNicely, fields => QuestionForms.verifyFunctionDisplaysNicely(fields.functionMathML))
   )
 
-  def toQuestion(user: User, form: DerivativeGraphQuestionForm) = DerivativeGraphQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, form.derivativeOrder, DerivativeGraphQuestionDifficulty(form.functionMathML))
+  def toQuestion(user: User, form: DerivativeGraphQuestionForm) = DerivativeGraphQuestion(null, user.id, form.functionMathML, form.functionStr, form.showFunction, JodaUTC.now, form.derivativeOrder, DerivativeGraphQuestionDifficulty(form.functionMathML, form.showFunction))
 
   private def verifyRangeValid(f: DerivativeGraphQuestionForm) = f.rangeLow < f.rangeHigh
 
@@ -100,7 +101,7 @@ object DerivativeGraphQuestionForm {
 
 }
 
-case class DerivativeGraphQuestionForm(function: String, functionStr : String, derivativeOrder: DerivativeOrder) {
+case class DerivativeGraphQuestionForm(function: String, functionStr : String, derivativeOrder: DerivativeOrder, showFunction: Boolean) {
   val rangeLow = -1d * tightRange
   val rangeHigh = tightRange
   // TODO handle errors for .get

@@ -43,7 +43,7 @@ object GraphMatchAnswerForm {
   val values = Form(mapping(guessIndex -> number (min=GraphMatchQuestionWhich.whichMin, max=GraphMatchQuestionWhich.whichMax))
     (GraphMatchAnswerForm.apply)(GraphMatchAnswerForm.unapply))
 
-  def toAnswerUnfinished(user: User, question: GraphMatchQuestion, form: GraphMatchAnswerForm) = GraphMatchAnswerUnfinished(user.id, question.id, form.guessIndex, JodaUTC.now)_
+  def toAnswerUnfinished(user: User, question: GraphMatchQuestion, form: GraphMatchAnswerForm) = GraphMatchAnswerUnfinished(user.id, question.id, form.guessIndex, "", JodaUTC.now)_
 }
 
 case class GraphMatchAnswerForm(guessIndexInt: Int) {

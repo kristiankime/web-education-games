@@ -11,6 +11,7 @@ trait Answer extends Owned {
   val id: AnswerId
   val ownerId: UserId
   val questionId: QuestionId
+  val comment: String
   val correctNum: Short
   val creationDate: DateTime
 
@@ -30,17 +31,17 @@ trait Answer extends Owned {
 }
 
 // ==== Derivative ===
-case class DerivativeAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, correctNum: Short, creationDate: DateTime) extends Answer with ViewableMath {
+case class DerivativeAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, comment: String, correctNum: Short, creationDate: DateTime) extends Answer with ViewableMath {
   def display : Html = views.html.quiz.derivative.answerDisplay(this)
 }
 
 object DerivativeAnswerUnfinished {
-  def apply(ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, creationDate: DateTime)(correct: Boolean): DerivativeAnswer =
-    DerivativeAnswer(null, ownerId, questionId, mathML, rawStr, if(correct) 1 else 0, creationDate)
+  def apply(ownerId: UserId, questionId: QuestionId, mathML: MathMLElem, rawStr: String, comment: String, creationDate: DateTime)(correct: Boolean): DerivativeAnswer =
+    DerivativeAnswer(null, ownerId, questionId, mathML, rawStr, comment, if(correct) 1 else 0, creationDate)
 }
 
 // ==== Tangent ===
-case class TangentAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, slopeMathML: MathMLElem, slopeRawStr: String, interceptMathML: MathMLElem, interceptRawStr: String, correctNum: Short, creationDate: DateTime) extends Answer {
+case class TangentAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, slopeMathML: MathMLElem, slopeRawStr: String, interceptMathML: MathMLElem, interceptRawStr: String, comment: String, correctNum: Short, creationDate: DateTime) extends Answer {
   def display : Html = views.html.quiz.tangent.answerDisplay(this)
 
   def slope = new ViewableMath { val mathML = slopeMathML; val rawStr = slopeRawStr }
@@ -49,26 +50,26 @@ case class TangentAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, 
 }
 
 object TangentAnswerUnfinished {
-  def apply(ownerId: UserId, questionId: QuestionId, slopeMathML: MathMLElem, slopeRawStr: String, interceptMathML: MathMLElem, interceptRawStr: String, creationDate: DateTime)(correct: Boolean): TangentAnswer =
-    TangentAnswer(null, ownerId, questionId, slopeMathML, slopeRawStr, interceptMathML, interceptRawStr, if(correct) 1 else 0, creationDate)
+  def apply(ownerId: UserId, questionId: QuestionId, slopeMathML: MathMLElem, slopeRawStr: String, interceptMathML: MathMLElem, interceptRawStr: String, comment: String, creationDate: DateTime)(correct: Boolean): TangentAnswer =
+    TangentAnswer(null, ownerId, questionId, slopeMathML, slopeRawStr, interceptMathML, interceptRawStr, comment, if(correct) 1 else 0, creationDate)
 }
 
 // ==== Derivative Graph ===
-case class DerivativeGraphAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, derivativeOrder: DerivativeOrder, correctNum: Short, creationDate: DateTime) extends Answer {
+case class DerivativeGraphAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, derivativeOrder: DerivativeOrder, comment: String, correctNum: Short, creationDate: DateTime) extends Answer {
   def display : Html = views.html.quiz.derivativegraph.answerDisplay(this)
 }
 
 object DerivativeGraphAnswerUnfinished {
-  def apply(ownerId: UserId, questionId: QuestionId, derivativeOrder: DerivativeOrder, creationDate: DateTime)(correct: Boolean): DerivativeGraphAnswer =
-    DerivativeGraphAnswer(null, ownerId, questionId, derivativeOrder, if(correct) 1 else 0, creationDate)
+  def apply(ownerId: UserId, questionId: QuestionId, derivativeOrder: DerivativeOrder, comment: String, creationDate: DateTime)(correct: Boolean): DerivativeGraphAnswer =
+    DerivativeGraphAnswer(null, ownerId, questionId, derivativeOrder, comment, if(correct) 1 else 0, creationDate)
 }
 
 // ==== Graph Match ===
-case class GraphMatchAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, guessIndex: Short, correctNum: Short, creationDate: DateTime) extends Answer {
+case class GraphMatchAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, correctNum: Short, creationDate: DateTime) extends Answer {
   def display : Html = views.html.quiz.graphmatch.answerDisplay(this)
 }
 
 object GraphMatchAnswerUnfinished {
-  def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, creationDate: DateTime)(correct: Boolean): GraphMatchAnswer =
-    GraphMatchAnswer(null, ownerId, questionId, guessIndex, if(correct) 1 else 0, creationDate)
+  def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, creationDate: DateTime)(correct: Boolean): GraphMatchAnswer =
+    GraphMatchAnswer(null, ownerId, questionId, guessIndex, comment, if(correct) 1 else 0, creationDate)
 }

@@ -12,5 +12,5 @@ object TestDerivativeAnswer {
 		rawStr: String = "7",
 		correct: Boolean = false,
 		creationDate: DateTime = JodaUTC.zero) =
-		DerivativeAnswer(null, owner, questionId, mathML, rawStr, NumericBoolean(correct), creationDate)
+		DerivativeAnswer(null, owner, questionId, mathML, rawStr, "comment", NumericBoolean(correct), creationDate)
 }

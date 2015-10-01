@@ -17,7 +17,7 @@ class DerivativeAnswersTable(tag: Tag) extends Table[DerivativeAnswer](tag, "der
 	def mathML = column[MathMLElem]("mathml")
 	def rawStr = column[String]("rawstr")
 
-	def * = (id, ownerId, questionId, mathML, rawStr, correct, creationDate) <> (DerivativeAnswer.tupled, DerivativeAnswer.unapply _)
+	def * = (id, ownerId, questionId, mathML, rawStr, comment, correct, creationDate) <> (DerivativeAnswer.tupled, DerivativeAnswer.unapply _)
 
   def idFK  = foreignKey("derivative_answers__id_fk", id, AnswerIdNext.answerIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("derivative_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)

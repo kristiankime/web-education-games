@@ -50,7 +50,7 @@ object TangentAnswerForm {
     interceptRawStr -> nonEmptyText)
     (TangentAnswerForm.apply)(TangentAnswerForm.unapply))
 
-  def toAnswerUnfinished(user: User, question: TangentQuestion, form: TangentAnswerForm) = TangentAnswerUnfinished(user.id, question.id, form.slopeMathML, form.slopeRawStr, form.interceptMathML, form.interceptRawStr, JodaUTC.now)_
+  def toAnswerUnfinished(user: User, question: TangentQuestion, form: TangentAnswerForm) = TangentAnswerUnfinished(user.id, question.id, form.slopeMathML, form.slopeRawStr, form.interceptMathML, form.interceptRawStr, "", JodaUTC.now)_
 }
 
 case class TangentAnswerForm(slope : String, slopeRawStr : String, intercept : String, interceptRawStr : String) {

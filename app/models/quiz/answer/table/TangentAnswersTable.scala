@@ -18,7 +18,7 @@ class TangentAnswersTable(tag: Tag) extends Table[TangentAnswer](tag, "tangent_a
   def interceptMathML = column[MathMLElem]("intercept_mathml")
   def interceptRawStr = column[String]("intercept_rawstr")
 
-	def * = (id, ownerId, questionId, slopeMathML, slopeRawStr, interceptMathML, interceptRawStr, correct, creationDate) <> (TangentAnswer.tupled, TangentAnswer.unapply _)
+	def * = (id, ownerId, questionId, slopeMathML, slopeRawStr, interceptMathML, interceptRawStr, comment, correct, creationDate) <> (TangentAnswer.tupled, TangentAnswer.unapply _)
 
   def idFK  = foreignKey("tangent_answers__id_fk", id, AnswerIdNext.answerIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
   def ownerFK = foreignKey("tangent_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)

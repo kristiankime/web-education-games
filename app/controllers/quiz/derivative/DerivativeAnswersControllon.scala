@@ -46,7 +46,7 @@ object DerivativeAnswerForm {
     functionStr -> text)
     (DerivativeAnswerForm.apply)(DerivativeAnswerForm.unapply))
 
-  def toAnswerUnfinished(user: User, question: DerivativeQuestion, form: DerivativeAnswerForm) = DerivativeAnswerUnfinished(user.id, question.id, form.functionMathML, form.functionStr, JodaUTC.now)_
+  def toAnswerUnfinished(user: User, question: DerivativeQuestion, form: DerivativeAnswerForm) = DerivativeAnswerUnfinished(user.id, question.id, form.functionMathML, form.functionStr, "", JodaUTC.now)_
 }
 
 case class DerivativeAnswerForm(function: String, functionStr: String) {

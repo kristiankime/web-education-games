@@ -43,10 +43,10 @@
         <h4>Add a new Question</h4>
 
         @tag.switch("createQuestion", forms.errorIndexOrRandom,
-            ("Create a Derivative Question",       derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id),           forms.derivative,      successCallback = List("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess",           gameState.game.requestorSkill)),
-            ("Create a Derivative Graph Question", derivativegraph.questionEditor(GamesRequesteeController.createDerivativeGraphQuestion(gameState.game.id), forms.derivativeGraph, successCallback = List("derivativeGraphEditorSuccess")) += derivative.scoringHints("derivativeGraphEditorSuccess", gameState.game.requestorSkill)),
-            ("Create a Tangent Question",          tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id),                 forms.tangent,         successCallback = List("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess",                    gameState.game.requestorSkill)),
-            ("Create a Graph Match Question",      graphmatch.questionEditor(GamesRequesteeController.createGraphMatchQuestion(gameState.game.id),           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess")) += graphmatch.scoringHints("graphMatchEditorSuccess",           gameState.game.requestorSkill))
+            ("Create a Derivative Question",       derivative.questionEditor(GamesRequesteeController.createDerivativeQuestion(gameState.game.id),           forms.derivative,      successCallback = List("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess",                gameState.game.requestorSkill)),
+            ("Create a Derivative Graph Question", derivativegraph.questionEditor(GamesRequesteeController.createDerivativeGraphQuestion(gameState.game.id), forms.derivativeGraph, successCallback = List("derivativeGraphEditorSuccess")) += derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.game.requestorSkill)),
+            ("Create a Tangent Question",          tangent.questionEditor(GamesRequesteeController.createTangentQuestion(gameState.game.id),                 forms.tangent,         successCallback = List("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess",                         gameState.game.requestorSkill)),
+            ("Create a Graph Match Question",      graphmatch.questionEditor(GamesRequesteeController.createGraphMatchQuestion(gameState.game.id),           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess")) += graphmatch.scoringHints("graphMatchEditorSuccess",                gameState.game.requestorSkill))
         )
 
         }

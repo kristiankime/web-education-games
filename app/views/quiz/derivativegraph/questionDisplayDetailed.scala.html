@@ -1,7 +1,6 @@
 @(question: models.quiz.question.DerivativeGraphQuestion)
 
 @defining(question.mathJS){ mathJS : (String, String, String) =>
-
     @mathml.graph("GRAPH_1", mathJS._1, Some("Graph 1"))
     @mathml.graph("GRAPH_2", mathJS._2, Some("Graph 2"))
     @mathml.graph("GRAPH_3", mathJS._3, Some("Graph 3"))

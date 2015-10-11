@@ -307,10 +307,10 @@ first check to see what tags you already have:
 next create a tag with the next version:
     git tag -a vx.y.z -m 'version x.y.z'
 
-tags need to be push explicity
+tags need to be push explicitly
     git push origin vx.y.x
 
-to push that branch to heoku
+to push that branch to heroku
     git push heroku +vx.y.z^{commit}:master
     
 see http://stackoverflow.com/questions/4061481/how-do-you-push-a-git-tag-to-a-branch-using-a-refspec

@@ -8,6 +8,7 @@ import models.support._
 import models.user.{User, Users}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import service.Non
 
 case class Game(id: GameId = null,
                 requestDate: DateTime,
@@ -38,6 +39,8 @@ case class Game(id: GameId = null,
     case `requesteeId` => true
     case _ => false
   }
+
+  def isTeacher(implicit user: User, session: Session) = courseId.flatMap(Courses(_)).map(_.access).getOrElse(Non).write
 
   def gameRole(user: User) = user.id match {
     case `requesteeId` => Requestee

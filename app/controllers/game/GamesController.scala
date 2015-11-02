@@ -77,7 +77,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -97,6 +97,9 @@ object GamesController extends Controller with SecureSocialConsented {
           case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.requestee.awaitingQuizRequestee(state))
           case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestee.answeringQuizRequestee(state, answerIdOp.flatMap(id => Answers(id))))
           case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
+        }
+        else if(game.isTeacher(user, session)) {
+          throw new IllegalStateException("TODO code up teacher view")
         }
         else throw new IllegalStateException("TODO code up teacher view")
       }

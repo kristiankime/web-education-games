@@ -26,7 +26,7 @@ class GameSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val (organization, course) = organizationAndCourse
         val (requestee, requestor, teacher) = (newFakeUser, newFakeUser, newFakeUser)
-        val game = Games.request(requestor, requestee)
+        val game = Games.request(requestor, requestee, course)
 
         Courses.grantAccess(course, Edit)(teacher, session)
 
@@ -38,7 +38,7 @@ class GameSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val (organization, course) = organizationAndCourse
         val (requestee, requestor, teacher) = (newFakeUser, newFakeUser, newFakeUser)
-        val game = Games.request(requestor, requestee)
+        val game = Games.request(requestor, requestee, course)
 
         Courses.grantAccess(course, View)(teacher, session)
 
@@ -50,7 +50,7 @@ class GameSpec extends Specification {
       DB.withSession { implicit session: Session =>
         val (organization, course) = organizationAndCourse
         val (requestee, requestor, teacher) = (newFakeUser, newFakeUser, newFakeUser)
-        val game = Games.request(requestor, requestee)
+        val game = Games.request(requestor, requestee, course)
 
         game.isTeacher(teacher, session) must beFalse
       }

@@ -4,4 +4,64 @@
 
     <h2> Game Summary </h2>
 
+
+    @* REQUESTEE QUIZ *@
+    <h2> Requestee (@game.requestee.nameDisplay) Quiz </h2>
+
+    answers are by @game.requestor.nameDisplay <br>
+
+    @for(requesteeQuiz <- game.requesteeQuiz) {
+    <table class="pure-table pure-table-striped extra-border">
+        <tr>
+            <th>question</th>
+            <th>answer</th>
+            <th>result</th>
+        </tr>
+        @for(questionResult <- requesteeQuiz.results(game.requestor).results) {
+        <tr>
+            <td rowspan="@{questionResult.answers.size}">@questionResult.question.display(true)</td>
+            @for(firstAnswer <- questionResult.answers.headOption){ <td>@firstAnswer.display</td> <td>@mathml.correct(firstAnswer.correct)</td> }
+            @if(questionResult.answers.headOption.isEmpty) { <td> NA </td> <td> NA </td>}
+        </tr>
+        @for(answer <- questionResult.answers.drop(1)) {
+        <tr>
+            <td>@answer.display</td>
+            <td>@mathml.correct(answer.correct)</td>
+        </tr>
+        }
+        }
+    </table>
+    }
+    @if(game.requesteeQuiz.isEmpty) { No game has been created yet <br> }
+
+    @* REQUESTOR QUIZ *@
+    <h2> Requestor (@game.requestor.nameDisplay) Quiz </h2>
+
+    answers are by @game.requestee.nameDisplay <br>
+
+    @for(requestorQuiz <- game.requestorQuiz) {
+        <table class="pure-table pure-table-striped extra-border">
+            <tr>
+                <th>question</th>
+                <th>answer</th>
+                <th>result</th>
+            </tr>
+            @for(questionResult <- requestorQuiz.results(game.requestee).results) {
+                <tr>
+                    <td rowspan="@{questionResult.answers.size}">@questionResult.question.display(true)</td>
+                    @for(firstAnswer <- questionResult.answers.headOption){ <td>@firstAnswer.display</td> <td>@mathml.correct(firstAnswer.correct)</td> }
+                    @if(questionResult.answers.headOption.isEmpty) { <td> NA </td> <td> NA </td>}
+                </tr>
+                @for(answer <- questionResult.answers.drop(1)) {
+                    <tr>
+                        <td>@answer.display</td>
+                        <td>@mathml.correct(answer.correct)</td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+    @if(game.requestorQuiz.isEmpty) { No game has been created yet <br> }
+
+
 }

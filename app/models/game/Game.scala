@@ -8,7 +8,7 @@ import models.support._
 import models.user.{User, Users}
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import service.Non
+import service.{View, Access, Non}
 
 case class Game(id: GameId = null,
                 requestDate: DateTime,
@@ -28,7 +28,14 @@ case class Game(id: GameId = null,
                 requesteeTeacherPoints: Option[Double] = None,
                 requestorStudentPoints: Option[Double] = None,
                 requestorTeacherPoints: Option[Double] = None,
-                finishedDate: Option[DateTime] = None) {
+                finishedDate: Option[DateTime] = None) extends HasAccess {
+
+  def access(implicit user: User, session: Session) : Access = {
+    val courseAccess = course.map(_.access).getOrElse(Non)
+    val requestorAccess = if(isRequestor(user)){View}else{Non}
+    val requesteeAccess = if(isRequestee(user)){View}else{Non}
+    List(courseAccess, requestorAccess, requesteeAccess).max
+  }
 
   def isRequestor(user: User) = user.id match {
     case `requestorId` => true
@@ -40,7 +47,11 @@ case class Game(id: GameId = null,
     case _ => false
   }
 
-  def isTeacher(implicit user: User, session: Session) = courseId.flatMap(Courses(_)).map(_.access).getOrElse(Non).write
+  def isTeacher(implicit user: User, session: Session) = {
+    val course = courseId.flatMap(Courses(_))
+    val maybeAccess = course.map(_.access)
+    maybeAccess.getOrElse(Non).write
+  }
 
   def gameRole(user: User) = user.id match {
     case `requesteeId` => Requestee

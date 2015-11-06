@@ -8,7 +8,7 @@ import controllers.quiz.AnswersController
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
-import controllers.support.SecureSocialConsented
+import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.game.GameRole._
 import models.game._
 import models.organization._
@@ -21,6 +21,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.mvc._
+import service.Edit
 
 object GamesController extends Controller with SecureSocialConsented {
 
@@ -70,7 +71,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def summary(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def summary(gameId: GameId) = ConsentedAction(RequireAccess(Edit, gameId)) { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => Ok(views.html.game.review.summary(game))
@@ -99,9 +100,9 @@ object GamesController extends Controller with SecureSocialConsented {
           case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
         }
         else if(game.isTeacher(user, session)) {
-          throw new IllegalStateException("TODO code up teacher view")
+          Ok(views.html.game.review.summary(game))
         }
-        else throw new IllegalStateException("TODO code up teacher view")
+        else throw new IllegalStateException("TODO should restrict access so this doesn't happen")
       }
     }
 

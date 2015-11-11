@@ -15,13 +15,13 @@
 
     @for(requestorQuiz <- gameState.game.requestorQuiz ) {
     <section class="extra-border">
-        Your score as a student was @tag.percent(requestorQuiz.studentScore(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>
+        Your score as a student was @views.html.quiz.quizScore(requestorQuiz.results(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requestorQuiz.id)">details</a>
     </section>
     }
 
     @for(requesteeQuiz <- gameState.game.requesteeQuizIfAnswered ) {
     <section class="extra-border">
-        Your score as a teacher was @tag.percent(requesteeQuiz.teacherScore(gameState.game.requestor, gameState.game.requestorSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>
+        Your score as a teacher was @views.html.quiz.quizScoreTeacher(requesteeQuiz.results(gameState.game.requestor), gameState.game.requestorSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, requesteeQuiz.id)">details</a>
     </section>
     }
 

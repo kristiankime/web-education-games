@@ -106,10 +106,11 @@ trait RequestorStillAnswering extends RequestorAnswerStatus {
   def requestorDoneAnswering(implicit session: Session) = {
     val quiz = game.requesteeQuiz.get // Should always have a quiz here
     val requestor = game.requestor
+    val results = quiz.results(requestor)
     game.copy(
       requestorFinished = true,
-      requestorStudentPoints = Some(quiz.studentScore(requestor)),
-      requesteeTeacherPoints = Some(quiz.teacherScore(requestor, game.requestorSkill))
+      requestorStudentPoints = Some(results.studentPercent),
+      requesteeTeacherPoints = Some(results.teacherPercent(game.requestorSkill))
     ).maybeUpdateForGameDone
   }
 }
@@ -130,9 +131,10 @@ trait RequesteeStillAnswering extends RequesteeAnswerStatus {
   def requesteeDoneAnswering(implicit session: Session) = {
     val quiz = game.requestorQuiz.get // Should always have a quiz here
     val requestee = game.requestee
+    val results = quiz.results(requestee)
     game.copy(requesteeFinished = true,
-      requesteeStudentPoints = Some(quiz.studentScore(requestee)),
-      requestorTeacherPoints = Some(quiz.teacherScore(requestee, game.requesteeSkill))
+      requesteeStudentPoints = Some(results.studentPoints),
+      requestorTeacherPoints = Some(results.teacherPoints(game.requesteeSkill))
     ).maybeUpdateForGameDone
   }
 }

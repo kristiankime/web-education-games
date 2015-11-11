@@ -25,12 +25,12 @@
                 <td> @result.question.display() </td>
                 <td> @mathml.correct(result.correct) </td>
                 <td> @tag.difficultyLevel(result.question.difficulty)</td>
-                <td> @tag.percent(result.teacherScore(studentSkillLevel)) </td>
+                <td> @views.html.quiz.questionScoreTeacher(result, studentSkillLevel) </td>
             </tr>
             }
         </table>
 
-        Your score for this quiz: @tag.percent(quizResults.teacherScore(studentSkillLevel))<br>
+        Your score for this quiz: @views.html.quiz.quizScoreTeacher(quizResults, studentSkillLevel)<br>
         }
     </section>
 }

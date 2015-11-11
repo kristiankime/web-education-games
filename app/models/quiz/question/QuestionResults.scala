@@ -28,28 +28,31 @@ sealed trait QuestionResults {
     if (num == -1) None else Some(num + 1)
   }
 
-  val score: Option[Double] =
-    if (!attempted) None
-    else if(correct) Some(1d)
-    else Some(0d)
+//  val score: Option[Double] =
+//    if (!attempted) None
+//    else if(correct) Some(1d)
+//    else Some(0d)
+//
+//  def studentScore = if(correct) 1d else 0d
+//
+//  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
 
-  def studentScore = if(correct) 1d else 0d
+  def studentPointsOp =
+    if(!attempted)   None
+    else if(correct) Some(QuestionScoring.pointsPerQuestion)
+    else             Some(0)
 
-  def teacherScore(studentSkill: Double): Double
+  def studentPoints =
+    if(correct) QuestionScoring.pointsPerQuestion
+    else        0
+
+  def teacherPoints(studentSkill: Double): Int = QuestionScoring.teacherScore(question, correct, studentSkill)
 }
 
-case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults {
-  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
-}
+case class DerivativeQuestionResults(answerer: User, question: DerivativeQuestion, answers: List[DerivativeAnswer]) extends QuestionResults
 
-case class DerivativeGraphQuestionResults(answerer: User, question: DerivativeGraphQuestion, answers: List[DerivativeGraphAnswer]) extends QuestionResults {
-  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
-}
+case class DerivativeGraphQuestionResults(answerer: User, question: DerivativeGraphQuestion, answers: List[DerivativeGraphAnswer]) extends QuestionResults
 
-case class TangentQuestionResults(answerer: User, question: TangentQuestion, answers: List[TangentAnswer]) extends QuestionResults {
-  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
-}
+case class TangentQuestionResults(answerer: User, question: TangentQuestion, answers: List[TangentAnswer]) extends QuestionResults
 
-case class GraphMatchQuestionResults(answerer: User, question: GraphMatchQuestion, answers: List[GraphMatchAnswer]) extends QuestionResults {
-  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
-}
+case class GraphMatchQuestionResults(answerer: User, question: GraphMatchQuestion, answers: List[GraphMatchAnswer]) extends QuestionResults

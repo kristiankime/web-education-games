@@ -1,37 +1,28 @@
-@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@()
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Javascript Test Page</title>
+        @imports()
+    </head>
+    <body>
 
-@main("Tests"){
-
-    <div id="progressbar" data-bind="kendoProgressBar: percent"> </div>
-    <hr/>
+    <div id="progressbar" data-bind="kendoProgressBar: percent"></div>
     <input data-bind="value: percent" />
-    <hr />
-
     <script>
         $("#progressbar").kendoProgressBar({
             animation: {
-                duration: 500,
-                value: 30,
-                max: 100,
-            }
+                duration: 500
+            },
+            max:100
         });
-
         var ViewModel = function() {
-            this.percent = ko.observable(25);
+            this.percent = ko.observable(30);
         };
 
         ko.applyBindings(new ViewModel());
     </script>
 
-
-
-    @*<div id="progressbar"></div>*@
-    @*<script>*@
-            @*$("#progressbar").kendoProgressBar({*@
-                @*animation: {*@
-                    @*duration: 500*@
-                @*}*@
-            @*});*@
-    @*</script>*@
-
-}
+    </body>
+</html>

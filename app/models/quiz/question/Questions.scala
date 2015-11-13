@@ -60,7 +60,6 @@ object Questions {
       t => GraphMatchQuestions.correctResults(user, num)(t.question, t.answer))
       .toList[(QuestionResults, DateTime)](a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]])
 
-
   def incorrectResults(user: User, num: Int)(implicit session: Session) : List[(QuestionResults, DateTime)] =
     questionAndAnswerTables.->(
       t => DerivativeQuestions.incorrectResults(user, num)(t.question, t.answer),

@@ -6,7 +6,7 @@ import controllers.Home._
 import controllers.support.SecureSocialConsented
 import play.api.mvc.{Action, Controller}
 
-object Application extends Controller with SecureSocialConsented{
+object Application extends Controller {
 	val version = Version(0, 7, 1)
 
   /**
@@ -28,7 +28,7 @@ object Application extends Controller with SecureSocialConsented{
     Ok("GCed")
   }
 
-  def tests = ConsentedAction { implicit request => implicit user => implicit session =>
+  def tests = Action {
     Ok(views.html.tests())
   }
 
@@ -42,7 +42,7 @@ object Application extends Controller with SecureSocialConsented{
   }
 }
 
-object Version{
+object Version {
 	def apply(major: Int, minor: Int) : Version = Version(major, minor, None)
 
 	def apply(major: Int, minor: Int, build: Int) : Version = Version(major, minor, Some(build))

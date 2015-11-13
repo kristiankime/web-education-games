@@ -2,9 +2,11 @@ package controllers
 
 import java.lang.ref.WeakReference
 
+import controllers.Home._
+import controllers.support.SecureSocialConsented
 import play.api.mvc.{Action, Controller}
 
-object Application extends Controller {
+object Application extends Controller with SecureSocialConsented{
 	val version = Version(0, 7, 1)
 
   /**
@@ -24,6 +26,10 @@ object Application extends Controller {
   def forceGarbageCollection = Action {
     gc
     Ok("GCed")
+  }
+
+  def tests = ConsentedAction { implicit request => implicit user => implicit session =>
+    Ok(views.html.tests())
   }
 
   private def gc() {

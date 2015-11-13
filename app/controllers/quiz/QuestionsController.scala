@@ -55,7 +55,7 @@ object QuestionsController extends Controller with SecureSocialConsented
     }
 	}
 
-  // These fields are for the ajax requests for questions scores (see
+  // These fields are for the ajax requests for questions scores
   val difficulty = "difficulty"
   val partnerSkill = "partnerSkill"
   val correctPoints = "correctPoints"

@@ -5,8 +5,9 @@
 # Remove trailing /'s from paths 
 GET         /*path/                                                                    controllers.Application.untrail(path: String)
 
-# GC for testing
+# Testing pages
 GET         /gc                                                                        controllers.Application.forceGarbageCollection
+GET         /tests                                                                     controllers.Application.tests
 
 # Consent Form
 GET         /consent                                                                   controllers.Consent.consent(goTo: Option[String], error: Option[String])

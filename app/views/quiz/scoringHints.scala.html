@@ -1,25 +1,10 @@
-@(name: String, skillLevel: Double)
+@(name: String, skillLevel: Double, difficultyUrl: String)(ajaxData: Html)(valid: Html)
 
 @import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
-@import controllers.quiz.graphmatch.GraphMatchQuestionForm.{ function1, functionStr1, function2, functionStr2, function3, functionStr3, graphThis }
 
-@views.html.quiz.scoringHints(name, skillLevel, "/question/difficulty/graphmatch"){
-    {
-        @function1    : GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.mathML,
-        @functionStr1 : GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.rawStr,
-        @function2    : GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.mathML,
-        @functionStr2 : GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.rawStr,
-        @function3    : GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.mathML,
-        @functionStr3 : GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.rawStr,
-        @graphThis    : parseInt($("input[name=@{graphThis}]:checked").val()),
-        @partnerSkill : @skillLevel
-    }
-}{ GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.valid }
-
-@*
 @defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 
-    <!-- ========= TANGENT MATH SCORING STARTS HERE ======= -->
+    <!-- ========= SCORING HINTS START HERE ======= -->
     <section>
     <h4>Scoring Information @tag.icon("icon-help", 'data_ot -> infoText)</h4>
 
@@ -41,27 +26,26 @@
     <script>
         var @name = function ( result ) {
 
+        var ajaxData = @ajaxData;
+        @*
         var ajaxData = {
-            @function1    : GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.mathML,
-            @functionStr1 : GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.rawStr,
-            @function2    : GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.mathML,
-            @functionStr2 : GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.rawStr,
-            @function3    : GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.mathML,
-            @functionStr3 : GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.rawStr,
-            @graphThis    : parseInt($("input[name=@{graphThis}]:checked").val()),
+            @functionStr  : TANGENT_QUESTION_FUNCTION.rawStr,
+            @function     : TANGENT_QUESTION_FUNCTION.mathML,
+            @atPointXStr  : TANGENT_QUESTION_X.rawStr,
+            @atPointX     : TANGENT_QUESTION_X.mathML,
             @partnerSkill : @skillLevel
-        };
+        }*@
 
         var ajaxSuccess = function( data ) {
             $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
-            $("#@{name}Correct").text(ARTC.fmtPercent(data.@{correctPoints}));
-            $("#@{name}Incorrect").text(ARTC.fmtPercent(data.@{incorrectPoints}));
+            $("#@{name}Correct").text(data.@{correctPoints});
+            $("#@{name}Incorrect").text(data.@{incorrectPoints});
         };
 
-        if(GRAPH_MATCH_FUNCTION_1_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_2_QUESTION_FORM.valid && GRAPH_MATCH_FUNCTION_3_QUESTION_FORM.valid) {
+        if( @valid @*TANGENT_QUESTION_FUNCTION.valid && TANGENT_QUESTION_X.valid*@) {
             $.ajax({
                 type : "POST",
-                url : "/question/difficulty/graphmatch",
+                url : "@difficultyUrl", @*"/question/difficulty/tangent",*@
                 dataType : "json",
                 data : JSON.stringify(ajaxData),
                 contentType: "application/json",
@@ -70,7 +54,9 @@
                 });
             }
         }
+
+
     </script>
     </section>
-    <!-- ========= TANGENT MATH SCORING ENDS HERE ======= -->
-}*@
+    <!-- ========= SCORING HINTS END HERE ======= -->
+}

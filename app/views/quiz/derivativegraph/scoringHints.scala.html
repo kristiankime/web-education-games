@@ -3,6 +3,18 @@
 @import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
 @import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm.{function, functionStr, derivativeOrder, showFunction}
 
+
+@views.html.quiz.scoringHints(name, skillLevel, "/question/difficulty/derivativegraph"){
+    {
+      @functionStr : DERIVATIVE_GRAPH_QUESTION_FORM.rawStr,
+      @function : DERIVATIVE_GRAPH_QUESTION_FORM.mathML,
+      @derivativeOrder : $("input[type='radio'][name='@derivativeOrder']:checked").val(),
+      @showFunction : ($("input[type='radio'][name='@showFunction']:checked").val() === 'true'),
+      @partnerSkill : @skillLevel
+    }
+}{ true }
+
+@*
 @defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
 
     <!-- ========= DERIVATIVE MATH SCORING STARTS HERE ======= -->
@@ -54,4 +66,4 @@
     </script>
     </section>
     <!-- ========= DERIVATIVE MATH SCORING ENDS HERE ======= -->
-}
+}*@

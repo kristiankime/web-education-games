@@ -20,8 +20,8 @@
             <td> <span id="@{name}Difficulty">NA</span> </td>
             @*<td> <span id="@{name}Correct">NA</span> </td>*@
             @*<td> <span id="@{name}Incorrect">NA</span> </td>*@
-            <td> @tag.bar(name + "Correct") </td>
-            <td> @tag.bar(name + "Incorrect") </td>
+            <td> @tag.bar(name + "Correct", "correctProgressBar") </td>
+            <td> @tag.bar(name + "Incorrect", "incorrectProgressBar") </td>
         </tr>
     </table>
 

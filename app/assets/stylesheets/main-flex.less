@@ -183,7 +183,7 @@ div.inline { float:left; }
 //}
 
 .correctProgressBar .k-progressbar {
-  //width: 100%;
+  width: 100%;
   background-color: @light;
   //color: lightgreen; // changes text color
   border-color: lightgrey;
@@ -195,3 +195,15 @@ div.inline { float:left; }
   }
 }
 
+.incorrectProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  //color: lightgreen; // changes text color
+  border-color: lightgrey;
+
+  .k-state-selected {
+    background-color: palevioletred;
+    //color: green;
+    border-color: lightgrey;
+  }
+}

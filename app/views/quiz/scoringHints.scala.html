@@ -18,8 +18,10 @@
         <tr>
             <td> @tag.skillLevel(skillLevel) </td>
             <td> <span id="@{name}Difficulty">NA</span> </td>
-            <td> <span id="@{name}Correct">NA</span> </td>
-            <td> <span id="@{name}Incorrect">NA</span> </td>
+            @*<td> <span id="@{name}Correct">NA</span> </td>*@
+            @*<td> <span id="@{name}Incorrect">NA</span> </td>*@
+            <td> @tag.bar(name + "Correct") </td>
+            <td> @tag.bar(name + "Incorrect") </td>
         </tr>
     </table>
 
@@ -38,8 +40,10 @@
 
         var ajaxSuccess = function( data ) {
             $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
-            $("#@{name}Correct").text(data.@{correctPoints});
-            $("#@{name}Incorrect").text(data.@{incorrectPoints});
+            @*$("#@{name}Correct").text(data.@{correctPoints});*@
+            @*$("#@{name}Incorrect").text(data.@{incorrectPoints});*@
+            @{name}CorrectModel.@{name}Correct(data.@{correctPoints})
+            @{name}IncorrectModel.@{name}Incorrect(data.@{incorrectPoints})
         };
 
         if( @valid @*TANGENT_QUESTION_FUNCTION.valid && TANGENT_QUESTION_X.valid*@) {

@@ -29,7 +29,7 @@ object Application extends Controller {
   }
 
   def tests = Action {
-    Ok(views.html.tests())
+    Ok(views.html.tests("pBar"))
   }
 
   private def gc() {

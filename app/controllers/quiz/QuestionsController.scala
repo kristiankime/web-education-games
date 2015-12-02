@@ -44,7 +44,7 @@ object QuestionsController extends Controller with SecureSocialConsented
     }
 	}
 
-	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) +
       QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult

@@ -16,7 +16,7 @@ import play.api.mvc.Controller
 
 trait DerivativeAnswersControllon extends Controller with SecureSocialConsented {
 
-  def createDerivative(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivative(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) + QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz, question : DerivativeQuestion)) => {

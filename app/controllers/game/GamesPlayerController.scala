@@ -57,7 +57,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
 
   // ===== Start Create =====
-  def createDerivativeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivativeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -71,7 +71,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def createDerivativeGraphQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivativeGraphQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -90,7 +90,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def createTangentQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createTangentQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -109,7 +109,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def createGraphMatchQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createGraphMatchQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -129,7 +129,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
   }
   // ===== End Create =====
 
-  def removeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def removeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -143,7 +143,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
@@ -159,7 +159,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
   }
 
   // ===== Start Answer =====
-  def answerDerivativeQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerDerivativeQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question : DerivativeQuestion)) => {
@@ -178,7 +178,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerDerivativeGraphQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerDerivativeGraphQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question: DerivativeGraphQuestion)) => {
@@ -197,7 +197,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerTangentQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerTangentQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question: TangentQuestion)) => {
@@ -216,7 +216,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerGraphMatchQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerGraphMatchQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question: GraphMatchQuestion)) => {
@@ -236,7 +236,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
   }
   // ===== End Answer =====
 
-  def finalizeAnswers(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def finalizeAnswers(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {

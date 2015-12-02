@@ -48,7 +48,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def requestGame(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def requestGame(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction { implicit request => implicit user => implicit session =>
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) => GameRequest.form.bindFromRequest.fold(
@@ -78,7 +78,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -106,7 +106,7 @@ object GamesController extends Controller with SecureSocialConsented {
       }
     }
 
-  def respond(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def respond(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => GameResponse.form.bindFromRequest.fold(

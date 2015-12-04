@@ -1,0 +1,9 @@
+@(gameState: models.game.mask.GameMask)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@mainWithBorder("Game Declined", tag.courseOpLink(gameState.game.course)) {
+
+    @if(gameState.requestor) {You asked to play a game with @gameState.game.requestee.nameView but they declined to play}
+    @if(gameState.requestee) { @gameState.game.requestor.nameView requested to play a game with you but you declined to play }
+
+}
+

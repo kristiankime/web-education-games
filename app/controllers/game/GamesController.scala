@@ -78,6 +78,31 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
+  def gameNEW(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) => {
+        game.toMask(user) match  {
+          case mask : mask.ResponseRequired              => Ok(views.html.games.request.responding(mask))
+          case mask : mask.RejectedNoQuiz                => Ok(views.html.games.request.rejected(mask))
+          case mask : mask.RejectedQuizDone              => Ok(views.html.games.request.rejected(mask))
+
+          case mask : mask.RequestedNoQuiz               => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+          case mask : mask.AcceptedMeNoQuizOtherNoQuiz   => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+          case mask : mask.AcceptedMeNoQuizOtherQuizDone => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+
+          case mask : mask.RequestedQuizDone             => Ok
+          case mask : mask.AcceptedMeQuizDoneOtherNoQuiz => Ok
+
+          case mask : mask.QuizzesDoneMeAnsOtherAns      => Ok
+          case mask : mask.QuizzesDoneMeAnsOtherDone     => Ok
+          case mask : mask.QuizzesDoneMeDoneOtherAns     => Ok
+          case mask : mask.GameDone                      => Ok
+        }
+      }
+    }
+  }
+
   def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
@@ -105,6 +130,37 @@ object GamesController extends Controller with SecureSocialConsented {
         else throw new IllegalStateException("TODO should restrict access so this doesn't happen")
       }
     }
+
+  def respondNEW(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) => GameResponse.form.bindFromRequest.fold(
+        errors => BadRequest(views.html.errors.formErrorPage(errors)),
+        accepted => {
+          val gameState = game.toMask(user) match {
+            case g : mask.NeedToRespond => g
+            case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[GameRequested].getName + "] but was " + game.toState)
+          }
+          if (accepted) {
+            Games.update(gameState.accept)
+            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+              val userName = user.nameDisplay
+              mail.setSubject(userName + " accepted your CalcTutor game request")
+              mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
+            }
+          }
+          else {
+            Games.update(gameState.reject)
+            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+              val userName = user.nameDisplay
+              mail.setSubject(userName + " rejected your CalcTutor game request")
+              mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))
+            }
+          }
+          Redirect(routes.GamesController.game(game.id, None))
+        })
+    }
+  }
 
   def respond(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
     GamesController(gameId) match {

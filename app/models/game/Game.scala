@@ -94,6 +94,12 @@ case class Game(id: GameId = null,
     case _ => throw new IllegalStateException("user [" + user + "] was not the requestor or the requestee")
   }
 
+  def otherPlayerId(userId: UserId) = userId match {
+    case `requestorId` => requesteeId
+    case `requesteeId` => requestorId
+    case _ => throw new IllegalStateException("user [" + userId + "] was not the requestor or the requestee")
+  }
+
   def course(implicit session: Session) = courseId.map(Courses(_).get)
 
   def ensureRequestorQuiz(implicit user: User, session: Session) : (Game, Quiz) = requestorQuizId match {
@@ -149,6 +155,8 @@ case class Game(id: GameId = null,
     case _ => throw new IllegalStateException("Game was not in an allowed state, probably programming error " + this)
   }
 
+  def toMask(me: User) : GameMask = toMask(me.id, this.otherPlayerId(me.id))
+
   def toMask(meId: UserId, otherId: UserId): GameMask =
   (meId, otherId) match {
     // me is requestor
@@ -176,8 +184,8 @@ case class Game(id: GameId = null,
     case (requesteeId, requestorId) =>
       (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
         // Response Requested
-        case (GameResponseStatus.requested,       _, false,    None, false, false, false,    None) => mask.RequestedNoQuiz(this, meId, otherId)
-        case (GameResponseStatus.requested, Some(_),  true,    None, false, false, false,    None) => mask.RequestedQuizDone(this, meId, otherId)
+        case (GameResponseStatus.requested,       _, false,    None, false, false, false,    None) => mask.ResponseRequired(this, meId, otherId)
+        case (GameResponseStatus.requested, Some(_),  true,    None, false, false, false,    None) => mask.ResponseRequired(this, meId, otherId)
         // Game Rejected
         case (GameResponseStatus.rejected,       _,  false,    None, false, false, false, Some(_)) => mask.RejectedNoQuiz(this, meId, otherId)
         case (GameResponseStatus.rejected,  Some(_),  true,    None, false, false, false, Some(_)) => mask.RejectedQuizDone(this, meId, otherId)

@@ -1,0 +1,66 @@
+@(gameState: models.game.mask.GameMask with models.game.mask.MyQuizUnfinished, forms: controllers.quiz.QuestionForms)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.GamesRequesteeController
+@import controllers.game.GameRemoveQuestion
+@import helper._
+@import com.artclod.collection.PimpedOptionList
+@import models.game.mask.GameMask.numberOfQuestions
+@import views.html.quiz._
+
+@defining(gameState.myQuizOp) { quizOp : Option[models.quiz.Quiz] =>
+@defining(quizOp.map(_.questions).dropOption) { questions : List[models.quiz.question.Question] =>
+@defining(numberOfQuestions - questions.size) { numQuestionRemaining : Int =>
+
+@majorMinor("Create Game Quiz", tag.courseOpLink(gameState.game.course)) {
+    <section class="primary-content">
+        <h1>Create a Game Quiz</h1>
+
+        You are now playing a game with @gameState.game.requestor.nameView, and need to create a Quiz for them. <br>
+
+        @if(gameState.otherQuizDone){
+        They have finished creating their quiz and are waiting for you to finish yours <br>
+        }
+
+        @views.html.quiz.questionCreationError(forms)
+
+        @for(quiz <- quizOp){
+        <table class="pure-table pure-table-striped">
+            <th>Question</th> <th> Remove </th>
+            @for(question <- questions){
+            <tr>
+                <td> @question.display() </td>
+                <td> @form(gameState.removeQuestionCall, 'class -> "pure-form") {<input type="hidden" name="@GameRemoveQuestion.removeId" value="@question.id.v"> <input type="submit" class="pure-button" value="remove" > } </td>
+            </tr>
+            }
+        </table>
+        }
+
+        @if(numQuestionRemaining == 0){
+        <h4> Your quiz has all the questions it needs. You can finalize the quiz if you want. Or remove a question and add another if you don't like one.</h4>
+        } else {
+        <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
+
+        <h4>Add a new Question</h4>
+
+        @tag.switch("createQuestion", forms.errorIndexOrRandom,
+            ("Create a Derivative Question",       derivative.questionEditor(gameState.createDerivativeQuestionCall,           forms.derivative,      successCallback = List("derivativeEditorSuccess")) += derivative.scoringHints("derivativeEditorSuccess",                gameState.game.requestorSkill)),
+            ("Create a Derivative Graph Question", derivativegraph.questionEditor(gameState.createDerivativeGraphQuestionCall, forms.derivativeGraph, successCallback = List("derivativeGraphEditorSuccess")) += derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.game.requestorSkill)),
+            ("Create a Tangent Question",          tangent.questionEditor(gameState.createTangentQuestionCall,                 forms.tangent,         successCallback = List("tangentEditorSuccess")) += tangent.scoringHints("tangentEditorSuccess",                         gameState.game.requestorSkill)),
+            ("Create a Graph Match Question",      graphmatch.questionEditor(gameState.createGraphMatchQuestionCall,           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess")) += graphmatch.scoringHints("graphMatchEditorSuccess",                gameState.game.requestorSkill))
+        )
+
+        }
+
+        @if(numQuestionRemaining == 0){
+        @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "pure-form") {
+            <input type="submit" class="pure-button pure-button-primary" value="Finalize Quiz" >
+        }
+        }
+    </section>
+}{  @* ===== Minor Content Here ==== *@
+    @views.html.quiz.recentHistory(gameState.game.requestor)
+}
+
+}
+}
+}

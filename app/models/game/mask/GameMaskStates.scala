@@ -11,7 +11,11 @@ sealed trait ResponseStatus extends GameSetup {
   def responseCheck : Unit
 }
 
-trait Requested extends ResponseStatus {
+trait AwaitingResponse extends ResponseStatus {
+  override def responseCheck = if(game.response != GameResponseStatus.requested) {throw new IllegalStateException("Game must be in request state")}
+}
+
+trait NeedToRespond extends ResponseStatus {
   override def responseCheck = if(game.response != GameResponseStatus.requested) {throw new IllegalStateException("Game must be in request state")}
 
   def accept(implicit session: Session) = {
@@ -19,7 +23,7 @@ trait Requested extends ResponseStatus {
     game.copy(response = GameResponseStatus.accepted)
   }
 
-  def reject(requesteeId : UserId)(implicit session: Session) = {
+  def reject(implicit session: Session) = {
     if (!requestee) throw new IllegalStateException("user [" + meId + "] attempted to accept game but was not requestee [" + meId + "]")
     game.copy(response = GameResponseStatus.rejected, finishedDate = Some(JodaUTC.now))
   }

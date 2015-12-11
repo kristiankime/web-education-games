@@ -1,0 +1,9 @@
+@(gameState: models.game.mask.GameMask with models.game.mask.MyQuizFinished )(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@mainWithBorder("Awaiting Quiz", tag.courseOpLink(gameState.game.course)) {
+
+    You finished your quiz but @gameState.other.nameView hasn't yet built theirs.
+    Please wait for the other player to finish their game (you will need to reload the page).<br>
+
+}
+

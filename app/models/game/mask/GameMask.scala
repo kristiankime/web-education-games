@@ -60,6 +60,12 @@ trait GameSetup {
   def finalizeCreatedQuiz : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeCreatedQuiz(game.id) }
     else {          controllers.game.routes.GamesRequestorController.finalizeCreatedQuiz(game.id) }
+
+
+
+  def finalizeAnsweringQuiz : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeAnswers(game.id) }
+    else {          controllers.game.routes.GamesRequestorController.finalizeAnswers(game.id) }
 }
 
 sealed trait GameMask extends GameSetup {

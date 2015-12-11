@@ -91,12 +91,14 @@ object GamesController extends Controller with SecureSocialConsented {
           case mask : mask.AcceptedMeNoQuizOtherNoQuiz   => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
           case mask : mask.AcceptedMeNoQuizOtherQuizDone => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
 
-          case mask : mask.RequestedQuizDone             => Ok
-          case mask : mask.AcceptedMeQuizDoneOtherNoQuiz => Ok
+          case mask : mask.RequestedQuizDone             => Ok(views.html.games.play.awaitingQuiz(mask))
+          case mask : mask.AcceptedMeQuizDoneOtherNoQuiz => Ok(views.html.games.play.awaitingQuiz(mask))
 
-          case mask : mask.QuizzesDoneMeAnsOtherAns      => Ok
-          case mask : mask.QuizzesDoneMeAnsOtherDone     => Ok
+          case mask : mask.QuizzesDoneMeAnsOtherAns      => Ok(views.html.games.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
+          case mask : mask.QuizzesDoneMeAnsOtherDone     => Ok(views.html.games.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
+
           case mask : mask.QuizzesDoneMeDoneOtherAns     => Ok
+
           case mask : mask.GameDone                      => Ok
         }
       }

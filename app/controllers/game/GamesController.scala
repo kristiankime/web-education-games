@@ -78,7 +78,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def gameNEW(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
@@ -86,26 +86,21 @@ object GamesController extends Controller with SecureSocialConsented {
           case mask : mask.ResponseRequired              => Ok(views.html.games.request.responding(mask))
           case mask : mask.RejectedNoQuiz                => Ok(views.html.games.request.rejected(mask))
           case mask : mask.RejectedQuizDone              => Ok(views.html.games.request.rejected(mask))
-
           case mask : mask.RequestedNoQuiz               => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
           case mask : mask.AcceptedMeNoQuizOtherNoQuiz   => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
           case mask : mask.AcceptedMeNoQuizOtherQuizDone => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
-
           case mask : mask.RequestedQuizDone             => Ok(views.html.games.play.awaitingQuiz(mask))
           case mask : mask.AcceptedMeQuizDoneOtherNoQuiz => Ok(views.html.games.play.awaitingQuiz(mask))
-
           case mask : mask.QuizzesDoneMeAnsOtherAns      => Ok(views.html.games.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
           case mask : mask.QuizzesDoneMeAnsOtherDone     => Ok(views.html.games.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
-
-          case mask : mask.QuizzesDoneMeDoneOtherAns     => Ok
-
-          case mask : mask.GameDone                      => Ok
+          case mask : mask.QuizzesDoneMeDoneOtherAns     => Ok(views.html.games.play.gameDone(mask))
+          case mask : mask.GameDone                      => Ok(views.html.games.play.gameDone(mask))
         }
       }
     }
   }
 
-  def game(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def gameOLD(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -133,7 +128,7 @@ object GamesController extends Controller with SecureSocialConsented {
       }
     }
 
-  def respondNEW(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
+  def respond(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => GameResponse.form.bindFromRequest.fold(
@@ -164,7 +159,7 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def respond(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
+  def respondOLD(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => GameResponse.form.bindFromRequest.fold(

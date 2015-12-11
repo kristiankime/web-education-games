@@ -52,7 +52,7 @@
         }
 
         @if(numQuestionRemaining == 0){
-        @form(GamesRequesteeController.finalizeCreatedQuiz(gameState.game.id), 'class -> "pure-form") {
+        @form(gameState.finalizeCreatedQuiz, 'class -> "pure-form") {
             <input type="submit" class="pure-button pure-button-primary" value="Finalize Quiz" >
         }
         }

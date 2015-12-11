@@ -160,7 +160,7 @@ case class Game(id: GameId = null,
   def toMask(meId: UserId, otherId: UserId): GameMask =
   (meId, otherId) match {
     // me is requestor
-    case (requestorId, requesteeId) =>
+    case (`requestorId`, `requesteeId`) =>
       (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
         // Response Requested
         case (GameResponseStatus.requested,       _, false,    None, false, false, false,    None) => mask.RequestedNoQuiz(this, meId, otherId)
@@ -181,7 +181,7 @@ case class Game(id: GameId = null,
         case _ => throw new IllegalStateException("Game was not in an allowed state, probably programming error " + this)
       }
     // me is requestee
-    case (requesteeId, requestorId) =>
+    case (`requesteeId`, `requestorId`) =>
       (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
         // Response Requested
         case (GameResponseStatus.requested,       _, false,    None, false, false, false,    None) => mask.ResponseRequired(this, meId, otherId)

@@ -70,7 +70,7 @@ sealed trait RequesteeQuizStatus {
 }
 
 trait RequesteeQuiz extends RequesteeQuizStatus {
-  override def requesteeQuizStatusCheck =  if(game.requesteeQuizDone != false) {throw new IllegalStateException("Game must be in Requestor Quiz not done state")}
+  override def requesteeQuizStatusCheck =  if(game.requesteeQuizDone != false) {throw new IllegalStateException("Game must be in Requestee Quiz not done state")}
 
   def finalizeRequesteeQuiz = {
     if(game.requesteeQuizId.isEmpty) {throw new IllegalStateException("Game must have a Requestee quiz")}

@@ -11,6 +11,7 @@ import controllers.quiz.tangent.TangentQuestionForm
 import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.game.GameRole._
 import models.game._
+import models.game.mask.GameMask
 import models.organization._
 import models.quiz.Quiz
 import models.quiz.answer._
@@ -100,33 +101,33 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def gameOLD(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
-    GamesController(gameId) match {
-      case Left(notFoundResult) => notFoundResult
-      case Right(game) =>
-        if(game.isRequestor(user)) game.toState match {
-          case state: GameRejected => Ok(views.html.game.request.rejectedRequestor(state))
-          case state: RequestorDoneAnswering => Ok(views.html.game.play.requestor.gameDoneRequestor(state))
-          case state: RequestorQuiz => Ok(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.empty))
-          case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.requestor.awaitingQuizRequestor(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestor.answeringQuizRequestor(state, answerIdOp.flatMap(id => Answers(id))))
-          case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
-        }
-        else if(game.isRequestee(user)) game.toState match {
-          case state: GameRejected => Ok(views.html.game.request.rejectedRequestee(state))
-          case state: RequesteeDoneAnswering => Ok(views.html.game.play.requestee.gameDoneRequestee(state))
-          case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
-          case state: RequesteeQuiz => Ok(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.empty))
-          case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.requestee.awaitingQuizRequestee(state))
-          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestee.answeringQuizRequestee(state, answerIdOp.flatMap(id => Answers(id))))
-          case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
-        }
-        else if(game.isTeacher(user, session)) {
-          Ok(views.html.game.review.summary(game))
-        }
-        else throw new IllegalStateException("TODO should restrict access so this doesn't happen")
-      }
-    }
+//  def gameOLD(gameId: GameId, answerIdOp: Option[AnswerId]) = ConsentedAction { implicit request => implicit user => implicit session =>
+//    GamesController(gameId) match {
+//      case Left(notFoundResult) => notFoundResult
+//      case Right(game) =>
+//        if(game.isRequestor(user)) game.toState match {
+//          case state: GameRejected => Ok(views.html.game.request.rejectedRequestor(state))
+//          case state: RequestorDoneAnswering => Ok(views.html.game.play.requestor.gameDoneRequestor(state))
+//          case state: RequestorQuiz => Ok(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.empty))
+//          case state: RequestorQuizFinished with RequesteeQuiz => Ok(views.html.game.play.requestor.awaitingQuizRequestor(state))
+//          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestor.answeringQuizRequestor(state, answerIdOp.flatMap(id => Answers(id))))
+//          case _ =>  throw new IllegalStateException("No match in Requestor State, programming error")
+//        }
+//        else if(game.isRequestee(user)) game.toState match {
+//          case state: GameRejected => Ok(views.html.game.request.rejectedRequestee(state))
+//          case state: RequesteeDoneAnswering => Ok(views.html.game.play.requestee.gameDoneRequestee(state))
+//          case state: GameRequested => Ok(views.html.game.request.responedToGameRequest(state))
+//          case state: RequesteeQuiz => Ok(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.empty))
+//          case state: RequesteeQuizFinished with RequestorQuiz => Ok(views.html.game.play.requestee.awaitingQuizRequestee(state))
+//          case state: RequestorQuizFinished with RequesteeQuizFinished => Ok(views.html.game.play.requestee.answeringQuizRequestee(state, answerIdOp.flatMap(id => Answers(id))))
+//          case _ =>  throw new IllegalStateException("No match in Requestee State, programming error")
+//        }
+//        else if(game.isTeacher(user, session)) {
+//          Ok(views.html.game.review.summary(game))
+//        }
+//        else throw new IllegalStateException("TODO should restrict access so this doesn't happen")
+//      }
+//    }
 
   def respond(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
@@ -159,36 +160,36 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
-  def respondOLD(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
-    GamesController(gameId) match {
-      case Left(notFoundResult) => notFoundResult
-      case Right(game) => GameResponse.form.bindFromRequest.fold(
-        errors => BadRequest(views.html.errors.formErrorPage(errors)),
-        accepted => {
-          val gameState = game.toState match {
-            case g : GameRequested => g
-            case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[GameRequested].getName + "] but was " + game.toState)
-          }
-          if (accepted) {
-            Games.update(gameState.accept(user.id))
-            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
-              val userName = user.nameDisplay
-              mail.setSubject(userName + " accepted your CalcTutor game request")
-              mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
-            }
-          }
-          else {
-            Games.update(gameState.reject(user.id))
-            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
-              val userName = user.nameDisplay
-              mail.setSubject(userName + " rejected your CalcTutor game request")
-              mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))
-            }
-          }
-          Redirect(routes.GamesController.game(game.id, None))
-        })
-    }
-  }
+//  def respondOLD(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
+//    GamesController(gameId) match {
+//      case Left(notFoundResult) => notFoundResult
+//      case Right(game) => GameResponse.form.bindFromRequest.fold(
+//        errors => BadRequest(views.html.errors.formErrorPage(errors)),
+//        accepted => {
+//          val gameState = game.toState match {
+//            case g : GameRequested => g
+//            case _ =>  throw new IllegalStateException("State should have been subclass of [" + classOf[GameRequested].getName + "] but was " + game.toState)
+//          }
+//          if (accepted) {
+//            Games.update(gameState.accept(user.id))
+//            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+//              val userName = user.nameDisplay
+//              mail.setSubject(userName + " accepted your CalcTutor game request")
+//              mail.sendHtml(userName + " accepted your requests to play a game with you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
+//            }
+//          }
+//          else {
+//            Games.update(gameState.reject(user.id))
+//            for(mail <- gameState.game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+//              val userName = user.nameDisplay
+//              mail.setSubject(userName + " rejected your CalcTutor game request")
+//              mail.sendHtml(userName + " rejected your requests to play a game with you in the " + serverLinkEmail(request))
+//            }
+//          }
+//          Redirect(routes.GamesController.game(game.id, None))
+//        })
+//    }
+//  }
 
   def question(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
@@ -197,17 +198,37 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => questionViewRequestor(game.toState, quiz, question, None)
+            case Right((game, quiz, question)) => questionView(game.toMask(user), quiz, question, None)
           }
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question)) => questionViewRequestee(game.toState, quiz, question, None)
+            case Right((game, quiz, question)) => questionView(game.toMask(user), quiz, question, None)
           }
         else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
+
       }
     }
   }
+
+//  def questionOLD(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+//    GamesController(gameId) match {
+//      case Left(notFoundResult) => notFoundResult
+//      case Right(game) => {
+//        if(game.isRequestor(user))
+//          GamesRequesteeController(gameId, questionId) match { // Use GamesRequesteeController here to get requestee quiz
+//            case Left(notFoundResult) => notFoundResult
+//            case Right((game, quiz, question)) => questionViewRequestor(game.toState, quiz, question, None)
+//          }
+//        else if(game.isRequestee(user))
+//          GamesRequestorController(gameId, questionId) match { // Use GamesRequestorController here to get requestor quiz
+//            case Left(notFoundResult) => notFoundResult
+//            case Right((game, quiz, question)) => questionViewRequestee(game.toState, quiz, question, None)
+//          }
+//        else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
+//      }
+//    }
+//  }
 
   def answer(gameId: GameId, questionId: QuestionId, answerId: AnswerId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
@@ -216,35 +237,63 @@ object GamesController extends Controller with SecureSocialConsented {
         if(game.isRequestor(user))
           GamesRequesteeController(gameId, questionId) + AnswersController(questionId, answerId) match { // Use GamesRequesteeController here to get requestee quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) =>  questionViewRequestor(game.toState, quiz, question, Some(Right(answer)))
+            case Right((game, quiz, question, answer)) =>  questionView(game.toMask(user), quiz, question, Some(Right(answer)))
           }
         else if(game.isRequestee(user))
           GamesRequestorController(gameId, questionId)  + AnswersController(questionId, answerId) match { // Use GamesRequestorController here to get requestor quiz
             case Left(notFoundResult) => notFoundResult
-            case Right((game, quiz, question, answer)) => questionViewRequestee(game.toState, quiz, question, Some(Right(answer)))
+            case Right((game, quiz, question, answer)) => questionView(game.toMask(user), quiz, question, Some(Right(answer)))
           }
         else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
       }
     }
   }
 
-  // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
-  def questionViewRequestor(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
-    (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.play.requestor.answeringDerivativeQuestionRequestor(gameState, quiz, q, a))
-      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.play.requestor.answeringDerivativeGraphQuestionRequestor(gameState, quiz, q, a))
-      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.play.requestor.answeringTangentQuestionRequestor(gameState, quiz, q, a))
-      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.play.requestor.answeringGraphMatchQuestionRequestor(gameState, quiz, q, a))
-    }
+//  def answerOLD(gameId: GameId, questionId: QuestionId, answerId: AnswerId) = ConsentedAction { implicit request => implicit user => implicit session =>
+//    GamesController(gameId) match {
+//      case Left(notFoundResult) => notFoundResult
+//      case Right(game) => {
+//        if(game.isRequestor(user))
+//          GamesRequesteeController(gameId, questionId) + AnswersController(questionId, answerId) match { // Use GamesRequesteeController here to get requestee quiz
+//            case Left(notFoundResult) => notFoundResult
+//            case Right((game, quiz, question, answer)) =>  questionViewRequestor(game.toState, quiz, question, Some(Right(answer)))
+//          }
+//        else if(game.isRequestee(user))
+//          GamesRequestorController(gameId, questionId)  + AnswersController(questionId, answerId) match { // Use GamesRequestorController here to get requestor quiz
+//            case Left(notFoundResult) => notFoundResult
+//            case Right((game, quiz, question, answer)) => questionViewRequestee(game.toState, quiz, question, Some(Right(answer)))
+//          }
+//        else throw new IllegalStateException("user was not requestee or requestor user = [" + user + "] game = [" + game + "]")
+//      }
+//    }
+//  }
 
   // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
-  def questionViewRequestee(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
+  def questionView(gameState: GameMask, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.play.requestee.answeringDerivativeQuestionRequestee(gameState, quiz, q, a))
-      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.play.requestee.answeringDerivativeGraphQuestionRequestee(gameState, quiz, q, a))
-      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.play.requestee.answeringTangentQuestionRequestee(gameState, quiz, q, a))
-      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.play.requestee.answeringGraphMatchQuestionRequestee(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.games.question.answeringDerivativeQuestion(gameState, quiz, q, a))
+      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.games.question.answeringDerivativeGraphQuestion(gameState, quiz, q, a))
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.games.question.answeringTangentQuestion(gameState, quiz, q, a))
+      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.games.question.answeringGraphMatchQuestion(gameState, quiz, q, a))
     }
+
+//  // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
+//  def questionViewRequestor(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
+//    (question, answer) match {
+//      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.play.requestor.answeringDerivativeQuestionRequestor(gameState, quiz, q, a))
+//      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.play.requestor.answeringDerivativeGraphQuestionRequestor(gameState, quiz, q, a))
+//      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.play.requestor.answeringTangentQuestionRequestor(gameState, quiz, q, a))
+//      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.play.requestor.answeringGraphMatchQuestionRequestor(gameState, quiz, q, a))
+//    }
+//
+//  // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
+//  def questionViewRequestee(gameState: GameState, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
+//    (question, answer) match {
+//      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.play.requestee.answeringDerivativeQuestionRequestee(gameState, quiz, q, a))
+//      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.play.requestee.answeringDerivativeGraphQuestionRequestee(gameState, quiz, q, a))
+//      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.play.requestee.answeringTangentQuestionRequestee(gameState, quiz, q, a))
+//      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.play.requestee.answeringGraphMatchQuestionRequestee(gameState, quiz, q, a))
+//    }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {

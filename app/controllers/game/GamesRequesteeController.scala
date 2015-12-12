@@ -35,8 +35,8 @@ object GamesRequesteeController extends GamesPlayerController {
     Games.update(gameState.requesteeDoneAnswering)
   }
 
-  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result =
-    GamesController.questionViewRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer)))
+//  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result =
+//    GamesController.questionViewRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer)))
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     GamesRequestorController(gameId, questionId)

@@ -1,7 +1,8 @@
 package models.game.mask
 
+import controllers.game.GamesRequestorController
 import models.game.Game
-import models.support.{GameId, QuizId, UserId}
+import models.support.{QuestionId, GameId, QuizId, UserId}
 import models.user.{Users, User}
 import play.api.db.slick.Config.driver.simple.Session
 
@@ -19,28 +20,29 @@ trait GameSetup {
   val requestee : Boolean = game.requesteeId == meId
   val requestor : Boolean = game.requestorId == meId
 
-  def mySkill =                             if(requestee) { game.requesteeSkill    } else { game.requestorSkill    }
-  def myQuizId      : Option[QuizId] =      if(requestee) { game.requesteeQuizId   } else { game.requestorQuizId   }
-  def myQuizDone    : Boolean =             if(requestee) { game.requesteeQuizDone } else { game.requestorQuizDone }
-  def myQuiz(implicit session: Session) =   if(requestee) { game.requesteeQuiz.get } else { game.requestorQuiz.get }
-  def myQuizOp(implicit session: Session) = if(requestee) { game.requesteeQuiz     } else { game.requestorQuiz     }
-  def myFinished: Boolean =                 if(requestee) { game.requesteeFinished } else { game.requestorFinished }
+  def mySkill =                                   if(requestee) { game.requesteeSkill          } else { game.requestorSkill    }
+  def myQuizId      : Option[QuizId] =            if(requestee) { game.requesteeQuizId         } else { game.requestorQuizId   }
+  def myQuizDone    : Boolean =                   if(requestee) { game.requesteeQuizDone       } else { game.requestorQuizDone }
+  def myQuiz(implicit session: Session) =         if(requestee) { game.requesteeQuiz.get       } else { game.requestorQuiz.get }
+  def myQuizOp(implicit session: Session) =       if(requestee) { game.requesteeQuiz           } else { game.requestorQuiz     }
+  def myQuizAnswered(implicit session: Session) = if(requestee) { game.requesteeQuizIfAnswered } else { game.requestorQuizIfAnswered }
+  def myFinished: Boolean =                       if(requestee) { game.requesteeFinished       } else { game.requestorFinished }
 
-  def otherSkill =                             if(requestee) { game.requestorSkill    } else { game.requesteeSkill    }
-  def otherQuizId   : Option[QuizId] =         if(requestee) { game.requestorQuizId   } else { game.requesteeQuizId   }
-  def otherQuizDone : Boolean =                if(requestee) { game.requestorQuizDone } else { game.requesteeQuizDone }
-  def otherQuiz(implicit session: Session) =   if(requestee) { game.requestorQuiz.get } else { game.requesteeQuiz.get }
-  def otherQuizOp(implicit session: Session) = if(requestee) { game.requestorQuiz     } else { game.requesteeQuiz     }
-  def otherFinished: Boolean =                 if(requestee) { game.requestorFinished } else { game.requesteeFinished }
+  def otherSkill =                                   if(requestee) { game.requestorSkill          } else { game.requesteeSkill    }
+  def otherQuizId   : Option[QuizId] =               if(requestee) { game.requestorQuizId         } else { game.requesteeQuizId   }
+  def otherQuizDone : Boolean =                      if(requestee) { game.requestorQuizDone       } else { game.requesteeQuizDone }
+  def otherQuiz(implicit session: Session) =         if(requestee) { game.requestorQuiz.get       } else { game.requesteeQuiz.get }
+  def otherQuizOp(implicit session: Session) =       if(requestee) { game.requestorQuiz           } else { game.requesteeQuiz     }
+  def otherQuizAnswered(implicit session: Session) = if(requestee) { game.requestorQuizIfAnswered } else { game.requesteeQuizIfAnswered }
+  def otherFinished: Boolean =                       if(requestee) { game.requestorFinished       } else { game.requesteeFinished }
 
+  // ==============================================================================================================
   // Play MVC calls which need to change based on requestor/requestee
+  // ==============================================================================================================
 
-  // Remove a questions,
-  def removeQuestionCall : play.api.mvc.Call =
-    if(requestee) { controllers.game.routes.GamesRequesteeController.removeQuestion(game.id) }
-    else {          controllers.game.routes.GamesRequestorController.removeQuestion(game.id) }
-
-  // Create a question
+  // ======================
+  // Create a Quiz/Question
+  // ======================
   def createDerivativeQuestionCall : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.createDerivativeQuestion(game.id) }
     else {          controllers.game.routes.GamesRequestorController.createDerivativeQuestion(game.id) }
@@ -57,13 +59,40 @@ trait GameSetup {
     if(requestee) { controllers.game.routes.GamesRequesteeController.createGraphMatchQuestion(game.id) }
     else {          controllers.game.routes.GamesRequestorController.createGraphMatchQuestion(game.id) }
 
+  // Finalize Quiz
   def finalizeCreatedQuiz : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeCreatedQuiz(game.id) }
     else {          controllers.game.routes.GamesRequestorController.finalizeCreatedQuiz(game.id) }
 
+  // Remove a questions,
+  def removeQuestionCall : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.removeQuestion(game.id) }
+    else {          controllers.game.routes.GamesRequestorController.removeQuestion(game.id) }
+
+  // ========================
+  // Answering Quiz/Question
+  // ========================
+  def answerDerivativeQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerDerivativeQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerDerivativeQuestion(game.id, questionId) }
+
+  def answerDerivativeGraphQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerDerivativeGraphQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerDerivativeGraphQuestion(game.id, questionId) }
+
+  def answerGraphMatchQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerGraphMatchQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerGraphMatchQuestion(game.id, questionId) }
+
+  def answerTangentQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerTangentQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerTangentQuestion(game.id, questionId) }
+
+  // Finalize Answers
   def finalizeAnsweringQuiz : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeAnswers(game.id) }
     else {          controllers.game.routes.GamesRequestorController.finalizeAnswers(game.id) }
+
 }
 
 sealed trait GameMask extends GameSetup {

@@ -48,6 +48,8 @@ case class Game(id: GameId = null,
     case _ => false
   }
 
+  def isPlayer(user: User) = isRequestor(user) || isRequestee(user)
+
   def isTeacher(implicit user: User, session: Session) = {
     val course = courseId.flatMap(Courses(_))
     val maybeAccess = course.map(_.access)

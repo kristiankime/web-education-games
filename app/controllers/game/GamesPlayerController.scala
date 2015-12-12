@@ -42,7 +42,9 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
-  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result
+  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result = {
+    GamesController.questionView(game.toMask(user), quiz, question, Some(Left(unfinishedAnswer)))
+  }
 
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
 

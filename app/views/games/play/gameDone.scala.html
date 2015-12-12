@@ -13,13 +13,13 @@
     <h1>Congratulations you finished a game with @gameState.other.nameView</h1>
     }
 
-    @for(otherQuiz <- gameState.otherQuizOp ) {
+    @for(otherQuiz <- gameState.otherQuizAnswered ) {
     <section class="extra-border">
         Your score as a student was @views.html.quiz.quizScore(otherQuiz.results(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, otherQuiz.id)">details</a>
     </section>
     }
 
-    @for(myQuiz <- gameState.myQuizOp ) {
+    @for(myQuiz <- gameState.myQuizAnswered ) {
     <section class="extra-border">
         Your score as a teacher was @views.html.quiz.quizScoreTeacher(myQuiz.results(gameState.game.requestor), gameState.otherSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, myQuiz.id)">details</a>
     </section>

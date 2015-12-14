@@ -2,6 +2,7 @@ package models.game
 
 import models.DBTest.{inMemH2, newFakeUser}
 import models.game.GameRole._
+import models.game.mask.NeedToRespond
 import models.organization._
 import org.junit.runner._
 import org.specs2.mutable._
@@ -149,7 +150,7 @@ class GamesSpec extends Specification {
         val (requestor, requestee) = (newFakeUser, newFakeUser)
 
         val gameInProgress = Games.request(requestor, requestee, course)
-        Games.update(gameInProgress.toState.asInstanceOf[GameRequested].accept(requestee.id))
+        Games.update(gameInProgress.toMask(requestee).asInstanceOf[NeedToRespond].accept)
 
         val gameRequest = Games.active(requestee.id)(session)(0)
 
@@ -166,7 +167,7 @@ class GamesSpec extends Specification {
         val (requestor, requestee) = (newFakeUser, newFakeUser)
 
         val gameDone = Games.request(requestor, requestee, course)
-        Games.update(gameDone.toState.asInstanceOf[GameRequested].reject(requestee.id))
+        Games.update(gameDone.toMask(requestee).asInstanceOf[NeedToRespond].reject)
 
         Games.active(requestor.id)(session) must beEmpty
         Games.active(requestee.id)(session) must beEmpty

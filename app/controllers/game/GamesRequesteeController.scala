@@ -19,21 +19,21 @@ object GamesRequesteeController extends GamesPlayerController {
 
   protected def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz] = game.requestorQuiz
 
-  protected def finalizeQuizInternal(game: Game)(implicit session: Session) {
-    val gameState = game.toState match {
-      case g: RequesteeQuiz => g
-      case _ => throw new IllegalStateException("State should have been subclass of [" + classOf[RequesteeQuiz].getName + "] but was " + game.toState)
-    }
-    Games.update(gameState.finalizeRequesteeQuiz)
-  }
+//  protected def finalizeQuizInternal(game: Game)(implicit session: Session) {
+//    val gameState = game.toState match {
+//      case g: RequesteeQuiz => g
+//      case _ => throw new IllegalStateException("State should have been subclass of [" + classOf[RequesteeQuiz].getName + "] but was " + game.toState)
+//    }
+//    Games.update(gameState.finalizeRequesteeQuiz)
+//  }
 
-  protected def finalizeAnswersInternal(game: Game)(implicit session: Session) {
-    val gameState = game.toState match {
-      case g: RequestorQuizFinished with RequesteeStillAnswering => g
-      case _ => throw new IllegalStateException("State should have been subclass of RequestorQuizFinished with RequesteeStillAnswering but was " + game.toState)
-    }
-    Games.update(gameState.requesteeDoneAnswering)
-  }
+//  protected def finalizeAnswersInternal(game: Game)(implicit session: Session) {
+//    val gameState = game.toState match {
+//      case g: RequestorQuizFinished with RequesteeStillAnswering => g
+//      case _ => throw new IllegalStateException("State should have been subclass of RequestorQuizFinished with RequesteeStillAnswering but was " + game.toState)
+//    }
+//    Games.update(gameState.requesteeDoneAnswering)
+//  }
 
 //  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result =
 //    GamesController.questionViewRequestee(game.toState, quiz, question, Some(Left(unfinishedAnswer)))

@@ -84,18 +84,18 @@ object GamesController extends Controller with SecureSocialConsented {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         game.toMask(user) match  {
-          case mask : mask.ResponseRequired              => Ok(views.html.games.request.responding(mask))
-          case mask : mask.RejectedNoQuiz                => Ok(views.html.games.request.rejected(mask))
-          case mask : mask.RejectedQuizDone              => Ok(views.html.games.request.rejected(mask))
-          case mask : mask.RequestedNoQuiz               => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
-          case mask : mask.AcceptedMeNoQuizOtherNoQuiz   => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
-          case mask : mask.AcceptedMeNoQuizOtherQuizDone => Ok(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
-          case mask : mask.RequestedQuizDone             => Ok(views.html.games.play.awaitingQuiz(mask))
-          case mask : mask.AcceptedMeQuizDoneOtherNoQuiz => Ok(views.html.games.play.awaitingQuiz(mask))
-          case mask : mask.QuizzesDoneMeAnsOtherAns      => Ok(views.html.games.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
-          case mask : mask.QuizzesDoneMeAnsOtherDone     => Ok(views.html.games.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
-          case mask : mask.QuizzesDoneMeDoneOtherAns     => Ok(views.html.games.play.gameDone(mask))
-          case mask : mask.GameDone                      => Ok(views.html.games.play.gameDone(mask))
+          case mask : mask.ResponseRequired              => Ok(views.html.game.request.responding(mask))
+          case mask : mask.RejectedNoQuiz                => Ok(views.html.game.request.rejected(mask))
+          case mask : mask.RejectedQuizDone              => Ok(views.html.game.request.rejected(mask))
+          case mask : mask.RequestedNoQuiz               => Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+          case mask : mask.AcceptedMeNoQuizOtherNoQuiz   => Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+          case mask : mask.AcceptedMeNoQuizOtherQuizDone => Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+          case mask : mask.RequestedQuizDone             => Ok(views.html.game.play.awaitingQuiz(mask))
+          case mask : mask.AcceptedMeQuizDoneOtherNoQuiz => Ok(views.html.game.play.awaitingQuiz(mask))
+          case mask : mask.QuizzesDoneMeAnsOtherAns      => Ok(views.html.game.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
+          case mask : mask.QuizzesDoneMeAnsOtherDone     => Ok(views.html.game.play.answeringQuiz(mask, answerIdOp.flatMap(id => Answers(id)) ))
+          case mask : mask.QuizzesDoneMeDoneOtherAns     => Ok(views.html.game.play.gameDone(mask))
+          case mask : mask.GameDone                      => Ok(views.html.game.play.gameDone(mask))
         }
       }
     }
@@ -174,10 +174,10 @@ object GamesController extends Controller with SecureSocialConsented {
   // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
   def questionView(gameState: GameMask, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.games.question.answeringDerivativeQuestion(gameState, quiz, q, a))
-      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.games.question.answeringDerivativeGraphQuestion(gameState, quiz, q, a))
-      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.games.question.answeringTangentQuestion(gameState, quiz, q, a))
-      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.games.question.answeringGraphMatchQuestion(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.question.answeringDerivativeQuestion(gameState, quiz, q, a))
+      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.question.answeringDerivativeGraphQuestion(gameState, quiz, q, a))
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.question.answeringTangentQuestion(gameState, quiz, q, a))
+      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.question.answeringGraphMatchQuestion(gameState, quiz, q, a))
     }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>

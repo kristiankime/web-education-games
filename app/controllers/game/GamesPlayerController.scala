@@ -84,7 +84,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         DerivativeQuestionForm.values.bindFromRequest.fold(
           errors =>
             game.toMask(user) match {
-              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.derivative(errors)))
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.derivative(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
 //            BadRequest(views.html.errors.formErrorPage(errors)),
@@ -103,7 +103,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         DerivativeGraphQuestionForm.values.bindFromRequest.fold(
           errors =>
             game.toMask(user) match {
-              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.derivativeGraph(errors)))
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.derivativeGraph(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
 //            (game.gameRole(user), game.toState) match {
@@ -126,7 +126,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         TangentQuestionForm.values.bindFromRequest.fold(
           errors =>
             game.toMask(user) match {
-              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.tangent(errors)))
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.tangent(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
 //            (game.gameRole(user), game.toState) match {
@@ -149,7 +149,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         GraphMatchQuestionForm.values.bindFromRequest.fold(
           errors =>
             game.toMask(user) match {
-              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.games.play.createQuiz(mask, controllers.quiz.QuestionForms.graphMatch(errors)))
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.graphMatch(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
 //            (game.gameRole(user), game.toState) match {

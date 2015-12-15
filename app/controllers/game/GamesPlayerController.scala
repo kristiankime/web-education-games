@@ -42,9 +42,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
 
   // ===== Concrete =====
-
-  //  protected def finalizeQuizInternal(game: Game)(implicit session: Session)
-
   protected def finalizeQuizInternal(game: Game)(implicit user: User, session: Session) {
     val gameState = game.toMask(user) match {
       case g: MyQuizUnfinished => g
@@ -52,8 +49,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
     Games.update(gameState.finalizeMyQuiz)
   }
-
-//  protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
 
   protected def finalizeAnswersInternal(game: Game)(implicit user: User, session: Session) {
     val gameState = game.toMask(user) match {
@@ -87,7 +82,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
               case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.derivative(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
-//            BadRequest(views.html.errors.formErrorPage(errors)),
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             DerivativeQuestions.create(DerivativeQuestionForm.toQuestion(user, form), quiz.id)
@@ -106,11 +100,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
               case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.derivativeGraph(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
-//            (game.gameRole(user), game.toState) match {
-//              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.derivativeGraph(errors)))
-//              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.derivativeGraph(errors)))
-//              case _ => BadRequest(views.html.errors.formErrorPage(errors))
-//            },
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             DerivativeGraphQuestions.create(DerivativeGraphQuestionForm.toQuestion(user, form), quiz.id)
@@ -129,11 +118,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
               case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.tangent(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
-//            (game.gameRole(user), game.toState) match {
-//              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.tangent(errors)))
-//              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.tangent(errors)))
-//              case _ => BadRequest(views.html.errors.formErrorPage(errors))
-//            },
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             TangentQuestions.create(TangentQuestionForm.toQuestion(user, form), quiz.id)
@@ -152,11 +136,6 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
               case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.graphMatch(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
-//            (game.gameRole(user), game.toState) match {
-//              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.graphMatch(errors)))
-//              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.graphMatch(errors)))
-//              case _ => BadRequest(views.html.errors.formErrorPage(errors))
-//            },
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             GraphMatchQuestions.create(GraphMatchQuestionForm.toQuestion(user, form), quiz.id)

@@ -6,7 +6,7 @@
 
 <section>
     <h5>Games in Progress</h5>
-    @if(games.isEmpty){<h6>You are currently not in the middle of a game with anyone</h6>} else {<h6>You are in the middle of a game with</h6>
+    @if(games.isEmpty){<h6>You are not currently in the middle of a game with anyone</h6>} else {<h6>You are in the middle of a game with</h6>
     <ul class="pure-list">
         @for(game <- games) {<li> @tag.gameLink(game.otherPlayer(user).nameView, game, 'class -> "button-xsmall") @tag.gameCourseLink(courseOp, game, 'class -> "button-xsmall")  </li>}
     </ul>

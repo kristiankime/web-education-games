@@ -4,12 +4,22 @@
 @import controllers.game.GameRequest
 @import models.user.User
 @import helper._
+@import com.artclod.play.{a, s}
 
 @defining(user.studentsToPlayWith(course.id)) { students : List[models.user.User] =>
 
 @mainWithBorder("Find a player for a game in course " + course.name,  views.html.tag.courseLink(course)) {
 
     <h1>Invite another player in the course @course.name to play a game round with you</h1>
+
+    @defining(models.game.Games.active(user.id)) { gs : List[models.game.Game] =>
+    @if(gs.nonEmpty) {
+    <h3>You are currently playing @a(gs) game@s(gs) with: </h3>
+    <ul class="pure-list">
+        @for(game <- gs) {<li> @tag.gameLink(game.otherPlayer(user).nameView, game, 'class -> "button-xsmall") @tag.gameCourseLink(Some(course), game, 'class -> "button-xsmall")  </li>}
+    </ul>
+    }
+    }
 
     @if(students.isEmpty){
     <h5>There are currently no students available to play with in the course</h5>

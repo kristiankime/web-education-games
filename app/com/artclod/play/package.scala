@@ -9,9 +9,13 @@ package object play {
 
   def plural(v: TraversableOnce[_])(plural: Html) = if (v.size == 1) { Html("") } else { plural }
 
+  def singular(v: TraversableOnce[_])(singular: Html) = if (v.size == 1) { singular } else { Html("") }
+
   def alternate(v: TraversableOnce[_])(singular: Html, plural: Html) = if (v.size == 1) { singular } else { plural }
 
   def s(v: TraversableOnce[_]) = plural(v)(Html("s"))
+
+  def a(v: TraversableOnce[_]) = singular(v)(Html("a"))
 
   def es(v: TraversableOnce[_]) = plural(v)(Html("es"))
 

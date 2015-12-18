@@ -21,24 +21,14 @@ case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]
 
   def firstUnfinishedQuestion = results.find(!_.correct)
 
-//  val score = {
-//    val scores = results.flatMap(_.score)
-//    if (scores.isEmpty) None
-//    else Some(scores.sum / results.size)
-//  }
+  val potentialPoints = numQuestions * QuestionScoring.pointsPerQuestion
 
-//  val studentScore = results.map(_.studentScore).sum / results.size
-//
-//  def teacherScore(studentSkill: Double) = results.map(_.teacherScore(studentSkill)).sum / results.size
+  val studentPoints = results.map(_.studentPoints).sum
 
-    val potentialPoints = numQuestions * QuestionScoring.pointsPerQuestion
+  val studentPercent = studentPoints.toDouble / potentialPoints.toDouble
 
-    val studentPoints = results.map(_.studentPoints).sum
+  def teacherPoints(studentSkill: Double) = results.map(_.teacherPoints(studentSkill)).sum
 
-    val studentPercent = studentPoints.toDouble / potentialPoints.toDouble
-
-    def teacherPoints(studentSkill: Double) = results.map(_.teacherPoints(studentSkill)).sum
-
-    def teacherPercent(studentSkill: Double) = teacherPoints(studentSkill) / potentialPoints.toDouble
+  def teacherPercent(studentSkill: Double) = teacherPoints(studentSkill) / potentialPoints.toDouble
 
 }

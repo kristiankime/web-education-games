@@ -177,20 +177,24 @@ div.inline { float:left; }
 }
 
 // KENDO UI =======================
-//.correctProgressBar .k-progressbar {
-//  margin-bottom: 1.5em;
-//  width: 100%;
-//}
+.pointsProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    background-color: gold;
+    border-color: lightgrey;
+  }
+}
 
 .correctProgressBar .k-progressbar {
   width: 100%;
   background-color: @light;
-  //color: lightgreen; // changes text color
   border-color: lightgrey;
 
   .k-state-selected {
     background-color: lightgreen;
-    //color: green;
     border-color: lightgrey;
   }
 }
@@ -198,12 +202,10 @@ div.inline { float:left; }
 .incorrectProgressBar .k-progressbar {
   width: 100%;
   background-color: @light;
-  //color: lightgreen; // changes text color
   border-color: lightgrey;
 
   .k-state-selected {
     background-color: palevioletred;
-    //color: green;
     border-color: lightgrey;
   }
 }

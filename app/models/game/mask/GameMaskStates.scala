@@ -97,14 +97,14 @@ trait MyStillAnswering extends MyAnswerStatus {
     if(requestee)
       game.copy(
         requesteeFinished = true,
-        requesteeStudentPoints = Some(results.studentPercent),
-        requestorTeacherPoints = Some(results.teacherPercent(mySkill))
+        requesteeStudentPoints = Some(results.studentPoints),
+        requestorTeacherPoints = Some(results.teacherPoints(mySkill))
       ).maybeUpdateForGameDone
     else
       game.copy(
         requestorFinished = true,
-        requestorStudentPoints = Some(results.studentPercent),
-        requesteeTeacherPoints = Some(results.teacherPercent(mySkill))
+        requestorStudentPoints = Some(results.studentPoints),
+        requesteeTeacherPoints = Some(results.teacherPoints(mySkill))
       ).maybeUpdateForGameDone
   }
 }

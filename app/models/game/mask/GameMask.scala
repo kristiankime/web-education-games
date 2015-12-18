@@ -23,18 +23,26 @@ trait GameSetup {
   def mySkill =                                   if(requestee) { game.requesteeSkill          } else { game.requestorSkill    }
   def myQuizId      : Option[QuizId] =            if(requestee) { game.requesteeQuizId         } else { game.requestorQuizId   }
   def myQuizDone    : Boolean =                   if(requestee) { game.requesteeQuizDone       } else { game.requestorQuizDone }
-  def myQuiz(implicit session: Session) =         if(requestee) { game.requesteeQuiz.get       } else { game.requestorQuiz.get }
   def myQuizOp(implicit session: Session) =       if(requestee) { game.requesteeQuiz           } else { game.requestorQuiz     }
+  def myQuiz(implicit session: Session) =         myQuizOp.get
   def myQuizAnswered(implicit session: Session) = if(requestee) { game.requesteeQuizIfAnswered } else { game.requestorQuizIfAnswered }
   def myFinished: Boolean =                       if(requestee) { game.requesteeFinished       } else { game.requestorFinished }
+  def myStudentPointsOp =                         if(requestee) { game.requesteeStudentPoints  } else { game.requestorStudentPoints }
+  def myStudentPoints =                           myStudentPointsOp.getOrElse(0)
+  def myTeacherPointsOp =                         if(requestee) { game.requesteeTeacherPoints  } else { game.requestorTeacherPoints }
+  def myTeacherPoints =                           myTeacherPointsOp.getOrElse(0)
 
   def otherSkill =                                   if(requestee) { game.requestorSkill          } else { game.requesteeSkill    }
   def otherQuizId   : Option[QuizId] =               if(requestee) { game.requestorQuizId         } else { game.requesteeQuizId   }
   def otherQuizDone : Boolean =                      if(requestee) { game.requestorQuizDone       } else { game.requesteeQuizDone }
-  def otherQuiz(implicit session: Session) =         if(requestee) { game.requestorQuiz.get       } else { game.requesteeQuiz.get }
   def otherQuizOp(implicit session: Session) =       if(requestee) { game.requestorQuiz           } else { game.requesteeQuiz     }
+  def otherQuiz(implicit session: Session) =         otherQuizOp.get
   def otherQuizAnswered(implicit session: Session) = if(requestee) { game.requestorQuizIfAnswered } else { game.requesteeQuizIfAnswered }
   def otherFinished: Boolean =                       if(requestee) { game.requestorFinished       } else { game.requesteeFinished }
+  def otherStudentPointsOp =                         if(requestee) { game.requestorStudentPoints  } else { game.requesteeStudentPoints }
+  def otherStudentPoints =                           otherStudentPointsOp.getOrElse(0)
+  def otherTeacherPointsOp =                         if(requestee) { game.requestorTeacherPoints  } else { game.requesteeTeacherPoints }
+  def otherTeacherPoints =                           otherTeacherPointsOp.getOrElse(0)
 
   // ==============================================================================================================
   // Play MVC calls which need to change based on requestor/requestee
@@ -111,6 +119,7 @@ sealed trait GameMask extends GameSetup {
 
 // Game in requested state (responder needs to respond before doing anything)
 case class ResponseRequired(game: Game, meId : UserId, otherId : UserId) extends GameMask with NeedToRespond with MyQuizUnfinished with OtherQuizUnfinished with BothStillAnswering { checks }
+case class ResponseRequiredOtherQuiz(game: Game, meId : UserId, otherId : UserId) extends GameMask with NeedToRespond with MyQuizUnfinished with OtherQuizFinished with BothStillAnswering { checks }
 // Game in requested state (requestor can still create a quiz while waiting)
 case class RequestedNoQuiz(game: Game, meId : UserId, otherId : UserId) extends GameMask with AwaitingResponse with MyQuizUnfinished with OtherQuizUnfinished with BothStillAnswering { checks }
 case class RequestedQuizDone(game: Game, meId : UserId, otherId : UserId) extends GameMask with AwaitingResponse with MyQuizFinished with OtherQuizUnfinished with BothStillAnswering { checks }

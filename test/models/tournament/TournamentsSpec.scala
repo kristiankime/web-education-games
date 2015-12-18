@@ -183,7 +183,7 @@ class TournamentsSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.newFakeUser(UserTest())
 
-				val rankings = Tournaments.sumOfStudentScoresRank
+				val rankings = Tournaments.sumOfStudentPointsRank
 
 				rankings must haveSize(0)
 			}
@@ -193,12 +193,15 @@ class TournamentsSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val (user1, user2) = (newFakeUser(UserTest(fullName = "user1")), newFakeUser(UserTest(fullName = "user2")))
 
-				TestGame.createFinished(user1, user2, .6, .7)
-				TestGame.createFinished(user2, user1, .5, .8)
+				TestGame.createFinished(user1, user2, 6, 7)
+				TestGame.createFinished(user2, user1, 5, 8)
 
-				val rankings = Tournaments.sumOfStudentScoresRank
+				val rankings = Tournaments.sumOfStudentPointsRank
 
-				rankings must beEqualTo(List(Rank(user1.id, testName(user1), 1.4, 1), Rank(user2.id, testName(user2), 1.2, 2)))
+				rankings must beEqualTo(List(
+					Rank(user1.id, testName(user1), 14, 1),
+					Rank(user2.id, testName(user2), 12, 2)
+				))
 			}
 		}
 
@@ -210,7 +213,7 @@ class TournamentsSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val user = DBTest.newFakeUser(UserTest())
 
-				val rankings = Tournaments.sumOfTeacherScoresRank
+				val rankings = Tournaments.sumOfTeacherPointsRank
 
 				rankings must haveSize(0)
 			}
@@ -220,12 +223,15 @@ class TournamentsSpec extends Specification {
 			DB.withSession { implicit session: Session =>
 				val (user1, user2) = (newFakeUser(UserTest(fullName = "user1")), newFakeUser(UserTest(fullName = "user2")))
 
-				TestGame.createFinished(user1, user2, .0, .0, .5, .8)
-				TestGame.createFinished(user2, user1, .0, .0, .7, .3)
+				TestGame.createFinished(user1, user2, 0, 0, 5, 8)
+				TestGame.createFinished(user2, user1, 0, 0, 7, 3)
 
-				val rankings = Tournaments.sumOfTeacherScoresRank
+				val rankings = Tournaments.sumOfTeacherPointsRank
 
-				rankings must beEqualTo(List(Rank(user2.id, testName(user2), 1.5, 1), Rank(user1.id, testName(user1), .8, 2)))
+				rankings must beEqualTo(List(
+					Rank(user2.id, testName(user2), 15, 1),
+					Rank(user1.id, testName(user1), 8, 2)
+				))
 			}
 		}
 

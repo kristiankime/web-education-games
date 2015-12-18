@@ -25,10 +25,10 @@ case class Game(id: GameId = null,
                 requesteeQuizDone: Boolean = false,
                 requesteeFinished: Boolean = false,
                 requestorFinished: Boolean = false,
-                requesteeStudentPoints: Option[Double] = None,
-                requesteeTeacherPoints: Option[Double] = None,
-                requestorStudentPoints: Option[Double] = None,
-                requestorTeacherPoints: Option[Double] = None,
+                requesteeStudentPoints: Option[Int] = None,
+                requesteeTeacherPoints: Option[Int] = None,
+                requestorStudentPoints: Option[Int] = None,
+                requestorTeacherPoints: Option[Int] = None,
                 finishedDate: Option[DateTime] = None) extends HasAccess {
 
   def access(implicit user: User, session: Session) : Access = {
@@ -167,7 +167,7 @@ case class Game(id: GameId = null,
       (response, requestorQuizId, requestorQuizDone, requesteeQuizId, requesteeQuizDone, requestorFinished, requesteeFinished, finishedDate) match {
         // Response Requested
         case (GameResponseStatus.requested,       _, false,    None, false, false, false,    None) => mask.ResponseRequired(this, meId, otherId)
-        case (GameResponseStatus.requested, Some(_),  true,    None, false, false, false,    None) => mask.ResponseRequired(this, meId, otherId)
+        case (GameResponseStatus.requested, Some(_),  true,    None, false, false, false,    None) => mask.ResponseRequiredOtherQuiz(this, meId, otherId)
         // Game Rejected
         case (GameResponseStatus.rejected,       _,  false,    None, false, false, false, Some(_)) => mask.RejectedNoQuiz(this, meId, otherId)
         case (GameResponseStatus.rejected,  Some(_),  true,    None, false, false, false, Some(_)) => mask.RejectedQuizDone(this, meId, otherId)

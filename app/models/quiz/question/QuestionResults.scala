@@ -28,15 +28,6 @@ sealed trait QuestionResults {
     if (num == -1) None else Some(num + 1)
   }
 
-//  val score: Option[Double] =
-//    if (!attempted) None
-//    else if(correct) Some(1d)
-//    else Some(0d)
-//
-//  def studentScore = if(correct) 1d else 0d
-//
-//  def teacherScore(studentSkill: Double): Double = QuestionScoring.teacherScore(question, correct, studentSkill)
-
   def studentPointsOp =
     if(!attempted)   None
     else if(correct) Some(QuestionScoring.pointsPerQuestion)

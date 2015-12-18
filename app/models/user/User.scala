@@ -1,6 +1,6 @@
 package models.user
 
-import models.game.Games
+import models.game.{Gamification, Games}
 import models.organization.Courses
 import models.quiz.question._
 import models.support.{CourseId, UserId}
@@ -44,4 +44,17 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
       else top5.sum / top5.size.toDouble
     )
   }
+
+  def studentTotalGamePoints(implicit session: Session) : Int = Games.finished(id).map(_.toMask(this)).map(_.myStudentPoints).sum
+
+  def studentLevel(implicit session: Session) : Int = Gamification.level(studentTotalGamePoints)
+
+  def studentPointsInLevel(implicit session: Session) : Int = Gamification.pointsInLevel(studentTotalGamePoints)
+
+  def teacherTotalGamePoints(implicit session: Session) : Int = Games.finished(id).map(_.toMask(this)).map(_.myTeacherPoints).sum
+
+  def teacherLevel(implicit session: Session) : Int = Gamification.level(teacherTotalGamePoints)
+
+  def teacherPointsInLevel(implicit session: Session) : Int = Gamification.pointsInLevel(teacherTotalGamePoints)
+
 }

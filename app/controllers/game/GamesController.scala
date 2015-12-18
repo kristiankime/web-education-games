@@ -85,6 +85,7 @@ object GamesController extends Controller with SecureSocialConsented {
       case Right(game) => {
         game.toMask(user) match  {
           case mask : mask.ResponseRequired              => Ok(views.html.game.request.responding(mask))
+          case mask : mask.ResponseRequiredOtherQuiz     => Ok(views.html.game.request.responding(mask))
           case mask : mask.RejectedNoQuiz                => Ok(views.html.game.request.rejected(mask))
           case mask : mask.RejectedQuizDone              => Ok(views.html.game.request.rejected(mask))
           case mask : mask.RequestedNoQuiz               => Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))

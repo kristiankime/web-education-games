@@ -1,14 +1,17 @@
 @(game: models.game.Game)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
+
+@defining(game.requestee) { requestee : models.user.User =>
+@defining(game.requestor) { requestor : models.user.User =>
+
 @mainWithBorder("Game Summary", tag.courseOpLink(game.course), tag.gameLink(Html("game"), game)) {
 
     <h2> Game Summary </h2>
 
-
     @* REQUESTEE QUIZ *@
-    <h2> Requestee (@game.requestee.nameDisplay) Quiz </h2>
+    <h2> Requestee (@requestee.nameDisplay) Quiz </h2>
 
-    answers are by @game.requestor.nameDisplay <br>
+    answers are by @requestor.nameDisplay <br>
 
     @for(requesteeQuiz <- game.requesteeQuiz) {
     <table class="pure-table pure-table-striped extra-border">
@@ -35,9 +38,9 @@
     @if(game.requesteeQuiz.isEmpty) { No game has been created yet <br> }
 
     @* REQUESTOR QUIZ *@
-    <h2> Requestor (@game.requestor.nameDisplay) Quiz </h2>
+    <h2> Requestor (@requestor.nameDisplay) Quiz </h2>
 
-    answers are by @game.requestee.nameDisplay <br>
+    answers are by @requestee.nameDisplay <br>
 
     @for(requestorQuiz <- game.requestorQuiz) {
         <table class="pure-table pure-table-striped extra-border">
@@ -63,5 +66,6 @@
     }
     @if(game.requestorQuiz.isEmpty) { No game has been created yet <br> }
 
-
+}
+}
 }

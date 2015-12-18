@@ -2,7 +2,7 @@
 
 @import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
 
-@defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
+@defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText : String =>
 
     <!-- ========= SCORING HINTS START HERE ======= -->
     <section>
@@ -18,8 +18,6 @@
         <tr>
             <td> @tag.skillLevel(skillLevel) </td>
             <td> <span id="@{name}Difficulty">NA</span> </td>
-            @*<td> <span id="@{name}Correct">NA</span> </td>*@
-            @*<td> <span id="@{name}Incorrect">NA</span> </td>*@
             <td> @tag.bar(name + "Correct", "correctProgressBar") </td>
             <td> @tag.bar(name + "Incorrect", "incorrectProgressBar") </td>
         </tr>
@@ -29,27 +27,17 @@
         var @name = function ( result ) {
 
         var ajaxData = @ajaxData;
-        @*
-        var ajaxData = {
-            @functionStr  : TANGENT_QUESTION_FUNCTION.rawStr,
-            @function     : TANGENT_QUESTION_FUNCTION.mathML,
-            @atPointXStr  : TANGENT_QUESTION_X.rawStr,
-            @atPointX     : TANGENT_QUESTION_X.mathML,
-            @partnerSkill : @skillLevel
-        }*@
 
         var ajaxSuccess = function( data ) {
             $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
-            @*$("#@{name}Correct").text(data.@{correctPoints});*@
-            @*$("#@{name}Incorrect").text(data.@{incorrectPoints});*@
-            @{name}CorrectModel.@{name}Correct(data.@{correctPoints})
-            @{name}IncorrectModel.@{name}Incorrect(data.@{incorrectPoints})
+            @{name}CorrectModel.barValue(data.@{correctPoints})
+            @{name}IncorrectModel.barValue(data.@{incorrectPoints})
         };
 
-        if( @valid @*TANGENT_QUESTION_FUNCTION.valid && TANGENT_QUESTION_X.valid*@) {
+        if( @valid ) {
             $.ajax({
                 type : "POST",
-                url : "@difficultyUrl", @*"/question/difficulty/tangent",*@
+                url : "@difficultyUrl",
                 dataType : "json",
                 data : JSON.stringify(ajaxData),
                 contentType: "application/json",
@@ -58,7 +46,6 @@
                 });
             }
         }
-
 
     </script>
     </section>

@@ -25,15 +25,24 @@
     }
     }
 
-    @*
-    @form(action = routes.Settings.toggleGameEmails, 'class -> "pure-form") {
-        @if(settings.emailGameUpdates) {
-            You are currently receiving emails on game updates <input class="pure-button" type="submit" value="Stop Game Emails">
-        } else {
-            You are not currently receiving emails on game updates <input class="pure-button" type="submit" value="Start Game Emails">
-        }
-    }*@
-
+    <h3> Your Points so far </h3>
+    <table class="pure-table">
+        <tr>
+            <th>Type</th>
+            <th>Level</th>
+            <th>Progress</th>
+        </tr>
+        <tr>
+            <td>Student</td>
+            <td>@tag.level(user.studentLevel)</td>
+            <td>@tag.points("studentPoints", user.studentPointsInLevel)</td>
+        </tr>
+        <tr>
+            <td>Teacher</td>
+            <td>@tag.level(user.teacherLevel)</td>
+            <td>@tag.points("teacherPoints", user.teacherPointsInLevel)</td>
+        </tr>
+    </table>
 
     <h3> Update your settings </h3>
 

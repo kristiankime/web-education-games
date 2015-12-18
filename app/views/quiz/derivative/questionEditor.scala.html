@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, derivativeForm: Form[controllers.quiz.derivative.DerivativeQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, derivativeForm: Form[controllers.quiz.derivative.DerivativeQuestionForm], successCallback : List[String] = List(), infoOp: Option[Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivative.DerivativeQuestionForm
@@ -18,6 +18,8 @@
             <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_QUESTION.formSubmit()">
         </fieldset>
     }
+
+    @for(info <- infoOp){ @info }
 
     <script>
     DERIVATIVE_QUESTION.formSubmit = function() {

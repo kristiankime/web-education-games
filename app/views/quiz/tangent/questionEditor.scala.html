@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, tangentForm: Form[controllers.quiz.tangent.TangentQuestionForm], successCallback : List[String] = List(), infoOp: Option[Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.tangent.TangentQuestionForm
@@ -23,6 +23,8 @@
             <input type="button" class="pure-button" value="Save Question" onclick="TANGENT_QUESTION.formSubmit()">
         </fieldset>
     }
+
+    @for(info <- infoOp){ @info }
 
     <script>
     var TANGENT_QUESTION = {}

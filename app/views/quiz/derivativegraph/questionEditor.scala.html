@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : List[String] = List(), infoOp: Option[Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
@@ -36,6 +36,8 @@
         <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit()">
     </fieldset>
     }
+
+    @for(info <- infoOp){ @info }
 
     @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION", titleOp = Some("Function"))
     @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE", titleOp = Some("First Derivative"))

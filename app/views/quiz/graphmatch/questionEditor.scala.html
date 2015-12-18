@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, graphMatchForm: Form[controllers.quiz.graphmatch.GraphMatchQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, graphMatchForm: Form[controllers.quiz.graphmatch.GraphMatchQuestionForm], successCallback : List[String] = List(), infoOp: Option[Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.graphmatch.GraphMatchQuestionForm
@@ -38,6 +38,8 @@
         <input type="button" class="pure-button" value="Save Question" onclick="GRAPH_MATCH_QUESTION_FORM.formSubmit()">
     </fieldset>
     }
+
+    @for(info <- infoOp){ @info }
 
     @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_1", titleOp = Some("Function 1 graph"))
     @mathml.graph("GRAPH_MATCH_QUESTION_GRAPHS_FUNCTION_2", titleOp = Some("Function 2 graph"))

@@ -6,18 +6,18 @@
 
     <!-- ========= SCORING HINTS START HERE ======= -->
     <section>
-    <h4>Scoring Information @tag.icon("icon-help", 'data_ot -> infoText)</h4>
+    @*<h4>Scoring Information @tag.icon("icon-help", 'data_ot -> infoText)</h4>*@
 
     <table class="pure-table">
         <tr>
-            <th>Skill Level @tag.icon("icon-help", 'data_ot -> "The other player's skill level") </th>
-            <th>Difficulty  @tag.icon("icon-help", 'data_ot -> "The difficulty of the question you are creating")</th>
-            <th>Correct     @tag.icon("icon-help", 'data_ot -> "The points you will get if they get it correct")</th>
-            <th>Incorrect   @tag.icon("icon-help", 'data_ot -> "The points you will get if they get it incorrect")</th>
+            @*<th>Skill Level @tag.icon("icon-help", 'data_ot -> "The other player's skill level") </th>*@
+            @*<th>Difficulty  @tag.icon("icon-help", 'data_ot -> "The difficulty of the question you are creating")</th>*@
+            <th>Correct     @tag.icon("icon-help", 'data_ot -> "The points you will get if the other player answers your question correctly")</th>
+            <th>Incorrect   @tag.icon("icon-help", 'data_ot -> "The points you will get if the other player answers your question incorrect")</th>
         </tr>
         <tr>
-            <td> @tag.skillLevel(skillLevel) </td>
-            <td> <span id="@{name}Difficulty">NA</span> </td>
+            @*<td> @tag.skillLevel(skillLevel) </td>*@
+            @*<td> <span id="@{name}Difficulty">NA</span> </td>*@
             <td> @tag.bar(name + "Correct", "correctProgressBar") </td>
             <td> @tag.bar(name + "Incorrect", "incorrectProgressBar") </td>
         </tr>
@@ -29,7 +29,7 @@
         var ajaxData = @ajaxData;
 
         var ajaxSuccess = function( data ) {
-            $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
+            @*$("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));*@
             @{name}CorrectModel.barValue(data.@{correctPoints})
             @{name}IncorrectModel.barValue(data.@{incorrectPoints})
         };

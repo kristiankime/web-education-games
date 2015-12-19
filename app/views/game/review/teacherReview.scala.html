@@ -1,6 +1,6 @@
 @(game: models.game.Game, quiz: models.quiz.Quiz, student: models.user.User)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@defining(game.skillLevel(student)){ studentSkillLevel =>
+@defining(game.skillLevel(student)){ studentSkillLevel : Double =>
 
 @mainWithBorder("Teacher Game Score", tag.courseOpLink(game.course), tag.gameLink(Html("game"), game)) {
 
@@ -12,7 +12,7 @@
 
     <section>
         When you played the game @student.nameView had a skill level of @studentSkillLevel @tag.icon("icon-help", 'data_ot -> "This skill level is compared to the difficulty of the questions you asked to determine your teacher score.")<br>
-        @defining(quiz.results(student)) { quizResults =>
+        @defining(quiz.results(student)) { quizResults : models.quiz.QuizResults =>
         <table class="pure-table pure-table-striped extra-border">
             <tr>
                 <th>question @tag.icon("icon-help", 'data_ot -> "The question you asked")</th>

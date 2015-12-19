@@ -15,7 +15,7 @@
     <section class="primary-content">
         <h1>Create a Game Quiz</h1>
 
-        You are now playing a game with @gameState.game.requestor.nameView, and need to create a Quiz for them. <br>
+        You are now playing a game with @gameState.other.nameView, and need to create a Quiz for them. <br>
 
         @if(gameState.otherQuizDone){
         They have finished creating their quiz and are waiting for you to finish yours <br>
@@ -43,10 +43,10 @@
         <h4>Add a new Question</h4>
 
         @tag.switch("createQuestion", forms.errorIndexOrRandom,
-            ("Create a Derivative Question",       derivative.questionEditor(gameState.createDerivativeQuestionCall,           forms.derivative,      successCallback = List("derivativeEditorSuccess"),      Some(derivative.scoringHints("derivativeEditorSuccess",           gameState.game.requestorSkill)))),
-            ("Create a Derivative Graph Question", derivativegraph.questionEditor(gameState.createDerivativeGraphQuestionCall, forms.derivativeGraph, successCallback = List("derivativeGraphEditorSuccess"), Some(derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.game.requestorSkill)))),
-            ("Create a Tangent Question",          tangent.questionEditor(gameState.createTangentQuestionCall,                 forms.tangent,         successCallback = List("tangentEditorSuccess"),         Some(tangent.scoringHints("tangentEditorSuccess",                 gameState.game.requestorSkill)))),
-            ("Create a Graph Match Question",      graphmatch.questionEditor(gameState.createGraphMatchQuestionCall,           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess"),      Some(graphmatch.scoringHints("graphMatchEditorSuccess",           gameState.game.requestorSkill))))
+            ("Create a Derivative Question",       derivative.questionEditor(gameState.createDerivativeQuestionCall,           forms.derivative,      successCallback = List("derivativeEditorSuccess"),      Some(derivative.scoringHints("derivativeEditorSuccess",           gameState.otherSkill)))),
+            ("Create a Derivative Graph Question", derivativegraph.questionEditor(gameState.createDerivativeGraphQuestionCall, forms.derivativeGraph, successCallback = List("derivativeGraphEditorSuccess"), Some(derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.otherSkill)))),
+            ("Create a Tangent Question",          tangent.questionEditor(gameState.createTangentQuestionCall,                 forms.tangent,         successCallback = List("tangentEditorSuccess"),         Some(tangent.scoringHints("tangentEditorSuccess",                 gameState.otherSkill)))),
+            ("Create a Graph Match Question",      graphmatch.questionEditor(gameState.createGraphMatchQuestionCall,           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess"),      Some(graphmatch.scoringHints("graphMatchEditorSuccess",           gameState.otherSkill))))
         )
 
         }
@@ -58,7 +58,7 @@
         }
     </section>
 }{  @* ===== Minor Content Here ==== *@
-    @views.html.quiz.recentHistory(gameState.game.requestor)
+    @views.html.quiz.recentHistory(gameState.other)
 }
 
 }

@@ -2,7 +2,7 @@
 
 @import models.game.Games
 
-@defining(courseOp match { case Some(course) => Games.activeAccepted(user.id, course.id); case None => Games.activeAccepted(user.id)}) { games =>
+@defining(courseOp match { case Some(course) => Games.activeAccepted(user.id, course.id); case None => Games.activeAccepted(user.id)}) { games : List[models.game.Game] =>
 
 <section>
     <h5>Games in Progress</h5>

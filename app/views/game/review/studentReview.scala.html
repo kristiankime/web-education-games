@@ -10,7 +10,7 @@
 
     <section>
         Your results for each question:<br>
-        @defining(quiz.results(user)) { quizResults =>
+        @defining(quiz.results(user)) { quizResults : models.quiz.QuizResults =>
         <table class="pure-table pure-table-striped extra-border">
             <tr>
                 <th>question</th>

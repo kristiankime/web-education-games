@@ -43,6 +43,6 @@
                 Version: @controllers.Application.version.toString
             </div>
         </footer>
-
+    @views.html.alert.modal(models.user.Alert.alertsFor(user))
     </body>
 </html>

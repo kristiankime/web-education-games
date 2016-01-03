@@ -1,0 +1,9 @@
+@(alerts: List[models.user.Alert])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+<ul>
+    @for(alert <- alerts) {
+    <li>
+        @alert.display
+    </li>
+    }
+</ul>

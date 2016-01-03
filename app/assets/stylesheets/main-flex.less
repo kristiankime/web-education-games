@@ -6,6 +6,9 @@
 @medium: #3E95CD;
 @dark: #17699D;
 
+@student-points-color: yellow;
+@teacher-points-color: orange;
+
 .primary-content {
   padding: 1em 1em 1em 1em;
 }
@@ -211,6 +214,26 @@ div.inline { float:left; }
 }
 
 // Modal =======================
-.modal-foo {
-  border: 3px solid @light;
+.modal-border {
+  border: .4em solid @light;
+}
+
+// Gamification =======================
+// https://css-tricks.com/adding-stroke-to-web-text/
+.student-points {
+  font-size: 175%;
+  font-weight: bold;
+  color: black;
+  -webkit-text-fill-color: @student-points-color; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: .05em;
+  -webkit-text-stroke-color: black;
+}
+
+.teacher-points {
+  font-size: 175%;
+  font-weight: bold;
+  color: black;
+  -webkit-text-fill-color: @teacher-points-color; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: .05em;
+  -webkit-text-stroke-color: black;
 }

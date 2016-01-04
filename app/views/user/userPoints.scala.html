@@ -1,0 +1,18 @@
+@(user: models.user.User, name: String)(implicit session: play.api.db.slick.Config.driver.simple.Session)
+    <table class="pure-table">
+        <tr>
+            <th>Type</th>
+            <th>Level</th>
+            <th>Progress</th>
+        </tr>
+        <tr>
+            <td>Student</td>
+            <td>@tag.level(user.studentLevel, Some("student-points"))</td>
+            <td>@tag.points(name + "StudentPoints", user.studentPointsInLevel, "studentPointsProgressBar")</td>
+        </tr>
+        <tr>
+            <td>Teacher</td>
+            <td>@tag.level(user.teacherLevel, Some("teacher-points"))</td>
+            <td>@tag.points(name + "TeacherPoints", user.teacherPointsInLevel, "teacherPointsProgressBar")</td>
+        </tr>
+    </table>

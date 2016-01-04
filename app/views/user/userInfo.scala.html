@@ -26,23 +26,7 @@
     }
 
     <h3> Your Points so far </h3>
-    <table class="pure-table">
-        <tr>
-            <th>Type</th>
-            <th>Level</th>
-            <th>Progress</th>
-        </tr>
-        <tr>
-            <td>Student</td>
-            <td>@tag.level(user.studentLevel)</td>
-            <td>@tag.points("studentPoints", user.studentPointsInLevel)</td>
-        </tr>
-        <tr>
-            <td>Teacher</td>
-            <td>@tag.level(user.teacherLevel)</td>
-            <td>@tag.points("teacherPoints", user.teacherPointsInLevel)</td>
-        </tr>
-    </table>
+    @views.html.user.userPoints(user, "userInfo")
 
     <h3> Update your settings </h3>
 

@@ -7,3 +7,8 @@
     </li>
     }
 </ul>
+
+@if(alerts.map(_.displayScore).fold(false)(_ || _)){
+    <h3> Summary of your progress: </h3>
+    @views.html.user.userPoints(user, "alerts")
+}

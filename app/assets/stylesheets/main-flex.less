@@ -229,6 +229,18 @@ div.inline { float:left; }
   -webkit-text-stroke-color: black;
 }
 
+.studentPointsProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    color: black;
+    background-color: @student-points-color;
+    border-color: lightgrey;
+  }
+}
+
 .teacher-points {
   font-size: 175%;
   font-weight: bold;
@@ -236,4 +248,16 @@ div.inline { float:left; }
   -webkit-text-fill-color: @teacher-points-color; /* Will override color (regardless of order) */
   -webkit-text-stroke-width: .05em;
   -webkit-text-stroke-color: black;
+}
+
+.teacherPointsProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    color: black;
+    background-color: @teacher-points-color;
+    border-color: lightgrey;
+  }
 }

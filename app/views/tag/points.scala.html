@@ -1,1 +1,1 @@
-@(name: String, points: Int)@tag.bar(name, "pointsProgressBar", max = models.game.Gamification.pointsPerLevel, initialOp = Some(points))
+@(name: String, points: Int, cssClass: String = "pointsProgressBar")@tag.bar(name, cssClass, max = models.game.Gamification.pointsPerLevel, initialOp = Some(points))

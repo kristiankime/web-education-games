@@ -1,19 +1,19 @@
 package models.support
 
 case class UserId(v: Long) {
-  override def toString = "U"+v
+  override def toString = "Us"+v
 }
 
 case class OrganizationId(v: Long) {
-  override def toString = "O"+v
+  override def toString = "Or"+v
 }
 
 case class CourseId(v: Long) {
-  override def toString = "C"+v
+  override def toString = "Co"+v
 }
 
 case class GameId(v: Long) {
-  override def toString = "G"+v
+  override def toString = "Ga"+v
 }
 
 case class QuizId(v: Long) {
@@ -25,5 +25,9 @@ case class QuestionId(v: Long) {
 }
 
 case class AnswerId(v: Long) {
-  override def toString = "A"+v
+  override def toString = "An"+v
+}
+
+case class AlertId(v: Long) {
+  override def toString = "Al"+v
 }

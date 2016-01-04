@@ -15,12 +15,12 @@ import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
 import models.game.GameRole._
 import models.game._
-import models.game.mask.{MyStillAnswering, MyQuizFinished, MyQuizUnfinished}
+import models.game.mask.{GameMask, MyStillAnswering, MyQuizFinished, MyQuizUnfinished}
 import models.quiz.Quiz
 import models.quiz.answer._
 import models.quiz.question._
 import models.support._
-import models.user.User
+import models.user.{Alerts, User}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -52,10 +52,12 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def finalizeAnswersInternal(game: Game)(implicit user: User, session: Session) {
     val gameState = game.toMask(user) match {
-      case g: MyQuizFinished with MyStillAnswering => g
+      case g: GameMask with MyQuizFinished with MyStillAnswering => g
       case s => throw new IllegalStateException("Mask should have been subclass of " + classOf[MyQuizFinished].getName + " with " + classOf[MyStillAnswering].getName + " but was " + s)
     }
-    Games.update(gameState.doneAnswering)
+    val updatedGame = gameState.doneAnswering
+    Games.update(updatedGame)
+    Alerts.gameAlert(updatedGame.toMask(user))
   }
 
   protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result = {

@@ -13,7 +13,7 @@ class GameCompletedAlertsTable(tag: Tag) extends Table[GameCompletedAlert](tag, 
   def studentPoints =  column[Int]("students_points")
   def quizId =  column[QuizId]("quiz_id")
 
-  def * = (recipientId, seen, creationDate, gameId, teacherPoints, studentPoints, quizId) <> (GameCompletedAlert.tupled, GameCompletedAlert.unapply _)
+  def * = (id, recipientId, seen, creationDate, gameId, teacherPoints, studentPoints, quizId) <> (GameCompletedAlert.tupled, GameCompletedAlert.unapply _)
 
   def userFK = foreignKey("alert_game_completed__user_fk", recipientId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 

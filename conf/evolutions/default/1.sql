@@ -4,7 +4,7 @@
 
 # --- !Ups
 
-create table "alert_game_completed" ("recipient_id" BIGINT NOT NULL,"consented" BOOLEAN NOT NULL,"creation_date" TIMESTAMP NOT NULL,"game_id" BIGINT NOT NULL,"teacher_points" INTEGER NOT NULL,"students_points" INTEGER NOT NULL,"quiz_id" BIGINT NOT NULL);
+create table "alert_game_completed" ("id" SERIAL NOT NULL PRIMARY KEY,"recipient_id" BIGINT NOT NULL,"consented" BOOLEAN NOT NULL,"creation_date" TIMESTAMP NOT NULL,"game_id" BIGINT NOT NULL,"teacher_points" INTEGER NOT NULL,"students_points" INTEGER NOT NULL,"quiz_id" BIGINT NOT NULL);
 create index "alert_game_completed__name_index" on "alert_game_completed" ("recipient_id","consented");
 create table "answer_id" ("id" SERIAL NOT NULL PRIMARY KEY,"dummy" SMALLINT NOT NULL);
 create table "application_users" ("user_id" BIGINT NOT NULL PRIMARY KEY,"consented" BOOLEAN NOT NULL,"name" TEXT NOT NULL,"allow_auto_match" BOOLEAN NOT NULL,"seen_help" BOOLEAN NOT NULL,"email_game_updates" BOOLEAN NOT NULL,"last_access" TIMESTAMP NOT NULL);
@@ -31,8 +31,8 @@ alter table "users_2_courses" add constraint "users_2_courses_pk" primary key("u
 create table "users_2_quizzes" ("user_id" BIGINT NOT NULL,"quiz_id" BIGINT NOT NULL,"access" SMALLINT NOT NULL);
 alter table "users_2_quizzes" add constraint "users_2_quizzes__pk" primary key("user_id","quiz_id");
 alter table "alert_game_completed" add constraint "alert_game_completed__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
-alter table "alert_game_completed" add constraint "alert_game_completed__game_fk" foreign key("game_id") references "games"("id") on update NO ACTION on delete CASCADE;
 alter table "alert_game_completed" add constraint "alert_game_completed__user_fk" foreign key("recipient_id") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
+alter table "alert_game_completed" add constraint "alert_game_completed__game_fk" foreign key("game_id") references "games"("id") on update NO ACTION on delete CASCADE;
 alter table "application_users" add constraint "application_users__user_fk" foreign key("user_id") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "courses" add constraint "courses__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "courses" add constraint "courses__organization_fk" foreign key("organization") references "organizations"("id") on update NO ACTION on delete CASCADE;
@@ -44,11 +44,11 @@ alter table "derivative_answers" add constraint "derivative_answers__id_fk" fore
 alter table "derivative_graph_answers" add constraint "derivative_graph_answers__question_fk" foreign key("question_id") references "derivative_graph_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_graph_answers" add constraint "derivative_graph_answers__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_graph_answers" add constraint "derivative_graph_answers__id_fk" foreign key("id") references "answer_id"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_graph_questions" add constraint "derivative_graph_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_graph_questions" add constraint "derivative_graph_questions__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_graph_questions" add constraint "derivative_graph_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_graph_questions" add constraint "derivative_graph_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
-alter table "derivative_questions" add constraint "derivative_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_questions" add constraint "derivative_questions__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
+alter table "derivative_questions" add constraint "derivative_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "derivative_questions" add constraint "derivative_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
 alter table "games" add constraint "games__course_fk" foreign key("course") references "courses"("id") on update NO ACTION on delete CASCADE;
 alter table "games" add constraint "games__requestor_fk" foreign key("requestor") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
@@ -58,26 +58,26 @@ alter table "games" add constraint "games__requestee_quiz_fk" foreign key("reque
 alter table "graph_match_answers" add constraint "graph_match_answers__question_fk" foreign key("question_id") references "graph_match_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "graph_match_answers" add constraint "graph_match_answers__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "graph_match_answers" add constraint "graph_match_answers__id_fk" foreign key("id") references "answer_id"("id") on update NO ACTION on delete CASCADE;
-alter table "graph_match_questions" add constraint "graph_match_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "graph_match_questions" add constraint "graph_match_questions__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
+alter table "graph_match_questions" add constraint "graph_match_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "graph_match_questions" add constraint "graph_match_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
 alter table "quizzes" add constraint "quizzes__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_answers" add constraint "tangent_answers__question_fk" foreign key("question_id") references "tangent_questions"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_answers" add constraint "tangent_answers__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_answers" add constraint "tangent_answers__id_fk" foreign key("id") references "answer_id"("id") on update NO ACTION on delete CASCADE;
-alter table "tangent_questions" add constraint "tangent_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_questions" add constraint "tangent_questions__owner_fk" foreign key("owner") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
+alter table "tangent_questions" add constraint "tangent_questions__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "tangent_questions" add constraint "tangent_questions__id_fk" foreign key("id") references "question_id"("id") on update NO ACTION on delete CASCADE;
-alter table "users_2_courses" add constraint "users_2_courses__user_fk" foreign key("user_id") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_courses" add constraint "users_2_courses__course_fk" foreign key("course_id") references "courses"("id") on update NO ACTION on delete CASCADE;
+alter table "users_2_courses" add constraint "users_2_courses__user_fk" foreign key("user_id") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_quizzes" add constraint "users_2_quizzes__quiz_fk" foreign key("quiz_id") references "quizzes"("id") on update NO ACTION on delete CASCADE;
 alter table "users_2_quizzes" add constraint "users_2_quizzes__user_fk" foreign key("user_id") references "secure_social_logins"("id") on update NO ACTION on delete CASCADE;
 
 # --- !Downs
 
 alter table "alert_game_completed" drop constraint "alert_game_completed__quiz_fk";
-alter table "alert_game_completed" drop constraint "alert_game_completed__game_fk";
 alter table "alert_game_completed" drop constraint "alert_game_completed__user_fk";
+alter table "alert_game_completed" drop constraint "alert_game_completed__game_fk";
 alter table "application_users" drop constraint "application_users__user_fk";
 alter table "courses" drop constraint "courses__owner_fk";
 alter table "courses" drop constraint "courses__organization_fk";
@@ -89,11 +89,11 @@ alter table "derivative_answers" drop constraint "derivative_answers__id_fk";
 alter table "derivative_graph_answers" drop constraint "derivative_graph_answers__question_fk";
 alter table "derivative_graph_answers" drop constraint "derivative_graph_answers__owner_fk";
 alter table "derivative_graph_answers" drop constraint "derivative_graph_answers__id_fk";
-alter table "derivative_graph_questions" drop constraint "derivative_graph_questions__quiz_fk";
 alter table "derivative_graph_questions" drop constraint "derivative_graph_questions__owner_fk";
+alter table "derivative_graph_questions" drop constraint "derivative_graph_questions__quiz_fk";
 alter table "derivative_graph_questions" drop constraint "derivative_graph_questions__id_fk";
-alter table "derivative_questions" drop constraint "derivative_questions__quiz_fk";
 alter table "derivative_questions" drop constraint "derivative_questions__owner_fk";
+alter table "derivative_questions" drop constraint "derivative_questions__quiz_fk";
 alter table "derivative_questions" drop constraint "derivative_questions__id_fk";
 alter table "games" drop constraint "games__course_fk";
 alter table "games" drop constraint "games__requestor_fk";
@@ -103,18 +103,18 @@ alter table "games" drop constraint "games__requestee_quiz_fk";
 alter table "graph_match_answers" drop constraint "graph_match_answers__question_fk";
 alter table "graph_match_answers" drop constraint "graph_match_answers__owner_fk";
 alter table "graph_match_answers" drop constraint "graph_match_answers__id_fk";
-alter table "graph_match_questions" drop constraint "graph_match_questions__quiz_fk";
 alter table "graph_match_questions" drop constraint "graph_match_questions__owner_fk";
+alter table "graph_match_questions" drop constraint "graph_match_questions__quiz_fk";
 alter table "graph_match_questions" drop constraint "graph_match_questions__id_fk";
 alter table "quizzes" drop constraint "quizzes__owner_fk";
 alter table "tangent_answers" drop constraint "tangent_answers__question_fk";
 alter table "tangent_answers" drop constraint "tangent_answers__owner_fk";
 alter table "tangent_answers" drop constraint "tangent_answers__id_fk";
-alter table "tangent_questions" drop constraint "tangent_questions__quiz_fk";
 alter table "tangent_questions" drop constraint "tangent_questions__owner_fk";
+alter table "tangent_questions" drop constraint "tangent_questions__quiz_fk";
 alter table "tangent_questions" drop constraint "tangent_questions__id_fk";
-alter table "users_2_courses" drop constraint "users_2_courses__user_fk";
 alter table "users_2_courses" drop constraint "users_2_courses__course_fk";
+alter table "users_2_courses" drop constraint "users_2_courses__user_fk";
 alter table "users_2_quizzes" drop constraint "users_2_quizzes__quiz_fk";
 alter table "users_2_quizzes" drop constraint "users_2_quizzes__user_fk";
 drop table "alert_game_completed";

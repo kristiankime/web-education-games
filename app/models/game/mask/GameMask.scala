@@ -24,25 +24,25 @@ trait GameSetup {
   def myQuizId      : Option[QuizId] =            if(requestee) { game.requesteeQuizId         } else { game.requestorQuizId   }
   def myQuizDone    : Boolean =                   if(requestee) { game.requesteeQuizDone       } else { game.requestorQuizDone }
   def myQuizOp(implicit session: Session) =       if(requestee) { game.requesteeQuiz           } else { game.requestorQuiz     }
-  def myQuiz(implicit session: Session) =         myQuizOp.get
+  def myQuiz(implicit session: Session) =         myQuizOp.get // LATER move to appropriate GameMaskState
   def myQuizAnswered(implicit session: Session) = if(requestee) { game.requesteeQuizIfAnswered } else { game.requestorQuizIfAnswered }
   def myFinished: Boolean =                       if(requestee) { game.requesteeFinished       } else { game.requestorFinished }
   def myStudentPointsOp =                         if(requestee) { game.requesteeStudentPoints  } else { game.requestorStudentPoints }
-  def myStudentPoints =                           myStudentPointsOp.getOrElse(0)
+  def myStudentPoints =                           myStudentPointsOp.getOrElse(0) // LATER move to appropriate GameMaskState
   def myTeacherPointsOp =                         if(requestee) { game.requesteeTeacherPoints  } else { game.requestorTeacherPoints }
-  def myTeacherPoints =                           myTeacherPointsOp.getOrElse(0)
+  def myTeacherPoints =                           myTeacherPointsOp.getOrElse(0) // LATER move to appropriate GameMaskState
 
   def otherSkill =                                   if(requestee) { game.requestorSkill          } else { game.requesteeSkill    }
   def otherQuizId   : Option[QuizId] =               if(requestee) { game.requestorQuizId         } else { game.requesteeQuizId   }
   def otherQuizDone : Boolean =                      if(requestee) { game.requestorQuizDone       } else { game.requesteeQuizDone }
   def otherQuizOp(implicit session: Session) =       if(requestee) { game.requestorQuiz           } else { game.requesteeQuiz     }
-  def otherQuiz(implicit session: Session) =         otherQuizOp.get
+  def otherQuiz(implicit session: Session) =         otherQuizOp.get // LATER move to appropriate GameMaskState
   def otherQuizAnswered(implicit session: Session) = if(requestee) { game.requestorQuizIfAnswered } else { game.requesteeQuizIfAnswered }
   def otherFinished: Boolean =                       if(requestee) { game.requestorFinished       } else { game.requesteeFinished }
   def otherStudentPointsOp =                         if(requestee) { game.requestorStudentPoints  } else { game.requesteeStudentPoints }
-  def otherStudentPoints =                           otherStudentPointsOp.getOrElse(0)
+  def otherStudentPoints =                           otherStudentPointsOp.getOrElse(0) // LATER move to appropriate GameMaskState
   def otherTeacherPointsOp =                         if(requestee) { game.requestorTeacherPoints  } else { game.requesteeTeacherPoints }
-  def otherTeacherPoints =                           otherTeacherPointsOp.getOrElse(0)
+  def otherTeacherPoints =                           otherTeacherPointsOp.getOrElse(0) // LATER move to appropriate GameMaskState
 
   // ==============================================================================================================
   // Play MVC calls which need to change based on requestor/requestee

@@ -13,16 +13,16 @@
     <h1>Congratulations you finished a game with @gameState.other.nameView</h1>
     }
 
-    @for(studentPoints <- gameState.otherStudentPointsOp ) {
+    @for(studentPoints <- gameState.myStudentPointsOp ) {
     <section class="extra-border">
-        You earned @tag.studentPoints(studentPoints) student points! <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, gameState.otherQuizId.get)">details</a>
+        You earned @tag.studentPoints(studentPoints) student points for playing this game! <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, gameState.otherQuizId.get)">details</a>
         @*Your score as a student was @views.html.quiz.quizScore(otherQuiz.results(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, otherQuiz.id)">details</a>*@
     </section>
     }
 
     @for(teacherPoints <- gameState.myTeacherPointsOp ) {
     <section class="extra-border">
-        You earned @tag.teacherPoints(teacherPoints) teacher points! <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, gameState.myQuizId.get)">details</a>
+        You earned @tag.teacherPoints(teacherPoints) teacher points for playing this game! <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, gameState.myQuizId.get)">details</a>
         @*Your score as a teacher was @views.html.quiz.quizScoreTeacher(myQuiz.results(gameState.other), gameState.otherSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, myQuiz.id)">details</a>*@
     </section>
     }@if(gameState.myTeacherPointsOp.isEmpty) {

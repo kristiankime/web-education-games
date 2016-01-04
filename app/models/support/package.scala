@@ -214,4 +214,13 @@ package object support {
 
     def unbind(key: String, id: AnswerId): String = longBinder.unbind(key, id.v)
   }
+
+	// ==========================
+	// AlertId
+	// ==========================
+	implicit def long2AlertId = MappedColumnType.base[AlertId, Long](
+		id => id.v,
+		long => AlertId(long))
 }
+
+

@@ -90,6 +90,12 @@ case class Game(id: GameId = null,
       case _ => None
     }
 
+  def otherPlayer(userId: UserId)(implicit session: Session) = userId match {
+    case `requestorId` => requestee
+    case `requesteeId` => requestor
+    case _ => throw new IllegalStateException("user [" + userId + "] was not the requestor or the requestee")
+  }
+
   def otherPlayer(user: User)(implicit session: Session) = user.id match {
     case `requestorId` => requestee
     case `requesteeId` => requestor

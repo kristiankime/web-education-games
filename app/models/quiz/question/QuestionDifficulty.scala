@@ -181,5 +181,5 @@ object TangentQuestionDifficulty {
 }
 
 object GraphMatchQuestionDifficulty {
-  def apply(e1: MathMLElem, e2: MathMLElem, e3: MathMLElem, graphThis: Short): Double = 10d
+  def apply(e1: MathMLElem, e2: MathMLElem, e3: MathMLElem, graphThis: Short): Double = (DerivativeDifficulty(e1) + DerivativeDifficulty(e2) + DerivativeDifficulty(e3)) / 3d
 }

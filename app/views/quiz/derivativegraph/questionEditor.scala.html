@@ -22,11 +22,13 @@
     <fieldset>
         <input type="hidden" name="@DerivativeGraphQuestionForm.function"    id="derivativeGraphQuestionMathML">
         <input type="hidden" name="@DerivativeGraphQuestionForm.functionStr" id="derivativeGraphQuestionRawStr">
+        @defining(com.artclod.util.Randoms.randomFrom(DerivativeOrder.all)) { selected : DerivativeOrder =>
         @for(order <- DerivativeOrder.all) {
         <label for="@order.asString" class="pure-radio">
-            <input id="@order.asString" type="radio" name="@DerivativeGraphQuestionForm.derivativeOrder" value="@order.asString" @if(order == FuncFirstSecond){checked} >
+            <input id="@order.asString" type="radio" name="@DerivativeGraphQuestionForm.derivativeOrder" value="@order.asString" @if(order == selected){checked} >
             @order.niceString
         </label>
+        }
         }
 
         Display the Function formula, as well as the graph, when players are answering (this makes the question easier):

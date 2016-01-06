@@ -1,4 +1,4 @@
-@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, xSize : Int = 300, ySize : Int = 300)
+@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, glider: Boolean = true, xSize : Int = 300, ySize : Int = 300)
 
 @import com.artclod.mathml.MathMLEq.tightRange
 
@@ -15,6 +15,7 @@
     var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(com.artclod.mathml.MathMLEq.tightRange*2)}, unitY: @{ySize/(com.artclod.mathml.MathMLEq.tightRange*2)}, showCopyright: false});
     board.suspendUpdate();
     var g = board.create('functiongraph', [f, -@{tightRange}, @{tightRange}], {strokeWidth: 3});
+    @if(glider){var glider = board.create('glider', [g]);}
     board.unsuspendUpdate();
     //]]>
     ret.brd = board;

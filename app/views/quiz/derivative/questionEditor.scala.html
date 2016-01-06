@@ -8,6 +8,7 @@
     Enter a function (of x) to differentiate. When you are done hit "Save Question": <br>
 
     @if(derivativeForm.hasMessage(DerivativeQuestionForm.functionInvalid)){<span class="form-error"> Sorry we were unable to create your question since the function is undefined at too many points. </span><br>}
+    @if(derivativeForm.hasMessage(DerivativeQuestionForm.functionDerivativeIsNotEasyToType)){<span class="form-error"> Sorry we didn't create your question since the function's derivative would require too much typing. </span><br>}
 
     @mathml.mathmlEditor(editorName = "DERIVATIVE_QUESTION", characterLimit = Some(40), mathParser = "CALC.mathJS.functionOfXParser", successCallback = successCallback)
 

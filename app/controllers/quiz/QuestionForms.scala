@@ -4,6 +4,7 @@ import com.artclod.collection.MustHandle
 import com.artclod.mathml.{MathMLEq, MathMLRange, MathMLDefined}
 import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
+import com.artclod.xml.Nodes
 import controllers.quiz.graphmatch.GraphMatchQuestionForm
 import play.api.data.Form
 import controllers.quiz.derivative.DerivativeQuestionForm
@@ -22,10 +23,6 @@ case class QuestionForms(derivative: Form[DerivativeQuestionForm], derivativeGra
     val firstTrue = com.artclod.play.firstTrue(errors)
     firstTrue
   }
-
-//  def errorIndexOrZero = {
-//    math.max(0, errorIndex)
-//  }
 
   def errorIndexOrRandom =
     if (errorIndex != -1) {
@@ -51,6 +48,8 @@ object QuestionForms {
   def graphMatch(graphMath: Form[GraphMatchQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, graphMath)
 
   def verifyFunctionValid(f: MathMLElem) = MathMLDefined.isDefinedFor(f, .10d)
+
+  def verifyFunctionDerivativeIsEasyToType(f: MathMLElem) = Nodes.nodeCount(f.dx.simplify) <= 60
 
   def verifyFunctionDisplaysNicely(f: MathMLElem) = {
     val ret = MathMLRange.percentInRange("x", f, -1d * MathMLEq.tightRange, MathMLEq.tightRange) >= .10d

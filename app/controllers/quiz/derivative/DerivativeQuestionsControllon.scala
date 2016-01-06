@@ -59,12 +59,14 @@ object DerivativeQuestionForm {
   val functionStr = "functionStr"
   // Validation Check Names
   val functionInvalid = "functionInvalid"
+  val functionDerivativeIsNotEasyToType = "functionDerivativeIsNotEasyToType"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
             functionStr -> nonEmptyText)
     (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply)
     verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
+    verifying(functionDerivativeIsNotEasyToType, fields => QuestionForms.verifyFunctionDerivativeIsEasyToType(fields.functionMathML))
   )
 
   def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, DerivativeQuestionDifficulty(form.functionMathML))

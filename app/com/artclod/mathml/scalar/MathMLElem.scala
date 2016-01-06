@@ -33,6 +33,7 @@ abstract class MathMLElem(
 		}
 		s_
 	}
+	def simplify = s
 
 	@tailrec private def simplifyRecurse(elem: MathMLElem): MathMLElem = {
 		val simp = elem.simplifyStepWithCNCheck

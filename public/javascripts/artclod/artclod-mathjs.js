@@ -196,6 +196,9 @@ ARTC.mathJS.buildParser = (function(){
 
         var ret = function(string) {
             try {
+
+                if(string.length > 0 && string.charAt(0) === "+") { throw "function can't start with +"; }
+
                 // ====
                 // This turns cos^2(x) into cos(x)^2 which can be parsed by mathjs
                 var funcs = [];
@@ -208,6 +211,8 @@ ARTC.mathJS.buildParser = (function(){
                 // =====
 
                 var mathJSNode = math.parse(stringPrepped);
+
+
 
                 var reject = rejectFuncSafe(mathJSNode);
                 if(reject){ throw reject; }

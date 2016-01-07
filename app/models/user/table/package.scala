@@ -8,8 +8,12 @@ package object table {
 
   val usersTable = TableQuery[UsersTable]
 
+  val friendsTable = TableQuery[FriendsTable]
+
+  // ==== Start Alerts
   val gameCompletedAlertsTable = TableQuery[GameCompletedAlertsTable]
 
   val alertTables = MustHandle(gameCompletedAlertsTable)
+  // ==== End Alerts
 
 }

@@ -1,11 +1,28 @@
 package models.user
 
 import com.artclod.slick.JodaUTC
-import models.support.UserId
+import models.organization.table._
+import models.support.{CourseId, UserId}
 import models.user.table._
 import play.api.db.slick.Config.driver.simple._
+import service.Access
 
 object Friends {
+
+  def apply(userId: UserId, friendId: UserId)(implicit session: Session) : Option[Friend] =
+    friendsTable.where(f => f.userId === userId && f.friendId === friendId).firstOption
+
+  def possibleFriends(userId: UserId)(implicit session: Session) =
+    usersTable.filterNot(_.userId.inSet(currentFriends(userId))).list
+
+  def friends(implicit user: User, session: Session) =
+    friendsTable.where(f => (f.userId === user.id || f.friendId === user.id) && f.acceptDate.isNotNull).sortBy(_.acceptDate).list
+
+  def currentFriends(userId: UserId)(implicit session: Session): List[UserId] = {
+    val u = (for (f <- friendsTable if f.userId   === userId && f.acceptDate.isNotNull) yield f.friendId)
+    val f = (for (f <- friendsTable if f.friendId === userId && f.acceptDate.isNotNull) yield f.userId)
+    u.union(f).list
+  }
 
   def invitation(friendId: UserId)(implicit user: User, session: Session) = {
     val invite = Friend(user.id, friendId, JodaUTC.now, None)
@@ -30,8 +47,6 @@ object Friends {
     findInviteQuery(invite).delete
   }
 
-  def friends(implicit user: User, session: Session) =
-    friendsTable.where(f => (f.userId === user.id || f.friendId === user.id) && f.acceptDate.isNotNull).sortBy(_.acceptDate).list
 
 }
 

@@ -1,0 +1,22 @@
+@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.organization.Courses
+@import com.artclod.play.s
+@import views.html.tag._
+@import helper._
+@import models.user.{Friends, Friend}
+
+@mainWithBorder("Friends") {
+
+    @defining(Friends.friends) { friends : List[Friend] =>
+    @if(friends.isEmpty){
+    <h5> You don't currently have anyone friended </h5>
+    } else {
+    <h5> Your have the following people friended:</h5>
+    <ul class="pure-list">
+        @for(friend <- friends) {<li> @friend.friend.nameDisplay </li>}
+    </ul>
+    }
+    }
+
+}

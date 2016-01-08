@@ -1,10 +1,12 @@
 package models.user
 
 import com.artclod.slick.JodaUTC
-import models.support.UserId
+import models.organization.table._
+import models.support.{CourseId, UserId}
 import models.user.table._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
+import service.Access
 
 import scala.Option
 import scala.util.{Failure, Success, Try}
@@ -50,6 +52,7 @@ object Users {
       }
     }
   }
+
 
 }
 

@@ -23,6 +23,11 @@ POST        /settings                                                           
 GET         /                                                                          controllers.Home.index
 GET         /user                                                                      controllers.Home.userInfo
 
+# Friends
+GET         /friends                                                                   controllers.Home.friends
+POST        /friends/request                                                           controllers.Home.friendRequest
+POST        /friends/response                                                          controllers.Home.friendResponse
+
 # Organizations
 GET         /orgs                                                                      controllers.organization.OrganizationsController.list
 GET         /orgs/:o                                                                   controllers.organization.OrganizationsController.view(o: OrganizationId)

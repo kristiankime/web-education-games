@@ -82,4 +82,74 @@ class FriendsSpec extends Specification {
     }
   }
 
+  "currentFriends" should {
+
+    "list nothing if there are no invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        val user = newFakeUser
+
+        Friends.currentFriends(user.id) must beEmpty
+      }
+    }
+
+    "list nothing if there are no accepted invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        val user = newFakeUser
+        val friend = newFakeUser
+
+        Friends.invitation(friend.id)(user, session)
+
+        Friends.currentFriends(user.id) must beEmpty
+      }
+    }
+
+    "list accepted invites (1)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        val user = newFakeUser
+        val friend = newFakeUser
+
+        val invitation = Friends.invitation(friend.id)(user, session)
+
+        val updatedInvite = Friends.acceptInvitation(invitation)(friend, session)
+
+        Friends.currentFriends(user.id) must beEqualTo(List(friend.id))
+      }
+    }
+
+    "list accepted invites (2)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        val user = newFakeUser
+
+        val friend1 = newFakeUser
+        val invitation1 = Friends.invitation(friend1.id)(user, session)
+        val updatedInvite1 = Friends.acceptInvitation(invitation1)(friend1, session)
+
+        val friend2 = newFakeUser
+        val invitation2 = Friends.invitation(friend2.id)(user, session)
+        val updatedInvite2 = Friends.acceptInvitation(invitation2)(friend2, session)
+
+        Friends.currentFriends(user.id) must beEqualTo(List(friend1.id, friend2.id))
+      }
+    }
+
+    "Does not list unrelated invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        val user = newFakeUser
+
+        val friend1 = newFakeUser
+        val invitation1 = Friends.invitation(friend1.id)(user, session)
+        val updatedInvite1 = Friends.acceptInvitation(invitation1)(friend1, session)
+
+        val friend2 = newFakeUser
+        val invitation2 = Friends.invitation(friend2.id)(user, session)
+        val updatedInvite2 = Friends.acceptInvitation(invitation2)(friend2, session)
+
+        val friendsFriendInvitation = Friends.invitation(friend2.id)(friend1, session)
+        Friends.acceptInvitation(friendsFriendInvitation)(friend2, session)
+
+        Friends.currentFriends(user.id) must beEqualTo(List(friend1.id, friend2.id))
+      }
+    }
+  }
+
 }

@@ -50,20 +50,18 @@ ARTC.mathJS.prepFuncPow = function(text, funcs) {
         if(typeof text !== "string") { throw "text was not a string [" + text + "]"; }
         if(typeof func !== "string") { throw "func was not a string [" + func + "]"; }
 
-        var i = text.indexOf(func+"^")
-        if(i !== -1) {
-            i = i + func.length;
-            var initialParenIndex = text.indexOf("(", i);
-            if(initialParenIndex !== -1) {
-                var matchingParenIndex = ARTC.parenMatch(text, initialParenIndex);
-                if(matchingParenIndex !== -1) {
-                    var pre = text.substring(0, i);
-                    var beforeParen = text.substring(i+1, initialParenIndex);
-                    var inParen = text.substring(initialParenIndex, matchingParenIndex);
-                    var post = text.substring(matchingParenIndex);
-                    var updatedText = pre + inParen + "^(" + beforeParen + ")" + post; // NOTE: swapping before & in paren
-                    return { updated : true, text : updatedText };
-                }
+        var re = new RegExp(func + "(\\^[0-9]+)\\(");
+        var match = re.exec(text);
+
+        if(match != null) {
+            var powerText = match[1];
+            var openParenIndex = match.index + func.length + powerText.length;
+            var closeParenIndex = ARTC.parenMatch(text, openParenIndex);
+            if(closeParenIndex !== -1) {
+                var preText = text.substring(0, match.index);
+                var inParenText = text.substring(openParenIndex, closeParenIndex);
+                var postText = text.substring(closeParenIndex);
+                return { updated : true, text : preText + "(" + func + inParenText + powerText + ")" + postText };
             }
         }
         return { updated : false, text : text };

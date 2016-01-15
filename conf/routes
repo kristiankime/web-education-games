@@ -25,6 +25,7 @@ GET         /user                                                               
 
 # Friends
 GET         /friends                                                                   controllers.Home.friends
+GET         /friends/find                                                              controllers.Home.findfriend
 POST        /friends/request                                                           controllers.Home.friendRequest
 POST        /friends/response                                                          controllers.Home.friendResponse
 

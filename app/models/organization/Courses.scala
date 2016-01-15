@@ -67,7 +67,6 @@ object Courses {
          u <- usersTable if (u.userId === uc.userId) && (u.userId =!= userId)
    ) yield u).sortBy(_.lastAccess.desc).list
 
-
   // ======= AUTHORIZATION ======
 	def otherAccess(course: Course)(implicit user: User, session: Session) =
     usersCoursesTable.where(uc => uc.userId === user.id && uc.id === course.id).firstOption.map(_.access).toAccess

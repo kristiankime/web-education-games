@@ -39,6 +39,7 @@
     }
     </section>
 
+    @if(models.user.Friends.isPossibleFriend(gameState.otherId)) {
     <section class="extra-border">
     @form(action = controllers.routes.Home.friendRequest(), 'class -> "pure-form") {
         Send a friend request to @gameState.other.nameView
@@ -46,4 +47,5 @@
         <input type="submit" class="pure-button pure-button-primary" value="Friend Request">
     }
     </section>
+    }
 }

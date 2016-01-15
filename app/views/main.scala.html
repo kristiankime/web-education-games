@@ -28,6 +28,7 @@
             </div>
             <div class="header-info">
                 <a href="@routes.Home.userInfo" class="pure-button">@user.nameView</a>
+                <a href="@routes.Home.friends" class="pure-button">Friends@if(models.user.Friends.pendingInvitesFor(user).nonEmpty){ @tag.icon("icon-heart6")}</a>
                 <a href="@securesocial.controllers.routes.LoginPage.logout" class="pure-button">logout</a>
                 @*Skill Level: @studentSkillLevel(user)*@
             </div>

@@ -1,4 +1,4 @@
-@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@()(implicit u: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.organization.Courses
 @import com.artclod.play.s
@@ -8,13 +8,53 @@
 
 @mainWithBorder("Friends") {
 
+    <h3> Friends List </h3>
     @defining(Friends.friends) { friends : List[Friend] =>
     @if(friends.isEmpty){
     <h5> You don't currently have anyone friended </h5>
     } else {
     <h5> Your have the following people friended:</h5>
     <ul class="pure-list">
-        @for(friend <- friends) {<li> @friend.friend.nameDisplay </li>}
+        @for(friend <- friends) {
+        <li>
+            @friend.friend.nameDisplay
+        </li>
+        }
+    </ul>
+    }
+    }
+
+    <h3> Invite Friends </h3>
+    To invite new friends click <a href="@controllers.routes.Home.findfriend()" class="pure-button">Here</a>
+
+    <h3> Pending Invitations </h3>
+    @defining(Friends.pendingInvitesFor(u)) { friends : List[Friend] =>
+    @if(friends.isEmpty){
+    <h5> You don't currently have any invitations </h5>
+    } else {
+    <h5> Your have friend requests from the following people:</h5>
+    <ul class="pure-list">
+        @for(friend <- friends) {
+        <li>
+            @friend.user.nameDisplay @views.html.user.friendRequestResponse(friend.otherId(u), true) @views.html.user.friendRequestResponse(friend.otherId(u), false)
+        </li>
+        }
+    </ul>
+    }
+    }
+
+    <h3> Awaiting Response </h3>
+    @defining(Friends.pendingInvitesBy(u)) { friends : List[Friend] =>
+    @if(friends.isEmpty){
+    <h5> You aren't awaiting responses to any invites </h5>
+    } else {
+    <h5> Your have sent requests to the following people:</h5>
+    <ul class="pure-list">
+        @for(friend <- friends) {
+        <li>
+            @friend.friend.nameDisplay
+        </li>
+        }
     </ul>
     }
     }

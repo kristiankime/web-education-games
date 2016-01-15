@@ -1,6 +1,8 @@
 package controllers
 
+import com.artclod.play.CommonsMailerHelper
 import com.artclod.slick.JodaUTC
+import controllers.game.GamesEmail._
 import controllers.organization.CoursesController._
 import models.user.{Friend, Friends, Users}
 import play.api.data.Form
@@ -33,6 +35,10 @@ object Home extends Controller with SecureSocialConsented {
     Ok(views.html.user.friends())
   }
 
+  def findfriend = ConsentedAction { implicit request => implicit user => implicit session =>
+    Ok(views.html.user.findFriend())
+  }
+
   def friendRequest = ConsentedAction { implicit request => implicit user => implicit session =>
     FriendRequest.form.bindFromRequest.fold(
       errors => BadRequest(views.html.errors.formErrorPage(errors)),
@@ -42,6 +48,11 @@ object Home extends Controller with SecureSocialConsented {
           case None => NotFound(views.html.errors.notFoundPage("There was no user for id=[" + friendId + "]"))
           case Some(friend) => {
             Friends.invitation(friendId)
+            for(mail <- friend.maybeSendEmail.map(mail => CommonsMailerHelper.defaultMailSetup(mail))) {
+              val userName = user.nameDisplay
+              mail.setSubject(userName + " has sent you a friend request in CalcTutor")
+              mail.sendHtml(userName + " wants to be your friend! " + serverLinkEmail(request) + " (" + goToFriendRequestLinkEmail(request) + ").")
+            }
             Redirect(routes.Home.friends())
           }
         }
@@ -54,9 +65,20 @@ object Home extends Controller with SecureSocialConsented {
       form => {
         val requestorId = UserId(form._1)
         Friends(requestorId, user.id)(session) match {
-          case None => NotFound(views.html.errors.notFoundPage("There was no request for id=[" + requestorId + " & " + user.id + "]"))
-          case Some(friend) => {
-            if(form._2) { Friends.acceptInvitation(friend) } else { Friends.rejectInvitation(friend) }
+          case None => NotFound(views.html.errors.notFoundPage("There was no friend request from [" + requestorId + "] to [" + user.id + "]"))
+          case Some(friendRequest) => {
+            if(form._2) {
+              Friends.acceptInvitation(friendRequest)
+              val inviter = friendRequest.user
+              for(mail <- inviter.maybeSendEmail.map(mail => CommonsMailerHelper.defaultMailSetup(mail))) {
+                val userName = user.nameDisplay
+                mail.setSubject(userName + " has accepted your friend request in CalcTutor")
+                mail.sendHtml(userName + " is now your friend! " + serverLinkEmail(request) + " (" + goToFriendRequestLinkEmail(request) + ").")
+              }
+            } else {
+              // TODO should we email on a rejected request?
+              Friends.rejectInvitation(friendRequest)
+            }
             Redirect(routes.Home.friends())
           }
         }

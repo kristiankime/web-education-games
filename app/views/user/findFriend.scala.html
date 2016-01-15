@@ -1,4 +1,4 @@
-@(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.game.routes.GamesController
 @import controllers.game.GameRequest
@@ -15,9 +15,9 @@
     <h1>Send a friend invitation</h1>
 
     @if(students.isEmpty){
-    <h5>There are currently no students available to invite</h5>
+    <h5>Currently there is no one for you to invite</h5>
     } else {
-    <h5>Please select the persin you want to send an invitation to:</h5>
+    <h5>Please select the person you want to send an invitation to:</h5>
 
     @form(action = Home.friendRequest(), 'class -> "pure-form") {
         <table class="pure-table pure-table-striped">

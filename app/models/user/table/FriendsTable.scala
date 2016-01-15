@@ -13,7 +13,7 @@ import scala.slick.model.ForeignKeyAction
 class FriendsTable(tag: Tag) extends Table[Friend](tag, "friends") {
   def userId = column[UserId]("user_id")
   def friendId = column[UserId]("friend_id")
-  def requestDate = column[DateTime]("request_date")
+  def requestDate = column[Option[DateTime]]("request_date")
   def acceptDate = column[Option[DateTime]]("accept_date")
 
   def * = (userId, friendId, requestDate, acceptDate) <> (Friend.tupled, Friend.unapply _)

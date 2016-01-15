@@ -19,7 +19,7 @@ object DBTest {
 	def newFakeUser(userNoId: Login)(implicit session: Session) : User = {
     val user = LoginsTable.insert(userNoId)
 
-    val createSettings = (() => Users.create(User(user.id, consented = true, name = Users.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailGameUpdates = false, lastAccess = JodaUTC.zero)))
+    val createSettings = (() => Users.create(User(user.id, consented = true, name = Users.validName(user.fullName), allowAutoMatch = true, seenHelp = true, emailUpdates = false, lastAccess = JodaUTC.zero)))
     val settings = createSettings.retryOnFail()
 
     settings.get

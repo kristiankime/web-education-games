@@ -1,6 +1,0 @@
-@(friendId: models.support.UserId, accept: Boolean)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
-    @helper.form(action = controllers.routes.Home.friendResponse(), 'class -> "pure-form", 'style -> "margin: 0; padding: 0; display: inline;") {
-        <input type="hidden" name="@controllers.FriendResponse.id" value="@friendId.v">
-        <input type="hidden" name="@controllers.FriendResponse.accept" value="@accept">
-        <input type="submit" class="pure-button @if(accept){pure-button-primary}" style="display: inline;" value="@if(accept){Accept}else{Reject}">
-    }

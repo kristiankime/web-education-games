@@ -11,71 +11,133 @@ import service.Access
 
 object Friends {
 
-  def apply(user: UserId, friend: UserId)(implicit session: Session) : Option[Friend] =
-    friendsTable.where(f => f.userId === user && f.friendId === friend).firstOption
+  def friend(friendId: UserId)(implicit user: User, session: Session) = Friends(friendId).friend
 
-  def invitation(friendId: UserId)(implicit user: User, session: Session) = {
-    val invite = Friend(user.id, friendId, Some(JodaUTC.now), None)
-    friendsTable += invite
-    invite
-  }
+  def unfriend(friendId: UserId)(implicit user: User, session: Session) = Friends(friendId).unfriend
 
-  def pendingInvitesFor(user: User)(implicit session: Session) =
-    friendsTable.where(f => f.friendId === user.id && f.requestDate.isNotNull && f.acceptDate.isNull).sortBy(_.requestDate).list
+  def pendingInvitesFor(implicit user: User, session: Session) =
+    friendsTable.where(f => f.friendId === user.id && f.acceptDate.isNull).sortBy(_.requestDate).list
 
-  def pendingInvitesBy(user: User)(implicit session: Session) =
-    friendsTable.where(f => f.userId === user.id && f.requestDate.isNotNull && f.acceptDate.isNull).sortBy(_.requestDate).list
-
-  def acceptInvitation(invite: Friend)(implicit user: User, session: Session) = {
-    if(invite.friendId != user.id) { throw new IllegalStateException("Cannot accept invitation unless user is the invited one") }
-    val now = Some(JodaUTC.now)
-    val updatedInvite = invite.copy(acceptDate = now)
-    findInviteQuery(invite).update(updatedInvite)
-    val accept = Friend(user.id, invite.userId, None, now)
-    friendsTable += accept
-    (updatedInvite, accept)
-  }
-
-  def rejectInvitation(invite: Friend)(implicit user: User, session: Session) = {
-    if(invite.friendId != user.id) { throw new IllegalStateException("Cannot reject invitation unless user is the invited one") }
-    findInviteQuery(invite).delete
-  }
+  def pendingInvitesBy(implicit user: User, session: Session) =
+    friendsTable.where(f => f.userId === user.id && f.acceptDate.isNull).sortBy(_.requestDate).list
 
   def friends(implicit user: User, session: Session) =
     friendsTable.where(f => f.userId === user.id && f.acceptDate.isNotNull).sortBy(_.acceptDate).list
 
-  def possibleFriends(userId: UserId)(implicit session: Session) =
-    usersTable.filterNot(_.userId.inSet(userId :: currentFriendIds(userId))).list
+  def possibleFriends(implicit user: User, session: Session) =
+    usersTable.filterNot(_.userId.inSet(user.id :: possibleFriendInviteIds)).list
 
   def isPossibleFriend(friendId: UserId)(implicit user: User, session: Session) =
-    !possibleFriends(user.id).contains(friendId)
+    !possibleFriends.contains(friendId)
 
-  def unfriend(invite: Friend)(implicit user: User, session: Session) = {
-    if(invite.userId != user.id) { throw new IllegalStateException("Cannot unfriend unless user is the invited one [" + invite + "] user [" + user.id + "]") }
-    val responseOp = apply(invite.friendId, invite.userId)
-    if(responseOp.isEmpty) { throw new IllegalStateException("There was no 2nd Invite for unfriending " + invite) }
-    for(response <- responseOp) {
-      findInviteQuery(response).delete
-      findInviteQuery(invite).update(invite.copy(acceptDate = None))
-    }
-  }
-
-  def studentsAndFriends(courseId: CourseId, userId: UserId)(implicit session: Session) = {
-    val friends = Set(currentFriendIds(userId): _*)
+  def possibleFriendsInCourse(courseId: CourseId)(implicit user: User, session: Session) = {
+    val friends = Set((user.id :: possibleFriendInviteIds): _*)
     Courses.students(courseId).filter(s => friends.contains(s.id))
   }
 
-  // ==== Support
+  // ==== Support Methods
+  private def apply(friend: User)(implicit user: User, session: Session) : FriendConnection = apply(friend.id)
+
+  private def apply(friendId: UserId)(implicit user: User, session: Session) : FriendConnection = {
+    FriendConnection(
+      friendsTable.where(f => f.userId === user.id && f.friendId === friendId).firstOption,
+      friendsTable.where(f => f.userId === friendId && f.friendId === user.id).firstOption,
+      user, friendId)
+  }
+
   private def findInviteQuery(invite: Friend)(implicit session: Session) = friendsTable.where(f => f.userId === invite.userId && f.friendId === invite.friendId)
 
-  @VisibleForTesting
-  def currentFriendIds(userId: UserId)(implicit session: Session): List[UserId] = {
-    val u = (for (f <- friendsTable if f.userId   === userId && f.acceptDate.isNotNull) yield f.friendId)
-    val f = (for (f <- friendsTable if f.friendId === userId && f.acceptDate.isNotNull) yield f.userId)
+  private def possibleFriendInviteIds(implicit user: User, session: Session) = {
+    val u = (for (f <- friendsTable if f.userId === user.id) yield f.friendId)
+    val f = (for (f <- friendsTable if f.friendId === user.id) yield f.userId)
     u.union(f).list
   }
 
+  // ==== Support Classes and Objects
+  private sealed trait FriendConnection {
+    val mainOp: Option[Friend]
+    val otherOp: Option[Friend]
+    val user: User
 
+    def checks() = {
+      for (main <- mainOp) {
+        if (main.userId != user.id) {
+          throw new IllegalStateException("Main must be from the points of view of the user [" + user + "] [" + mainOp + "]")
+        }
+      }
+      for (other <- otherOp) {
+        if (other.friendId != user.id) {
+          throw new IllegalStateException("Other must be from the points of view of the other [" + user + "] [" + otherOp + "]")
+        }
+      }
+    }
+
+    def friend(implicit session: Session) : Boolean
+
+    def unfriend(implicit session: Session)
+  }
+
+  private object FriendConnection {
+    def apply(mainOp: Option[Friend], otherOp: Option[Friend], user: User, friendId: UserId) =
+      (mainOp, otherOp) match {
+        case (None,       None       ) => FriendConnectionNone(user, friendId)
+        case (Some(main), None       ) => FriendConnectionMain(main, user, friendId)
+        case (None,       Some(other)) => FriendConnectionOther(other, user, friendId)
+        case (Some(main), Some(other)) => FriendConnectionBoth(main, other, user, friendId)
+      }
+  }
+
+  private case class FriendConnectionNone(user: User, friendId: UserId) extends FriendConnection {
+    val mainOp = None
+    val otherOp = None
+    checks()
+
+    def friend(implicit session: Session) = {
+      friendsTable += Friend(user.id, friendId, Some(JodaUTC.now), None)
+      true;
+    }
+
+    def unfriend(implicit session: Session) = {}
+  }
+
+  private case class FriendConnectionMain(main: Friend, user: User, friendId: UserId) extends FriendConnection {
+    val mainOp = Some(main)
+    val otherOp = None
+    checks()
+
+    def friend(implicit session: Session) = { false }
+
+    def unfriend(implicit session: Session) = Friends.findInviteQuery(main).delete
+
+  }
+
+  private case class FriendConnectionOther(other: Friend, user: User, friendId: UserId) extends FriendConnection {
+    val mainOp = None
+    val otherOp = Some(other)
+    checks()
+
+    def friend(implicit session: Session) = {
+      val now = JodaUTC.now
+      val invite = Friend(user.id, friendId, None, Some(now))
+      friendsTable += invite
+      Friends.findInviteQuery(other).update(other.copy(acceptDate = Some(now)))
+      true
+    }
+
+    def unfriend(implicit session: Session) = { Friends.findInviteQuery(other).delete }
+  }
+
+  private case class FriendConnectionBoth(main: Friend, other: Friend, user: User, friendId: UserId) extends FriendConnection {
+    val mainOp = Some(main)
+    val otherOp = Some(other)
+    checks()
+
+    def friend(implicit session: Session) = { false }
+
+    def unfriend(implicit session: Session) = {
+      Friends.findInviteQuery(main).delete
+      Friends.findInviteQuery(other).delete
+    }
+  }
 
 }
-

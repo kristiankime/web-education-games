@@ -39,19 +39,20 @@ object Home extends Controller with SecureSocialConsented {
     Ok(views.html.user.findFriend())
   }
 
-  def friendRequest = ConsentedAction { implicit request => implicit user => implicit session =>
+  def friend = ConsentedAction { implicit request => implicit user => implicit session =>
     FriendRequest.form.bindFromRequest.fold(
       errors => BadRequest(views.html.errors.formErrorPage(errors)),
       form => {
         val friendId = UserId(form)
         Users(friendId) match {
-          case None => NotFound(views.html.errors.notFoundPage("There was no user for id=[" + friendId + "]"))
+          case None => NotFound(views.html.errors.notFoundPage("Friend: there was no user for id=[" + friendId + "]"))
           case Some(friend) => {
-            Friends.invitation(friendId)
-            for(mail <- friend.maybeSendEmail.map(mail => CommonsMailerHelper.defaultMailSetup(mail))) {
-              val userName = user.nameDisplay
-              mail.setSubject(userName + " has sent you a friend request in CalcTutor")
-              mail.sendHtml(userName + " wants to be your friend! " + serverLinkEmail(request) + " (" + goToFriendRequestLinkEmail(request) + ").")
+            if(Friends.friend(friendId)) {
+              for (mail <- friend.maybeSendEmail.map(mail => CommonsMailerHelper.defaultMailSetup(mail))) {
+                val userName = user.nameDisplay
+                mail.setSubject(userName + " has sent you a friend request in CalcTutor")
+                mail.sendHtml(userName + " wants to be your friend! " + serverLinkEmail(request) + " (" + goToFriendRequestLinkEmail(request) + ").")
+              }
             }
             Redirect(routes.Home.friends())
           }
@@ -59,31 +60,29 @@ object Home extends Controller with SecureSocialConsented {
       })
   }
 
-  def friendResponse = ConsentedAction { implicit request => implicit user => implicit session =>
-    FriendResponse.form.bindFromRequest.fold(
+  def unfriend = ConsentedAction { implicit request => implicit user => implicit session =>
+    UnfriendRequest.form.bindFromRequest.fold(
       errors => BadRequest(views.html.errors.formErrorPage(errors)),
       form => {
-        val requestorId = UserId(form._1)
-        Friends(requestorId, user.id)(session) match {
-          case None => NotFound(views.html.errors.notFoundPage("There was no friend request from [" + requestorId + "] to [" + user.id + "]"))
-          case Some(friendRequest) => {
-            if(form._2) {
-              Friends.acceptInvitation(friendRequest)
-              val inviter = friendRequest.user
-              for(mail <- inviter.maybeSendEmail.map(mail => CommonsMailerHelper.defaultMailSetup(mail))) {
-                val userName = user.nameDisplay
-                mail.setSubject(userName + " has accepted your friend request in CalcTutor")
-                mail.sendHtml(userName + " is now your friend! " + serverLinkEmail(request) + " (" + goToFriendRequestLinkEmail(request) + ").")
-              }
-            } else {
-              // TODO should we email on a rejected request?
-              Friends.rejectInvitation(friendRequest)
-            }
+        val friendId = UserId(form)
+        Users(friendId) match {
+          case None => NotFound(views.html.errors.notFoundPage("Unfriend: there was no user for id=[" + friendId + "]"))
+          case Some(friend) => {
+            Friends.unfriend(friendId)
+            // TODO should we notify the unfriended?
+//            if() {
+//              for (mail <- friend.maybeSendEmail.map(mail => CommonsMailerHelper.defaultMailSetup(mail))) {
+//                val userName = user.nameDisplay
+//                mail.setSubject(userName + " has sent you a friend request in CalcTutor")
+//                mail.sendHtml(userName + " wants to be your friend! " + serverLinkEmail(request) + " (" + goToFriendRequestLinkEmail(request) + ").")
+//              }
+//            }
             Redirect(routes.Home.friends())
           }
         }
       })
   }
+
 
 }
 
@@ -92,8 +91,7 @@ object FriendRequest {
   val form = Form(id -> of[Long])
 }
 
-object FriendResponse {
+object UnfriendRequest {
   val id = "id"
-  val accept = "accept"
-  val form = Form(tuple(id -> of[Long], accept -> boolean))
+  val form = Form(id -> of[Long])
 }

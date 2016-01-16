@@ -26,8 +26,8 @@ GET         /user                                                               
 # Friends
 GET         /friends                                                                   controllers.Home.friends
 GET         /friends/find                                                              controllers.Home.findfriend
-POST        /friends/request                                                           controllers.Home.friendRequest
-POST        /friends/response                                                          controllers.Home.friendResponse
+POST        /friends/friend                                                            controllers.Home.friend
+POST        /friends/unfriend                                                          controllers.Home.unfriend
 
 # Organizations
 GET         /orgs                                                                      controllers.organization.OrganizationsController.list

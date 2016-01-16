@@ -15,57 +15,57 @@ class FriendsSpec extends Specification {
   "pendingInvitesFor" should {
     "list nothing if there are no invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-        Friends.pendingInvitesFor(user) must beEmpty
+        implicit val user = newFakeUser
+        Friends.pendingInvitesFor must beEmpty
       }
     }
 
     "list nothing if the user invited someone" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        Friends.invitation(other.id)(user, session)
-        Friends.pendingInvitesFor(user) must beEmpty
+        Friends.friend(other.id)
+        Friends.pendingInvitesFor must beEmpty
       }
     }
 
     "list invite if someone invited them" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(user.id)(other, session)
-        Friends.pendingInvitesFor(user) must beEqualTo(List(invite))
+        Friends.friend(user.id)(other, session)
+        Friends.pendingInvitesFor.map(_.userId) must beEqualTo(List(other.id))
       }
     }
 
     "list nothing if someone invited them and they accepted" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(user.id)(other, session)
-        Friends.acceptInvitation(invite)(user, session)
-        Friends.pendingInvitesFor(user) must beEmpty
+        Friends.friend(user.id)(other, session)
+        Friends.friend(other.id)
+        Friends.pendingInvitesFor must beEmpty
       }
     }
 
     "list nothing if someone invited them and they rejected" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(user.id)(other, session)
-        Friends.rejectInvitation(invite)(user, session)
-        Friends.pendingInvitesFor(user) must beEmpty
+        Friends.friend(user.id)(other, session)
+        Friends.unfriend(other.id)
+        Friends.pendingInvitesFor must beEmpty
       }
     }
 
-    "list invite if someone invited them and they accepted, then unfriended" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+    "list nothing if someone invited them and they accepted, then unfriended" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(user.id)(other, session)
-        val (_, accept) = Friends.acceptInvitation(invite)(user, session)
-        Friends.unfriend(accept)(user, session)
-        Friends.pendingInvitesFor(user) must beEmpty
+        Friends.friend(user.id)(other, session)
+        Friends.friend(other.id)
+        Friends.unfriend(other.id)
+        Friends.pendingInvitesFor must beEmpty
       }
     }
   }
@@ -74,57 +74,57 @@ class FriendsSpec extends Specification {
   "pendingInvitesBy" should {
     "list nothing if there are no invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-        Friends.pendingInvitesBy(user) must beEmpty
+        implicit val user = newFakeUser
+        Friends.pendingInvitesBy must beEmpty
       }
     }
 
     "list invite if the user invited someone" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(other.id)(user, session)
-        Friends.pendingInvitesBy(user) must beEqualTo(List(invite))
+        val invite = Friends.friend(other.id)
+        Friends.pendingInvitesBy.map(_.friendId) must beEqualTo(List(other.id))
       }
     }
 
     "list nothing if someone invited them" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        Friends.invitation(user.id)(other, session)
-        Friends.pendingInvitesBy(user) must beEmpty
+        Friends.friend(user.id)(other, session)
+        Friends.pendingInvitesBy must beEmpty
       }
     }
 
     "list nothing if the user invited someone and they accepted" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(other.id)(user, session)
-        Friends.acceptInvitation(invite)(other, session)
-        Friends.pendingInvitesBy(user) must beEmpty
+        Friends.friend(user.id)(other, session)
+        Friends.friend(other.id)
+        Friends.pendingInvitesBy must beEmpty
       }
     }
 
     "list nothing if the user invited someone and they rejected" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(other.id)(user, session)
-        Friends.rejectInvitation(invite)(other, session)
-        Friends.pendingInvitesBy(user) must beEmpty
+        Friends.friend(other.id)
+        Friends.unfriend(user.id)(other, session)
+        Friends.pendingInvitesBy must beEmpty
       }
     }
 
-    "list invite if the user invited someone and they accepted, then unfriended" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+    "list nothing if the user invited someone and they accepted, then unfriended" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val other = newFakeUser
-        val invite = Friends.invitation(other.id)(user, session)
-        val (_, accept) = Friends.acceptInvitation(invite)(other, session)
-        Friends.unfriend(accept)(other, session)
-        Friends.pendingInvitesBy(user) must beEmpty
+        Friends.friend(other.id)
+        Friends.friend(user.id)(other, session)
+        Friends.unfriend(user.id)(other, session)
+        Friends.pendingInvitesBy.map(_.friendId) must beEmpty
       }
     }
   }
@@ -133,134 +133,64 @@ class FriendsSpec extends Specification {
 
     "list nothing if there are no invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         Friends.friends(user, session) must beEmpty
       }
     }
 
     "list nothing if there are no accepted invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val friend = newFakeUser
-        Friends.invitation(friend.id)(user, session)
+        Friends.friend(friend.id)
         Friends.friends(user, session) must beEmpty
       }
     }
 
     "list accepted invites (1)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
         val friend = newFakeUser
-        val invitation = Friends.invitation(friend.id)(user, session)
-        val (updatedInvite, _) = Friends.acceptInvitation(invitation)(friend, session)
-        Friends.friends(user, session) must beEqualTo(List(updatedInvite))
+        Friends.friend(friend.id)
+        Friends.friend(user.id)(friend, session)
+        Friends.friends(user, session).map(_.friendId) must beEqualTo(List(friend.id))
       }
     }
 
     "list accepted invites (2)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
 
         val friend1 = newFakeUser
-        val invitation1 = Friends.invitation(friend1.id)(user, session)
-        val (updatedInvite1, _) = Friends.acceptInvitation(invitation1)(friend1, session)
+        Friends.friend(friend1.id)
+        Friends.friend(user.id)(friend1, session)
 
         val friend2 = newFakeUser
-        val invitation2 = Friends.invitation(friend2.id)(user, session)
-        val (updatedInvite2, _) = Friends.acceptInvitation(invitation2)(friend2, session)
+        Friends.friend(friend2.id)
+        Friends.friend(user.id)(friend2, session)
 
-        Friends.friends(user, session) must beEqualTo(List(updatedInvite1, updatedInvite2))
+        Friends.friends(user, session).map(_.friendId) must beEqualTo(List(friend1.id, friend2.id))
       }
     }
 
     "Does not list unrelated invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
+        implicit val user = newFakeUser
 
         val friend1 = newFakeUser
-        val invitation1 = Friends.invitation(friend1.id)(user, session)
-        val (updatedInvite1, _) = Friends.acceptInvitation(invitation1)(friend1, session)
+        Friends.friend(friend1.id)
+        Friends.friend(user.id)(friend1, session)
 
         val friend2 = newFakeUser
-        val invitation2 = Friends.invitation(friend2.id)(user, session)
-        val (updatedInvite2, _) = Friends.acceptInvitation(invitation2)(friend2, session)
+        Friends.friend(friend2.id)
+        Friends.friend(user.id)(friend2, session)
 
-        val friendsFriendInvitation = Friends.invitation(friend2.id)(friend1, session)
-        Friends.acceptInvitation(friendsFriendInvitation)(friend2, session)
+        Friends.friend(friend2.id)(friend1, session)
+        Friends.friend(friend1.id)(friend2, session)
 
-        Friends.friends(user, session) must beEqualTo(List(updatedInvite1, updatedInvite2))
+        Friends.friends(user, session).map(_.friendId) must beEqualTo(List(friend1.id, friend2.id))
       }
     }
   }
-
-  "currentFriendIds" should {
-
-    "list nothing if there are no invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-
-        Friends.currentFriendIds(user.id) must beEmpty
-      }
-    }
-
-    "list nothing if there are no accepted invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-        val friend = newFakeUser
-
-        Friends.invitation(friend.id)(user, session)
-
-        Friends.currentFriendIds(user.id) must beEmpty
-      }
-    }
-
-    "list accepted invites (1)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-        val friend = newFakeUser
-
-        val invitation = Friends.invitation(friend.id)(user, session)
-
-        val (updatedInvite, _) = Friends.acceptInvitation(invitation)(friend, session)
-
-        Friends.currentFriendIds(user.id) must beEqualTo(List(friend.id))
-      }
-    }
-
-    "list accepted invites (2)" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-
-        val friend1 = newFakeUser
-        val invitation1 = Friends.invitation(friend1.id)(user, session)
-        val (updatedInvite1, _) = Friends.acceptInvitation(invitation1)(friend1, session)
-
-        val friend2 = newFakeUser
-        val invitation2 = Friends.invitation(friend2.id)(user, session)
-        val (updatedInvite2, _) = Friends.acceptInvitation(invitation2)(friend2, session)
-
-        Friends.currentFriendIds(user.id) must beEqualTo(List(friend1.id, friend2.id))
-      }
-    }
-
-    "Does not list unrelated invites" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      val settings = DB.withSession { implicit session: Session =>
-        val user = newFakeUser
-
-        val friend1 = newFakeUser
-        val invitation1 = Friends.invitation(friend1.id)(user, session)
-        val (updatedInvite1, _) = Friends.acceptInvitation(invitation1)(friend1, session)
-
-        val friend2 = newFakeUser
-        val invitation2 = Friends.invitation(friend2.id)(user, session)
-        val (updatedInvite2, _) = Friends.acceptInvitation(invitation2)(friend2, session)
-
-        val friendsFriendInvitation = Friends.invitation(friend2.id)(friend1, session)
-        Friends.acceptInvitation(friendsFriendInvitation)(friend2, session)
-
-        Friends.currentFriendIds(user.id) must beEqualTo(List(friend1.id, friend2.id))
-      }
-    }
-  }
-
+  
 }

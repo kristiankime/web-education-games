@@ -19,7 +19,7 @@
     } else {
     <h5>Please select the person you want to send an invitation to:</h5>
 
-    @form(action = Home.friendRequest(), 'class -> "pure-form") {
+    @form(action = Home.friend(), 'class -> "pure-form") {
         <table class="pure-table pure-table-striped">
             <tr><th>Player</th><th>Last Login</th></tr>
             @for(student <- students.zipWithIndex) {

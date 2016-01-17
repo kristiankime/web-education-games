@@ -15,7 +15,30 @@
     var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(com.artclod.mathml.MathMLEq.tightRange*2)}, unitY: @{ySize/(com.artclod.mathml.MathMLEq.tightRange*2)}, showCopyright: false});
     board.suspendUpdate();
     var g = board.create('functiongraph', [f, -@{tightRange}, @{tightRange}], {strokeWidth: 3});
-    @if(glider){var glider = board.create('glider', [g]);}
+    @if(glider){
+        var glider = board.create('glider', [g]);
+
+        var getMouseCoords = function(e, i) { @* http://jsxgraph.uni-bayreuth.de/wiki/index.php/Browser_event_and_coordinates *@
+            var cPos = board.getCoordsTopLeftCorner(e, i),
+                    absPos = JXG.getPosition(e, i),
+                    dx = absPos[0]-cPos[0],
+                    dy = absPos[1]-cPos[1];
+
+            return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], board);
+        }
+
+        var down = function(e)  {
+            var i;
+            if (e[JXG.touchProperty]) {
+                i = 0; // index of the finger that is used to extract the coordinates
+            }
+            var coords = getMouseCoords(e, i);
+
+            glider.moveTo([coords.usrCoords[1], coords.usrCoords[2]]);
+        }
+
+        board.on('down', down);
+    }
     board.unsuspendUpdate();
     //]]>
     ret.brd = board;

@@ -2,17 +2,19 @@
     <table class="pure-table">
         <tr>
             <th>Type</th>
-            <th>Level</th>
-            <th>Progress</th>
+            @*<th>Level</th>*@
+            <th>Points</th>
         </tr>
         <tr>
             <td>Student</td>
-            <td>@tag.level(user.studentLevel, Some("student-points"))</td>
-            <td>@tag.points(name + "StudentPoints", user.studentPointsInLevel, "studentPointsProgressBar")</td>
+            @*<td>@tag.level(user.studentLevel, Some("student-points"))</td>*@
+            @*<td>@tag.pointsBar(name + "StudentPoints", user.studentTotalGamePoints, "studentPointsProgressBar")</td>*@
+            <td>@tag.studentPoints(user.studentTotalGamePoints)</td>
         </tr>
         <tr>
             <td>Teacher</td>
-            <td>@tag.level(user.teacherLevel, Some("teacher-points"))</td>
-            <td>@tag.points(name + "TeacherPoints", user.teacherPointsInLevel, "teacherPointsProgressBar")</td>
+            @*<td>@tag.level(user.teacherLevel, Some("teacher-points"))</td>*@
+            @*<td>@tag.pointsBar(name + "TeacherPoints", user.teacherTotalGamePoints, "teacherPointsProgressBar")</td>*@
+            <td>@tag.teacherPoints(user.teacherTotalGamePoints)</td>
         </tr>
     </table>

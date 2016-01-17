@@ -192,5 +192,5 @@ class FriendsSpec extends Specification {
       }
     }
   }
-  
+
 }

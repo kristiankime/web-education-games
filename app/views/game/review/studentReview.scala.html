@@ -15,16 +15,18 @@
             <tr>
                 <th>question</th>
                 <th>correct</th>
+                <th>student points</th>
             </tr>
             @for(result <- quizResults.results) {
             <tr>
                 <td> @result.question.display() </td>
                 <td> @mathml.correct(result.correct) </td>
+                <td> @models.quiz.question.QuestionScoring.pointsPerQuestion </td>
             </tr>
             }
         </table>
 
-        Your score for this quiz: @views.html.quiz.quizScore(quizResults)<br>
+        @*Your score for this quiz: @views.html.quiz.quizScore(quizResults)<br>*@
         }
     </section>
 }

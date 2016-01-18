@@ -66,6 +66,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/graphmatch      
 
 # Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                             controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)
+GET         /orgs/:o/courses/:c/games/list                                             controllers.game.GamesController.list(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/games/request                                          controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
 
 # Games

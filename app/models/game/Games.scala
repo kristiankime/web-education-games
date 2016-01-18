@@ -2,6 +2,7 @@ package models.game
 
 import com.artclod.slick.JodaUTC
 import models.game.table.gamesTable
+import models.organization.table.coursesTable
 import models.organization.{Course, Courses}
 import models.support._
 import models.user.User
@@ -12,6 +13,8 @@ import scala.language.postfixOps
 object Games {
 
   def apply(gameId: GameId)(implicit session: Session): Option[Game] = gamesTable.where(_.id === gameId).firstOption
+
+  def apply(courseId: CourseId)(implicit session: Session): List[Game] = gamesTable.where(g => g.course === courseId).list
 
   // ====== Find players  ======
   def studentsToPlayWith(requestorId: UserId, courseId: CourseId)(implicit session: Session) =

@@ -198,6 +198,13 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
+  def list(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(organizationId, courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course)) => Ok(views.html.organization.courseGames(organization, course))
+    }
+  }
+
 }
 
 object  GameRequest {

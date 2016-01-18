@@ -1,5 +1,6 @@
 package models.organization
 
+import models.game.Games
 import models.organization.table._
 import models.quiz.Quizzes
 import models.support._
@@ -15,7 +16,9 @@ case class Course(id: CourseId, name: String, organizationId: OrganizationId, ow
 
   def quizzes(implicit session: Session) = Quizzes(id)
 
-  def students(implicit session: Session) = Courses.students(id)
+	def games(implicit session: Session) = Games(id)
+
+	def students(implicit session: Session) = Courses.students(id)
 
 	def anyStudent = viewCode.isEmpty
 

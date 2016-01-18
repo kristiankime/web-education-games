@@ -1,0 +1,37 @@
+@(organization: models.organization.Organization, course: models.organization.Course)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import com.artclod.play._
+@import helper._
+@import service._
+@import viewsupport.organization.AccessName.an
+@import controllers.organization.CourseJoin
+@import controllers.organization.routes.CoursesController
+@import controllers.quiz.routes.QuizzesController
+@import controllers.game.routes.GamesController
+
+@mainWithStatus(course.name, tag.organizationLink(organization))(Some(course)) {
+    <h2>Welcome to the game information page for the course: @course.name</h2>
+
+    @* >>>>> Start Access > Non *@
+    @if(course.access >= Edit) {
+
+        @* ======= Games ======= *@
+        @defining(course.games) { games : List[models.game.Game] =>
+        <section>
+            @if(games.isEmpty) {
+                <h5> There are no games for this course </h5>
+            } else {
+                <h5> The course has the following game@s(games): </h5>
+                <ul class="pure-list">
+                @for(game <- games) {
+                    <li>
+                        <a href="@controllers.game.routes.GamesController.summary(game.id)" class="pure-button">@game.requestor.nameDisplay -> @game.requestee.nameDisplay</a>
+                    </li>
+                }
+                </ul>
+            }
+        </section>
+        }
+
+    }
+}

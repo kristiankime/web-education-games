@@ -41,6 +41,9 @@ object Games {
   }
 
   // ====== Find Games ======
+  def all(userId: UserId)(implicit session: Session): List[Game] =
+    gamesTable.where(g => (g.requestee === userId || g.requestor === userId)).sortBy(_.requestDate.desc).list
+
   def activeGame(player1Id: UserId, player2Id: UserId)(implicit session: Session): Option[Game] =
     (gamesTable.where(g => (g.finishedDate isNull) &&
       ((g.requestee === player1Id && g.requestor === player2Id) || (g.requestee === player2Id && g.requestor === player1Id))

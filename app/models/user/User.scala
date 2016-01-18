@@ -49,13 +49,13 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
     )
   }
 
-  def studentTotalGamePoints(implicit session: Session) : Int = Games.finished(id).map(_.toMask(this)).map(_.myStudentPoints).sum
+  def studentTotalGamePoints(implicit session: Session) : Int = Games.all(id).map(_.toMask(this)).map(_.myStudentPoints).sum
 
   def studentLevel(implicit session: Session) : Int = Gamification.level(studentTotalGamePoints)
 
   def studentPointsInLevel(implicit session: Session) : Int = Gamification.pointsInLevel(studentTotalGamePoints)
 
-  def teacherTotalGamePoints(implicit session: Session) : Int = Games.finished(id).map(_.toMask(this)).map(_.myTeacherPoints).sum
+  def teacherTotalGamePoints(implicit session: Session) : Int = Games.all(id).map(_.toMask(this)).map(_.myTeacherPoints).sum
 
   def teacherLevel(implicit session: Session) : Int = Gamification.level(teacherTotalGamePoints)
 

@@ -1,6 +1,9 @@
 package models
 
+import com.artclod.math.Interval
+import com.google.common.annotations.VisibleForTesting
 import models.game.GameResponseStatus
+import models.quiz.question.support.PolynomialZoneType
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc._
 import service._
@@ -221,6 +224,45 @@ package object support {
 	implicit def long2AlertId = MappedColumnType.base[AlertId, Long](
 		id => id.v,
 		long => AlertId(long))
+
+	// ==========================
+	// Vector of Ints
+	// ==========================
+	implicit def string2VectorInt = MappedColumnType.base[Vector[Int], String](
+		vec => vec.mkString(","),
+		str => Vector(str.split(",").map(_.toInt):_*))
+
+	// ==========================
+	// PolynomialZoneType
+	// ==========================
+	implicit def short2PolynomialZoneType = MappedColumnType.base[PolynomialZoneType, Short](
+		zone => zone.order,
+		short => PolynomialZoneType(short))
+
+
+	// ==========================
+	// Vector of Intervals
+	// ==========================
+	implicit def string2VectorIntervals = MappedColumnType.base[Vector[Interval], String](
+		vec => s2VI(vec),
+		str => vI2s(str))
+
+	@VisibleForTesting
+	def s2VI(vec: Vector[Interval]) = vec.mkString(",")
+
+	@VisibleForTesting
+	def vI2s(str: String) : Vector[Interval] = {
+		val split = str.split("""(?<=\)),""") // http://stackoverflow.com/questions/4416425/how-to-split-string-with-some-separator-but-without-removing-that-separator-in-j
+		val intervalOps = split.map( s => Interval(s) )
+		val intervals = for(internalOp <- intervalOps) yield {
+			internalOp match {
+				case None => throw new IllegalArgumentException("was unable to parse [" + str + "] as intervals")
+				case Some(interval) => interval
+			}
+		}
+		intervals.toVector
+	}
+
 }
 
 

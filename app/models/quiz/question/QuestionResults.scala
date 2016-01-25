@@ -47,3 +47,5 @@ case class DerivativeGraphQuestionResults(answerer: User, question: DerivativeGr
 case class TangentQuestionResults(answerer: User, question: TangentQuestion, answers: List[TangentAnswer]) extends QuestionResults
 
 case class GraphMatchQuestionResults(answerer: User, question: GraphMatchQuestion, answers: List[GraphMatchAnswer]) extends QuestionResults
+
+case class PolynomialZoneQuestionResults(answerer: User, question: PolynomialZoneQuestion, answers: List[PolynomialZoneAnswer]) extends QuestionResults

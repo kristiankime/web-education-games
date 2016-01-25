@@ -4,6 +4,7 @@ import com.artclod.mathml.scalar.apply._
 import com.artclod.mathml.scalar.concept.{Constant, NthRoot, UnaryFunction}
 import com.artclod.mathml.scalar.{Ci => Variable, Cn, MathMLElem}
 import com.artclod.mathml.{Math, MathML}
+import models.quiz.question.support.PolynomialZoneType
 
 import scala.util.Failure
 
@@ -182,4 +183,8 @@ object TangentQuestionDifficulty {
 
 object GraphMatchQuestionDifficulty {
   def apply(e1: MathMLElem, e2: MathMLElem, e3: MathMLElem, graphThis: Short): Double = (DerivativeDifficulty(e1) + DerivativeDifficulty(e2) + DerivativeDifficulty(e3)) / 3d
+}
+
+object PolynomialZoneQuestionDifficulty {
+  def apply(roots: Vector[Int], zoneType: PolynomialZoneType): Double = 5d * roots.size
 }

@@ -43,8 +43,12 @@ class PolynomialZoneAnswersSpec extends Specification {
   }
 
   "keepRoots" should {
-    "return (0,+inf) for roots (0) increasing" in {
+    "return (0,+inf) for roots (0) and increasing" in {
       PolynomialZoneAnswers.keepRoots(pZQ(FirstDerivativeIncreasing, 0)) must beEqualTo(Vector(Interval(0, Double.PositiveInfinity)))
+    }
+
+    "return (-inf,-1)(1,+inf) for roots (-1,1) and increasing" in {
+      PolynomialZoneAnswers.keepRoots(pZQ(FirstDerivativeIncreasing, -1,1)) must beEqualTo(Vector(Interval(Double.NegativeInfinity, -1), Interval(1, Double.PositiveInfinity)))
     }
   }
 

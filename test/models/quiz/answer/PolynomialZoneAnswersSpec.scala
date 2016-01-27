@@ -48,8 +48,22 @@ class PolynomialZoneAnswersSpec extends Specification {
     }
 
     "return (-inf,-1)(1,+inf) for roots (-1,1) and increasing" in {
-      PolynomialZoneAnswers.keepRoots(pZQ(FirstDerivativeIncreasing, -1,1)) must beEqualTo(Vector(Interval(Double.NegativeInfinity, -1), Interval(1, Double.PositiveInfinity)))
+      PolynomialZoneAnswers.keepRoots(pZQ(FirstDerivativeIncreasing, -1, 1)) must beEqualTo(Vector(Interval(Double.NegativeInfinity, -1), Interval(1, Double.PositiveInfinity)))
     }
   }
 
+
+  "correct" should {
+    "return true if zones match" in {
+      PolynomialZoneAnswers.correct(pZQ(FirstDerivativeIncreasing, -1, 1), Vector(Interval(Double.NegativeInfinity, -1), Interval(1, Double.PositiveInfinity))) must beTrue
+    }
+
+    "return true if zones match (even if the input aren't sorted" in {
+      PolynomialZoneAnswers.correct(pZQ(FirstDerivativeIncreasing, 1, -1), Vector(Interval(1, Double.PositiveInfinity), Interval(Double.NegativeInfinity, -1))) must beTrue
+    }
+
+    "return false if zones do not match" in {
+      PolynomialZoneAnswers.correct(pZQ(FirstDerivativeIncreasing, -1, 2), Vector(Interval(Double.NegativeInfinity, -1), Interval(1, Double.PositiveInfinity))) must beFalse
+    }
+  }
 }

@@ -11,26 +11,25 @@ import play.api.db.slick.Config.driver.simple._
 object PolynomialZoneAnswers {
 
   def correct(question: PolynomialZoneQuestion, answer: Vector[Interval]) = {
-    true
+    keepRoots(question).equals( answer.sortBy(_.lower) )
   }
 
-  def valueIn(interval : Interval): Double = interval match {
+  private def valueIn(interval : Interval): Double = interval match {
     case Interval(Double.NegativeInfinity, Double.PositiveInfinity) => 0d
     case Interval(Double.NegativeInfinity, v) => v - 1d
     case Interval(v, Double.PositiveInfinity) => v + 1d
     case Interval(l, u) => (l + u) / 2d
   }
 
+  @VisibleForTesting
   def keepRoots(question: PolynomialZoneQuestion) : Vector[Interval] = {
     val poly = question.polynomial
     val splits = splitPolyAtRoots(question.roots)
 
-    val keep = splits.filter(e => {
-      val v = poly.evalT(("x", valueIn(e))).get
+    splits.filter(interval => {
+      val v = poly.evalT(("x", valueIn(interval))).get
       if(question.zoneType.positive) { v > 0d } else { v < 0d }
     })
-
-    keep
   }
 
   @VisibleForTesting

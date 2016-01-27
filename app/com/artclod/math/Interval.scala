@@ -10,7 +10,7 @@ private object IntervalSupport {
   private val num = """[-+]?[0-9]*\.?[0-9]+"""
   private val w = """[\s]*"""
   private val numGroup = w + "(" + num + ")" + w
-  val full = ("""\(""" + numGroup + "," + numGroup + """\)""")
+  private val full = ("""\(""" + numGroup + "," + numGroup + """\)""")
   val reg = full.r
 }
 
@@ -18,9 +18,6 @@ object Interval {
   def apply(lower: Int, upper: Int) : Interval = Interval(lower.toDouble, upper.toDouble)
 
   def apply(str: String) : Option[Interval] = {
-
-    val foo = IntervalSupport.full
-
     str.trim match {
       case IntervalSupport.reg(lower, upper) => {
         val loTry = Try(lower.toDouble).toOption

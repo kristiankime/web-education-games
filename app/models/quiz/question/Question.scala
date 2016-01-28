@@ -142,7 +142,7 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
 
   def answersAndOwners(implicit session: Session) = PolynomialZoneQuestions.answersAndOwners(id)
 
-  def difficulty : Double = PolynomialZoneQuestionDifficulty(roots, zoneType)
+  def difficulty : Double = PolynomialZoneQuestionDifficulty(roots, scale, zoneType)
 
   def results(user: User)(implicit session: Session) = PolynomialZoneQuestionResults(user, this, answers(user))
 

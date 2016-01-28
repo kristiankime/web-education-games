@@ -186,5 +186,5 @@ object GraphMatchQuestionDifficulty {
 }
 
 object PolynomialZoneQuestionDifficulty {
-  def apply(roots: Vector[Int], zoneType: PolynomialZoneType): Double = 5d * roots.size
+  def apply(roots: Vector[Int], scale: Double, zoneType: PolynomialZoneType): Double = 5d * roots.size
 }

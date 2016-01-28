@@ -5,6 +5,7 @@ import com.artclod.util._
 import controllers.quiz.derivative.DerivativeQuestionsControllon
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionsControllon
 import controllers.quiz.graphmatch.GraphMatchQuestionsControllon
+import controllers.quiz.polynomialzone.PolynomialZoneQuestionsControllon
 import controllers.quiz.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.question._
@@ -19,7 +20,8 @@ object QuestionsController extends Controller with SecureSocialConsented
   with DerivativeQuestionsControllon
   with DerivativeGraphQuestionsControllon
   with TangentQuestionsControllon
-  with GraphMatchQuestionsControllon {
+  with GraphMatchQuestionsControllon
+  with PolynomialZoneQuestionsControllon {
 
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {

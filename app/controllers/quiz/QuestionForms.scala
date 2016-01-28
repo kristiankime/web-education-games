@@ -6,6 +6,7 @@ import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.slick.JodaUTC
 import com.artclod.xml.Nodes
 import controllers.quiz.graphmatch.GraphMatchQuestionForm
+import controllers.quiz.polynomialzone.PolynomialZoneQuestionForm
 import play.api.data.Form
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
@@ -13,13 +14,17 @@ import controllers.quiz.tangent.TangentQuestionForm
 
 import scala.util.Random
 
-case class QuestionForms(derivative: Form[DerivativeQuestionForm], derivativeGraph: Form[DerivativeGraphQuestionForm], tangent: Form[TangentQuestionForm], graphMatch: Form[GraphMatchQuestionForm]) {
+case class QuestionForms(derivative: Form[DerivativeQuestionForm],
+                         derivativeGraph: Form[DerivativeGraphQuestionForm],
+                         tangent: Form[TangentQuestionForm],
+                         graphMatch: Form[GraphMatchQuestionForm],
+                         polynomialZone: Form[PolynomialZoneQuestionForm]) {
   implicit val randomEngine = new Random(JodaUTC.now.getMillis())
 
   def mustHandle = MustHandle.fromTuple( QuestionForms.unapply(this).get )
 
   def errorIndex = {
-    val errors = mustHandle -> (_.hasErrors, _.hasErrors, _.hasErrors, _.hasErrors)
+    val errors = mustHandle -> (_.hasErrors, _.hasErrors, _.hasErrors, _.hasErrors, _.hasErrors)
     val firstTrue = com.artclod.play.firstTrue(errors)
     firstTrue
   }
@@ -37,15 +42,17 @@ case class QuestionForms(derivative: Form[DerivativeQuestionForm], derivativeGra
 
 object QuestionForms {
 
-  val empty = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, GraphMatchQuestionForm.values)
+  val empty = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, GraphMatchQuestionForm.values, PolynomialZoneQuestionForm.values)
 
-  def derivative(derivative: Form[DerivativeQuestionForm]) = QuestionForms(derivative, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, GraphMatchQuestionForm.values)
+  def derivative(derivative: Form[DerivativeQuestionForm]) = QuestionForms(derivative, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, GraphMatchQuestionForm.values, PolynomialZoneQuestionForm.values)
 
-  def derivativeGraph(derivativeGraph: Form[DerivativeGraphQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, derivativeGraph, TangentQuestionForm.values, GraphMatchQuestionForm.values)
+  def derivativeGraph(derivativeGraph: Form[DerivativeGraphQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, derivativeGraph, TangentQuestionForm.values, GraphMatchQuestionForm.values, PolynomialZoneQuestionForm.values)
 
-  def tangent(tangent: Form[TangentQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, tangent, GraphMatchQuestionForm.values)
+  def tangent(tangent: Form[TangentQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, tangent, GraphMatchQuestionForm.values, PolynomialZoneQuestionForm.values)
 
-  def graphMatch(graphMath: Form[GraphMatchQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, graphMath)
+  def graphMatch(graphMath: Form[GraphMatchQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, graphMath, PolynomialZoneQuestionForm.values)
+
+  def polynomialZone(polynomialZone: Form[PolynomialZoneQuestionForm]) = QuestionForms(DerivativeQuestionForm.values, DerivativeGraphQuestionForm.values, TangentQuestionForm.values, GraphMatchQuestionForm.values, polynomialZone)
 
   def verifyFunctionValid(f: MathMLElem) = MathMLDefined.isDefinedFor(f, .10d)
 

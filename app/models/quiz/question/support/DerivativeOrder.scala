@@ -20,16 +20,16 @@ object DerivativeOrder {
     def bind(key: String, data: Map[String, String]) = {
       data.get(key) match {
         case None => Left(Seq(FormError(key, "key must map to a value", Nil)))
-        case Some(txt) => DerivativeOrder.parse(txt)
+        case Some(txt) => DerivativeOrder.parse(key, txt)
       }
     }
 
     def unbind(key: String, value: DerivativeOrder) = Map(key -> value.asString)
   }
 
-  private def parse(in: String) : Either[Seq[FormError], DerivativeOrder] = all.find( _.asString == in) match {
+  private def parse(key: String, in: String) : Either[Seq[FormError], DerivativeOrder] = all.find( _.asString == in) match {
     case Some(out) => Right(out)
-    case None => Left(Seq(FormError(in, "Could not find " + DerivativeOrder.getClass.getSimpleName + " for " + in)))
+    case None => Left(Seq(FormError(key, "Could not find " + DerivativeOrder.getClass.getSimpleName + " for " + in)))
   }
 }
 

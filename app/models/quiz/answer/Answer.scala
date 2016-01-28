@@ -81,6 +81,6 @@ case class PolynomialZoneAnswer(id: AnswerId, ownerId: UserId, questionId: Quest
 }
 
 object PolynomialZoneAnswerUnfinished {
-  def apply(id: AnswerId, ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], comment: String, creationDate: DateTime)(correct: Boolean): PolynomialZoneAnswer =
+  def apply(ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], comment: String, creationDate: DateTime)(correct: Boolean): PolynomialZoneAnswer =
     PolynomialZoneAnswer(null, ownerId, questionId, zones, if(correct) 1 else 0, comment, creationDate)
 }

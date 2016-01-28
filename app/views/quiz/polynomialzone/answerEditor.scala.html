@@ -1,0 +1,15 @@
+@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.PolynomialZoneAnswer, models.quiz.answer.PolynomialZoneAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.quiz.polynomialzone.PolynomialZoneAnswerForm
+
+<section>
+    Select your answer, and then hit the submit button @tag.answerWarning()<br>
+
+    @helper.form(action, 'id -> "polynomialZoneAnswerForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="submit" class="pure-button pure-button-primary" value="Submit">
+            @link
+        </fieldset>
+    }
+
+</section>

@@ -11,6 +11,7 @@ import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
 import controllers.quiz.derivativegraph.{DerivativeGraphQuestionForm, DerivativeGraphAnswerForm}
 import controllers.quiz.graphmatch.{GraphMatchAnswerForm, GraphMatchQuestionForm}
+import controllers.quiz.polynomialzone.PolynomialZoneQuestionForm
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
 import models.game.GameRole._
@@ -141,6 +142,24 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             GraphMatchQuestions.create(GraphMatchQuestionForm.toQuestion(user, form), quiz.id)
+            Redirect(routes.GamesController.game(updatedGame.id, None))
+          })
+    }
+  }
+
+  def createPolynomialZoneQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) =>
+        PolynomialZoneQuestionForm.values.bindFromRequest.fold(
+          errors =>
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.polynomialZone(errors)))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
+          form => {
+            val (updatedGame, quiz) = createdQuizEnsured(game)
+            PolynomialZoneQuestions.create(PolynomialZoneQuestionForm.toQuestion(user, form), quiz.id)
             Redirect(routes.GamesController.game(updatedGame.id, None))
           })
     }

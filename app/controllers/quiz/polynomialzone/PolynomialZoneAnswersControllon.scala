@@ -43,7 +43,7 @@ object PolynomialZoneAnswerForm {
   val intervals = "intervals"
 
   val values = Form(mapping(
-    intervals -> nonEmptyText.verifying(e => Try(models.support.vI2s(e)).isSuccess))
+    intervals -> nonEmptyText.verifying(e => Try(models.support.string2VectorInterval(e)).isSuccess))
     (PolynomialZoneAnswerForm.apply)(PolynomialZoneAnswerForm.unapply))
 
   def toAnswerUnfinished(user: User, question: PolynomialZoneQuestion, form: PolynomialZoneAnswerForm) = PolynomialZoneAnswerUnfinished(user.id, question.id, form.intervals, "", JodaUTC.now)_
@@ -51,5 +51,5 @@ object PolynomialZoneAnswerForm {
 
 case class PolynomialZoneAnswerForm(intervalsStr : String) {
   // TODO better error handling for .get(s)
-  def intervals = models.support.vI2s(intervalsStr)
+  def intervals = models.support.string2VectorInterval(intervalsStr)
 }

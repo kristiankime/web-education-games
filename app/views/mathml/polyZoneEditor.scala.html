@@ -1,0 +1,57 @@
+@(editorName: String,
+  initialRootsValue: Option[String] = None,
+  characterLimit: Option[Int] = None,
+  successCallback : List[String] = List(),
+  failureCallback : List[String] = List())
+
+    <!-- ========= MATH EDITOR STARTS HERE ======= -->
+    @* @mathml.mathmlEditorHelp(editorName, mathParser) *@
+
+    <span id="@editorName"> @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
+        <input id="polyZoneRootsInput" type="text" size="@characterLimit.getOrElse(80)" @for(lim <- characterLimit){maxlength="@lim"} onchange="@{editorName + ".updateRoots(this.value)"}" oninput="@{editorName + ".updateRoots(this.value)"}"/>
+        <span id="@{editorName+"Indicator"}"> @tag.icon("icon-warning2", 'class -> "warning", 'data_ot -> "Zones could not be parsed, is empty or contains integers that were too large or too small") </span>
+        <span id="@{editorName+"View"}"> </span>
+    </span>
+
+    <script>
+    // Start the indicator hidden
+    $("#@{editorName+"Indicator"}").hide();
+
+    var @{editorName} = (function() {
+        var result = {
+                scaleStr : "1",
+                rootsStr : "",
+                node: null,
+                func: null,
+                valid : false
+             };
+
+        result.updateRoots = function(zoneStr) {
+            var parsedPolyZones = ARTC.mathJS.parsePolyZones(result.scaleStr, zoneStr);
+            if(parsedPolyZones.success) {
+                result.rootsStr = parsedPolyZones.text;
+                result.node = parsedPolyZones.node;
+                result.func = parsedPolyZones.func;
+                result.valid = true;
+                $("#@{editorName+"Indicator"}").hide();
+                ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(parsedPolyZones.node.toTex()));
+                @for(onSuccess <- successCallback){@{onSuccess}(result); }
+            } else {
+                result.valid = false;
+                $("#@{editorName+"Indicator"}").show();
+                if(zoneStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }
+                @for(onFailure <- failureCallback){@{onFailure}(result); }
+            }
+        };
+
+        @for(value <- initialRootsValue){
+        ARTC.addLoadEvent(function(){
+            $("#@{editorName} #polyZoneInput").val("@value");
+            result.updateAnswer("@value");
+        });
+        }
+        return result;
+    })();
+    </script>
+
+    <!-- ========= MATH EDITOR ENDS HERE ======= -->

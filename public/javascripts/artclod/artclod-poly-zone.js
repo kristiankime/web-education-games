@@ -80,3 +80,50 @@ ARTC.mathJS.polyZones = function(scale, rootsObj) {
         func: func
     }
 }
+
+/*
+ * Parse comma separated integer intervels "(3,8),(9,20)" etc
+ * into a javascript object (or fail)
+ * the result is of the form { success: boolean, intervals: [{ success: boolean, lower: number, upper: number }] }
+ */
+ARTC.mathJS.polyIntervals = function(intervalsStr) {
+    if(typeof intervalsStr !== "string") { return {success: false}; }
+    if(intervalsStr === "") { return {success: false};  }
+
+    var regex = /\)[\s]*,/;
+    var splitMinusParen = intervalsStr.split(regex);
+    var split = [];
+    for(var i=0; i<(splitMinusParen.length-1); i++) {
+        split.push(splitMinusParen[i] + ")");
+    }
+    split.push(splitMinusParen[splitMinusParen.length-1]);
+
+    var intervals = [];
+    for(var i=0; i < split.length; i++) {
+        var interval = ARTC.mathJS.polyInterval(split[i]);
+        if(interval.success) {
+            intervals.push(interval);
+        } else {
+            return {success: false};
+        }
+    }
+    return {success: true, intervals: intervals}
+}
+
+/*
+ * Parse intger intervals eg "(2,3)" into javascript object (or fail)
+ * The result is of the form { success: boolean, lower: number, upper: number }
+ */
+ARTC.mathJS.polyInterval = function(intervalStr) {
+    var regex = /^[\s]*\([\s]*([+-]?[0-9]*)[\s]*,[\s]*([+-]?[0-9]*)[\s]*\)[\s]*$/;
+    var match = regex.exec(intervalStr);
+
+    if(match) {
+        var lower = parseInt(match[1]);
+        var upper = parseInt(match[2]);
+        if(lower < upper) {
+            return { success: true, lower: lower, upper: upper}
+        }
+    }
+    return { success: false }
+}

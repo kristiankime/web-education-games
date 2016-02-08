@@ -15,7 +15,7 @@ ARTC.mathJS.infinity.negativeInfinityStrings = [];
 ARTC.mathJS.infinity.allInfinityStrings = [];
 ARTC.mathJS.infinity.allInfinityStrRegex = [];
 (function(){
-    var infinityStrings = ["infinity", "inf"];
+    var infinityStrings = ["infinity", "inf", "∞"];
 
     var positiveNoSpace = ["", "+", "pos", "positive"];
     var positiveStrings = [];

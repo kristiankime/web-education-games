@@ -8,7 +8,7 @@ import controllers.quiz.polynomialzone.PolynomialZoneAnswersControllon
 import controllers.quiz.tangent.TangentAnswersControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.answer._
-import models.quiz.question.{GraphMatchQuestion, DerivativeGraphQuestion, DerivativeQuestion, TangentQuestion}
+import models.quiz.question._
 import models.support._
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc.{Controller, Result}
@@ -38,6 +38,7 @@ object AnswersController extends Controller with SecureSocialConsented
         case (dq: DerivativeGraphQuestion, da: DerivativeGraphAnswer) => Ok(views.html.quiz.derivativegraph.questionView(course, quiz, dq.results(user), Some(Right(da))))
         case (tq: TangentQuestion, ta: TangentAnswer) => Ok(views.html.quiz.tangent.questionView(course, quiz, tq.results(user), Some(Right(ta))))
         case (tq: GraphMatchQuestion, ta: GraphMatchAnswer) => Ok(views.html.quiz.graphmatch.questionView(course, quiz, tq.results(user), Some(Right(ta))))
+        case (pz: PolynomialZoneQuestion, pa: PolynomialZoneAnswer) => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, pz.results(user), Some(Right(pa))))
         case _ => Ok(views.html.errors.notFoundPage("Question " + questionId + " type did not match Answer " + answerId))
       }
     }

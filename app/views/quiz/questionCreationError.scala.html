@@ -1,1 +1,8 @@
-@(forms: controllers.quiz.QuestionForms)(implicit session: play.api.db.slick.Config.driver.simple.Session)@if(forms.hasErrors){<h5 class="warning"> An error occurred while creating a question (please see below)</h5>}
+@(forms: controllers.quiz.QuestionForms)(implicit session: play.api.db.slick.Config.driver.simple.Session)@if(forms.hasErrors){
+    <h5 class="warning"> An error occurred while creating a question (please see below)</h5>
+    <ul>
+    @for(error <- forms.allErrors) {
+        <li>@error.key ->  @error.message</li>
+    }
+    </ul>
+}

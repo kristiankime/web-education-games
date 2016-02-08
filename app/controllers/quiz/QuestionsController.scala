@@ -42,6 +42,7 @@ object QuestionsController extends Controller with SecureSocialConsented
           case derivativeGraph : DerivativeGraphQuestion => Ok(views.html.quiz.derivativegraph.questionView(course, quiz, derivativeGraph.results(user), None))
           case tangent : TangentQuestion => Ok(views.html.quiz.tangent.questionView(course, quiz, tangent.results(user), None))
           case graphMatch : GraphMatchQuestion => Ok(views.html.quiz.graphmatch.questionView(course, quiz, graphMatch.results(user), None))
+          case polyZone : PolynomialZoneQuestion => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, polyZone.results(user), None))
         }
     }
 	}

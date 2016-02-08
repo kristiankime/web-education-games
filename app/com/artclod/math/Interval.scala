@@ -1,16 +1,18 @@
 package com.artclod.math
 
 import com.google.common.base.Strings
+import org.apache.commons.lang3.math.NumberUtils
 
 import scala.util.Try
 
 private object IntervalSupport {
   val fmt = new java.text.DecimalFormat("#.##");
 
-  private val num = """[-+]?[0-9]*\.?[0-9]+"""
-  private val w = """[\s]*"""
-  private val numGroup = w + "(" + num + ")" + w
-  private val full = ("""\(""" + numGroup + "," + numGroup + """\)""")
+  private val num = "[-+]?[0-9]*\\.?[0-9]+"
+  private val numOrInf = (DoubleParse.allInfForRegex + num).mkString("(?:", "|", ")")
+  private val w = "[\\s]*"
+  private val numGroup = w + "(" + numOrInf + ")" + w
+  private val full = ("^\\(" + numGroup + "," + numGroup + "\\)$")
   val reg = full.r
 }
 
@@ -18,10 +20,10 @@ object Interval {
   def apply(lower: Int, upper: Int) : Interval = Interval(lower.toDouble, upper.toDouble)
 
   def apply(str: String) : Option[Interval] = {
-    str.trim match {
+    str.trim.toLowerCase match {
       case IntervalSupport.reg(lower, upper) => {
-        val loTry = Try(lower.toDouble).toOption
-        val upTry = Try(upper.toDouble).toOption
+        val loTry = DoubleParse(lower).toOption
+        val upTry = DoubleParse(upper).toOption
         loTry.flatMap(lo => upTry.map(up => Interval(lo, up)))
       }
       case _ => None

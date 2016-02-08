@@ -6,6 +6,63 @@ if (!ARTC.mathJS) {
     ARTC.mathJS = {};
 }
 
+if (!ARTC.mathJS.infinity) {
+    ARTC.mathJS.infinity = {};
+}
+
+ARTC.mathJS.infinity.positiveInfinityStrings = [];
+ARTC.mathJS.infinity.negativeInfinityStrings = [];
+ARTC.mathJS.infinity.allInfinityStrings = [];
+ARTC.mathJS.infinity.allInfinityStrRegex = [];
+(function(){
+    var infinityStrings = ["infinity", "inf"];
+
+    var positiveNoSpace = ["", "+", "pos", "positive"];
+    var positiveStrings = [];
+    positiveNoSpace.forEach(function(p){
+        positiveStrings.push(p);
+        positiveStrings.push(p + " ");
+    });
+
+    var negativeNoSpace = [    "-", "neg", "negative"];
+    var negativeStrings = [];
+    negativeNoSpace.forEach(function(n){
+        negativeStrings.push(n);
+        negativeStrings.push(n + " ");
+    });
+
+    positiveStrings.forEach(function(p){
+        infinityStrings.forEach(function(i){
+            ARTC.mathJS.infinity.positiveInfinityStrings.push(p + i);
+        })
+    })
+
+    negativeStrings.forEach(function(n){
+        infinityStrings.forEach(function(i){
+            ARTC.mathJS.infinity.negativeInfinityStrings.push(n + i);
+        })
+    })
+
+    ARTC.mathJS.infinity.allInfinityStrings = ARTC.mathJS.infinity.positiveInfinityStrings.concat(ARTC.mathJS.infinity.negativeInfinityStrings);
+
+    ARTC.mathJS.infinity.allInfinityStrings.forEach(function(i){ // here we replace + with \+ for regex use
+        ARTC.mathJS.infinity.allInfinityStrRegex.push( i.replace(/\+/g, "\\+") );
+    });
+})();
+
+(function(){
+    var num = "[-+]?[0-9]*\\.?[0-9]+";
+    // === numOrInf === match a (non scientific notation) Double or words like "infinite"
+    var numOrInf = "(?:";
+    ARTC.mathJS.infinity.allInfinityStrRegex.forEach(function(i){ numOrInf += i + "|"; });
+    numOrInf += num + ")";
+    // === numOrInf ===
+    var w = "[\\s]*"
+    var numGroup = w + "(" + numOrInf + ")" + w;
+    var full = "^\\(" + numGroup + "," + numGroup + "\\)$";
+    ARTC.mathJS.polyIntervalRegex = new RegExp(full);
+})();
+
 /*
  * Parse string to an int only if the entire string is an integer (modulo whitespace)
  */
@@ -90,6 +147,7 @@ ARTC.mathJS.polyIntervals = function(intervalsStr) {
     if(typeof intervalsStr !== "string") { return {success: false}; }
     if(intervalsStr === "") { return {success: false};  }
 
+
     var regex = /\)[\s]*,/;
     var splitMinusParen = intervalsStr.split(regex);
     var split = [];
@@ -111,19 +169,41 @@ ARTC.mathJS.polyIntervals = function(intervalsStr) {
 }
 
 /*
- * Parse intger intervals eg "(2,3)" into javascript object (or fail)
+ * Parse integer intervals eg "(2,3)" into javascript object (or fail)
  * The result is of the form { success: boolean, lower: number, upper: number }
  */
 ARTC.mathJS.polyInterval = function(intervalStr) {
-    var regex = /^[\s]*\([\s]*([+-]?[0-9]*)[\s]*,[\s]*([+-]?[0-9]*)[\s]*\)[\s]*$/;
-    var match = regex.exec(intervalStr);
+    if(typeof intervalStr !== "string") { { success: false }; }
+
+    //var trim = intervalStr.trim().toLowerCase();
+    //var regex = ARTC.mathJS.polyIntervalRegex;
+    //var match = regex.exec(trim);
+
+    var match = ARTC.mathJS.polyIntervalRegex.exec(intervalStr.trim().toLowerCase());
 
     if(match) {
-        var lower = parseInt(match[1]);
-        var upper = parseInt(match[2]);
+        var lower = ARTC.mathJS.doubleParse(match[1]);
+        var upper = ARTC.mathJS.doubleParse(match[2]);
         if(lower < upper) {
             return { success: true, lower: lower, upper: upper}
         }
     }
     return { success: false }
+}
+
+/*
+ * Parse string to an int only if the entire string is an integer (modulo whitespace)
+ */
+ARTC.mathJS.doubleParse = function(text) {
+    if(typeof text !== "string") { return NaN; }
+    var trim = text.trim().toLowerCase();
+
+    if(ARTC.mathJS.infinity.positiveInfinityStrings.indexOf(trim) !== -1) {
+        return Number.POSITIVE_INFINITY;
+    } else if(ARTC.mathJS.infinity.negativeInfinityStrings.indexOf(trim) !== -1) {
+        return Number.NEGATIVE_INFINITY;
+    }
+
+    var ret = parseFloat(trim);
+    return ret;
 }

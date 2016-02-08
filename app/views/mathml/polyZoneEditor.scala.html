@@ -26,10 +26,10 @@
                 valid : false
              };
 
-        result.updateRoots = function(zoneStr) {
-            var parsedPolyZones = ARTC.mathJS.parsePolyZones(result.scaleStr, zoneStr);
+        result.updateRoots = function(rootsStr) {
+            var parsedPolyZones = ARTC.mathJS.parsePolyZones(result.scaleStr, rootsStr);
             if(parsedPolyZones.success) {
-                result.rootsStr = parsedPolyZones.text;
+                result.rootsStr = rootsStr;
                 result.node = parsedPolyZones.node;
                 result.func = parsedPolyZones.func;
                 result.valid = true;
@@ -39,7 +39,7 @@
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();
-                if(zoneStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }
+                if(rootsStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }
                 @for(onFailure <- failureCallback){@{onFailure}(result); }
             }
         };

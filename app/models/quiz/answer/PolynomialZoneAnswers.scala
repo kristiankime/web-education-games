@@ -50,10 +50,4 @@ object PolynomialZoneAnswers {
     toInsert
   }
 
-  def foo(question: PolynomialZoneQuestion) = {
-    val poly = question.polynomial
-
-    question.roots
-  }
-
 }

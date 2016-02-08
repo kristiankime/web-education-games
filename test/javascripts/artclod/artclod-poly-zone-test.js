@@ -57,17 +57,16 @@ test("ARTC.mathJS.polyZones: gibberish roots yields failure", function() {
 test("ARTC.mathJS.polyInterval: matches numbers in parens", function() {
 	var interval = ARTC.mathJS.polyInterval("(1,2)")
 	deepEqual(interval, { success: true, lower: 1, upper: 2 } )
-    equal(interval.success, true);
-    equal(interval.lower, 1);
-	equal(interval.upper, 2);
 });
 
 test("ARTC.mathJS.polyInterval: matches even with white space", function() {
 	var interval = ARTC.mathJS.polyInterval(" ( 1 ,   2 )")
 	deepEqual(interval, { success: true, lower: 1, upper: 2 } )
-    equal(interval.success, true);
-    equal(interval.lower, 1);
-	equal(interval.upper, 2);
+});
+
+test("ARTC.mathJS.polyInterval: matches infinites", function() {
+	var interval = ARTC.mathJS.polyInterval("(-Inf, Inf)")
+	deepEqual(interval, { success: true, lower: Number.NEGATIVE_INFINITY, upper: Number.POSITIVE_INFINITY } )
 });
 
 test("ARTC.mathJS.polyInterval: fails on gibberish", function() {
@@ -76,7 +75,7 @@ test("ARTC.mathJS.polyInterval: fails on gibberish", function() {
 });
 
 test("ARTC.mathJS.polyInterval: fails with extra parens", function() {
-	var interval = ARTC.mathJS.polyInterval("(1,sd2))")
+	var interval = ARTC.mathJS.polyInterval("(1,2))")
     equal(interval.success, false);
 });
 

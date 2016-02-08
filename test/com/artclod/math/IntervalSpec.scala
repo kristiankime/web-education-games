@@ -14,7 +14,9 @@ class IntervalSpec extends Specification {
     "parse integers in parens"                   in { Interval("(2, 4)")             must beEqualTo( Some(Interval(2,4)) )         }
     "parse doubles in parens"                    in { Interval("(2.4, 4.7)")         must beEqualTo( Some(Interval(2.4d, 4.7d)) )  }
     "parser ignores whitespace"                  in { Interval("  (   2  ,   5  ) ") must beEqualTo( Some(Interval(2, 5)) )        }
+    "parse infinities"                           in { Interval("(-Inf, Inf)")        must beEqualTo( Some(Interval(Double.NegativeInfinity, Double.PositiveInfinity)) )  }
     "parser fails if parens are absent"          in { Interval("2, 4")               must beNone                                   }
+    "parser fails on extra paren"                in { Interval("(2, 4))")            must beNone                                   }
     "parser fails if a number is missing"        in { Interval("(2)")                must beNone                                   }
     "parser fails if there are too many numbers" in { Interval("(2,3,4)")            must beNone                                   }
   }

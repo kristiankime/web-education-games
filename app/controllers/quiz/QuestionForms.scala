@@ -11,6 +11,7 @@ import play.api.data.Form
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
+import com.artclod.tuple._
 
 import scala.util.Random
 
@@ -38,6 +39,7 @@ case class QuestionForms(derivative: Form[DerivativeQuestionForm],
 
   def hasErrors = (errorIndex != -1)
 
+  def allErrors = QuestionForms.unapply(this).get toList(_.errors.toList, _.errors.toList, _.errors.toList, _.errors.toList, _.errors.toList )
 }
 
 object QuestionForms {

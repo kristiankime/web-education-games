@@ -72,7 +72,7 @@ object PolynomialZoneQuestionForm {
     (PolynomialZoneQuestionForm.apply)(PolynomialZoneQuestionForm.unapply)
   )
 
-  def strToRoots(str: String) =  Try(str.split(",").map(e => e.toInt).toVector)
+  def strToRoots(str: String) = Try(str.split(",").map(e => e.toInt).toVector)
 
   def toQuestion(user: User, form: PolynomialZoneQuestionForm) = PolynomialZoneQuestion(null, user.id, form.roots, form.scale, form.zoneType, JodaUTC.now, PolynomialZoneQuestionDifficulty(form.roots, form.scale, form.zoneType))
 

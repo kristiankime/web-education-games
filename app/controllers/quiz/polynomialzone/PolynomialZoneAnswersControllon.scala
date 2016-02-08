@@ -27,9 +27,9 @@ trait PolynomialZoneAnswersControllon extends Controller with SecureSocialConsen
           form => {
             val unfinishedAnswer = PolynomialZoneAnswerForm.toAnswerUnfinished(user, question, form)
             PolynomialZoneAnswers.correct(question, form.intervals) match {
-              case Yes => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
-              case No => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, question.results(user), Some(Left(unfinishedAnswer(false)))))
+              case true => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case false => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
+//              case Inconclusive => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, question.results(user), Some(Left(unfinishedAnswer(false)))))
             }
           })
       }

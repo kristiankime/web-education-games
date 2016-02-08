@@ -15,20 +15,25 @@ object PolynomialZoneType {
 sealed trait PolynomialZoneType {
   val order : Short
   val positive : Boolean
+  val display : String
 }
 object FirstDerivativeIncreasing extends PolynomialZoneType {
   val order : Short = 10
   val positive = true
+  val display = "Increasing"
 }
 object FirstDerivativeDecreasing extends PolynomialZoneType {
   val order : Short = 11
   val positive = false
+  val display = "Decreasing"
 }
 object SecondDerivativeConcaveUp  extends PolynomialZoneType {
   val order : Short = 20
   val positive = true
+  val display = "Concave Up"
 }
 object SecondDerivativeConcaveDown  extends PolynomialZoneType {
   val order : Short = 21
   val positive = false
+  val display = "Concave Down"
 }

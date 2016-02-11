@@ -1,0 +1,13 @@
+@(name: String, skillLevel: Double)
+
+@import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
+@import controllers.quiz.polynomialzone.PolynomialZoneQuestionForm.{rootsStr, scale, zoneType}
+
+@views.html.quiz.scoringHints(name, skillLevel, "/question/difficulty/polynomialzone"){
+    {
+        @rootsStr        : POLYNOMIAL_ZONE_QUESTION.rootsStr,
+        @scale        : POLYNOMIAL_ZONE_QUESTION.scale,
+        @zoneType     : POLYNOMIAL_ZONE_QUESTION.zoneType,
+        @partnerSkill : @skillLevel
+    }
+}{ POLYNOMIAL_ZONE_QUESTION.valid }

@@ -11,7 +11,7 @@ import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
 import controllers.quiz.derivativegraph.{DerivativeGraphQuestionForm, DerivativeGraphAnswerForm}
 import controllers.quiz.graphmatch.{GraphMatchAnswerForm, GraphMatchQuestionForm}
-import controllers.quiz.polynomialzone.PolynomialZoneQuestionForm
+import controllers.quiz.polynomialzone.{PolynomialZoneAnswerForm, PolynomialZoneQuestionForm}
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
 import models.game.GameRole._
@@ -269,6 +269,25 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           })
       }
       case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
+    }
+  }
+
+  def answerPolynomialZoneQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    questionToAnswer(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question: PolynomialZoneQuestion)) => {
+        PolynomialZoneAnswerForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val unfinishedAnswer = PolynomialZoneAnswerForm.toAnswerUnfinished(user, question, form)
+            PolynomialZoneAnswers.correct(question, form.intervals) match {
+              case Yes => Redirect(routes.GamesController.game(game.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case No => Redirect(routes.GamesController.answer(game.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
+              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
+            }
+          })
+      }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a polynomial zone question " + questionId))
     }
   }
   // ===== End Answer =====

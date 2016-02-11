@@ -11,9 +11,9 @@
 
     @form(action, 'id -> "polynomialZoneQuestionForm", 'class -> "pure-form") {
         <fieldset>
-            <input type="hidden" name="@PolynomialZoneQuestionForm.roots" id="polynomialZoneQuestionRoots">
-            <input type="hidden" name="@PolynomialZoneQuestionForm.scale" id="polynomialZoneQuestionScale" value="1">
-            <input type="hidden" name="@PolynomialZoneQuestionForm.zoneType" id="polynomialZoneQuestionZoneType" value="@models.quiz.question.support.FirstDerivativeIncreasing.order">
+            <input type="hidden" name="@PolynomialZoneQuestionForm.rootsStr" id="polynomialZoneQuestionRoots">
+            <input type="hidden" name="@PolynomialZoneQuestionForm.scale" id="polynomialZoneQuestionScale">
+            <input type="hidden" name="@PolynomialZoneQuestionForm.zoneType" id="polynomialZoneQuestionZoneType">
             <input type="button" class="pure-button" value="Save Question" onclick="POLYNOMIAL_ZONE_QUESTION.formSubmit()">
         </fieldset>
     }
@@ -24,7 +24,8 @@
     POLYNOMIAL_ZONE_QUESTION.formSubmit = function() {
         if(POLYNOMIAL_ZONE_QUESTION.valid){
             $("#polynomialZoneQuestionRoots").val(POLYNOMIAL_ZONE_QUESTION.rootsStr);
-            $("#polynomialZoneQuestionScale").val(POLYNOMIAL_ZONE_QUESTION.scaleStr);
+            $("#polynomialZoneQuestionScale").val(POLYNOMIAL_ZONE_QUESTION.scale);
+            $("#polynomialZoneQuestionZoneType").val(POLYNOMIAL_ZONE_QUESTION.zoneType);
             $("#polynomialZoneQuestionForm").submit();
         } else {
             alert("Sorry we couldn't understand what you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")

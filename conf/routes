@@ -87,6 +87,7 @@ POST        /games/:g/questions/create/requestee/derivative                     
 POST        /games/:g/questions/create/requestee/derivativegraph                       controllers.game.GamesRequesteeController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/tangent                               controllers.game.GamesRequesteeController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/graphmatch                            controllers.game.GamesRequesteeController.createGraphMatchQuestion(g: GameId)
+POST        /games/:g/questions/create/requestee/polynomialzone                        controllers.game.GamesRequesteeController.createPolynomialZoneQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestee                                       controllers.game.GamesRequesteeController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestee                                          controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestee                                       controllers.game.GamesRequesteeController.finalizeAnswers(g: GameId)
@@ -97,10 +98,13 @@ POST        /games/:g/questions/:q/requestee/derivative                         
 POST        /games/:g/questions/:q/requestee/derivativegraph                           controllers.game.GamesRequesteeController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/tangent                                   controllers.game.GamesRequesteeController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/graphmatch                                controllers.game.GamesRequesteeController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestee/polynomialzone                            controllers.game.GamesRequesteeController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivative                                controllers.game.GamesRequestorController.answerDerivativeQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivativegraph                           controllers.game.GamesRequestorController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/tangent                                   controllers.game.GamesRequestorController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/graphmatch                                controllers.game.GamesRequestorController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor/polynomialzone                            controllers.game.GamesRequestorController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
+
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                                       controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 

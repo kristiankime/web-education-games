@@ -67,6 +67,10 @@ trait GameSetup {
     if(requestee) { controllers.game.routes.GamesRequesteeController.createGraphMatchQuestion(game.id) }
     else {          controllers.game.routes.GamesRequestorController.createGraphMatchQuestion(game.id) }
 
+  def createPolynomialZoneQuestionCall : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.createPolynomialZoneQuestion(game.id) }
+    else {          controllers.game.routes.GamesRequestorController.createPolynomialZoneQuestion(game.id) }
+
   // Finalize Quiz
   def finalizeCreatedQuiz : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeCreatedQuiz(game.id) }
@@ -95,6 +99,10 @@ trait GameSetup {
   def answerTangentQuestion(questionId: QuestionId) : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.answerTangentQuestion(game.id, questionId) }
     else {          controllers.game.routes.GamesRequestorController.answerTangentQuestion(game.id, questionId) }
+
+  def answerPolynomialZoneQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerPolynomialZoneQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerPolynomialZoneQuestion(game.id, questionId) }
 
   // Finalize Answers
   def finalizeAnsweringQuiz : play.api.mvc.Call =

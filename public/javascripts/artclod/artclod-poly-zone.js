@@ -97,11 +97,13 @@ ARTC.mathJS.string2IntArray = function(text) {
 /*
  *
  */
-ARTC.mathJS.parsePolyZones = function(scaleText, rootsText) {
-    var scale = ARTC.mathJS.parsePureInt(scaleText);
+ARTC.mathJS.parsePolyZones = function(scaleIn, rootsText) {
+    var scale = (typeof scaleIn === "number" ) ? scaleIn : ARTC.mathJS.parsePureInt(scale);
     if(isNaN(scale)) { return { success : false }; }
+
     var roots = ARTC.mathJS.string2IntArray(rootsText);
     if(!roots.success) { return { success : false}; }
+
     return ARTC.mathJS.polyZones(scale, roots);
 }
 

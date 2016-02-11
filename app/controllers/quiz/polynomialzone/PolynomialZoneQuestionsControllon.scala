@@ -36,8 +36,8 @@ trait PolynomialZoneQuestionsControllon extends Controller with SecureSocialCons
     }
   }
 
-  case class PolynomialZoneDifficultyRequest(scale: Double, rootsStr : Array[Int], zoneTypeShort: Short, partnerSkill: Double)
-  case class PolynomialZoneDifficultyResponse(scale: Double, rootsStr : Array[Int], zoneTypeShort: Short, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
+  case class PolynomialZoneDifficultyRequest(scale: Double, rootsStr : String, zoneType: Short, partnerSkill: Double)
+  case class PolynomialZoneDifficultyResponse(scale: Double, rootsStr : String, zoneType: Short, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
   implicit val formatPolynomialZoneDifficultyRequest = Json.format[PolynomialZoneDifficultyRequest]
   implicit val formatPolynomialZoneDifficultyResponse = Json.format[PolynomialZoneDifficultyResponse]
 
@@ -45,13 +45,14 @@ trait PolynomialZoneQuestionsControllon extends Controller with SecureSocialCons
     request.body.asJson.map { configJson =>
       configJson.validate[PolynomialZoneDifficultyRequest]
         .map { difficultyRequest =>
-          Try(PolynomialZoneType(difficultyRequest.zoneTypeShort)) match {
-            case (Failure(e)) => BadRequest("Could not parse number [" + difficultyRequest.zoneTypeShort + "] as " + PolynomialZoneType.getClass.getSimpleName + "\n" + e.getStackTraceString)
-            case (Success(zoneType)) => {
-              val diff = PolynomialZoneQuestionDifficulty(difficultyRequest.rootsStr.toVector, difficultyRequest.scale, zoneType)
+          (Try(PolynomialZoneType(difficultyRequest.zoneType)), PolynomialZoneQuestionForm.strToRoots(difficultyRequest.rootsStr))  match {
+            case (Failure(e), _) => BadRequest("Could not parse number [" + difficultyRequest.zoneType + "] as " + PolynomialZoneType.getClass.getSimpleName + "\n" + e.getStackTraceString)
+            case (_, Failure(e)) => BadRequest("Could not parse [" + difficultyRequest.rootsStr + "] as Vector[Int]\n" + e.getStackTraceString)
+            case (Success(zoneType), Success(roots)) => {
+              val diff = PolynomialZoneQuestionDifficulty(roots, difficultyRequest.scale, zoneType)
               val correct = QuestionScoring.teacherScore(diff, true, difficultyRequest.partnerSkill)
               val incorrect = QuestionScoring.teacherScore(diff, false, difficultyRequest.partnerSkill)
-              Ok(Json.toJson(PolynomialZoneDifficultyResponse(difficultyRequest.scale, difficultyRequest.rootsStr, difficultyRequest.zoneTypeShort, diff, correct, incorrect)))
+              Ok(Json.toJson(PolynomialZoneDifficultyResponse(difficultyRequest.scale, difficultyRequest.rootsStr, difficultyRequest.zoneType, diff, correct, incorrect)))
             }
           }
         }.recoverTotal { e => BadRequest("Detected error:" + JsError.toFlatJson(e)) }
@@ -61,12 +62,12 @@ trait PolynomialZoneQuestionsControllon extends Controller with SecureSocialCons
 }
 
 object PolynomialZoneQuestionForm {
-  val roots = "roots"
+  val rootsStr = "rootsStr"
   val scale = "scale"
   val zoneType = "zoneType"
 
   val values = Form(
-    mapping(roots -> nonEmptyText.verifying(e => strToRoots(e).isSuccess),
+    mapping(rootsStr -> nonEmptyText.verifying(e => strToRoots(e).isSuccess),
             scale -> of[Double],
             zoneType -> of[Short].verifying(e => Try(PolynomialZoneType(e)).isSuccess))
     (PolynomialZoneQuestionForm.apply)(PolynomialZoneQuestionForm.unapply)

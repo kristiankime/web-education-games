@@ -3,7 +3,7 @@
 @import controllers.quiz.polynomialzone.PolynomialZoneAnswerForm
 
 <section>
-    Select your answer, and then hit the submit button @tag.answerWarning()<br>
+    Input your answer, and then hit the submit button<br>
 
     @mathml.polyIntervalEditor("POLY_ZONE_EDITOR", currentAnswer.map(_.fold(_.zoneToString, _.zoneToString))) <br>
 

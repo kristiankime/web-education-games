@@ -281,9 +281,8 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           form => {
             val unfinishedAnswer = PolynomialZoneAnswerForm.toAnswerUnfinished(user, question, form)
             PolynomialZoneAnswers.correct(question, form.intervals) match {
-              case Yes => Redirect(routes.GamesController.game(game.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
-              case No => Redirect(routes.GamesController.answer(game.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
+              case true => Redirect(routes.GamesController.game(game.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case false => Redirect(routes.GamesController.answer(game.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
             }
           })
       }

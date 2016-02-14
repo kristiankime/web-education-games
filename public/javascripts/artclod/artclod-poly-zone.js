@@ -107,6 +107,11 @@ ARTC.mathJS.parsePolyZones = function(scaleIn, rootsText) {
     // Don't allow more than 12 roots
     if(roots.array.length > 12) { return { success : false}; }
 
+    // Don't allow roots > 10 or < -10
+    var badRoots = false;
+    roots.array.forEach(function(r){ if (r > 10 || r < -10 ){ badRoots = true; } });
+    if(badRoots) { return { success : false}; }
+
     return ARTC.mathJS.polyZones(scale, roots);
 }
 

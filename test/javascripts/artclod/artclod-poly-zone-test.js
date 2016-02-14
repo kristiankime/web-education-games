@@ -72,6 +72,17 @@ test("ARTC.mathJS.polyZones: to many roots yields failure", function() {
 	equal(zones.success, false);
 });
 
+test("ARTC.mathJS.polyZones: not root should be greater than 10", function() {
+	var zones = ARTC.mathJS.parsePolyZones("1", "1,2,12,2")
+	equal(zones.success, false);
+});
+
+test("ARTC.mathJS.polyZones: not root should be less than -10", function() {
+	var zones = ARTC.mathJS.parsePolyZones("1", "1,2,-12,2")
+	equal(zones.success, false);
+});
+
+
 // ================
 test("ARTC.mathJS.polyInterval: matches numbers in parens", function() {
 	var interval = ARTC.mathJS.polyInterval("(1,2)")

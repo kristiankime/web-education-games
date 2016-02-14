@@ -9,8 +9,8 @@
 
     @helper.form(action, 'id -> "polynomialZoneAnswerForm", 'class -> "pure-form") {
         <fieldset>
-            <input type="submit" class="pure-button pure-button-primary" value="Submit" onclick="POLY_ZONE_ANSWER.formSubmit()">
             <input type="hidden" name="@PolynomialZoneAnswerForm.intervals" id="intervalsAnswer">
+            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="POLY_ZONE_ANSWER.formSubmit()">
             @link
         </fieldset>
     }

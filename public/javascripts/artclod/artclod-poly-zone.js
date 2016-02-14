@@ -98,11 +98,14 @@ ARTC.mathJS.string2IntArray = function(text) {
  *
  */
 ARTC.mathJS.parsePolyZones = function(scaleIn, rootsText) {
-    var scale = (typeof scaleIn === "number" ) ? scaleIn : ARTC.mathJS.parsePureInt(scale);
+    var scale = (typeof scaleIn === "number" ) ? scaleIn : ARTC.mathJS.parsePureInt(scaleIn);
     if(isNaN(scale)) { return { success : false }; }
 
     var roots = ARTC.mathJS.string2IntArray(rootsText);
     if(!roots.success) { return { success : false}; }
+
+    // Don't allow more than 12 roots
+    if(roots.array.length > 12) { return { success : false}; }
 
     return ARTC.mathJS.polyZones(scale, roots);
 }

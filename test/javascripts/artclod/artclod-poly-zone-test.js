@@ -19,7 +19,22 @@ test("ARTC.mathJS.string2IntArray: parsing random string fails", function() {
     deepEqual(ARTC.mathJS.string2IntArray("asdfs, 2sdf 6.7"), { success: false, array: [] });
 });
 
+// ================
+test("ARTC.mathJS.parsePureInt: 1", function() {
+	equal(ARTC.mathJS.parsePureInt("1"), 1)
+});
 
+test("ARTC.mathJS.parsePureInt: -12", function() {
+	equal(ARTC.mathJS.parsePureInt("-12"), -12)
+});
+
+test("ARTC.mathJS.parsePureInt: gibberish is NaN", function() {
+	equal( isNaN(ARTC.mathJS.parsePureInt("adsf")), true)
+});
+
+test("ARTC.mathJS.parsePureInt: 12.1232 is NaN", function() {
+	equal( isNaN(ARTC.mathJS.parsePureInt("12.1232")), true)
+});
 // ================
 test("ARTC.mathJS.polyZones: no roots yields constant", function() {
 	var zones = ARTC.mathJS.parsePolyZones("1", "")
@@ -52,6 +67,10 @@ test("ARTC.mathJS.polyZones: gibberish roots yields failure", function() {
     equal(zones.success, false);
 });
 
+test("ARTC.mathJS.polyZones: to many roots yields failure", function() {
+	var zones = ARTC.mathJS.parsePolyZones("1", "1,2,3,4,5,6,7,8,9,10,11,12,13")
+	equal(zones.success, false);
+});
 
 // ================
 test("ARTC.mathJS.polyInterval: matches numbers in parens", function() {

@@ -4,6 +4,8 @@
   successCallback : List[String] = List(),
   failureCallback : List[String] = List())
 
+@import com.artclod.mathml.MathMLEq.tightRange
+
     <!-- ========= MATH EDITOR STARTS HERE ======= -->
     @mathml.polyZoneEditorHelp()
 
@@ -28,14 +30,22 @@
              };
 
         result.updateRoots = function(rootsStr) {
-            var parsedPolyZones = ARTC.mathJS.parsePolyZones(result.scale, rootsStr);
+            var min = @{ (-1 * tightRange).toInt};
+            var max = @tightRange.toInt;
+            var parsedPolyZones = ARTC.mathJS.parsePolyZones(1, rootsStr, 12, min, max);
+
             if(parsedPolyZones.success) {
                 result.rootsStr = rootsStr;
                 result.node = parsedPolyZones.node;
                 result.func = parsedPolyZones.func;
                 result.valid = true;
+
+                var fMax = ARTC.mathJS.guessFunctionMax(result.func, min, max, 100);
+                var fMin = ARTC.mathJS.guessFunctionMin(result.func, min, max, 100);
+                result.scale = max / Math.max(Math.abs(fMax), Math.abs(fMin)); // rescale so everything fits in range
+
                 $("#@{editorName+"Indicator"}").hide();
-                ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(parsedPolyZones.node.toTex()));
+                ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(parsedPolyZones.nodeNoScale.toTex()));
                 @for(onSuccess <- successCallback){@{onSuccess}(result); }
             } else {
                 result.valid = false;
@@ -48,7 +58,7 @@
         @for(value <- initialRootsValue){
         ARTC.addLoadEvent(function(){
             $("#@{editorName} #polyZoneInput").val("@value");
-            result.updateAnswer("@value");
+            result.updateRoots("@value");
         });
         }
         return result;

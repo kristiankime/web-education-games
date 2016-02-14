@@ -12,7 +12,7 @@
     var ret = {}
     //<![CDATA[
     var f = ARTC.mathJS.text2FunctionOfX("@{initialFunction}");
-    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(com.artclod.mathml.MathMLEq.tightRange*2)}, unitY: @{ySize/(com.artclod.mathml.MathMLEq.tightRange*2)}, showCopyright: false});
+    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(tightRange*2)}, unitY: @{ySize/(tightRange*2)}, showCopyright: false});
     board.suspendUpdate();
     var g = board.create('functiongraph', [f, -@{tightRange}, @{tightRange}], {strokeWidth: 3});
     @if(glider){

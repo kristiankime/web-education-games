@@ -97,19 +97,23 @@ ARTC.mathJS.string2IntArray = function(text) {
 /*
  *
  */
-ARTC.mathJS.parsePolyZones = function(scaleIn, rootsText) {
+ARTC.mathJS.parsePolyZones = function(scaleIn, rootsText, numRoots, min, max) {
     var scale = (typeof scaleIn === "number" ) ? scaleIn : ARTC.mathJS.parsePureInt(scaleIn);
     if(isNaN(scale)) { return { success : false }; }
 
     var roots = ARTC.mathJS.string2IntArray(rootsText);
     if(!roots.success) { return { success : false}; }
 
-    // Don't allow more than 12 roots
-    if(roots.array.length > 12) { return { success : false}; }
+    if(numRoots === undefined) { numRoots = 12; }
+    if(min === undefined) { min = -10; }
+    if(max === undefined) { max = 10; }
 
-    // Don't allow roots > 10 or < -10
+    // Don't allow more than numRoots roots
+    if(roots.array.length > numRoots) { return { success : false}; }
+
+    // Don't allow roots that are too large or small
     var badRoots = false;
-    roots.array.forEach(function(r){ if (r > 10 || r < -10 ){ badRoots = true; } });
+    roots.array.forEach(function(r){ if (r > max || r < min ){ badRoots = true; } });
     if(badRoots) { return { success : false}; }
 
     return ARTC.mathJS.polyZones(scale, roots);
@@ -122,17 +126,12 @@ ARTC.mathJS.polyZones = function(scale, rootsObj) {
     if(isNaN(scale)) { return { success: false }; }
 
     var roots = rootsObj.array;
-    if(roots.length == 0) {
-        return {
-            success: true,
-            text: "" + scale,
-            node: math.parse("" + scale),
-            func: function(x) { return scale; }
-        }
-    }
 
     var node = scale.toString();
     roots.forEach(function(e){ node += " * (x - " + e + ")"; })
+
+    var nodeNoScale = "C";
+    roots.forEach(function(e){ nodeNoScale += " * (x - " + e + ")"; })
 
     var func = function(x) {
         var ret = scale;
@@ -142,8 +141,10 @@ ARTC.mathJS.polyZones = function(scale, rootsObj) {
 
     return {
         success: true,
-        text: node,
+        nodeText: node,
         node: math.parse(node),
+        nodeNoScaleText: nodeNoScale,
+        nodeNoScale: math.parse(nodeNoScale),
         func: func
     }
 }
@@ -216,4 +217,39 @@ ARTC.mathJS.doubleParse = function(text) {
 
     var ret = parseFloat(trim);
     return ret;
+}
+
+
+/*
+ * Assuming a one argument (numeric) function that outputs a number
+ * take a guess at the maximum value on a range.
+ */
+ARTC.mathJS.guessFunctionMax = function(func, lower, upper, segments) {
+    // Set initial max
+    var max = func(lower);
+    max = Math.max(max, func(upper));
+
+    var s = (segments ? segments : 10);// number of segments
+    var diff = (upper - lower) / s;
+    for(var i=1; i < s; i++) {
+        max = Math.max(max, func(lower + (i * diff)));
+    }
+    return max;
+}
+
+/*
+ * Assuming a one argument (numeric) function that outputs a number
+ * take a guess at the minimum value on a range.
+ */
+ARTC.mathJS.guessFunctionMin = function(func, lower, upper, segments) {
+    // Set initial min
+    var min = func(lower);
+    min = Math.min(min, func(upper));
+
+    var s = (segments ? segments : 10);// number of segments
+    var diff = (upper - lower) / s;
+    for(var i=1; i < s; i++) {
+        min = Math.min(min, func(lower + (i * diff)));
+    }
+    return min;
 }

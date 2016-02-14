@@ -35,24 +35,53 @@ test("ARTC.mathJS.parsePureInt: gibberish is NaN", function() {
 test("ARTC.mathJS.parsePureInt: 12.1232 is NaN", function() {
 	equal( isNaN(ARTC.mathJS.parsePureInt("12.1232")), true)
 });
+
+
+// ================
+test("ARTC.mathJS.guessFunctionMax: correct if max is at upper", function() {
+	equal(ARTC.mathJS.guessFunctionMax(function(x){return x;}, -10,5,15), 5)
+});
+
+test("ARTC.mathJS.guessFunctionMax: correct if max is at lower", function() {
+	equal(ARTC.mathJS.guessFunctionMax(function(x){return -x;}, -6,9,15), 6)
+});
+
+test("ARTC.mathJS.guessFunctionMax: correct if max is in the middle", function() {
+	equal(ARTC.mathJS.guessFunctionMax(function(x){return -(x*x) + 4;}, -5,5,10), 4)
+});
+
+
+// ================
+test("ARTC.mathJS.guessFunctionMin: correct if min is at lower", function() {
+	equal(ARTC.mathJS.guessFunctionMin(function(x){return x;}, -10,5,15), -10)
+});
+
+test("ARTC.mathJS.guessFunctionMin: correct if min is at upper", function() {
+	equal(ARTC.mathJS.guessFunctionMin(function(x){return -x;}, -6,9,15), -9)
+});
+
+test("ARTC.mathJS.guessFunctionMin: correct if max is in the middle", function() {
+	equal(ARTC.mathJS.guessFunctionMin(function(x){return (x*x) - 4;}, -5,5,10), -4)
+});
+
 // ================
 test("ARTC.mathJS.polyZones: no roots yields constant", function() {
 	var zones = ARTC.mathJS.parsePolyZones("1", "")
-    equal(zones.text, "1");
+    equal(zones.nodeText, "1");
 	equal(zones.func(10), 1);
 	equal(zones.func(20), 1);
 });
 
 test("ARTC.mathJS.polyZones: one roots yields linear", function() {
 	var zones = ARTC.mathJS.parsePolyZones("2", "3")
-    equal(zones.text, "2 * (x - 3)");
+    equal(zones.nodeText, "2 * (x - 3)");
 	equal(zones.func(10), 14);
 	equal(zones.func(20), 34);
 });
 
 test("ARTC.mathJS.polyZones: multiple roots", function() {
 	var zones = ARTC.mathJS.parsePolyZones("1", "-3,0,1")
-    equal(zones.text, "1 * (x - -3) * (x - 0) * (x - 1)");
+    equal(zones.nodeText, "1 * (x - -3) * (x - 0) * (x - 1)");
 	equal(zones.func(-1), 4);
 	equal(zones.func(2), 10);
 });

@@ -42,6 +42,7 @@ object Questions {
       case q: DerivativeGraphQuestion => DerivativeGraphQuestions.remove(quiz, q)
       case q: TangentQuestion => TangentQuestions.remove(quiz, q)
       case q: GraphMatchQuestion => GraphMatchQuestions.remove(quiz, q)
+      case q: PolynomialZoneQuestion => PolynomialZoneQuestions.remove(quiz, q)
     }
 
   // ======= RESULTS ======

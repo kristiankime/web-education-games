@@ -186,10 +186,6 @@ ARTC.mathJS.polyIntervals = function(intervalsStr) {
 ARTC.mathJS.polyInterval = function(intervalStr) {
     if(typeof intervalStr !== "string") { { success: false }; }
 
-    //var trim = intervalStr.trim().toLowerCase();
-    //var regex = ARTC.mathJS.polyIntervalRegex;
-    //var match = regex.exec(trim);
-
     var match = ARTC.mathJS.polyIntervalRegex.exec(intervalStr.trim().toLowerCase());
 
     if(match) {

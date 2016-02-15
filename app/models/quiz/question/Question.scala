@@ -150,11 +150,14 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
 
   def display(explanation : Boolean = true) : Html = views.html.quiz.polynomialzone.questionDisplay(this, explanation)
 
-  def polynomial : MathMLElem = {
-    val mathRoots = roots.map(v => Cn(v) : MathMLElem)
-    val rootTerms = mathRoots.map(r => (x - r) : MathMLElem)
-    val poly = Cn(scale) *  rootTerms.reduce( (a , b ) => a * b)
-    poly
-  }
+  def polynomial : MathMLElem =
+    if(roots.isEmpty) {
+      Cn(scale)
+    } else {
+      val mathRoots = roots.map(v => Cn(v) : MathMLElem)
+      val rootTerms = mathRoots.map(r => (x - r) : MathMLElem)
+      val poly = Cn(scale) * rootTerms.reduce( (a , b ) => a * b)
+      poly
+    }
 }
 

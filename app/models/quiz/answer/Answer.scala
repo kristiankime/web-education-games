@@ -77,6 +77,8 @@ object GraphMatchAnswerUnfinished {
 
 // ==== Graph Match ===
 case class PolynomialZoneAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], correctNum: Short, comment: String, creationDate: DateTime) extends Answer {
+  if(Interval.overlap(zones)) { throw new IllegalStateException("Zones were overlapping " + zones) }
+
   def display : Html = views.html.quiz.polynomialzone.answerDisplay(this)
 
   def zoneToString = zones.mkString(",")

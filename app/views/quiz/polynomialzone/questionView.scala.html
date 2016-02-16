@@ -6,7 +6,7 @@
 @import controllers.quiz.routes.AnswersController
 @import com.artclod.play.s
 
-@defining(quiz.access){ access =>
+@defining(quiz.access){ access : service.Access =>
 
 @mainWithBorder("Question Page", tag.courseLink(course), tag.courseQuizLink(course, quiz, None)) {
     <h2>Welcome to a question page for quiz: @quiz.name </h2>

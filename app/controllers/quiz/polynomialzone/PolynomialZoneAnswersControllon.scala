@@ -1,5 +1,6 @@
 package controllers.quiz.polynomialzone
 
+import com.artclod.math.Interval
 import com.artclod.mathml.Match._
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
@@ -29,7 +30,6 @@ trait PolynomialZoneAnswersControllon extends Controller with SecureSocialConsen
             PolynomialZoneAnswers.correct(question, form.intervals) match {
               case true => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case false => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
-//              case Inconclusive => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, question.results(user), Some(Left(unfinishedAnswer(false)))))
             }
           })
       }
@@ -41,10 +41,16 @@ trait PolynomialZoneAnswersControllon extends Controller with SecureSocialConsen
 
 object PolynomialZoneAnswerForm {
   val intervals = "intervals"
+  // Validation Check Names
+  val intervalsValid = "intervalsValid"
 
   val values = Form(mapping(
     intervals -> nonEmptyText.verifying(e => Try(models.support.string2VectorInterval(e)).isSuccess))
-    (PolynomialZoneAnswerForm.apply)(PolynomialZoneAnswerForm.unapply))
+    (PolynomialZoneAnswerForm.apply)(PolynomialZoneAnswerForm.unapply)
+    verifying(intervalsValid, fields => verifyIntervalsValid( fields.intervals ))
+  )
+
+  def verifyIntervalsValid(v : Vector[Interval]) = !Interval.overlap(v)
 
   def toAnswerUnfinished(user: User, question: PolynomialZoneQuestion, form: PolynomialZoneAnswerForm) = PolynomialZoneAnswerUnfinished(user.id, question.id, form.intervals, "", JodaUTC.now)_
 }

@@ -149,6 +149,13 @@ ARTC.mathJS.polyZones = function(scale, rootsObj) {
     }
 }
 
+ARTC.mathJS.parsePolyIntervals = function(intervalsStr) {
+    var ints = ARTC.mathJS.polyIntervals(intervalsStr);
+    if(!ints.success){ return {success: false}; }
+    if(ARTC.mathJS.polyIntervalsOverlap(ints.intervals)) { return {success: false}; }
+    return ints;
+}
+
 /*
  * Parse comma separated integer intervels "(3,8),(9,20)" etc
  * into a javascript object (or fail)
@@ -156,8 +163,7 @@ ARTC.mathJS.polyZones = function(scale, rootsObj) {
  */
 ARTC.mathJS.polyIntervals = function(intervalsStr) {
     if(typeof intervalsStr !== "string") { return {success: false}; }
-    if(intervalsStr === "") { return {success: false};  }
-
+    if(intervalsStr === "") { return {success: false}; }
 
     var regex = /\)[\s]*,/;
     var splitMinusParen = intervalsStr.split(regex);

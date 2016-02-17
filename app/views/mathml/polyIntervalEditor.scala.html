@@ -25,18 +25,16 @@
              };
 
         result.updateAnswer = function(intervalsStr) {
-            var parsedIntervals = ARTC.mathJS.polyIntervals(intervalsStr);
+            var parsedIntervals = ARTC.mathJS.parsePolyIntervals(intervalsStr);
             if(parsedIntervals.success) {
                 result.intervalsStr = intervalsStr;
                 result.intervals = parsedIntervals.intervals;
                 result.valid = true;
                 $("#@{editorName+"Indicator"}").hide();
-                @*ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(parsedIntervals.node.toTex()));*@
                 @for(onSuccess <- successCallback){@{onSuccess}(result); }
             } else {
                 result.valid = false;
                 $("#@{editorName+"Indicator"}").show();
-                @*if(zoneStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }*@
                 @for(onFailure <- failureCallback){@{onFailure}(result); }
             }
         };

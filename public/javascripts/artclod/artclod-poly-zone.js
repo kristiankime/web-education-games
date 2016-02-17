@@ -198,6 +198,32 @@ ARTC.mathJS.polyInterval = function(intervalStr) {
     return { success: false }
 }
 
+
+ARTC.mathJS.polyIntervalsOverlap = function(ints) {
+    if(ints.length == 0 || ints.length == 1) {
+        return false;
+    } else {
+        var sort = ints.slice().sort(function(a, b) { return a.lower - b.lower; });
+
+        for(var i = 0; i < sort.length -1; i++) {
+            var a = sort[i];
+            var b = sort[i+1];
+            if(ARTC.mathJS.polyIntervalOverlap(a, b)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+ARTC.mathJS.polyIntervalOverlap = function(a, b) {
+    return (a.lower >= b.lower && a.lower  < b.upper) ||
+           (a.upper >  b.lower && a.upper <= b.upper) ||
+           (b.lower >= a.lower && b.lower  < a.upper) ||
+           (b.upper >  a.lower && b.upper <= a.upper);
+}
+
 /*
  * Parse string to an int only if the entire string is an integer (modulo whitespace)
  */

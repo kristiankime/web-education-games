@@ -159,3 +159,31 @@ test("ARTC.mathJS.polyIntervals: fails for an extra paren", function() {
 	var intervals = ARTC.mathJS.polyIntervals("(1,2)), (3,4)")
 	equal(intervals.success, false)
 });
+
+// ================
+test("ARTC.mathJS.polyIntervalOverlap: return false if a is completely before b" , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper: 2 }, { lower: 3, upper: 4 }), false ) });
+test("ARTC.mathJS.polyIntervalOverlap: return false if b is completely before a" , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 3, upper: 4 }, { lower: 1, upper: 2 }), false ) });
+test("ARTC.mathJS.polyIntervalOverlap: return false if a touches the end of b"   , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 2, upper: 3 }, { lower: 1, upper: 2 }), false ) });
+test("ARTC.mathJS.polyIntervalOverlap: return false if b touches the end of a"   , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper: 2 }, { lower: 2, upper: 3 }), false ) });
+test("ARTC.mathJS.polyIntervalOverlap: return false if a touches the start of b" , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper: 2 }, { lower: 2, upper: 3 }), false ) });
+test("ARTC.mathJS.polyIntervalOverlap: return false if b touches the start of a" , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 2, upper: 3 }, { lower: 1, upper: 2 }), false ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if a lower == b lower"        , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper: 2 }, { lower: 1, upper:20 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if b lower == a lower"        , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper:20 }, { lower: 1, upper: 2 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if a upper == b upper"        , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower:-1, upper: 2 }, { lower: 1, upper: 2 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if b upper == a upper"        , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper: 2 }, { lower:-1, upper: 2 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if a contains b"              , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper:10 }, { lower: 3, upper: 4 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if b contains a"              , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 3, upper: 4 }, { lower: 1, upper:10 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if a upper in b"              , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 3, upper: 7 }, { lower: 5, upper:10 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if b upper in a"              , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 5, upper:10 }, { lower: 3, upper: 7 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if a lower in b"              , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 3, upper: 7 }, { lower: 1, upper: 5 }), true ) });
+test("ARTC.mathJS.polyIntervalOverlap: return true if b lower in a"              , function() { equal(ARTC.mathJS.polyIntervalOverlap( { lower: 1, upper: 5 }, { lower: 3, upper: 7 }), true ) });
+
+
+// ================
+test("ARTC.mathJS.polyIntervalsOverlap: return false if no overlap", function() {
+	equal(ARTC.mathJS.polyIntervalsOverlap([{lower:1, upper:2}, {lower:3, upper:4}]), false)
+});
+
+test("ARTC.mathJS.polyIntervalsOverlap: return true if overlap", function() {
+	equal(ARTC.mathJS.polyIntervalsOverlap([{lower:3, upper:6}, {lower:1, upper:2}, {lower:3, upper:4}]), true)
+});

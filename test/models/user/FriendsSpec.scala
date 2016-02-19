@@ -2,12 +2,15 @@ package models.user
 
 import com.artclod.slick.JodaUTC
 import com.artclod.util.TryUtil._
+import models.DBTest
 import models.DBTest._
+import models.organization.{TestCourse, Courses, TestOrganization, Organizations}
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 import play.api.db.slick._
 import play.api.test.{FakeApplication, WithApplication}
+import service.{View, Edit}
 
 @RunWith(classOf[JUnitRunner])
 class FriendsSpec extends Specification {
@@ -193,4 +196,60 @@ class FriendsSpec extends Specification {
     }
   }
 
+
+  "friendsToPlayWIth (Course)" should {
+
+    "list nothing if user has no friends" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        implicit val user = newFakeUser
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
+        Friends.friendsToPlayWith(course.id)(user, session) must beEmpty
+      }
+    }
+
+    "list friend if user has a friend in the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        implicit val user = newFakeUser
+
+        val friend1 = newFakeUser
+        Friends.friend(friend1.id)
+        Friends.friend(user.id)(friend1, session)
+
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
+        course.grantAccess(View)(user, session)
+        course.grantAccess(View)(friend1, session) // Note friend is in course
+
+        Friends.friendsToPlayWith(course.id)(user, session) must beEqualTo(List(friend1))
+      }
+    }
+
+    "list nothing if user has a friend who is not in the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        implicit val user = newFakeUser
+
+        val friend1 = newFakeUser
+        Friends.friend(friend1.id)
+        Friends.friend(user.id)(friend1, session)
+
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
+        course.grantAccess(View)(user, session) // Note friend is not added to course
+
+        Friends.friendsToPlayWith(course.id)(user, session) must beEmpty
+      }
+    }
+  }
+
+  "possibleFriendsInCourse" should {
+
+    "list nothing if the user is the only one in the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+      val settings = DB.withSession { implicit session: Session =>
+        implicit val user = newFakeUser
+        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
+        course.grantAccess(View)(user, session)
+
+        Friends.possibleFriendsInCourse(course.id)(user, session) must beEmpty
+      }
+    }
+
+  }
 }

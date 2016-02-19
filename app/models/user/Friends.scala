@@ -2,6 +2,7 @@ package models.user
 
 import com.artclod.slick.JodaUTC
 import com.google.common.annotations.VisibleForTesting
+import models.game.Games
 import models.organization.Courses
 import models.organization.table._
 import models.support.{CourseId, UserId}
@@ -25,14 +26,19 @@ object Friends {
     friendsTable.where(f => f.userId === user.id && f.acceptDate.isNotNull).sortBy(_.acceptDate).list
 
   def possibleFriends(implicit user: User, session: Session) =
-    usersTable.filterNot(_.userId.inSet(user.id :: possibleFriendInviteIds)).list
+    usersTable.filterNot(_.userId.inSet(user.id :: engagedFriendIds)).list
 
   def isPossibleFriend(friendId: UserId)(implicit user: User, session: Session) =
-    !possibleFriends.contains(friendId)
+    possibleFriends.map(_.id).contains(friendId)
 
   def possibleFriendsInCourse(courseId: CourseId)(implicit user: User, session: Session) = {
-    val friends = Set((user.id :: possibleFriendInviteIds): _*)
-    Courses.students(courseId).filter(s => friends.contains(s.id))
+    val engaged = Set(user.id :: engagedFriendIds:_*)
+    Courses.students(courseId).filterNot(u => engaged.contains(u.id))
+  }
+
+  def friendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = {
+    val friends = Set(user.id ::friendIds: _*)
+    Games.studentsToPlayWith(user.id, courseId).filter(s => friends.contains(s.id))
   }
 
   // ==== Support Methods
@@ -47,10 +53,20 @@ object Friends {
 
   private def findInviteQuery(invite: Friend)(implicit session: Session) = friendsTable.where(f => f.userId === invite.userId && f.friendId === invite.friendId)
 
-  private def possibleFriendInviteIds(implicit user: User, session: Session) = {
+  /**
+    * Friend Ids which have any kind of engagement to the user (ie full friend or either invited)
+    */
+  private def engagedFriendIds(implicit user: User, session: Session) = {
     val u = (for (f <- friendsTable if f.userId === user.id) yield f.friendId)
     val f = (for (f <- friendsTable if f.friendId === user.id) yield f.userId)
     u.union(f).list
+  }
+
+  /**
+    * Id for users who are friends
+    */
+  private def friendIds(implicit user: User, session: Session) = {
+    (for (f <- friendsTable if f.userId === user.id && f.acceptDate.isNotNull) yield f.friendId).list
   }
 
   // ==== Support Classes and Objects

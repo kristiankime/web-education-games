@@ -28,18 +28,18 @@
         <table class="pure-table pure-table-striped">
             <tr><th>Player</th><th>Last Login</th></tr>
             @for(student <- students.zipWithIndex) {
-                <tr>
-                    <td>
-                        <label for="player@student._2" class="pure-checkbox">
-                            <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
-                            @student._1.nameDisplay
-                        </label>
-                    </td>
-                    <td>
+            <tr>
+                <td>
+                    <label for="player@student._2" class="pure-checkbox">
+                        <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
+                        @student._1.nameDisplay
+                    </label>
+                </td>
+                <td>
                     @tag.datetime(student._1.lastAccess)
-                    </td>
-                    }
-        </tr>
+                </td>
+            </tr>
+            }
         </table>
         <input type="submit" class="pure-button pure-button-primary" value="Submit">
     }

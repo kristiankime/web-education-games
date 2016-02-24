@@ -31,14 +31,19 @@ object Friends {
   def isPossibleFriend(friendId: UserId)(implicit user: User, session: Session) =
     possibleFriends.map(_.id).contains(friendId)
 
-  def possibleFriendsInCourse(courseId: CourseId)(implicit user: User, session: Session) = {
-    val engaged = Set(user.id :: engagedFriendIds:_*)
-    Courses.students(courseId).filterNot(u => engaged.contains(u.id))
-  }
+//  def possibleFriendsInCourse(courseId: CourseId)(implicit user: User, session: Session) = {
+  //    val engaged = Set(user.id :: engagedFriendIds:_*)
+  //    Courses.students(courseId).filterNot(u => engaged.contains(u.id))
+  //  }
 
   def friendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = {
     val friends = Set(user.id ::friendIds: _*)
     Games.studentsToPlayWith(user.id, courseId).filter(s => friends.contains(s.id))
+  }
+
+  def studentsNotfriendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = {
+    val friends = Set(user.id ::friendIds: _*)
+    Games.studentsToPlayWith(user.id, courseId).filterNot(s => friends.contains(s.id))
   }
 
   // ==== Support Methods

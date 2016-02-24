@@ -46,7 +46,7 @@
     }
     }
 
-    @defining(user.studentsToPlayWith(course.id)) { students : List[models.user.User] =>
+    @defining(user.studentsNotfriendsToPlayWith(course.id)) { students : List[models.user.User] =>
     @if(students.isEmpty){
     <h3>There are currently no students available to play with in the course</h3>
     } else {

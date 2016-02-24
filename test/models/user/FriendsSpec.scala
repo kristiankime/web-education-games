@@ -239,17 +239,18 @@ class FriendsSpec extends Specification {
     }
   }
 
-  "possibleFriendsInCourse" should {
+//  "possibleFriendsInCourse" should {
+//
+//    "list nothing if the user is the only one in the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+//      val settings = DB.withSession { implicit session: Session =>
+//        implicit val user = newFakeUser
+//        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
+//        course.grantAccess(View)(user, session)
+//
+//        Friends.possibleFriendsInCourse(course.id)(user, session) must beEmpty
+//      }
+//    }
+//
+//  }
 
-    "list nothing if the user is the only one in the course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
-      val settings = DB.withSession { implicit session: Session =>
-        implicit val user = newFakeUser
-        val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
-        course.grantAccess(View)(user, session)
-
-        Friends.possibleFriendsInCourse(course.id)(user, session) must beEmpty
-      }
-    }
-
-  }
 }

@@ -21,7 +21,7 @@
             <tr>
                 <td> @result.question.display() </td>
                 <td> @mathml.correct(result.correct) </td>
-                <td> @models.quiz.question.QuestionScoring.pointsPerQuestion </td>
+                <td> @tag.studentPoints(result.studentPoints) </td>
             </tr>
             }
         </table>

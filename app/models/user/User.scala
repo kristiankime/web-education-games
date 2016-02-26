@@ -23,9 +23,9 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
 
   def activeGame(otherId: UserId)(implicit session: Session) = Games.activeGame(id, otherId)
 
-  def studentsToPlayWith(courseId: CourseId)(implicit session: Session) = Games.studentsToPlayWith(id, courseId)
+//  def studentsToPlayWith(courseId: CourseId)(implicit session: Session) = Games.studentsToPlayWith(id, courseId)
 
-  def studentsNotfriendsToPlayWith(courseId: CourseId)(implicit session: Session) = Friends.studentsNotfriendsToPlayWith(courseId)
+  def studentsNotfriendedToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = Friends.studentsNotfriendedToPlayWith(courseId)
 
   def friendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = Friends.friendsToPlayWith(courseId)
 

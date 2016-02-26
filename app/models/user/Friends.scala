@@ -37,12 +37,12 @@ object Friends {
   //  }
 
   def friendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = {
-    val friends = Set(user.id ::friendIds: _*)
+    val friends = Set( (user.id :: friendIds) : _*)
     Games.studentsToPlayWith(user.id, courseId).filter(s => friends.contains(s.id))
   }
 
-  def studentsNotfriendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = {
-    val friends = Set(user.id ::friendIds: _*)
+  def studentsNotfriendedToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = {
+    val friends = Set( (user.id :: friendIds) : _*)
     Games.studentsToPlayWith(user.id, courseId).filterNot(s => friends.contains(s.id))
   }
 
@@ -61,7 +61,8 @@ object Friends {
   /**
     * Friend Ids which have any kind of engagement to the user (ie full friend or either invited)
     */
-  private def engagedFriendIds(implicit user: User, session: Session) = {
+  @VisibleForTesting
+  def engagedFriendIds(implicit user: User, session: Session) = {
     val u = (for (f <- friendsTable if f.userId === user.id) yield f.friendId)
     val f = (for (f <- friendsTable if f.friendId === user.id) yield f.userId)
     u.union(f).list

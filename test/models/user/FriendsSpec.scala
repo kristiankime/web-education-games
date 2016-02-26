@@ -253,4 +253,55 @@ class FriendsSpec extends Specification {
 //
 //  }
 
+    "studentsNotfriendedToPlayWith" should {
+
+      "list students in course who are not friended" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+        val settings = DB.withSession { implicit session: Session =>
+          implicit val user = newFakeUser
+          val course = Courses.create(TestCourse(owner = DBTest.newFakeUser.id, organizationId = Organizations.create(TestOrganization()).id))
+          course.grantAccess(View)(user, session)
+
+          val teacher = newFakeUser
+          course.grantAccess(Edit)(teacher, session)
+
+          val student1 = newFakeUser
+          course.grantAccess(View)(student1, session)
+          val student2 = newFakeUser
+          course.grantAccess(View)(student2, session)
+
+          val friend1 = newFakeUser
+          course.grantAccess(View)(friend1, session)
+          Friends.friend(friend1.id)
+          Friends.friend(user.id)(friend1, session)
+
+          Set(Friends.studentsNotfriendedToPlayWith(course.id)(user, session): _*) must beEqualTo(Set(student1, student2))
+        }
+      }
+
+    }
+
+    "engagedFriendIds" should {
+
+      "list any user who the user has invited, or who as invited them" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+        val settings = DB.withSession { implicit session: Session =>
+          implicit val user = newFakeUser
+
+          val friend = newFakeUser
+          Friends.friend(friend.id)
+          Friends.friend(user.id)(friend, session)
+
+          val inivited = newFakeUser
+          Friends.friend(inivited.id)
+
+          val invitedBy = newFakeUser
+          Friends.friend(user.id)(invitedBy, session)
+
+          val otherUser = newFakeUser // here to ensure unrelated users don't show up
+
+          Set(Friends.engagedFriendIds(user, session) :_*) must beEqualTo(Set(friend.id, inivited.id, invitedBy.id))
+        }
+      }
+
+    }
+
 }

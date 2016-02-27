@@ -46,8 +46,8 @@
             ("Create a Derivative Question",       derivative.questionEditor(gameState.createDerivativeQuestionCall,           forms.derivative,      successCallback = List("derivativeEditorSuccess"),      Some(derivative.scoringHints("derivativeEditorSuccess",           gameState.otherSkill)))),
             ("Create a Derivative Graph Question", derivativegraph.questionEditor(gameState.createDerivativeGraphQuestionCall, forms.derivativeGraph, successCallback = List("derivativeGraphEditorSuccess"), Some(derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.otherSkill)))),
             ("Create a Tangent Question",          tangent.questionEditor(gameState.createTangentQuestionCall,                 forms.tangent,         successCallback = List("tangentEditorSuccess"),         Some(tangent.scoringHints("tangentEditorSuccess",                 gameState.otherSkill)))),
-            ("Create a Graph Match Question",      graphmatch.questionEditor(gameState.createGraphMatchQuestionCall,           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess"),      Some(graphmatch.scoringHints("graphMatchEditorSuccess",           gameState.otherSkill)))),
-            ("Create a Polynomial Zone Question",  polynomialzone.questionEditor(gameState.createPolynomialZoneQuestionCall,   forms.polynomialZone,  successCallback = List("polynomialZoneEditorSuccess"),  Some(polynomialzone.scoringHints("polynomialZoneEditorSuccess",   gameState.otherSkill))))
+            ("Create a Graph Match Question",      graphmatch.questionEditor(gameState.createGraphMatchQuestionCall,           forms.graphMatch,      successCallback = List("graphMatchEditorSuccess"),      Some(graphmatch.scoringHints("graphMatchEditorSuccess",           gameState.otherSkill)))) /*,
+            ("Create a Polynomial Zone Question",  polynomialzone.questionEditor(gameState.createPolynomialZoneQuestionCall,   forms.polynomialZone,  successCallback = List("polynomialZoneEditorSuccess"),  Some(polynomialzone.scoringHints("polynomialZoneEditorSuccess",   gameState.otherSkill))))*/
         )
 
         }

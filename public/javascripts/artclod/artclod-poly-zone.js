@@ -145,6 +145,7 @@ ARTC.mathJS.polyZones = function(scale, rootsObj) {
         node: math.parse(node),
         nodeNoScaleText: nodeNoScale,
         nodeNoScale: math.parse(nodeNoScale),
+        roots: roots,
         func: func
     }
 }

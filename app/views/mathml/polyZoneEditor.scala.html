@@ -39,9 +39,15 @@
                 result.node = parsedPolyZones.node;
                 result.func = parsedPolyZones.func;
                 result.valid = true;
+                var maxRoot = Math.max.apply(null, parsedPolyZones.roots)
+                var minRoot = Math.min.apply(null, parsedPolyZones.roots)
+                if(minRoot === maxRoot) {
+                    minRoot = (minRoot === min ? min : minRoot - 1);
+                    maxRoot = (maxRoot === max ? max : maxRoot + 1);
+                }
 
-                var fMax = ARTC.mathJS.guessFunctionMax(result.func, min, max, 100);
-                var fMin = ARTC.mathJS.guessFunctionMin(result.func, min, max, 100);
+                var fMax = ARTC.mathJS.guessFunctionMax(result.func, minRoot, maxRoot, 100);
+                var fMin = ARTC.mathJS.guessFunctionMin(result.func, minRoot, maxRoot, 100);
                 result.scale = max / Math.max(Math.abs(fMax), Math.abs(fMin)); // rescale so everything fits in range
 
                 $("#@{editorName+"Indicator"}").hide();

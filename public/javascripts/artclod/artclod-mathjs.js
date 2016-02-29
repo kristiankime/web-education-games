@@ -2,6 +2,23 @@ if(!ARTC){
     var ARTC = {};
 }
 
+ARTC.parenMatch = function(text, startParenIndex) {
+    // Some input checkig
+    if(typeof text !== "string") { throw "text was not a string [" + text + "]"; }
+    if(typeof startParenIndex !== "number") { throw "initial paren index was not a number [" + startParenIndex + "]"; }
+    if( text.charAt(startParenIndex) !== "(" ) { throw "character at index was not open paren, text=[" + text + "]"  + " index=[" + startParenIndex + "] character=[" + text.charAt(startParenIndex) + "]"; }
+
+    var parenCount = 1;
+    for(var i = startParenIndex + 1; i < text.length; i++) {
+        switch(text.charAt(i)) {
+            case "(": parenCount = parenCount + 1; break;
+            case ")": parenCount = parenCount - 1; break;
+        }
+        if(parenCount === 0) { return i+1; }
+    }
+    return -1;
+}
+
 if(!ARTC.mathJS){
     ARTC.mathJS = {};
 }
@@ -18,6 +35,58 @@ ARTC.mathJS.text2FunctionOfX = function(mathText) {
     var node = math.parse(mathText)
     return  ARTC.mathJS.node2FunctionOfX(node);
 };
+
+/*
+ * mathjs only parse functions raised to powers if the power comes after
+ * the closing paren.
+ *
+ * for exampe mathjs does not parse cos^2(x) it has to be written as cos(x)^2
+ *
+ * This preprocessor changes the string so mathjs can understand it.
+ */
+ARTC.mathJS.prepFuncPow = function(text, funcs) {
+
+    var prepFuncPowOnce = function(text, func) {
+        if(typeof text !== "string") { throw "text was not a string [" + text + "]"; }
+        if(typeof func !== "string") { throw "func was not a string [" + func + "]"; }
+
+        var re = new RegExp(func + "(\\^[0-9]+)\\(");
+        var match = re.exec(text);
+
+        if(match != null) {
+            var powerText = match[1];
+            var openParenIndex = match.index + func.length + powerText.length;
+            var closeParenIndex = ARTC.parenMatch(text, openParenIndex);
+            if(closeParenIndex !== -1) {
+                var preText = text.substring(0, match.index);
+                var inParenText = text.substring(openParenIndex, closeParenIndex);
+                var postText = text.substring(closeParenIndex);
+                return { updated : true, text : preText + "(" + func + inParenText + powerText + ")" + postText };
+            }
+        }
+        return { updated : false, text : text };
+    }
+
+    var prepFuncPowLoop = function(text, func) {
+        if(typeof text !== "string") { throw "text was not a string [" + text + "]"; }
+        if(typeof func !== "string") { throw "func was not a string [" + func + "]"; }
+
+        var ret = { updated : true, text : text };
+        while(ret.updated) {
+            ret = prepFuncPowOnce(ret.text, func);
+        }
+        return ret;
+    }
+
+    if(typeof text !== "string") { throw "text was not a string [" + text + "]"; }
+    if(!Array.isArray(funcs)) { throw "funcs was not an array [" + funcs + "]"; }
+
+    var ret = text;
+    for(var i = 0; i < funcs.length; i++) {
+        ret = prepFuncPowLoop(ret, funcs[i]).text;
+    }
+    return ret;
+}
 
 /*
  * ARTC.buildMathJSParser is a builder for parsers.
@@ -125,7 +194,23 @@ ARTC.mathJS.buildParser = (function(){
 
         var ret = function(string) {
             try {
-                var mathJSNode = math.parse(string);
+
+                if(string.length > 0 && string.charAt(0) === "+") { throw "function can't start with +"; }
+
+                // ====
+                // This turns cos^2(x) into cos(x)^2 which can be parsed by mathjs
+                var funcs = [];
+                for(var key in functionsSafe){
+                    if (functionsSafe.hasOwnProperty(key)) {
+                        funcs.push(key.split("#")[0]);
+                    }
+                }
+                var stringPrepped = ARTC.mathJS.prepFuncPow(string, funcs);
+                // =====
+
+                var mathJSNode = math.parse(stringPrepped);
+
+
 
                 var reject = rejectFuncSafe(mathJSNode);
                 if(reject){ throw reject; }

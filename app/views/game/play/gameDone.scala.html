@@ -1,0 +1,51 @@
+@(gameState: models.game.mask.GameMask with models.game.mask.MyDoneAnswering)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.GamesController
+@import controllers.game.GameRequest
+@import helper._
+@import models.organization.Courses
+
+@mainWithBorder("Game Done", tag.courseOpLink(gameState.game.course)) {
+
+    @if(!gameState.otherFinished){
+    <h1>You have finished but @gameState.other.nameView still needs to finish your quiz.</h1>
+    } else {
+    <h1>Congratulations you finished a game with @gameState.other.nameView</h1>
+    }
+
+    @for(studentPoints <- gameState.myStudentPointsOp ) {
+    <section class="extra-border">
+        You earned @tag.studentPoints(studentPoints) student points for playing this game! <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, gameState.otherQuizId.get)">details</a>
+        @*Your score as a student was @views.html.quiz.quizScore(otherQuiz.results(user)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, otherQuiz.id)">details</a>*@
+    </section>
+    }
+
+    @for(teacherPoints <- gameState.myTeacherPointsOp ) {
+    <section class="extra-border">
+        You earned @tag.teacherPoints(teacherPoints) teacher points for playing this game! <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, gameState.myQuizId.get)">details</a>
+        @*Your score as a teacher was @views.html.quiz.quizScoreTeacher(myQuiz.results(gameState.other), gameState.otherSkill)) <a class="pure-button" href="@GamesController.reviewQuiz(gameState.game.id, myQuiz.id)">details</a>*@
+    </section>
+    }@if(gameState.myTeacherPointsOp.isEmpty) {
+        Your quiz hasn't been completed yet so you haven't gotten any teacher points.
+    }
+
+    <section class="extra-border">
+    @for(course <- gameState.game.courseId.flatMap(Courses(_))){
+    @form(action = GamesController.requestGame(course.organizationId, course.id), 'class -> "pure-form") {
+        Play another round with @gameState.other.nameView
+        <input type="hidden" name="@GameRequest.requestee" value="@gameState.otherId.v">
+        <input type="submit" class="pure-button pure-button-primary" value="Play Again">
+    }
+    }
+    </section>
+
+    @if(models.user.Friends.isPossibleFriend(gameState.otherId)) {
+    <section class="extra-border">
+    @form(action = controllers.routes.Home.friend(), 'class -> "pure-form") {
+        Send a friend request to @gameState.other.nameView
+        <input type="hidden" name="@controllers.FriendRequest.id" value="@gameState.otherId.v">
+        <input type="submit" class="pure-button pure-button-primary" value="Friend Request">
+    }
+    </section>
+    }
+}

@@ -1,6 +1,6 @@
 package models.quiz.question
 
-import com.artclod.mathml.scalar.MathMLElem
+import com.artclod.mathml.scalar.{Cn, MathMLElem, x}
 import com.artclod.slick.JodaUTC
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
@@ -137,3 +137,27 @@ object GraphMatchQuestionWhich {
     if(v > whichMax) throw new IllegalStateException("graphThis was " + v + " should have been between " + GraphMatchQuestionWhich.whichMin + " and " + GraphMatchQuestionWhich.whichMax)
   }
 }
+
+case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector[Int], scale: Double, zoneType: PolynomialZoneType, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+
+  def answersAndOwners(implicit session: Session) = PolynomialZoneQuestions.answersAndOwners(id)
+
+  def difficulty : Double = PolynomialZoneQuestionDifficulty(roots, scale, zoneType)
+
+  def results(user: User)(implicit session: Session) = PolynomialZoneQuestionResults(user, this, answers(user))
+
+  def answers(user: User)(implicit session: Session) = PolynomialZoneQuestions(id, user)
+
+  def display(explanation : Boolean = true) : Html = views.html.quiz.polynomialzone.questionDisplay(this, explanation)
+
+  def polynomial : MathMLElem =
+    if(roots.isEmpty) {
+      Cn(scale)
+    } else {
+      val mathRoots = roots.map(v => Cn(v) : MathMLElem)
+      val rootTerms = mathRoots.map(r => (x - r) : MathMLElem)
+      val poly = Cn(scale) * rootTerms.reduce( (a , b ) => a * b)
+      poly
+    }
+}
+

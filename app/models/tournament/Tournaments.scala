@@ -94,14 +94,14 @@ object Tournaments {
   }
 
   // ============ Sum of Student Score Rankings ===========
-  def sumOfStudentScoresRankingFor(id: UserId, size: Int)(implicit session: Session) =
-    rankingsFor(id, size, sumOfStudentScoresRank)
+  def sumOfStudentPointsRankingFor(id: UserId, size: Int)(implicit session: Session) =
+    rankingsFor(id, size, sumOfStudentPointsRank)
 
   @VisibleForTesting
-  protected[tournament] def sumOfStudentScoresRank(implicit session: Session) =
-    rankings(sumOfStudentScores.map(v => v.copy(_3 = v._3.getOrElse(0d))))
+  protected[tournament] def sumOfStudentPointsRank(implicit session: Session) =
+    rankings(sumOfStudentPoints.map(v => v.copy(_3 = v._3.getOrElse(0))))
 
-  private def sumOfStudentScores(implicit session: Session) = {
+  private def sumOfStudentPoints(implicit session: Session) = {
     val requstorGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestor, r.requestorStudentPoints))
     val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requesteeStudentPoints))
     val gamesUnion = requstorGames.unionAll(requsteeGames)
@@ -112,14 +112,14 @@ object Tournaments {
   }
 
   // ============ Sum of Teacher Score Rankings ===========
-  def sumOfTeacherScoresRankingFor(id: UserId, size: Int)(implicit session: Session) =
-    rankingsFor(id, size, sumOfTeacherScoresRank)
+  def sumOfTeacherPointsRankingFor(id: UserId, size: Int)(implicit session: Session) =
+    rankingsFor(id, size, sumOfTeacherPointsRank)
 
   @VisibleForTesting
-  protected[tournament] def sumOfTeacherScoresRank(implicit session: Session) =
-    rankings(sumOfTeacherScores.map(v => v.copy(_3 = v._3.getOrElse(0d))))
+  protected[tournament] def sumOfTeacherPointsRank(implicit session: Session) =
+    rankings(sumOfTeacherPoints.map(v => v.copy(_3 = v._3.getOrElse(0))))
 
-  private def sumOfTeacherScores(implicit session: Session) = {
+  private def sumOfTeacherPoints(implicit session: Session) = {
     val requstorGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestor, r.requestorTeacherPoints))
     val requsteeGames = gamesTable.filter(_.finishedDate.isNotNull).map(r => (r.requestee, r.requesteeTeacherPoints))
     val gamesUnion = requstorGames.unionAll(requsteeGames)

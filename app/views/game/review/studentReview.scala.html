@@ -10,21 +10,23 @@
 
     <section>
         Your results for each question:<br>
-        @defining(quiz.results(user)) { quizResults =>
+        @defining(quiz.results(user)) { quizResults : models.quiz.QuizResults =>
         <table class="pure-table pure-table-striped extra-border">
             <tr>
                 <th>question</th>
                 <th>correct</th>
+                <th>student points</th>
             </tr>
             @for(result <- quizResults.results) {
             <tr>
                 <td> @result.question.display() </td>
                 <td> @mathml.correct(result.correct) </td>
+                <td> @tag.studentPoints(result.studentPoints) </td>
             </tr>
             }
         </table>
 
-        Your score for this quiz: @tag.percent(quizResults.studentScore)<br>
+        @*Your score for this quiz: @views.html.quiz.quizScore(quizResults)<br>*@
         }
     </section>
 }

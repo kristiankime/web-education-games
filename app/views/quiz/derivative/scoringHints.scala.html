@@ -3,53 +3,10 @@
 @import controllers.quiz.QuestionsController.{partnerSkill, difficulty, correctPoints, incorrectPoints}
 @import controllers.quiz.derivative.DerivativeQuestionForm.{function, functionStr}
 
-@defining("In order to score a lot of points in the game you need to select hard questions the other player can get right or easy questions they will get wrong <br><br> A hard question is a question whose difficulty is above the skill level of the other player <br><br> An easy question is a question whose difficulty is greatly below the skill level of the other player <br><br> The table below summarizes the skill level of the other player, the difficulty of the questions and how many points you will get if they get the questions right or wrong"){ infoText =>
-
-    <!-- ========= DERIVATIVE MATH SCORING STARTS HERE ======= -->
-    <section>
-    <h4>Scoring Information @tag.icon("icon-help", 'data_ot -> infoText)</h4>
-
-    <table class="pure-table">
-        <tr>
-            <th>Skill Level @tag.icon("icon-help", 'data_ot -> "The other player's skill level") </th>
-            <th>Difficulty  @tag.icon("icon-help", 'data_ot -> "The difficulty of the question you are creating")</th>
-            <th>Correct     @tag.icon("icon-help", 'data_ot -> "The points you will get if they get it correct")</th>
-            <th>Incorrect   @tag.icon("icon-help", 'data_ot -> "The points you will get if they get it incorrect")</th>
-        </tr>
-        <tr>
-            <td> @tag.skillLevel(skillLevel) </td>
-            <td> <span id="@{name}Difficulty">NA</span> </td>
-            <td> <span id="@{name}Correct">NA</span> </td>
-            <td> <span id="@{name}Incorrect">NA</span> </td>
-        </tr>
-    </table>
-
-    <script>
-        var @name = function ( result ) {
-
-        var ajaxData = {
-            @functionStr : result.rawStr,
-            @function : result.mathML,
-            @partnerSkill : @skillLevel
-        };
-
-        var ajaxSuccess = function( data ) {
-            $("#@{name}Difficulty").text(data.@{difficulty}.toFixed(0));
-            $("#@{name}Correct").text(ARTC.fmtPercent(data.@{correctPoints}));
-            $("#@{name}Incorrect").text(ARTC.fmtPercent(data.@{incorrectPoints}));
-        };
-
-        $.ajax({
-            type : "POST",
-            url : "/question/difficulty/derivative",
-            dataType : "json",
-            data : JSON.stringify(ajaxData),
-            contentType: "application/json",
-            success : ajaxSuccess,
-            processData: false
-            });
-        }
-    </script>
-    </section>
-    <!-- ========= DERIVATIVE MATH SCORING ENDS HERE ======= -->
-}
+@views.html.quiz.scoringHints(name, skillLevel, "/question/difficulty/derivative"){
+    {
+      @functionStr : result.rawStr,
+      @function : result.mathML,
+      @partnerSkill : @skillLevel
+    }
+}{ true }

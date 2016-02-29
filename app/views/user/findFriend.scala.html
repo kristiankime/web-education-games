@@ -1,0 +1,44 @@
+@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.GamesController
+@import controllers.game.GameRequest
+@import controllers.routes.Home
+@import controllers.FriendRequest
+@import models.user.User
+@import helper._
+@import com.artclod.play.{a, s}
+
+@defining(user.possibleFriends) { students : List[models.user.User] =>
+
+@mainWithBorder("Find a Friend") {
+
+    <h1>Send a friend invitation</h1>
+
+    @if(students.isEmpty){
+    <h5>Currently there is no one for you to invite</h5>
+    } else {
+    <h5>Please select the person you want to send an invitation to:</h5>
+
+    @form(action = Home.friend(), 'class -> "pure-form") {
+        <table class="pure-table pure-table-striped">
+            <tr><th>Player</th><th>Last Login</th></tr>
+            @for(student <- students.zipWithIndex) {
+            <tr>
+                <td>
+                    <label for="player@student._2" class="pure-checkbox">
+                    <input id="player@student._2" type="radio" name="@FriendRequest.id" value="@student._1.id.v"@if(student._2 == 0){checked}>
+                    @student._1.nameDisplay
+                    </label>
+                </td>
+                <td>
+                    @tag.datetime(student._1.lastAccess)
+                </td>
+            }
+            </tr>
+        </table>
+	    <input type="submit" class="pure-button pure-button-primary" value="Submit">
+    }
+    }
+}
+
+}

@@ -1,4 +1,4 @@
-@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, xSize : Int = 300, ySize : Int = 300)
+@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, glider: Boolean = true, xSize : Int = 300, ySize : Int = 300)
 
 @import com.artclod.mathml.MathMLEq.tightRange
 
@@ -12,9 +12,33 @@
     var ret = {}
     //<![CDATA[
     var f = ARTC.mathJS.text2FunctionOfX("@{initialFunction}");
-    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(com.artclod.mathml.MathMLEq.tightRange*2)}, unitY: @{ySize/(com.artclod.mathml.MathMLEq.tightRange*2)}, showCopyright: false});
+    var board = JXG.JSXGraph.initBoard('@{name}_box', {axis: true, boundingbox:[@{-(tightRange+1)},@{tightRange+1},@{tightRange+1},@{-(tightRange+1)}], originX: @{xSize/2}, originY: @{ySize/2}, unitX: @{xSize/(tightRange*2)}, unitY: @{ySize/(tightRange*2)}, showCopyright: false});
     board.suspendUpdate();
-    var g = board.create('functiongraph', [f, -@{tightRange}, @{tightRange}], {strokeWidth: 3});
+    var g = board.create('functiongraph', [f, -@{tightRange*2}, @{tightRange*2}], {strokeWidth: 3});
+    @if(glider){
+        var glider = board.create('glider', [g]);
+
+        var getMouseCoords = function(e, i) { @* http://jsxgraph.uni-bayreuth.de/wiki/index.php/Browser_event_and_coordinates *@
+            var cPos = board.getCoordsTopLeftCorner(e, i),
+                    absPos = JXG.getPosition(e, i),
+                    dx = absPos[0]-cPos[0],
+                    dy = absPos[1]-cPos[1];
+
+            return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], board);
+        }
+
+        var down = function(e)  {
+            var i;
+            if (e[JXG.touchProperty]) {
+                i = 0; // index of the finger that is used to extract the coordinates
+            }
+            var coords = getMouseCoords(e, i);
+
+            glider.moveTo([coords.usrCoords[1], coords.usrCoords[2]]);
+        }
+
+        board.on('down', down);
+    }
     board.unsuspendUpdate();
     //]]>
     ret.brd = board;

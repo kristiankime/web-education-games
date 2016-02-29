@@ -1,0 +1,71 @@
+@()(implicit u: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.organization.Courses
+@import com.artclod.play.s
+@import views.html.tag._
+@import helper._
+@import models.user.{Friends, Friend}
+
+@mainWithBorder("Friends") {
+
+    <h3> Friends List </h3>
+    @defining(Friends.friends) { friends : List[Friend] =>
+    @if(friends.isEmpty){
+    <h4> You don't currently have anyone friended </h4>
+    } else {
+    <h4> Your have the following people friended:</h4>
+    If you want to unfriend someone selected them and hit unfriend
+
+    @form(action = controllers.routes.Home.unfriend(), 'class -> "pure-form") {
+        <ul class="pure-list">
+            @for(student <- friends.zipWithIndex) {
+            <li>
+                <label for="friend@student._2" class="pure-checkbox">
+                    <input id="friend@student._2" type="radio" name="@UnfriendRequest.id" value="@student._1.friendId.v"@if(student._2 == 0){checked}>
+                    @student._1.friend.nameDisplay
+                </label>
+            </li>
+            }
+        </ul>
+        <input type="submit" class="pure-button pure-button-primary" value="Unfriend">
+    }
+    }
+    }
+
+
+    <h3> Invite Friends </h3>
+    To invite new friends click <a href="@controllers.routes.Home.findfriend()" class="pure-button">Here</a>
+
+    <h3> Pending Invitations </h3>
+    @defining(Friends.pendingInvitesFor(u, session)) { friends : List[Friend] =>
+    @if(friends.isEmpty){
+    <h5> You don't currently have any invitations </h5>
+    } else {
+    <h5> Your have friend requests from the following people:</h5>
+    <ul class="pure-list">
+        @for(friend <- friends) {
+        <li>
+            @friend.user.nameDisplay @views.html.user.friend(friend.userId) @views.html.user.unfriend(friend.userId)
+        </li>
+        }
+    </ul>
+    }
+    }
+
+    <h3> Awaiting Response </h3>
+    @defining(Friends.pendingInvitesBy(u, session)) { friends : List[Friend] =>
+    @if(friends.isEmpty){
+    <h5> You aren't awaiting responses to any invites </h5>
+    } else {
+    <h5> Your have sent requests to the following people:</h5>
+    <ul class="pure-list">
+        @for(friend <- friends) {
+        <li>
+            @friend.friend.nameDisplay
+        </li>
+        }
+    </ul>
+    }
+    }
+
+}

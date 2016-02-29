@@ -3,7 +3,7 @@
 @import models.game.Games
 @import views.html.tag.gameLink
 
-@defining(courseOp match { case Some(course) => Games.requests(user.id, course.id); case None => Games.requests(user.id)}) { games =>
+@defining(courseOp match { case Some(course) => Games.requests(user.id, course.id); case None => Games.requests(user.id)}) { games : List[models.game.Game] =>
 
 <section>
     <h5>Game Requests</h5>

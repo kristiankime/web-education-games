@@ -1,0 +1,5 @@
+@(friendId: models.support.UserId)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+    @helper.form(action = controllers.routes.Home.unfriend(), 'class -> "pure-form", 'style -> "margin: 0; padding: 0; display: inline;") {
+        <input type="hidden" name="@controllers.UnfriendRequest.id" value="@friendId.v">
+        <input type="submit" class="pure-button " style="display: inline;" value="Reject">
+    }

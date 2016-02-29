@@ -25,15 +25,8 @@
     }
     }
 
-    @*
-    @form(action = routes.Settings.toggleGameEmails, 'class -> "pure-form") {
-        @if(settings.emailGameUpdates) {
-            You are currently receiving emails on game updates <input class="pure-button" type="submit" value="Stop Game Emails">
-        } else {
-            You are not currently receiving emails on game updates <input class="pure-button" type="submit" value="Start Game Emails">
-        }
-    }*@
-
+    <h3> Your Points so far </h3>
+    @views.html.user.userPoints(user, "userInfo")
 
     <h3> Update your settings </h3>
 
@@ -46,17 +39,21 @@
         @for(err <- errorsOp.flatMap(_.error(SettingsForm.name))){ <span class="form-error"> @err.message </span> } @* TODO determine now to display errors *@<br>
 
         <label for="@SettingsForm.emailGameUpdates" class="pure-checkbox">
-            <input type="checkbox" id="@SettingsForm.emailGameUpdates" name="@SettingsForm.emailGameUpdates" value="true" @if(user.emailGameUpdates){checked} />
-            <input type="hidden" name="@SettingsForm.emailGameUpdates" value="false" />
-            Send me an email on game updates
+            <input type="checkbox" id="@SettingsForm.emailGameUpdates" name="@SettingsForm.emailGameUpdates" value="true" @if(user.emailUpdates){checked} />
+            <input type="hidden" name="@SettingsForm.emailGameUpdates" value="false" /> Send me an email on updates
         </label><br>
 
         <button type="submit" class="pure-button pure-button-primary">Update Settings</button>
     }
+
+    <h3> Friends </h3>
+
+    To see your friends list (and invite new friends) click <a href="@controllers.routes.Home.friends()" class="pure-button">Here</a>
 
     <h3> Revoke Consent </h3>
 
     @form(action = routes.Consent.revokeConsent, 'class -> "pure-form") {
         I no longer want to take part in this study <input class="pure-button" type="submit" value="Revoke Consent">
     }
+
 }

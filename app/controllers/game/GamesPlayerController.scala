@@ -11,15 +11,17 @@ import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
 import controllers.quiz.derivativegraph.{DerivativeGraphQuestionForm, DerivativeGraphAnswerForm}
 import controllers.quiz.graphmatch.{GraphMatchAnswerForm, GraphMatchQuestionForm}
+import controllers.quiz.polynomialzone.{PolynomialZoneAnswerForm, PolynomialZoneQuestionForm}
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
 import models.game.GameRole._
 import models.game._
+import models.game.mask.{GameMask, MyStillAnswering, MyQuizFinished, MyQuizUnfinished}
 import models.quiz.Quiz
 import models.quiz.answer._
 import models.quiz.question._
 import models.support._
-import models.user.User
+import models.user.{Alerts, User}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.db.slick.Config.driver.simple.Session
@@ -38,15 +40,31 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
 
   protected def quizToAnswer(game: Game)(implicit session: Session): Option[Quiz]
 
-  protected def finalizeQuizInternal(game: Game)(implicit session: Session)
-
-  protected def finalizeAnswersInternal(game: Game)(implicit session: Session)
-
-  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result
-
   protected def questionToAnswer(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)]
 
   // ===== Concrete =====
+  protected def finalizeQuizInternal(game: Game)(implicit user: User, session: Session) {
+    val gameState = game.toMask(user) match {
+      case g: MyQuizUnfinished => g
+      case s => throw new IllegalStateException("Mask should have been subclass of " + classOf[MyQuizUnfinished].getName + " but was " + s)
+    }
+    Games.update(gameState.finalizeMyQuiz)
+  }
+
+  protected def finalizeAnswersInternal(game: Game)(implicit user: User, session: Session) {
+    val gameState = game.toMask(user) match {
+      case g: GameMask with MyQuizFinished with MyStillAnswering => g
+      case s => throw new IllegalStateException("Mask should have been subclass of " + classOf[MyQuizFinished].getName + " with " + classOf[MyStillAnswering].getName + " but was " + s)
+    }
+    val updatedGame = gameState.doneAnswering
+    Games.update(updatedGame)
+    Alerts.gameAlert(updatedGame.toMask(user))
+  }
+
+  protected def questionView(game: Game, quiz: Quiz, question: Question, unfinishedAnswer: Answer)(implicit user: models.user.User, session: Session) : Result = {
+    GamesController.questionView(game.toMask(user), quiz, question, Some(Left(unfinishedAnswer)))
+  }
+
   def apply(gameId: GameId, questionId: QuestionId)(implicit session: Session): Either[Result, (Game, Quiz, Question)] =
     Games(gameId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no game for id=[" + gameId + "]")))
@@ -57,12 +75,16 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
 
   // ===== Start Create =====
-  def createDerivativeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivativeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
         DerivativeQuestionForm.values.bindFromRequest.fold(
-          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          errors =>
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.derivative(errors)))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
           form => {
             val (updatedGame, quiz) = createdQuizEnsured(game)
             DerivativeQuestions.create(DerivativeQuestionForm.toQuestion(user, form), quiz.id)
@@ -71,15 +93,14 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def createDerivativeGraphQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivativeGraphQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
         DerivativeGraphQuestionForm.values.bindFromRequest.fold(
           errors =>
-            (game.gameRole(user), game.toState) match {
-              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.derivativeGraph(errors)))
-              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.derivativeGraph(errors)))
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.derivativeGraph(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
           form => {
@@ -90,15 +111,14 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def createTangentQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createTangentQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
         TangentQuestionForm.values.bindFromRequest.fold(
           errors =>
-            (game.gameRole(user), game.toState) match {
-              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.tangent(errors)))
-              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.tangent(errors)))
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.tangent(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
           form => {
@@ -109,15 +129,14 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def createGraphMatchQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createGraphMatchQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
         GraphMatchQuestionForm.values.bindFromRequest.fold(
           errors =>
-            (game.gameRole(user), game.toState) match {
-              case (Requestor, state: RequestorQuiz) => BadRequest(views.html.game.play.requestor.createQuizRequestor(state, controllers.quiz.QuestionForms.graphMatch(errors)))
-              case (Requestee, state: RequesteeQuiz) => BadRequest(views.html.game.play.requestee.createQuizRequestee(state, controllers.quiz.QuestionForms.graphMatch(errors)))
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.graphMatch(errors)))
               case _ => BadRequest(views.html.errors.formErrorPage(errors))
             },
           form => {
@@ -127,9 +146,27 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           })
     }
   }
+
+  def createPolynomialZoneQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) =>
+        PolynomialZoneQuestionForm.values.bindFromRequest.fold(
+          errors =>
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.polynomialZone(errors)))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
+          form => {
+            val (updatedGame, quiz) = createdQuizEnsured(game)
+            PolynomialZoneQuestions.create(PolynomialZoneQuestionForm.toQuestion(user, form), quiz.id)
+            Redirect(routes.GamesController.game(updatedGame.id, None))
+          })
+    }
+  }
   // ===== End Create =====
 
-  def removeQuestion(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def removeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) =>
@@ -143,12 +180,12 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def finalizeCreatedQuiz(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeQuizInternal(game)
-        for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+        for(mail <- game.otherPlayer(user).maybeSendEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
           val userName = user.nameDisplay
           mail.setSubject(userName + " created a CalcTutor game quiz for you")
           mail.sendHtml(userName + " created a game quiz for you in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")
@@ -159,7 +196,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
   }
 
   // ===== Start Answer =====
-  def answerDerivativeQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerDerivativeQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question : DerivativeQuestion)) => {
@@ -178,7 +215,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerDerivativeGraphQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerDerivativeGraphQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question: DerivativeGraphQuestion)) => {
@@ -197,7 +234,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerTangentQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerTangentQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question: TangentQuestion)) => {
@@ -216,7 +253,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
     }
   }
 
-  def answerGraphMatchQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def answerGraphMatchQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     questionToAnswer(gameId, questionId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((game, quiz, question: GraphMatchQuestion)) => {
@@ -234,14 +271,32 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
       case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
     }
   }
+
+  def answerPolynomialZoneQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    questionToAnswer(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question: PolynomialZoneQuestion)) => {
+        PolynomialZoneAnswerForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val unfinishedAnswer = PolynomialZoneAnswerForm.toAnswerUnfinished(user, question, form)
+            PolynomialZoneAnswers.correct(question, form.intervals) match {
+              case true => Redirect(routes.GamesController.game(game.id, Some(PolynomialZoneAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case false => Redirect(routes.GamesController.answer(game.id, question.id, PolynomialZoneAnswers.createAnswer(unfinishedAnswer(false)).id))
+            }
+          })
+      }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a polynomial zone question " + questionId))
+    }
+  }
   // ===== End Answer =====
 
-  def finalizeAnswers(gameId: GameId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def finalizeAnswers(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(game) => {
         finalizeAnswersInternal(game)
-        for(mail <- game.otherPlayer(user).maybeSendGameEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
+        for(mail <- game.otherPlayer(user).maybeSendEmail.map(otherMail => CommonsMailerHelper.defaultMailSetup(otherMail))) {
           val userName = user.nameDisplay
           mail.setSubject(userName + " finished answering your CalcTutor game quiz")
           mail.sendHtml(userName + " finished answering your game quiz in the " + serverLinkEmail(request) + " (" + goToGameLinkEmail(request, game) + ").")

@@ -1,0 +1,1 @@
+@(level: Int, cssClass: Option[String] = None) @for(c <- cssClass){<span class="@c">}@level@if(cssClass.nonEmpty){</span>}

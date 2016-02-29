@@ -1,0 +1,2 @@
+@(question: models.quiz.question.PolynomialZoneQuestion, explanation : Boolean)@if(explanation){find the intervals for which the function @* @question.roots.mkString(",") *@ is @question.zoneType.display }else{ @views.html.quiz.polynomialzone.questionDisplayDetailed(question) }
+

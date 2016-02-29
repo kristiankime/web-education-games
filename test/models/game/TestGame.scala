@@ -13,7 +13,7 @@ object TestGame {
     finishedGame
   }
 
-  def score(game: Game)(requestorStudent : Double = 0d, requesteeStudent : Double = 0d, requestorTeacher : Double = 0d, requesteeTeacher : Double = 0d) = {
+  def score(game: Game)(requestorStudent : Int = 0, requesteeStudent : Int = 0, requestorTeacher : Int = 0, requesteeTeacher : Int = 0) = {
     game.copy(
       requestorStudentPoints = Some(requestorStudent),
       requesteeStudentPoints = Some(requesteeStudent),
@@ -22,7 +22,7 @@ object TestGame {
     )
   }
 
-  def createFinished(requestor: User, requestee : User, requestorStudent : Double = 0d, requesteeStudent : Double = 0d, requestorTeacher : Double = 0d, requesteeTeacher : Double = 0d)(implicit session: Session) = {
+  def createFinished(requestor: User, requestee : User, requestorStudent : Int = 0, requesteeStudent : Int = 0, requestorTeacher : Int = 0, requesteeTeacher : Int = 0)(implicit session: Session) = {
     val game = score(Games.request(requestor, requestee))(requestorStudent, requesteeStudent, requestorTeacher, requesteeTeacher)
     finish(game)
   }

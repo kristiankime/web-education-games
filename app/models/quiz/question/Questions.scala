@@ -22,16 +22,17 @@ object Questions {
 
   // ======= FIND ======
   def list()(implicit session: Session) : List[Question] =
-    questionTables.->(_.list, _.list, _.list, _.list)
-      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
+    questionTables.->(_.list, _.list, _.list, _.list, _.list)
+      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
 
   def apply(questionId: QuestionId)(implicit session: Session) : Option[Question] =
     questionTables.->(
       _.where(_.id === questionId).list,
       _.where(_.id === questionId).list,
       _.where(_.id === questionId).list,
+      _.where(_.id === questionId).list,
       _.where(_.id === questionId).list)
-      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
+      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
       .headOption
 
   // ======= REMOVE ======
@@ -41,6 +42,7 @@ object Questions {
       case q: DerivativeGraphQuestion => DerivativeGraphQuestions.remove(quiz, q)
       case q: TangentQuestion => TangentQuestions.remove(quiz, q)
       case q: GraphMatchQuestion => GraphMatchQuestions.remove(quiz, q)
+      case q: PolynomialZoneQuestion => PolynomialZoneQuestions.remove(quiz, q)
     }
 
   // ======= RESULTS ======
@@ -49,25 +51,27 @@ object Questions {
       t => DerivativeQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
       t => DerivativeGraphQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
       t => TangentQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => GraphMatchQuestions.results(user, asOfOp, quizOp)(t.question, t.answer))
-      .toList[QuestionResults](a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]])
+      t => GraphMatchQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
+      t => PolynomialZoneQuestions.results(user, asOfOp, quizOp)(t.question, t.answer))
+      .toList[QuestionResults](a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]])
 
   def correctResults(user: User, num: Int)(implicit session: Session) : List[(QuestionResults, DateTime)] =
     questionAndAnswerTables.->(
       t => DerivativeQuestions.correctResults(user, num)(t.question, t.answer),
       t => DerivativeGraphQuestions.correctResults(user, num)(t.question, t.answer),
       t => TangentQuestions.correctResults(user, num)(t.question, t.answer),
-      t => GraphMatchQuestions.correctResults(user, num)(t.question, t.answer))
-      .toList[(QuestionResults, DateTime)](a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]])
-
+      t => GraphMatchQuestions.correctResults(user, num)(t.question, t.answer),
+      t => PolynomialZoneQuestions.correctResults(user, num)(t.question, t.answer))
+      .toList[(QuestionResults, DateTime)](a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]])
 
   def incorrectResults(user: User, num: Int)(implicit session: Session) : List[(QuestionResults, DateTime)] =
     questionAndAnswerTables.->(
       t => DerivativeQuestions.incorrectResults(user, num)(t.question, t.answer),
       t => DerivativeGraphQuestions.incorrectResults(user, num)(t.question, t.answer),
       t => TangentQuestions.incorrectResults(user, num)(t.question, t.answer),
-      t => GraphMatchQuestions.incorrectResults(user, num)(t.question, t.answer))
-      .toList[(QuestionResults, DateTime)](a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]])
+      t => GraphMatchQuestions.incorrectResults(user, num)(t.question, t.answer),
+      t => PolynomialZoneQuestions.incorrectResults(user, num)(t.question, t.answer))
+      .toList[(QuestionResults, DateTime)](a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]], a => a.asInstanceOf[List[(QuestionResults, DateTime)]])
 
   // ========================================================
   //GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS (SEE DerivativeQuestions, TangentQuestions ...)

@@ -1,4 +1,4 @@
-@(action: play.api.mvc.Call, derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : List[String] = List())(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, derivativeGraphForm: Form[controllers.quiz.derivativegraph.DerivativeGraphQuestionForm], successCallback : List[String] = List(), infoOp: Option[Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import helper._
 @import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
@@ -22,11 +22,13 @@
     <fieldset>
         <input type="hidden" name="@DerivativeGraphQuestionForm.function"    id="derivativeGraphQuestionMathML">
         <input type="hidden" name="@DerivativeGraphQuestionForm.functionStr" id="derivativeGraphQuestionRawStr">
+        @defining(com.artclod.util.Randoms.randomFrom(DerivativeOrder.all)) { selected : DerivativeOrder =>
         @for(order <- DerivativeOrder.all) {
         <label for="@order.asString" class="pure-radio">
-            <input id="@order.asString" type="radio" name="@DerivativeGraphQuestionForm.derivativeOrder" value="@order.asString" @if(order == FuncFirstSecond){checked} >
+            <input id="@order.asString" type="radio" name="@DerivativeGraphQuestionForm.derivativeOrder" value="@order.asString" @if(order == selected){checked} >
             @order.niceString
         </label>
+        }
         }
 
         Display the Function formula, as well as the graph, when players are answering (this makes the question easier):
@@ -36,6 +38,8 @@
         <input type="button" class="pure-button" value="Save Question" onclick="DERIVATIVE_GRAPH_QUESTION_FORM.formSubmit()">
     </fieldset>
     }
+
+    @for(info <- infoOp){ @info }
 
     @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FUNCTION", titleOp = Some("Function"))
     @mathml.graph("DERIVATIVE_GRAPH_QUESTION_GRAPHS_FIRST_DERIVATIVE", titleOp = Some("First Derivative"))

@@ -82,4 +82,12 @@
         </section>
         @* <<<<< Close Access > Non *@
     }
+
+    @* >>>>> Start Access > Non *@
+    @if(course.access >= Edit) {
+        <section>
+            <h5> Review game summaries </h5>
+            <a href="@GamesController.list(course.organizationId, course.id)" class="pure-button"> See games list</a>
+        <section>
+    }
 }

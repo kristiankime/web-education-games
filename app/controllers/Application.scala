@@ -2,10 +2,12 @@ package controllers
 
 import java.lang.ref.WeakReference
 
+import controllers.Home._
+import controllers.support.SecureSocialConsented
 import play.api.mvc.{Action, Controller}
 
 object Application extends Controller {
-	val version = Version(0, 7, 0)
+	val version = Version(0, 8, 0)
 
   /**
 	 * Application does not use trailing slashes so indicate to browsers
@@ -26,6 +28,10 @@ object Application extends Controller {
     Ok("GCed")
   }
 
+  def tests = Action {
+    Ok(views.html.tests("pBar"))
+  }
+
   private def gc() {
     var obj = new Object()
     val ref = new WeakReference[Object](obj);
@@ -36,7 +42,7 @@ object Application extends Controller {
   }
 }
 
-object Version{
+object Version {
 	def apply(major: Int, minor: Int) : Version = Version(major, minor, None)
 
 	def apply(major: Int, minor: Int, build: Int) : Version = Version(major, minor, Some(build))

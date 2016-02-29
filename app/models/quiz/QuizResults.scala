@@ -1,7 +1,7 @@
 package models.quiz
 
 import com.artclod.collection.PimpedSeq
-import models.quiz.question.{QuestionResults, Question}
+import models.quiz.question.{QuestionScoring, QuestionResults, Question}
 import models.user.User
 
 case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]) {
@@ -21,14 +21,14 @@ case class QuizResults(student: User, quiz: Quiz, results: List[QuestionResults]
 
   def firstUnfinishedQuestion = results.find(!_.correct)
 
-  val score = {
-    val scores = results.flatMap(_.score)
-    if (scores.isEmpty) None
-    else Some(scores.sum / results.size)
-  }
+  val potentialPoints = numQuestions * QuestionScoring.pointsPerQuestion
 
-  val studentScore = results.map(_.studentScore).sum / results.size
+  val studentPoints = results.map(_.studentPoints).sum
 
-  def teacherScore(studentSkill: Double) = results.map(_.teacherScore(studentSkill)).sum / results.size
+  val studentPercent = studentPoints.toDouble / potentialPoints.toDouble
+
+  def teacherPoints(studentSkill: Double) = results.map(_.teacherPoints(studentSkill)).sum
+
+  def teacherPercent(studentSkill: Double) = teacherPoints(studentSkill) / potentialPoints.toDouble
 
 }

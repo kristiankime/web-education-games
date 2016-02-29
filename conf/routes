@@ -5,8 +5,9 @@
 # Remove trailing /'s from paths 
 GET         /*path/                                                                    controllers.Application.untrail(path: String)
 
-# GC for testing
+# Testing pages
 GET         /gc                                                                        controllers.Application.forceGarbageCollection
+GET         /tests                                                                     controllers.Application.tests
 
 # Consent Form
 GET         /consent                                                                   controllers.Consent.consent(goTo: Option[String], error: Option[String])
@@ -21,6 +22,12 @@ POST        /settings                                                           
 # Home page
 GET         /                                                                          controllers.Home.index
 GET         /user                                                                      controllers.Home.userInfo
+
+# Friends
+GET         /friends                                                                   controllers.Home.friends
+GET         /friends/find                                                              controllers.Home.findfriend
+POST        /friends/friend                                                            controllers.Home.friend
+POST        /friends/unfriend                                                          controllers.Home.unfriend
 
 # Organizations
 GET         /orgs                                                                      controllers.organization.OrganizationsController.list
@@ -48,6 +55,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivative                 
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivativegraph                   controllers.quiz.QuestionsController.createDerivativeGraph(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/tangent                           controllers.quiz.QuestionsController.createTangent(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/graphmatch                        controllers.quiz.QuestionsController.createGraphMatch(o: OrganizationId, c: CourseId, z: QuizId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/polynomialzone                    controllers.quiz.QuestionsController.createPolynomialZone(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove                         controllers.quiz.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Course Quizzes Answers
@@ -56,9 +64,11 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivative      
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivativegraph        controllers.quiz.AnswersController.createDerivativeGraph(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/tangent                controllers.quiz.AnswersController.createTangent(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/graphmatch             controllers.quiz.AnswersController.createGraphMatch(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/polynomialzone         controllers.quiz.AnswersController.createPolynomialZone(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                             controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)
+GET         /orgs/:o/courses/:c/games/list                                             controllers.game.GamesController.list(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/games/request                                          controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
 
 # Games
@@ -69,6 +79,7 @@ POST        /games/:g/questions/create/requestor/derivative                     
 POST        /games/:g/questions/create/requestor/derivativegraph                       controllers.game.GamesRequestorController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/tangent                               controllers.game.GamesRequestorController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/graphmatch                            controllers.game.GamesRequestorController.createGraphMatchQuestion(g: GameId)
+POST        /games/:g/questions/create/requestor/polynomialzone                        controllers.game.GamesRequestorController.createPolynomialZoneQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestor                                       controllers.game.GamesRequestorController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestor                                          controllers.game.GamesRequestorController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestor                                       controllers.game.GamesRequestorController.finalizeAnswers(g: GameId)
@@ -76,6 +87,7 @@ POST        /games/:g/questions/create/requestee/derivative                     
 POST        /games/:g/questions/create/requestee/derivativegraph                       controllers.game.GamesRequesteeController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/tangent                               controllers.game.GamesRequesteeController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/graphmatch                            controllers.game.GamesRequesteeController.createGraphMatchQuestion(g: GameId)
+POST        /games/:g/questions/create/requestee/polynomialzone                        controllers.game.GamesRequesteeController.createPolynomialZoneQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestee                                       controllers.game.GamesRequesteeController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestee                                          controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestee                                       controllers.game.GamesRequesteeController.finalizeAnswers(g: GameId)
@@ -86,10 +98,13 @@ POST        /games/:g/questions/:q/requestee/derivative                         
 POST        /games/:g/questions/:q/requestee/derivativegraph                           controllers.game.GamesRequesteeController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/tangent                                   controllers.game.GamesRequesteeController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/graphmatch                                controllers.game.GamesRequesteeController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestee/polynomialzone                            controllers.game.GamesRequesteeController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivative                                controllers.game.GamesRequestorController.answerDerivativeQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivativegraph                           controllers.game.GamesRequestorController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/tangent                                   controllers.game.GamesRequestorController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/graphmatch                                controllers.game.GamesRequestorController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor/polynomialzone                            controllers.game.GamesRequestorController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
+
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                                       controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)
 
@@ -98,6 +113,7 @@ POST        /question/difficulty/derivative                                     
 POST        /question/difficulty/derivativegraph                                       controllers.quiz.QuestionsController.derivativeGraphQuestionDifficulty
 POST        /question/difficulty/tangent                                               controllers.quiz.QuestionsController.tangentQuestionDifficulty
 POST        /question/difficulty/graphmatch                                            controllers.quiz.QuestionsController.graphMatchQuestionDifficulty
+POST        /question/difficulty/polynomialzone                                        controllers.quiz.QuestionsController.polynomialZoneQuestionDifficulty
 
 # Function Derivative service (ajax)
 POST        /question/derivatives                                                      controllers.MathController.functionDerivatives

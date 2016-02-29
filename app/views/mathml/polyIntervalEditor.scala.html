@@ -1,0 +1,52 @@
+@(editorName: String,
+  initialIntervalsValue: Option[String] = None,
+  characterLimit: Option[Int] = None,
+  successCallback : List[String] = List(),
+  failureCallback : List[String] = List())
+
+    <!-- ========= MATH EDITOR STARTS HERE ======= -->
+    @mathml.polyIntervalEditorHelp()
+
+    <span id="@editorName"> @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
+        <input id="polyZoneIntervalsInput" type="text" size="@characterLimit.getOrElse(80)" @for(lim <- characterLimit){maxlength="@lim"} onchange="@{editorName + ".updateAnswer(this.value)"}" oninput="@{editorName + ".updateAnswer(this.value)"}"/>
+        <span id="@{editorName+"Indicator"}"> @tag.icon("icon-warning2", 'class -> "warning", 'data_ot -> "Intervals could not be parsed, is empty or contains integers that were too large or too small") </span>
+        <span id="@{editorName+"View"}"> </span>
+    </span>
+
+    <script>
+    // Start the indicator hidden
+    $("#@{editorName+"Indicator"}").hide();
+
+    var @{editorName} = (function() {
+        var result = {
+                intervalsStr : "",
+                intervals: null,
+                valid : false
+             };
+
+        result.updateAnswer = function(intervalsStr) {
+            var parsedIntervals = ARTC.mathJS.parsePolyIntervals(intervalsStr);
+            if(parsedIntervals.success) {
+                result.intervalsStr = intervalsStr;
+                result.intervals = parsedIntervals.intervals;
+                result.valid = true;
+                $("#@{editorName+"Indicator"}").hide();
+                @for(onSuccess <- successCallback){@{onSuccess}(result); }
+            } else {
+                result.valid = false;
+                $("#@{editorName+"Indicator"}").show();
+                @for(onFailure <- failureCallback){@{onFailure}(result); }
+            }
+        };
+
+        @for(value <- initialIntervalsValue){
+        ARTC.addLoadEvent(function(){
+            $("#@{editorName} #polyZoneIntervalsInput").val("@value");
+            result.updateAnswer("@value");
+        });
+        }
+        return result;
+    })();
+    </script>
+
+    <!-- ========= MATH EDITOR ENDS HERE ======= -->

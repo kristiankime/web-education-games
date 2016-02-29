@@ -1,10 +1,10 @@
 @()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@defining(models.tournament.Tournaments.studentScoresRankingFor(user.id, 10)) { scoreRanking =>
-@defining(models.tournament.Tournaments.completedGamesRankingFor(user.id, 10)) { gameRanking =>
-@defining(models.tournament.Tournaments.numberOfUniqueOpponentsRankingFor(user.id, 10)) { uniqueRanking =>
-@defining(models.tournament.Tournaments.sumOfStudentScoresRankingFor(user.id, 10)) { studentRanking =>
-@defining(models.tournament.Tournaments.sumOfTeacherScoresRankingFor(user.id, 10)) { teacherRanking =>
+@defining(models.tournament.Tournaments.studentScoresRankingFor(user.id, 10)) { scoreRanking : models.tournament.Rankings[Double] =>
+@defining(models.tournament.Tournaments.completedGamesRankingFor(user.id, 10)) { gameRanking : models.tournament.Rankings[Int] =>
+@defining(models.tournament.Tournaments.numberOfUniqueOpponentsRankingFor(user.id, 10)) { uniqueRanking : models.tournament.Rankings[Int] =>
+@defining(models.tournament.Tournaments.sumOfStudentPointsRankingFor(user.id, 10)) { studentRanking : models.tournament.Rankings[Int] =>
+@defining(models.tournament.Tournaments.sumOfTeacherPointsRankingFor(user.id, 10)) { teacherRanking : models.tournament.Rankings[Int] =>
 
     @main("Leader Board") {
         <h1>Leader Board</h1>

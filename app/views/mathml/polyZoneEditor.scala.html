@@ -1,0 +1,74 @@
+@(editorName: String,
+  initialRootsValue: Option[String] = None,
+  characterLimit: Option[Int] = None,
+  successCallback : List[String] = List(),
+  failureCallback : List[String] = List())
+
+@import com.artclod.mathml.MathMLEq.tightRange
+
+    <!-- ========= MATH EDITOR STARTS HERE ======= -->
+    @mathml.polyZoneEditorHelp()
+
+    <span id="@editorName"> @*see http://stackoverflow.com/questions/574941/best-way-to-track-onchange-as-you-type-in-input-type-text*@
+        <input id="polyZoneRootsInput" type="text" size="@characterLimit.getOrElse(80)" @for(lim <- characterLimit){maxlength="@lim"} onchange="@{editorName + ".updateRoots(this.value)"}" oninput="@{editorName + ".updateRoots(this.value)"}"/>
+        <span id="@{editorName+"Indicator"}"> @tag.icon("icon-warning2", 'class -> "warning", 'data_ot -> "Zones could not be parsed, is empty or contains integers that were too large or too small") </span>
+        <span id="@{editorName+"View"}"> </span>
+    </span>
+
+    <script>
+    // Start the indicator hidden
+    $("#@{editorName+"Indicator"}").hide();
+
+    var @{editorName} = (function() {
+        var result = {
+                scale : 1,
+                rootsStr : "",
+                zoneType : @models.quiz.question.support.FirstDerivativeIncreasing.order,
+                node: null,
+                func: null,
+                valid : false
+             };
+
+        result.updateRoots = function(rootsStr) {
+            var min = @{ (-1 * tightRange).toInt};
+            var max = @tightRange.toInt;
+            var parsedPolyZones = ARTC.mathJS.parsePolyZones(1, rootsStr, 12, min, max);
+
+            if(parsedPolyZones.success) {
+                result.rootsStr = rootsStr;
+                result.node = parsedPolyZones.node;
+                result.func = parsedPolyZones.func;
+                result.valid = true;
+                var maxRoot = Math.max.apply(null, parsedPolyZones.roots)
+                var minRoot = Math.min.apply(null, parsedPolyZones.roots)
+                if(minRoot === maxRoot) {
+                    minRoot = (minRoot === min ? min : minRoot - 1);
+                    maxRoot = (maxRoot === max ? max : maxRoot + 1);
+                }
+
+                var fMax = ARTC.mathJS.guessFunctionMax(result.func, minRoot, maxRoot, 100);
+                var fMin = ARTC.mathJS.guessFunctionMin(result.func, minRoot, maxRoot, 100);
+                result.scale = max / Math.max(Math.abs(fMax), Math.abs(fMin)); // rescale so everything fits in range
+
+                $("#@{editorName+"Indicator"}").hide();
+                ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex(parsedPolyZones.nodeNoScale.toTex()));
+                @for(onSuccess <- successCallback){@{onSuccess}(result); }
+            } else {
+                result.valid = false;
+                $("#@{editorName+"Indicator"}").show();
+                if(rootsStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }
+                @for(onFailure <- failureCallback){@{onFailure}(result); }
+            }
+        };
+
+        @for(value <- initialRootsValue){
+        ARTC.addLoadEvent(function(){
+            $("#@{editorName} #polyZoneInput").val("@value");
+            result.updateRoots("@value");
+        });
+        }
+        return result;
+    })();
+    </script>
+
+    <!-- ========= MATH EDITOR ENDS HERE ======= -->

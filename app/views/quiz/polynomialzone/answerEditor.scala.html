@@ -1,0 +1,29 @@
+@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.PolynomialZoneAnswer, models.quiz.answer.PolynomialZoneAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.quiz.polynomialzone.PolynomialZoneAnswerForm
+
+<section>
+    Input your answer, and then hit the submit button<br>
+
+    @mathml.polyIntervalEditor("POLY_ZONE_EDITOR", currentAnswer.map(_.fold(_.zoneToString, _.zoneToString))) <br>
+
+    @helper.form(action, 'id -> "polynomialZoneAnswerForm", 'class -> "pure-form") {
+        <fieldset>
+            <input type="hidden" name="@PolynomialZoneAnswerForm.intervals" id="intervalsAnswer">
+            <input type="button" class="pure-button pure-button-primary" value="Submit" onclick="POLY_ZONE_ANSWER.formSubmit()">
+            @link
+        </fieldset>
+    }
+
+    <script>
+    var POLY_ZONE_ANSWER = {};
+    POLY_ZONE_ANSWER.formSubmit = function () {
+        if(POLY_ZONE_EDITOR.valid) {
+            $("#intervalsAnswer").val(POLY_ZONE_EDITOR.intervalsStr);
+            $("#polynomialZoneAnswerForm").submit();
+        } else {
+            alert("Sorry we couldn't understand your answer. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+        }
+    }
+    </script>
+</section>

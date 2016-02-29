@@ -5,6 +5,7 @@ import com.artclod.util._
 import controllers.quiz.derivative.DerivativeQuestionsControllon
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionsControllon
 import controllers.quiz.graphmatch.GraphMatchQuestionsControllon
+import controllers.quiz.polynomialzone.PolynomialZoneQuestionsControllon
 import controllers.quiz.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
 import models.quiz.question._
@@ -19,7 +20,8 @@ object QuestionsController extends Controller with SecureSocialConsented
   with DerivativeQuestionsControllon
   with DerivativeGraphQuestionsControllon
   with TangentQuestionsControllon
-  with GraphMatchQuestionsControllon {
+  with GraphMatchQuestionsControllon
+  with PolynomialZoneQuestionsControllon {
 
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {
@@ -40,11 +42,12 @@ object QuestionsController extends Controller with SecureSocialConsented
           case derivativeGraph : DerivativeGraphQuestion => Ok(views.html.quiz.derivativegraph.questionView(course, quiz, derivativeGraph.results(user), None))
           case tangent : TangentQuestion => Ok(views.html.quiz.tangent.questionView(course, quiz, tangent.results(user), None))
           case graphMatch : GraphMatchQuestion => Ok(views.html.quiz.graphmatch.questionView(course, quiz, graphMatch.results(user), None))
+          case polyZone : PolynomialZoneQuestion => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, polyZone.results(user), None))
         }
     }
 	}
 
-	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+	def remove(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) +
       QuestionsController(quizId, questionId) match {
       case Left(notFoundResult) => notFoundResult
@@ -55,7 +58,7 @@ object QuestionsController extends Controller with SecureSocialConsented
     }
 	}
 
-  // These fields are for the ajax requests for questions scores (see
+  // These fields are for the ajax requests for questions scores
   val difficulty = "difficulty"
   val partnerSkill = "partnerSkill"
   val correctPoints = "correctPoints"

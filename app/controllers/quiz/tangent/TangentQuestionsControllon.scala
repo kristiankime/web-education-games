@@ -18,7 +18,7 @@ import scala.util.{Success, Failure}
 
 trait TangentQuestionsControllon extends Controller with SecureSocialConsented {
 
-  def createTangent(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createTangent(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
@@ -65,6 +65,7 @@ object TangentQuestionForm {
   // Validation Check Names
   val tangentUndefined = "tangentUndefined"
   val functionInvalid = "functionInvalid"
+  val functionDerivativeIsNotEasyToType = "functionDerivativeIsNotEasyToType"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
@@ -74,6 +75,8 @@ object TangentQuestionForm {
     (TangentQuestionForm.apply)(TangentQuestionForm.unapply)
     verifying(tangentUndefined, fields => tangentDefined(fields) )
     verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
+    verifying(functionDerivativeIsNotEasyToType, fields => QuestionForms.verifyFunctionDerivativeIsEasyToType(fields.functionMathML))
+
   )
 
   def toQuestion(user: User, form: TangentQuestionForm) = TangentQuestion(null, user.id, form.functionMathML, form.functionStr, form.atPointXMathML, form.atPointXStr, JodaUTC.now, TangentQuestionDifficulty(form.functionMathML))

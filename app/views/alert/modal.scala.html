@@ -1,0 +1,15 @@
+@(contentOp: Option[Html])@for(content <- contentOp) {
+    <section class="modal--show" id="modal-alert" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+
+        <div class="modal-inner modal-border">
+            <div class="modal-content">@content</div>
+        </div>
+
+        <a href="#!" class="modal-close" title="Close this modal" data-close="Close" data-dismiss="modal">?</a>
+    </section>
+    <script>
+        ARTC.addLoadEvent(function() {
+            window.location.hash = 'modal-alert';
+        });
+    </script>
+}

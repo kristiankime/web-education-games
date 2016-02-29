@@ -1,17 +1,24 @@
 package com.artclod
 
+import _root_.play.api.data.format.Formatter
 import _root_.play.api.templates.Html
-import _root_.play.api.data.Form
+import _root_.play.api.data.{FormError, Form}
+import models.quiz.question.support.DerivativeOrder
 
 import scala.collection.mutable.LinkedHashMap
+import scala.util.{Failure, Success, Try}
 
 package object play {
 
   def plural(v: TraversableOnce[_])(plural: Html) = if (v.size == 1) { Html("") } else { plural }
 
+  def singular(v: TraversableOnce[_])(singular: Html) = if (v.size == 1) { singular } else { Html("") }
+
   def alternate(v: TraversableOnce[_])(singular: Html, plural: Html) = if (v.size == 1) { singular } else { plural }
 
   def s(v: TraversableOnce[_]) = plural(v)(Html("s"))
+
+  def a(v: TraversableOnce[_]) = singular(v)(Html("a"))
 
   def es(v: TraversableOnce[_]) = plural(v)(Html("es"))
 
@@ -52,4 +59,17 @@ package object play {
   def firstTrue(t: (Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else{-1}
   def firstTrue(t: (Boolean, Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else if(t._5){4} else{-1}
 
+  implicit def shortFormatter: Formatter[Short] = new Formatter[Short] {
+    def bind(key: String, data: Map[String, String]) = {
+      data.get(key) match {
+        case None => Left(Seq(FormError(key, "key must map to a value", Nil)))
+        case Some(txt) => Try(txt.toShort) match {
+          case Success(v) => Right(v)
+          case Failure(_) => Left(Seq(FormError(key, "Could not parse [" + txt + "] as Short")))
+        }
+      }
+    }
+
+    def unbind(key: String, value: Short) = Map(key -> value.toString)
+  }
 }

@@ -1,0 +1,37 @@
+@(name : String)
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Javascript Test Page</title>
+        @imports()
+    </head>
+    <body>
+
+@*
+    <div id="@{name}" class="correctProgressBar" data-bind="kendoProgressBar : { value : @{name}, max : 10, animation : { duration : 500 } }"></div>
+    <input data-bind="value: @{name}" />
+    <script>
+        var @{name}Model = { @{name} : ko.observable() };
+        ko.applyBindings( @{name}Model);
+    </script>
+    *@
+    <div class="correctProgressBar"> <div data-bind="kendoProgressBar : { value : percent, max : 10, animation : { duration : 500 } }"></div> </div>
+    <input data-bind="value: percent" />
+    <script>
+        @*$("#progressbar").kendoProgressBar({
+            animation: {
+                duration: 500
+            },
+            max:100
+        });*@
+        var ViewModel = function() {
+            this.percent = ko.observable(2);
+        };
+
+        ko.applyBindings(new ViewModel());
+    </script>
+
+        
+    </body>
+</html>

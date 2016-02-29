@@ -1,0 +1,8 @@
+@(name: String, cssClass: String, max : Int = 10, initialOp : Option[Int] = None)
+<!DOCTYPE html>
+
+    <div class="@cssClass"> <div id="@name" data-bind="kendoProgressBar : { value : barValue, max : @max, animation : { duration : 500 } }"></div> </div>
+    <script>
+        var @{name}Model = { barValue : ko.observable(@for(initial <- initialOp){@initial}) };
+        ko.applyBindings( @{name}Model, document.getElementById("@name"));
+    </script>

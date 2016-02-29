@@ -1,6 +1,6 @@
 @(game: models.game.Game, quiz: models.quiz.Quiz, student: models.user.User)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@defining(game.skillLevel(student)){ studentSkillLevel =>
+@defining(game.skillLevel(student)){ studentSkillLevel : Double =>
 
 @mainWithBorder("Teacher Game Score", tag.courseOpLink(game.course), tag.gameLink(Html("game"), game)) {
 
@@ -12,25 +12,25 @@
 
     <section>
         When you played the game @student.nameView had a skill level of @studentSkillLevel @tag.icon("icon-help", 'data_ot -> "This skill level is compared to the difficulty of the questions you asked to determine your teacher score.")<br>
-        @defining(quiz.results(student)) { quizResults =>
+        @defining(quiz.results(student)) { quizResults : models.quiz.QuizResults =>
         <table class="pure-table pure-table-striped extra-border">
             <tr>
                 <th>question @tag.icon("icon-help", 'data_ot -> "The question you asked")</th>
                 <th>correct @tag.icon("icon-help", 'data_ot -> "Did the other player get your question correct")</th>
                 <th>difficulty @tag.icon("icon-help", 'data_ot -> "How difficult the system considers your question") </th>
-                <th>score @tag.icon("icon-help", 'data_ot -> "You get a high score for asking hard questions (difficulty > skill) the other player gets right and easy questions (difficulty << skill) the other player gets wrong.")</th>
+                <th>teacher points @tag.icon("icon-help", 'data_ot -> "You get a high score for asking hard questions (difficulty > skill) the other player gets right and easy questions (difficulty << skill) the other player gets wrong.")</th>
             </tr>
             @for(result <- quizResults.results) {
             <tr>
                 <td> @result.question.display() </td>
                 <td> @mathml.correct(result.correct) </td>
                 <td> @tag.difficultyLevel(result.question.difficulty)</td>
-                <td> @tag.percent(result.teacherScore(studentSkillLevel)) </td>
+                <td> @views.html.quiz.questionScoreTeacher(result, studentSkillLevel) </td>
             </tr>
             }
         </table>
 
-        Your score for this quiz: @tag.percent(quizResults.teacherScore(studentSkillLevel))<br>
+        @*You got Your score for this quiz: @views.html.quiz.quizScoreTeacher(quizResults, studentSkillLevel)<br>*@
         }
     </section>
 }

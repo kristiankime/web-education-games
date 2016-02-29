@@ -16,7 +16,7 @@ import scala.util.{Success, Failure, Left}
 
 trait DerivativeQuestionsControllon extends Controller with SecureSocialConsented {
 
-  def createDerivative(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction("TODO REMOVE ME WHEN INTELLIJ 14 CAN PARSE WITHOUT THIS") { implicit request => implicit user => implicit session =>
+  def createDerivative(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuizzesController(organizationId, courseId, quizId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz)) => {
@@ -59,12 +59,14 @@ object DerivativeQuestionForm {
   val functionStr = "functionStr"
   // Validation Check Names
   val functionInvalid = "functionInvalid"
+  val functionDerivativeIsNotEasyToType = "functionDerivativeIsNotEasyToType"
 
   val values = Form(
     mapping(function -> nonEmptyText.verifying(f => MathML(f).isSuccess),
             functionStr -> nonEmptyText)
     (DerivativeQuestionForm.apply)(DerivativeQuestionForm.unapply)
     verifying(functionInvalid, fields => QuestionForms.verifyFunctionValid(fields.functionMathML))
+    verifying(functionDerivativeIsNotEasyToType, fields => QuestionForms.verifyFunctionDerivativeIsEasyToType(fields.functionMathML))
   )
 
   def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, DerivativeQuestionDifficulty(form.functionMathML))

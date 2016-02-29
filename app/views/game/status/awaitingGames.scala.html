@@ -3,7 +3,7 @@
 @import models.game.Games
 @import views.html.tag.gameLink
 
-@defining(courseOp match { case Some(course) => Games.awaiting(user.id, course.id); case None => Games.awaiting(user.id)}) { games =>
+@defining(courseOp match { case Some(course) => Games.awaiting(user.id, course.id); case None => Games.awaiting(user.id)}) { games : List[models.game.Game] =>
 
 <section>
     <h5>Awaiting Replies</h5>

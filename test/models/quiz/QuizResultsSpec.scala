@@ -26,7 +26,7 @@ class QuizResultsSpec extends Specification {
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
 
-      results.studentScore must beEqualTo(0d)
+      results.studentPercent must beEqualTo(0d)
     }
 
     "be 1 if all of the questions were answered corectly" in {
@@ -41,7 +41,7 @@ class QuizResultsSpec extends Specification {
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
 
-      results.studentScore must beEqualTo(1d)
+      results.studentPercent must beEqualTo(1d)
     }
 
     "be .5 if half of the questions were answered corectly" in {
@@ -56,7 +56,7 @@ class QuizResultsSpec extends Specification {
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
 
-      results.studentScore must beEqualTo(.5d)
+      results.studentPercent must beEqualTo(.5d)
     }
 
   }
@@ -77,7 +77,7 @@ class QuizResultsSpec extends Specification {
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
 
-      results.teacherScore(studentSkill) must beEqualTo(1d)
+      results.teacherPercent(studentSkill) must beEqualTo(1d)
     }
 
 
@@ -95,7 +95,7 @@ class QuizResultsSpec extends Specification {
 
       val results = QuizResults(answerer, quiz, List(question1Results, question2Results))
 
-      results.teacherScore(studentSkill) must beEqualTo(0d)
+      results.teacherPercent(studentSkill) must beEqualTo(0d)
     }
   }
 

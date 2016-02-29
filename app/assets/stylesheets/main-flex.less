@@ -6,6 +6,9 @@
 @medium: #3E95CD;
 @dark: #17699D;
 
+@student-points-color: yellow;
+@teacher-points-color: orange;
+
 .primary-content {
   padding: 1em 1em 1em 1em;
 }
@@ -174,4 +177,87 @@ div.inline { float:left; }
 
 .form-error {
   color: red;
+}
+
+// KENDO UI =======================
+.pointsProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    background-color: gold;
+    border-color: lightgrey;
+  }
+}
+
+.correctProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    background-color: lightgreen;
+    border-color: lightgrey;
+  }
+}
+
+.incorrectProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    background-color: palevioletred;
+    border-color: lightgrey;
+  }
+}
+
+// Modal =======================
+.modal-border {
+  border: .4em solid @light;
+}
+
+// Gamification =======================
+// https://css-tricks.com/adding-stroke-to-web-text/
+.student-points {
+  font-size: 175%;
+  font-weight: bold;
+  color: black;
+  -webkit-text-fill-color: @student-points-color; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: .05em;
+  -webkit-text-stroke-color: black;
+}
+
+.studentPointsProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    color: black;
+    background-color: @student-points-color;
+    border-color: lightgrey;
+  }
+}
+
+.teacher-points {
+  font-size: 175%;
+  font-weight: bold;
+  color: black;
+  -webkit-text-fill-color: @teacher-points-color; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: .05em;
+  -webkit-text-stroke-color: black;
+}
+
+.teacherPointsProgressBar .k-progressbar {
+  width: 100%;
+  background-color: @light;
+  border-color: lightgrey;
+
+  .k-state-selected {
+    color: black;
+    background-color: @teacher-points-color;
+    border-color: lightgrey;
+  }
 }

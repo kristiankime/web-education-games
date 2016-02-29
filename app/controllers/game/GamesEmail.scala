@@ -12,4 +12,8 @@ object GamesEmail {
 
   def serverLinkEmail(request: Request[_]) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + "\">CalcTutor</a>"
 
+  def goToFriendRequestLinkEmail(request: Request[_]) =  friendRequestLinkEmail(request, "go to the friend request")
+
+  private def friendRequestLinkEmail(request: Request[_], linkText: String) = "<a href=\"" + CommonsMailerHelper.serverAddress(request) + controllers.routes.Home.friends() + "\">" + linkText + "</a>"
+
 }

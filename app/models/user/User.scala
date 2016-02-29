@@ -1,6 +1,6 @@
 package models.user
 
-import models.game.Games
+import models.game.{Gamification, Games}
 import models.organization.Courses
 import models.quiz.question._
 import models.support.{CourseId, UserId}
@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.Session
 import service.Logins
 
-case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailGameUpdates: Boolean = true, lastAccess : DateTime) {
+case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMatch: Boolean = true, seenHelp: Boolean = false, emailUpdates: Boolean = true, lastAccess : DateTime) {
 
   def nameView = views.html.tag.name(this)
 
@@ -19,11 +19,17 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
   /**
    * If we can (and should) send an email to the user returns Some(their_email), otherwise None.
    */
-  def maybeSendGameEmail(implicit session: Session) = if(emailGameUpdates){ email } else { None }
+  def maybeSendEmail(implicit session: Session) = if(emailUpdates){ email } else { None }
 
   def activeGame(otherId: UserId)(implicit session: Session) = Games.activeGame(id, otherId)
 
-  def studentsToPlayWith(courseId: CourseId)(implicit session: Session) = Games.studentsToPlayWith(id, courseId)
+//  def studentsToPlayWith(courseId: CourseId)(implicit session: Session) = Games.studentsToPlayWith(id, courseId)
+
+  def studentsNotfriendedToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = Friends.studentsNotfriendedToPlayWith(courseId)
+
+  def friendsToPlayWith(courseId: CourseId)(implicit user: User, session: Session) = Friends.friendsToPlayWith(courseId)
+
+  def possibleFriends(implicit user: User, session: Session) = Friends.possibleFriends
 
   def gameRequests(courseId: CourseId)(implicit session: Session) = Games.requests(id, courseId)
 
@@ -44,4 +50,17 @@ case class User(id: UserId, consented: Boolean = true, name: String, allowAutoMa
       else top5.sum / top5.size.toDouble
     )
   }
+
+  def studentTotalGamePoints(implicit session: Session) : Int = Games.all(id).map(_.toMask(this)).map(_.myStudentPoints).sum
+
+  def studentLevel(implicit session: Session) : Int = Gamification.level(studentTotalGamePoints)
+
+  def studentPointsInLevel(implicit session: Session) : Int = Gamification.pointsInLevel(studentTotalGamePoints)
+
+  def teacherTotalGamePoints(implicit session: Session) : Int = Games.all(id).map(_.toMask(this)).map(_.myTeacherPoints).sum
+
+  def teacherLevel(implicit session: Session) : Int = Gamification.level(teacherTotalGamePoints)
+
+  def teacherPointsInLevel(implicit session: Session) : Int = Gamification.pointsInLevel(teacherTotalGamePoints)
+
 }

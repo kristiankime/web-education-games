@@ -1,5 +1,6 @@
 package models.quiz.answer
 
+import com.artclod.math.Interval
 import com.artclod.mathml.scalar.MathMLElem
 import models.quiz.ViewableMath
 import models.quiz.question.support.DerivativeOrder
@@ -72,4 +73,18 @@ case class GraphMatchAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionI
 object GraphMatchAnswerUnfinished {
   def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, creationDate: DateTime)(correct: Boolean): GraphMatchAnswer =
     GraphMatchAnswer(null, ownerId, questionId, guessIndex, comment, if(correct) 1 else 0, creationDate)
+}
+
+// ==== Graph Match ===
+case class PolynomialZoneAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], correctNum: Short, comment: String, creationDate: DateTime) extends Answer {
+  if(Interval.overlap(zones)) { throw new IllegalStateException("Zones were overlapping " + zones) }
+
+  def display : Html = views.html.quiz.polynomialzone.answerDisplay(this)
+
+  def zoneToString = zones.mkString(",")
+}
+
+object PolynomialZoneAnswerUnfinished {
+  def apply(ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], comment: String, creationDate: DateTime)(correct: Boolean): PolynomialZoneAnswer =
+    PolynomialZoneAnswer(null, ownerId, questionId, zones, if(correct) 1 else 0, comment, creationDate)
 }

@@ -30,17 +30,10 @@ trait SecureSocialConsented extends SecureSocial {
     }
 
     def apply(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
-      DB.withSession { implicit session: Session =>
-        run(request, f)
-      }
-    }
-
-    // LATER this method is essentially the same as the one above and exists for Intellij 14 IDE help
-    def apply(dummy: String)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction { request: SecuredRequest[AnyContent] =>
-      DB.withSession { implicit session: Session =>
-        run(request, f)
-      }
-    }
+          DB.withSession { implicit session: Session =>
+            run(request, f)
+          }
+        }
 
     def apply(authorize: Authorization)(f: SecuredRequest[AnyContent] => User => Session => Result) = SecuredAction(authorize) { request: SecuredRequest[AnyContent] =>
       DB.withSession { implicit session: Session =>

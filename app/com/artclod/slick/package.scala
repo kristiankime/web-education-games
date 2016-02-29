@@ -4,8 +4,6 @@ import scala.collection.mutable.ListBuffer
 
 package object slick {
 
-  case class ListGroup[A, B](key: A, values : List[B])
-
   def listGroupBy[E, A, B](list: List[E])(keyFunc : E => A, valFunc : E => B) : List[ListGroup[A, B]] =
     if(list.isEmpty) { List() }
     else {

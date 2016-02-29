@@ -4,17 +4,53 @@
 @import controllers.game.GameRequest
 @import models.user.User
 @import helper._
+@import com.artclod.play.{a, s}
 
-@defining(user.studentsToPlayWith(course.id)) { students : List[models.user.User] =>
 
 @mainWithBorder("Find a player for a game in course " + course.name,  views.html.tag.courseLink(course)) {
 
     <h1>Invite another player in the course @course.name to play a game round with you</h1>
 
+    @defining(models.game.Games.active(user.id)) { gs : List[models.game.Game] =>
+    @if(gs.nonEmpty) {
+    <h3>You are currently playing @a(gs) game@s(gs) with: </h3>
+    <ul class="pure-list">
+        @for(game <- gs) {<li> @tag.gameLink(game.otherPlayer(user).nameView, game, 'class -> "button-xsmall") @tag.gameCourseLink(Some(course), game, 'class -> "button-xsmall")  </li>}
+    </ul>
+    }
+    }
+
+    @defining(user.friendsToPlayWith(course.id)) { students : List[models.user.User] =>
+    @if(students.nonEmpty){
+    <h3>Please select the friend you want to play with (an invitation will be sent to them):</h3>
+
+    @form(action = GamesController.requestGame(organization.id, course.id), 'class -> "pure-form") {
+        <table class="pure-table pure-table-striped">
+            <tr><th>Player</th><th>Last Login</th></tr>
+            @for(student <- students.zipWithIndex) {
+            <tr>
+                <td>
+                    <label for="player@student._2" class="pure-checkbox">
+                        <input id="player@student._2" type="radio" name="@GameRequest.requestee" value="@student._1.id.v"@if(student._2 == 0){checked}>
+                        @student._1.nameDisplay
+                    </label>
+                </td>
+                <td>
+                    @tag.datetime(student._1.lastAccess)
+                </td>
+            </tr>
+            }
+        </table>
+        <input type="submit" class="pure-button pure-button-primary" value="Submit">
+    }
+    }
+    }
+
+    @defining(user.studentsNotfriendedToPlayWith(course.id)) { students : List[models.user.User] =>
     @if(students.isEmpty){
-    <h5>There are currently no students available to play with in the course</h5>
+    <h3>There are currently no students available to play with in the course</h3>
     } else {
-    <h5>Please select the player you want to play with (an invitation will be sent to them):</h5>
+    <h3>Please select the player you want to play with (an invitation will be sent to them):</h3>
 
     @form(action = GamesController.requestGame(organization.id, course.id), 'class -> "pure-form") {
         <table class="pure-table pure-table-striped">
@@ -36,6 +72,6 @@
 	    <input type="submit" class="pure-button pure-button-primary" value="Submit">
     }
     }
-}
+    }
 
 }

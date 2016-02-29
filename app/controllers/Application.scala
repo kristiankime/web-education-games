@@ -7,7 +7,7 @@ import controllers.support.SecureSocialConsented
 import play.api.mvc.{Action, Controller}
 
 object Application extends Controller {
-	val version = Version(0, 7, 1)
+	val version = Version(0, 8, 0)
 
   /**
 	 * Application does not use trailing slashes so indicate to browsers

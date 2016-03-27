@@ -3,7 +3,7 @@ package controllers.organization
 import com.artclod.random._
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
-import controllers.support.SecureSocialConsented
+import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.organization._
 import models.support._
 import play.api.data.Form
@@ -76,6 +76,13 @@ object CoursesController extends Controller with SecureSocialConsented {
         })
     }
 	}
+
+  def studentSummary(organizationId: OrganizationId, courseId: CourseId) = ConsentedAction(RequireAccess(Edit, courseId)) { implicit request => implicit user => implicit session =>
+    CoursesController(organizationId, courseId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((organization, course)) => Ok(views.html.organization.courseStudentSummary(organization, course))
+    }
+  }
 
 }
 

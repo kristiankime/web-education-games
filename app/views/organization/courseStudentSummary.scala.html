@@ -1,0 +1,46 @@
+@(organization: models.organization.Organization, course: models.organization.Course)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.quiz.{Quiz, QuizResults}
+
+@defining(course.quizzes) { quizzes : List[Quiz] =>
+
+@mainWithStatus(course.name, tag.organizationLink(organization), tag.courseLink(course))(Some(course)) {
+    <h2>Welcome to the student summary page for the course: @course.name</h2>
+
+    <table class="pure-table">
+        <tr>
+            <th colspan="2"> Student </th>
+            <th colspan="2"> Points </th>
+            @for(quiz <- quizzes) {<th colspan="2"> Quiz: @quiz.name </th>
+            }
+        </tr>
+
+        <tr>
+            <th> Name </th>
+            <th> Email </th>
+            <th> Student </th>
+            <th> Teacher </th>
+            @for(quiz <- quizzes) {<th> attempted </th>
+            <th> correct </th>
+            }
+        </tr>
+
+        @for(student <- course.students) {
+            <tr>
+                <td> @student.nameDisplay </td>
+                <td> @student.email </td>
+                <td> @student.studentTotalGamePoints </td>
+                <td> @student.teacherTotalGamePoints </td>
+                @for(quiz <- quizzes) {
+                @defining(quiz.results(student)){ results : QuizResults =>
+                <td>@results.numAttempted </td>
+                <td> @results.numCorrect </td>
+                }
+                }
+            </tr>
+        }
+
+    </table>
+}
+
+}

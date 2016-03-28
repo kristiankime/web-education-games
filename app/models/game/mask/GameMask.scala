@@ -133,7 +133,8 @@ case class RequestedNoQuiz(game: Game, meId : UserId, otherId : UserId) extends 
 case class RequestedQuizDone(game: Game, meId : UserId, otherId : UserId) extends GameMask with AwaitingResponse with MyQuizFinished with OtherQuizUnfinished with BothStillAnswering { checks }
 // Game was rejected (but requestor could have made a quiz before it was rejected)
 case class RejectedNoQuiz(game: Game, meId : UserId, otherId : UserId) extends GameMask with Rejected with MyQuizUnfinished with OtherQuizUnfinished with BothStillAnswering { checks }
-case class RejectedQuizDone(game: Game, meId : UserId, otherId : UserId) extends GameMask with Rejected with MyQuizFinished with OtherQuizUnfinished with BothStillAnswering { checks }
+case class RejectedMeQuizDone(game: Game, meId : UserId, otherId : UserId) extends GameMask with Rejected with MyQuizFinished with OtherQuizUnfinished with BothStillAnswering { checks }
+case class RejectedOtherQuizDone(game: Game, meId : UserId, otherId : UserId) extends GameMask with Rejected with MyQuizUnfinished with OtherQuizFinished with BothStillAnswering { checks }
 // Game is in progress both players are making quizzes
 case class AcceptedMeNoQuizOtherNoQuiz(game: Game, meId : UserId, otherId : UserId) extends GameMask with Accepted with MyQuizUnfinished with OtherQuizUnfinished with BothStillAnswering { checks }
 case class AcceptedMeQuizDoneOtherNoQuiz(game: Game, meId : UserId, otherId : UserId) extends GameMask with Accepted with  MyQuizFinished with OtherQuizUnfinished with BothStillAnswering { checks }

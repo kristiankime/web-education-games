@@ -155,7 +155,7 @@ case class Game(id: GameId = null,
         case (GameResponseStatus.requested, Some(_),  true,    None, false, false, false,    None) => mask.RequestedQuizDone(this, meId, otherId)
         // Game Rejected
         case (GameResponseStatus.rejected,       _,  false,    None, false, false, false, Some(_)) => mask.RejectedNoQuiz(this, meId, otherId)
-        case (GameResponseStatus.rejected,  Some(_),  true,    None, false, false, false, Some(_)) => mask.RejectedQuizDone(this, meId, otherId)
+        case (GameResponseStatus.rejected,  Some(_),  true,    None, false, false, false, Some(_)) => mask.RejectedMeQuizDone(this, meId, otherId)
         // Game Accepted (both making quizzes)
         case (GameResponseStatus.accepted,       _,  false,       _, false, false, false,    None) => mask.AcceptedMeNoQuizOtherNoQuiz(this, meId, otherId)
         case (GameResponseStatus.accepted,  Some(_),  true,       _, false, false, false,    None) => mask.AcceptedMeQuizDoneOtherNoQuiz(this, meId, otherId)
@@ -176,7 +176,7 @@ case class Game(id: GameId = null,
         case (GameResponseStatus.requested, Some(_),  true,    None, false, false, false,    None) => mask.ResponseRequiredOtherQuiz(this, meId, otherId)
         // Game Rejected
         case (GameResponseStatus.rejected,       _,  false,    None, false, false, false, Some(_)) => mask.RejectedNoQuiz(this, meId, otherId)
-        case (GameResponseStatus.rejected,  Some(_),  true,    None, false, false, false, Some(_)) => mask.RejectedQuizDone(this, meId, otherId)
+        case (GameResponseStatus.rejected,  Some(_),  true,    None, false, false, false, Some(_)) => mask.RejectedOtherQuizDone(this, meId, otherId)
         // Game Accepted (both making quizzes)
         case (GameResponseStatus.accepted,       _,  false,       _, false, false, false,    None) => mask.AcceptedMeNoQuizOtherNoQuiz(this, meId, otherId)
         case (GameResponseStatus.accepted,  Some(_),  true,       _, false, false, false,    None) => mask.AcceptedMeNoQuizOtherQuizDone(this, meId, otherId)

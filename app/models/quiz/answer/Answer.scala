@@ -75,7 +75,7 @@ object GraphMatchAnswerUnfinished {
     GraphMatchAnswer(null, ownerId, questionId, guessIndex, comment, if(correct) 1 else 0, creationDate)
 }
 
-// ==== Graph Match ===
+// ==== Polynomial Zone ===
 case class PolynomialZoneAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], correctNum: Short, comment: String, creationDate: DateTime) extends Answer {
   if(Interval.overlap(zones)) { throw new IllegalStateException("Zones were overlapping " + zones) }
 
@@ -87,4 +87,14 @@ case class PolynomialZoneAnswer(id: AnswerId, ownerId: UserId, questionId: Quest
 object PolynomialZoneAnswerUnfinished {
   def apply(ownerId: UserId, questionId: QuestionId, zones: Vector[Interval], comment: String, creationDate: DateTime)(correct: Boolean): PolynomialZoneAnswer =
     PolynomialZoneAnswer(null, ownerId, questionId, zones, if(correct) 1 else 0, comment, creationDate)
+}
+
+// ==== Multiple Choice ===
+case class MultipleChoiceAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, correctNum: Short, creationDate: DateTime) extends Answer {
+  def display : Html = views.html.quiz.multiplechoice.answerDisplay(this)
+}
+
+object MultipleChoiceAnswerUnfinished {
+  def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, creationDate: DateTime)(correct: Boolean): GraphMatchAnswer =
+    GraphMatchAnswer(null, ownerId, questionId, guessIndex, comment, if(correct) 1 else 0, creationDate)
 }

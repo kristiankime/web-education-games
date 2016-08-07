@@ -1,5 +1,7 @@
 package models.quiz.question
 
+import java.io.File
+
 import com.artclod.mathml.scalar.{Cn, MathMLElem, x}
 import com.artclod.slick.JodaUTC
 import controllers.quiz.derivative.DerivativeQuestionForm
@@ -160,4 +162,21 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
       poly
     }
 }
+
+case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, explanation: String, correctAnswer: Short, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+
+  def answerOptions: List[MultipleChoiceQuestionOption] = List()
+
+  def answersAndOwners(implicit session: Session) = MultipleChoiceQuestions.answersAndOwners(id)
+
+  def difficulty : Double = atCreationDifficulty
+
+  def results(user: User)(implicit session: Session) = MultipleChoiceQuestionResults(user, this, answers(user))
+
+  def answers(user: User)(implicit session: Session) = MultipleChoiceQuestions(id, user)
+
+  def display(explanation : Boolean = true) : Html = views.html.quiz.multiplechoice.questionDisplay(this, explanation)
+}
+
+case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option: String)
 

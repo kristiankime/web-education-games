@@ -31,6 +31,15 @@ object MustHandle {
   def apply[V1, V2, V3, V4, V5, V6](v1: V1, v2: V2, v3: V3, v4: V4, v5: V5, v6: V6) = MustHandle6(v1, v2, v3, v4, v5, v6)
 
   def fromTuple[V1, V2, V3, V4, V5, V6](v: (V1, V2, V3, V4, V5, V6)) = MustHandle6(v._1, v._2, v._3, v._4, v._5, v._6)
+
+  def apply[V1, V2, V3, V4, V5, V6, V7](v1: V1, v2: V2, v3: V3, v4: V4, v5: V5, v6: V6, v7: V7) = MustHandle7(v1, v2, v3, v4, v5, v6, v7)
+
+  def fromTuple[V1, V2, V3, V4, V5, V6, V7](v: (V1, V2, V3, V4, V5, V6, V7)) = MustHandle7(v._1, v._2, v._3, v._4, v._5, v._6, v._7)
+
+  def apply[V1, V2, V3, V4, V5, V6, V7, V8](v1: V1, v2: V2, v3: V3, v4: V4, v5: V5, v6: V6, v7: V7, v8: V8) = MustHandle8(v1, v2, v3, v4, v5, v6, v7, v8)
+
+  def fromTuple[V1, V2, V3, V4, V5, V6, V7, V8](v: (V1, V2, V3, V4, V5, V6, V7, V8)) = MustHandle8(v._1, v._2, v._3, v._4, v._5, v._6, v._7, v._8)
+
 }
 
 case class MustHandle1[T1](v1: T1) {
@@ -79,4 +88,20 @@ case class MustHandle6[T1, T2, T3, T4, T5, T6](v1: T1, v2: T2, v3: T3, v4: T4, v
   def zip[Z1, Z2, Z3, Z4, Z5, Z6](z : MustHandle6[Z1, Z2, Z3, Z4, Z5, Z6]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5), (v6, z.v6) )
 
   def size = 6
+}
+
+case class MustHandle7[T1, T2, T3, T4, T5, T6, T7](v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) {
+  def ->[O1, O2, O3, O4, O5, O6, O7](f1: (T1) => O1, f2: (T2) => O2, f3: (T3) => O3, f4: (T4) => O4, f5: (T5) => O5, f6: (T6) => O6, f7: (T7) => O7) = (f1(v1), f2(v2), f3(v3), f4(v4), f5(v5), f6(v6), f7(v7))
+
+  def zip[Z1, Z2, Z3, Z4, Z5, Z6, Z7](z : MustHandle7[Z1, Z2, Z3, Z4, Z5, Z6, Z7]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5), (v6, z.v6), (v7, z.v7) )
+
+  def size = 7
+}
+
+case class MustHandle8[T1, T2, T3, T4, T5, T6, T7, T8](v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) {
+  def ->[O1, O2, O3, O4, O5, O6, O7, O8](f1: (T1) => O1, f2: (T2) => O2, f3: (T3) => O3, f4: (T4) => O4, f5: (T5) => O5, f6: (T6) => O6, f7: (T7) => O7, f8: (T8) => O8) = (f1(v1), f2(v2), f3(v3), f4(v4), f5(v5), f6(v6), f7(v7), f8(v8))
+
+  def zip[Z1, Z2, Z3, Z4, Z5, Z6, Z7, Z8](z : MustHandle8[Z1, Z2, Z3, Z4, Z5, Z6, Z7, Z8]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5), (v6, z.v6), (v7, z.v7), (v8, z.v8) )
+
+  def size = 8
 }

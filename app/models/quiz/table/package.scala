@@ -15,18 +15,21 @@ package object table {
   val tangentQuestionsTable = TableQuery[TangentQuestionsTable]
   val graphMatchQuestionsTable = TableQuery[GraphMatchQuestionsTable]
   val polynomialZoneQuestionsTable = TableQuery[PolynomialZoneQuestionsTable]
-  val questionTables = MustHandle(derivativeQuestionsTable, derivativeGraphQuestionsTable, tangentQuestionsTable, graphMatchQuestionsTable, polynomialZoneQuestionsTable)
+  val multipleChoiceQuestionsTable = TableQuery[MultipleChoiceQuestionsTable]; val multipleChoiceQuestionOptionsTable = TableQuery[MultipleChoiceQuestionOptionsTable]
+  val questionTables = MustHandle(derivativeQuestionsTable, derivativeGraphQuestionsTable, tangentQuestionsTable, graphMatchQuestionsTable, polynomialZoneQuestionsTable, multipleChoiceQuestionsTable)
 
   val derivativeAnswersTable = TableQuery[DerivativeAnswersTable]
   val derivativeGraphAnswersTable = TableQuery[DerivativeGraphAnswersTable]
   val tangentAnswersTable = TableQuery[TangentAnswersTable]
   val graphMatchAnswersTable = TableQuery[GraphMatchAnswersTable]
   val polynomialZoneAnswersTable = TableQuery[PolynomialZoneAnswersTable]
-  val answerTables = MustHandle(derivativeAnswersTable, derivativeGraphAnswersTable, tangentAnswersTable, graphMatchAnswersTable, polynomialZoneAnswersTable)
+  val multipleChoiceAnswersTable = TableQuery[MultipleChoiceAnswersTable]
+  val answerTables = MustHandle(derivativeAnswersTable, derivativeGraphAnswersTable, tangentAnswersTable, graphMatchAnswersTable, polynomialZoneAnswersTable, multipleChoiceAnswersTable)
 
   case class QuestionAndAnswer[Q,A](question: Q, answer: A)
 
   val questionAndAnswerTables = MustHandle.fromTuple(questionTables.zip(answerTables) -> (
+    qAndA => QuestionAndAnswer(qAndA._1, qAndA._2),
     qAndA => QuestionAndAnswer(qAndA._1, qAndA._2),
     qAndA => QuestionAndAnswer(qAndA._1, qAndA._2),
     qAndA => QuestionAndAnswer(qAndA._1, qAndA._2),

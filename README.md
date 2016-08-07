@@ -252,9 +252,9 @@ https://groups.google.com/forum/#!topic/play-framework/ukwA8W9voXU
 if all else fails you can drop all the tables:
 http://stackoverflow.com/questions/3327312/drop-all-tables-in-postgresql
 
-select 'drop table if exists "' || tablename || '" cascade;' 
-  from pg_tables
- where schemaname = 'public';
+select 'drop table if exists "' || tablename || '" cascade;' from pg_tables where schemaname = 'public';
+
+select 'drop view if exists "' || viewname || '" cascade;' from pg_views where schemaname = 'public';
 
 ##### Adding Java Version
 https://devcenter.heroku.com/articles/scala-support

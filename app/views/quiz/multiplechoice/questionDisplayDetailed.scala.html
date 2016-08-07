@@ -1,0 +1,9 @@
+@(question: models.quiz.question.MultipleChoiceQuestion)
+
+@question.explanation
+
+<ul>
+@for(answerOption <- question.answerOptions) {
+    <li>@answerOption.option</li>
+}
+</ul>

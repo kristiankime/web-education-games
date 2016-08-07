@@ -21,7 +21,8 @@ libraryDependencies ++= Seq(
   "ws.securesocial"         %% "securesocial"        % "2.1.4" withSources,
   "com.typesafe"            %% "play-plugins-mailer" % "2.2.0" withSources,
   "org.mozilla"             %  "rhino"               % "1.7R4" withSources,
-  "com.github.mumoshu"      %% "play2-memcached"     % "0.5.0-RC1" withSources // 0.4.0" withSources // or 0.5.0-RC1 to try the latest improvements
+  "com.github.mumoshu"      %% "play2-memcached"     % "0.5.0-RC1" withSources, // 0.4.0" withSources // or 0.5.0-RC1 to try the latest improvements
+  "org.planet42"            %% "laika-core"           % "0.6.0" withSources
 )
 
 resolvers ++= Seq(

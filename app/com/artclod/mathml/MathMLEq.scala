@@ -25,7 +25,7 @@ object MathMLEq {
 	// a "tight" range from -10 to 10
 	val tightRange = 10d;
 	private val tightRange2 = tightRange * 2d;
-	// and a "wide" range from -500 to 500
+	// and a "wide" range from -400 to 400
 	val wideRange = 400d;
 	val wideRange2 = wideRange * 2;
 	// which then get appended together

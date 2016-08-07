@@ -49,3 +49,6 @@ case class TangentQuestionResults(answerer: User, question: TangentQuestion, ans
 case class GraphMatchQuestionResults(answerer: User, question: GraphMatchQuestion, answers: List[GraphMatchAnswer]) extends QuestionResults
 
 case class PolynomialZoneQuestionResults(answerer: User, question: PolynomialZoneQuestion, answers: List[PolynomialZoneAnswer]) extends QuestionResults
+
+case class MultipleChoiceQuestionResults(answerer: User, question: MultipleChoiceQuestion, answers: List[MultipleChoiceAnswer]) extends QuestionResults
+

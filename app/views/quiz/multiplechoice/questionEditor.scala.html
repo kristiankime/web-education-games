@@ -1,0 +1,48 @@
+@(action: play.api.mvc.Call, graphMatchForm: Form[controllers.quiz.multiplechoice.MultipleChoiceQuestionForm], successCallback : List[String] = List(), infoOp: Option[Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.quiz.multiplechoice.MultipleChoiceQuestionForm
+@import com.artclod.play.FormEnhanced
+@import controllers.MathController
+@import com.artclod.mathml.MathMLEq.tightRange
+
+<section>
+    Enter a description of the problem, as well as descriptions for answers options. Then mark the correct answer and submit. <br>
+
+    @if(graphMatchForm.hasMessage(MultipleChoiceQuestionForm.explanationInvalid)){<span class="form-error"> Sorry we were unable to create your question since the explanation was not valid markup. </span><br>}
+
+    @form(action, 'id -> "graphMatchQuestionForm", 'class -> "pure-form"){
+    <fieldset>
+        Explanation: @tag.markupEditor("")
+
+        <input type="hidden" name="@MultipleChoiceQuestionForm.correct"    id="@MultipleChoiceQuestionForm.correct"    value="0">
+        <input type="hidden" name="@MultipleChoiceQuestionForm.difficulty" id="@MultipleChoiceQuestionForm.difficulty" value="1">
+        <input type="hidden" name="@MultipleChoiceQuestionForm.options"    id="@MultipleChoiceQuestionForm.options"    value='["option1", "option2"]'>
+
+        <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_CHOICE_QUESTION_FORM.formSubmit()">
+    </fieldset>
+    }
+
+    @for(info <- infoOp){ @info }
+
+    <br class="clearBoth" />
+
+    <script>
+
+        var MULTIPLE_CHOICE_QUESTION_FORM = {}
+        MULTIPLE_CHOICE_QUESTION_FORM.formSubmit = function() {
+            var ready = true;
+
+            if(true) {
+                // noop for now
+            } else {
+                ready = false;
+                alert("Sorry we couldn't understand one of the functions that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+            }
+
+            if(ready) {
+                $("#graphMatchQuestionForm").submit();
+            }
+        }
+    </script>
+</section>

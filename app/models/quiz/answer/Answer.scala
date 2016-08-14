@@ -95,6 +95,6 @@ case class MultipleChoiceAnswer(id: AnswerId, ownerId: UserId, questionId: Quest
 }
 
 object MultipleChoiceAnswerUnfinished {
-  def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, creationDate: DateTime)(correct: Boolean): GraphMatchAnswer =
-    GraphMatchAnswer(null, ownerId, questionId, guessIndex, comment, if(correct) 1 else 0, creationDate)
+  def apply(ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, creationDate: DateTime)(correct: Boolean): MultipleChoiceAnswer =
+    MultipleChoiceAnswer(null, ownerId, questionId, guessIndex, comment, if(correct) 1 else 0, creationDate)
 }

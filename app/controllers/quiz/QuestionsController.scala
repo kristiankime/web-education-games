@@ -5,6 +5,7 @@ import com.artclod.util._
 import controllers.quiz.derivative.DerivativeQuestionsControllon
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionsControllon
 import controllers.quiz.graphmatch.GraphMatchQuestionsControllon
+import controllers.quiz.multiplechoice.MultipleChoiceQuestionsControllon
 import controllers.quiz.polynomialzone.PolynomialZoneQuestionsControllon
 import controllers.quiz.tangent.TangentQuestionsControllon
 import controllers.support.SecureSocialConsented
@@ -21,7 +22,8 @@ object QuestionsController extends Controller with SecureSocialConsented
   with DerivativeGraphQuestionsControllon
   with TangentQuestionsControllon
   with GraphMatchQuestionsControllon
-  with PolynomialZoneQuestionsControllon {
+  with PolynomialZoneQuestionsControllon
+  with MultipleChoiceQuestionsControllon {
 
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {
@@ -43,6 +45,7 @@ object QuestionsController extends Controller with SecureSocialConsented
           case tangent : TangentQuestion => Ok(views.html.quiz.tangent.questionView(course, quiz, tangent.results(user), None))
           case graphMatch : GraphMatchQuestion => Ok(views.html.quiz.graphmatch.questionView(course, quiz, graphMatch.results(user), None))
           case polyZone : PolynomialZoneQuestion => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, polyZone.results(user), None))
+          case multipleChoice : MultipleChoiceQuestion => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, multipleChoice.results(user), None))
         }
     }
 	}

@@ -1,5 +1,7 @@
 package com.artclod.util
 
+import play.api.templates.Html
+
 object LaikaExample {
   def main(args: Array[String]) {
     import laika.api.{Transform, Render, Parse}
@@ -13,9 +15,9 @@ object LaikaExample {
     //    val file2 : File = null;
 
 
-    val html = Transform from Markdown.strict to HTML fromString
-      """An h1 header\n============"""
-    toString() //"hello.html"
+    val htmlStr = Transform from Markdown.strict to HTML fromString """An h1 header\n============""" toString() //"hello.html"
+
+    val html = Html(htmlStr)
 
     println(html)
 

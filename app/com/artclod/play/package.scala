@@ -58,6 +58,9 @@ package object play {
   def firstTrue(t: (Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else{-1}
   def firstTrue(t: (Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else{-1}
   def firstTrue(t: (Boolean, Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else if(t._5){4} else{-1}
+  def firstTrue(t: (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else if(t._5){4} else if(t._6){5} else{-1}
+  def firstTrue(t: (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else if(t._5){4} else if(t._6){5} else if(t._7){6} else{-1}
+  def firstTrue(t: (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean)) = if(t._1){0} else if(t._2){1} else if(t._3){2} else if(t._4){3} else if(t._5){4} else if(t._6){5} else if(t._6){5} else if(t._7){6} else{-1}
 
   implicit def shortFormatter: Formatter[Short] = new Formatter[Short] {
     def bind(key: String, data: Map[String, String]) = {

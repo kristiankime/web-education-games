@@ -57,6 +57,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/derivativegraph            
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/tangent                           controllers.quiz.QuestionsController.createTangent(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/graphmatch                        controllers.quiz.QuestionsController.createGraphMatch(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/polynomialzone                    controllers.quiz.QuestionsController.createPolynomialZone(o: OrganizationId, c: CourseId, z: QuizId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/multiplechoice                    controllers.quiz.QuestionsController.createMultipleChoice(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove                         controllers.quiz.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Course Quizzes Answers
@@ -66,6 +67,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/derivativegraph 
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/tangent                controllers.quiz.AnswersController.createTangent(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/graphmatch             controllers.quiz.AnswersController.createGraphMatch(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/polynomialzone         controllers.quiz.AnswersController.createPolynomialZone(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/multiplechoice         controllers.quiz.AnswersController.createMultipleChoice(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                             controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)

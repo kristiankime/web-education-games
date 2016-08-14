@@ -77,14 +77,10 @@ object MultipleChoiceQuestionForm {
   // Validation Check Names
   val explanationInvalid = "explanationInvalid"
 
-  // .verifying(e => LaikaParser(e).isSuccess)
-//  .verifying(ops => true)
-// ,
-//  helper.options -> list(nonEmptyText)
   val values = Form(
-    mapping(explanation -> nonEmptyText.verifying(e => LaikaParser(e).isSuccess),
+    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => LaikaParser(e).isSuccess),
       correct -> number,
-      options -> list(nonEmptyText).verifying(ops => ops.map(e => LaikaParser(e).isSuccess).reduce(_ & _) ),
+      options -> list(nonEmptyText).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.map(e => LaikaParser(e).isSuccess).reduce(_ & _)} ),
       difficulty -> number
     )
     (MultipleChoiceQuestionForm.apply)(MultipleChoiceQuestionForm.unapply)

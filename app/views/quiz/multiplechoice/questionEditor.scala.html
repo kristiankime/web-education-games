@@ -9,15 +9,17 @@
 <section>
     Enter a description of the problem, as well as descriptions for answers options. Then mark the correct answer and submit. <br>
 
+    @if(graphMatchForm.hasErrors){ @for(error <- graphMatchForm.errors){<span class="form-error"> Error: @error.message </span><br>} }
     @if(graphMatchForm.hasMessage(MultipleChoiceQuestionForm.explanationInvalid)){<span class="form-error"> Sorry we were unable to create your question since the explanation was not valid markup. </span><br>}
 
-    @form(action, 'id -> "graphMatchQuestionForm", 'class -> "pure-form"){
+    @form(action, 'id -> "multipleChoiceQuestionForm", 'class -> "pure-form"){
     <fieldset>
-        Explanation: @tag.markupEditor("")
+        Explanation: @tag.markupEditor(MultipleChoiceQuestionForm.explanation)
 
-        <input type="hidden" name="@MultipleChoiceQuestionForm.correct"    id="@MultipleChoiceQuestionForm.correct"    value="0">
-        <input type="hidden" name="@MultipleChoiceQuestionForm.difficulty" id="@MultipleChoiceQuestionForm.difficulty" value="1">
-        <input type="hidden" name="@MultipleChoiceQuestionForm.options"    id="@MultipleChoiceQuestionForm.options"    value='["option1", "option2"]'>
+        <input type="hidden" name="@MultipleChoiceQuestionForm.correct"      id="@MultipleChoiceQuestionForm.correct"    value="0">
+        <input type="hidden" name="@MultipleChoiceQuestionForm.difficulty"   id="@MultipleChoiceQuestionForm.difficulty" value="1">
+        <input type="hidden" name="@{MultipleChoiceQuestionForm.options}[0]" id="@{MultipleChoiceQuestionForm.options}[0]"    value="option0">
+        <input type="hidden" name="@{MultipleChoiceQuestionForm.options}[1]" id="@{MultipleChoiceQuestionForm.options}[1]"    value="option1">
 
         <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_CHOICE_QUESTION_FORM.formSubmit()">
     </fieldset>
@@ -41,7 +43,7 @@
             }
 
             if(ready) {
-                $("#graphMatchQuestionForm").submit();
+                $("#multipleChoiceQuestionForm").submit();
             }
         }
     </script>

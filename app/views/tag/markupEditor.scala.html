@@ -1,1 +1,35 @@
-@(name: String)<textarea name="@name" id="@name"></textarea>
+@(name: String)
+
+    <!-- ========= MARKUP EDITOR STARTS HERE ======= -->
+
+    <textarea name="@{name}" id="@{name}" onchange="@{name}_helper.update(this.value)" oninput="@{name}_helper.update(this.value)"></textarea><div id="@{name}_div"></div>
+    <script>
+        var @{name}_helper = (function() {
+            var result = {
+                rawStr : "",
+                markup : ""
+            };
+
+            var ajaxSuccess = function(data) {
+                result.rawStr = data.markupStr;
+                result.markupHtml = data.markupHtml;
+                $("#@{name}_div").html(data.markupHtml);
+            };
+
+            result.update = _.debounce(function(markupStr) {
+                $.ajax({
+                    type : "POST",
+                    url : "/question/markup",
+                    dataType : "json",
+                    data : JSON.stringify({ markupStr : markupStr }),
+                    contentType: "application/json",
+                    success : ajaxSuccess,
+                    processData: false
+                    });
+                }, 300);
+
+            return result;
+        })();
+    </script>
+
+    <!-- ========= MARKUP EDITOR ENDS HERE ======= -->

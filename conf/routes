@@ -121,6 +121,10 @@ POST        /question/difficulty/polynomialzone                                 
 # Function Derivative service (ajax)
 POST        /question/derivatives                                                      controllers.MathController.functionDerivatives
 
+# Markup service (ajax)
+POST        /question/markup                                                           controllers.MarkupController.markup
+
+
 # ======== START Routes for Secure Social ========
 # Login page
 GET         /login                                                                     securesocial.controllers.LoginPage.login

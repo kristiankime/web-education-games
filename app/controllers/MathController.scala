@@ -8,7 +8,7 @@ import play.api.mvc.Controller
 import play.api.db.slick.Config.driver.simple.Session
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc.{Action, Controller, Result}
-
+import play.api.templates.Html
 import scala.util.{Success, Failure}
 
 object MathController extends Controller with SecureSocialConsented {

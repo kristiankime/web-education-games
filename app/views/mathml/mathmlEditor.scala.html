@@ -26,7 +26,7 @@
                 valid : false
              };
 
-        result.updateAnswer = function(mathStr) {
+        result.updateAnswer = _.debounce(function(mathStr) {
             result.rawStr = mathStr;
             var mathResult = @{mathParser}(mathStr);
             if(mathResult.success) {
@@ -42,7 +42,7 @@
                 if(mathStr == "") { ARTC.mathJax.updateById("@{editorName+"View"}", ARTC.mathJax.tex("")); }
                 @for(onFailure <- failureCallback){@{onFailure}(result); }
             }
-        };
+        }, 300);
 
         @for(value <- initialValue){
         ARTC.addLoadEvent(function(){

@@ -14,12 +14,16 @@
 
     @form(action, 'id -> "multipleChoiceQuestionForm", 'class -> "pure-form"){
     <fieldset>
-        Explanation: @tag.markupEditor(MultipleChoiceQuestionForm.explanation)
 
-        <input type="hidden" name="@MultipleChoiceQuestionForm.correct"      id="@MultipleChoiceQuestionForm.correct"    value="0">
+        <h5>Explanation</h5>
+        @tag.markupEditor(MultipleChoiceQuestionForm.explanation)
+
+        <table class="pure-table pure-table-striped">
+            <tr> <th> Option </th> <th> Details </th> <th> Correct </th>  </tr>
+            @for(i <- (0 to 9).zipWithIndex) { <tr> <td> Option @{i._1 + 1} </td> <td> @tag.markupEditor(MultipleChoiceQuestionForm.options + "[" + i._1 + "]") </td> <td> <input type="radio" name="@MultipleChoiceQuestionForm.correct" value="@i._1" @if(i._2 == 0){checked}> </td> </tr> }
+        </table>
+
         <input type="hidden" name="@MultipleChoiceQuestionForm.difficulty"   id="@MultipleChoiceQuestionForm.difficulty" value="1">
-        <input type="hidden" name="@{MultipleChoiceQuestionForm.options}[0]" id="@{MultipleChoiceQuestionForm.options}[0]"    value="option0">
-        <input type="hidden" name="@{MultipleChoiceQuestionForm.options}[1]" id="@{MultipleChoiceQuestionForm.options}[1]"    value="option1">
 
         <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_CHOICE_QUESTION_FORM.formSubmit()">
     </fieldset>

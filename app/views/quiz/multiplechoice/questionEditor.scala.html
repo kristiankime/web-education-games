@@ -15,15 +15,19 @@
     @form(action, 'id -> "multipleChoiceQuestionForm", 'class -> "pure-form"){
     <fieldset>
 
-        <h5>Explanation</h5>
+        <h4>Explanation</h4>
+        <p>
         @tag.markupEditor(MultipleChoiceQuestionForm.explanation)
+        </p>
 
+        <h4>Answer Options</h4>
         <table class="pure-table pure-table-striped">
             <tr> <th> Option </th> <th> Details </th> <th> Correct </th>  </tr>
-            @for(i <- (0 to 9).zipWithIndex) { <tr> <td> Option @{i._1 + 1} </td> <td> @tag.markupEditor(MultipleChoiceQuestionForm.options + "[" + i._1 + "]") </td> <td> <input type="radio" name="@MultipleChoiceQuestionForm.correct" value="@i._1" @if(i._2 == 0){checked}> </td> </tr> }
+            @for(i <- (0 to 5).zipWithIndex) { <tr> <td> Option @{i._1 + 1} </td> <td> @tag.markupEditor(MultipleChoiceQuestionForm.options + "[" + i._1 + "]", 4, 30) </td> <td> <input type="radio" name="@MultipleChoiceQuestionForm.correct" value="@i._1" @if(i._2 == 0){checked}> </td> </tr> }
         </table>
 
-        <input type="hidden" name="@MultipleChoiceQuestionForm.difficulty"   id="@MultipleChoiceQuestionForm.difficulty" value="1">
+        <h4>Difficulty</h4>
+        <input type="number" min="1" max="300" step="1" value="1" size="6" name="@MultipleChoiceQuestionForm.difficulty" id="@MultipleChoiceQuestionForm.difficulty"> <br/><br/>
 
         <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_CHOICE_QUESTION_FORM.formSubmit()">
     </fieldset>
@@ -31,7 +35,6 @@
 
     @for(info <- infoOp){ @info }
 
-    <br class="clearBoth" />
 
     <script>
 

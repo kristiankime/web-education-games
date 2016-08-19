@@ -1,9 +1,15 @@
-@(name: String)
+@(name: String, rows: Int = 10, cols: Int = 60)
 
 @defining(name.replaceAll("""[\[\]]""", "_")) { nameId : String =>
     <!-- ========= MARKUP EDITOR STARTS HERE ======= -->
+    <table>
+        <tr>
+        <td><textarea name="@{name}" id="@{nameId}" rows="@rows" cols="@cols" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)" class="inline"></textarea></td>
+        <td><span id="@{nameId}_div"> (this area will updated when markup is input)</span></td>
+        </tr>
+    </table>
+    <span class="clearBoth"></span>
 
-    <textarea name="@{name}" id="@{nameId}" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)"></textarea><span id="@{nameId}_div"></span>
     <script>
         var @{nameId}_helper = (function() {
             var result = {
@@ -18,16 +24,20 @@
             };
 
             result.update = _.debounce(function(markupStr) {
-                $.ajax({
-                    type : "POST",
-                    url : "/question/markup",
-                    dataType : "json",
-                    data : JSON.stringify({ markupStr : markupStr }),
-                    contentType: "application/json",
-                    success : ajaxSuccess,
-                    processData: false
+                if(markupStr.trim() === "") {
+                    ajaxSuccess( {rawStr : "(this area will updated when markup is input)", markupHtml : "(this area will updated when markup is input)" } )
+                } else {
+                    $.ajax({
+                        type : "POST",
+                        url : "/question/markup",
+                        dataType : "json",
+                        data : JSON.stringify({ markupStr : markupStr }),
+                        contentType: "application/json",
+                        success : ajaxSuccess,
+                        processData: false
                     });
-                }, 300);
+                }
+            }, 300);
 
             return result;
         })();

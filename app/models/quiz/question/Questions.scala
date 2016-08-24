@@ -44,6 +44,7 @@ object Questions {
       case q: TangentQuestion => TangentQuestions.remove(quiz, q)
       case q: GraphMatchQuestion => GraphMatchQuestions.remove(quiz, q)
       case q: PolynomialZoneQuestion => PolynomialZoneQuestions.remove(quiz, q)
+      case q: MultipleChoiceQuestion => MultipleChoiceQuestions.remove(quiz, q)
     }
 
   // ======= RESULTS ======

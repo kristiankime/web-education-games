@@ -1,8 +1,8 @@
 package controllers
 
+import com.artclod.markup.LaikaParser
 import com.artclod.mathml.MathML
 import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.util.LaikaParser
 import controllers.MathController.{FunctionDerivativeResponse, FunctionDerivativeRequest}
 import controllers.support.SecureSocialConsented
 import play.api.libs.json.{JsError, Json}

@@ -40,7 +40,7 @@ sealed trait Question extends Owned {
 
   def difficulty : Double
 
-  def display(explanation : Boolean = true) : Html
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html
 }
 
 case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question with ViewableMath {
@@ -53,7 +53,7 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def answers(user: User)(implicit session: Session) = DerivativeQuestions(id, user)
 
-  def display(explanation : Boolean = true) : Html = views.html.quiz.derivative.questionDisplay(this, explanation)
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.derivative.questionDisplay(this, explanation)
 }
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
@@ -66,7 +66,7 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
 
   def answers(user: User)(implicit session: Session) = TangentQuestions(id, user)
 
-  def display(explanation : Boolean = true) : Html = views.html.quiz.tangent.questionDisplay(this, explanation)
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.tangent.questionDisplay(this, explanation)
 
   def functionViewableMath = new ViewableMath { val mathML = function; val rawStr = functionStr }
 
@@ -83,7 +83,7 @@ case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: Ma
 
   def answers(user: User)(implicit session: Session) = DerivativeGraphQuestions(id, user)
 
-  def display(explanation : Boolean = true) : Html = views.html.quiz.derivativegraph.questionDisplay(this, explanation)
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.derivativegraph.questionDisplay(this, explanation)
 
   val mathML = function
   val rawStr = functionStr
@@ -114,7 +114,7 @@ case class GraphMatchQuestion(id: QuestionId, ownerId: UserId, function1Math: Ma
 
   def answers(user: User)(implicit session: Session) = GraphMatchQuestions(id, user)
 
-  def display(explanation : Boolean = true) : Html = views.html.quiz.graphmatch.questionDisplay(this, explanation)
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.graphmatch.questionDisplay(this, explanation)
 
   def mathView1 : models.quiz.ViewableMath = new models.quiz.ViewableMath { val mathML = function1Math; val rawStr = function1Raw;  }
 
@@ -150,7 +150,7 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
 
   def answers(user: User)(implicit session: Session) = PolynomialZoneQuestions(id, user)
 
-  def display(explanation : Boolean = true) : Html = views.html.quiz.polynomialzone.questionDisplay(this, explanation)
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.polynomialzone.questionDisplay(this, explanation)
 
   def polynomial : MathMLElem =
     if(roots.isEmpty) {
@@ -165,7 +165,7 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
 
 case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, explanation: String, correctAnswer: Short, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
-  def answerOptions: List[MultipleChoiceQuestionOption] = List()
+  def answerOptions(implicit session: Session): List[MultipleChoiceQuestionOption] = MultipleChoiceQuestionOptions(this)
 
   def answersAndOwners(implicit session: Session) = MultipleChoiceQuestions.answersAndOwners(id)
 
@@ -175,7 +175,7 @@ case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, explanation: 
 
   def answers(user: User)(implicit session: Session) = MultipleChoiceQuestions(id, user)
 
-  def display(explanation : Boolean = true) : Html = views.html.quiz.multiplechoice.questionDisplay(this, explanation)
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.multiplechoice.questionDisplay(this, explanation)
 }
 
 case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option: String)

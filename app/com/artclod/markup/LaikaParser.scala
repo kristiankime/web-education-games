@@ -1,13 +1,8 @@
-package com.artclod.util
+package com.artclod.markup
 
 import laika.api.Transform
 import laika.parse.markdown.Markdown
-import laika.api.{Transform, Render, Parse}
-import laika.parse.markdown.Markdown
-import laika.parse.rst.ReStructuredText
 import laika.render.HTML
-import laika.template.ParseTemplate
-import laika.tree.Documents.DocumentContext
 import play.api.templates.Html
 
 import scala.util.Try

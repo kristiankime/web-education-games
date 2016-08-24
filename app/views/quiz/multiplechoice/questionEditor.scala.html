@@ -17,13 +17,13 @@
 
         <h4>Explanation</h4>
         <p>
-        @tag.markupEditor(MultipleChoiceQuestionForm.explanation)
+        @tag.markupEditor(MultipleChoiceQuestionForm.explanation, graphMatchForm.dataFor(MultipleChoiceQuestionForm.explanation))
         </p>
 
         <h4>Answer Options</h4>
         <table class="pure-table pure-table-striped">
-            <tr> <th> Option </th> <th> Details </th> <th> Correct </th>  </tr>
-            @for(i <- (0 to 5).zipWithIndex) { <tr> <td> Option @{i._1 + 1} </td> <td> @tag.markupEditor(MultipleChoiceQuestionForm.options + "[" + i._1 + "]", 4, 30) </td> <td> <input type="radio" name="@MultipleChoiceQuestionForm.correct" value="@i._1" @if(i._2 == 0){checked}> </td> </tr> }
+            <tr> <th> Option </th> <th> Details </th> <th> Correct </th>  </tr> @* TODO on error keep selection *@
+            @for(i <- (0 to 5).zipWithIndex) { <tr> <td> Option @{i._1 + 1} </td> <td> @tag.markupEditor(MultipleChoiceQuestionForm.options + "[" + i._1 + "]", graphMatchForm.dataFor(MultipleChoiceQuestionForm.options + "[" + i._1 + "]"), 4, 30) </td> <td> <input type="radio" name="@MultipleChoiceQuestionForm.correct" value="@i._1" @if(i._2 == 0){checked}> </td> </tr> }
         </table>
 
         <h4>Difficulty</h4>

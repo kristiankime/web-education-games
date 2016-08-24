@@ -1,11 +1,12 @@
-@(name: String, rows: Int = 10, cols: Int = 60)
+@(name: String, markupStrOp: Option[String], rows: Int = 10, cols: Int = 60)
 
+@defining(markupStrOp.flatMap(com.artclod.markup.LaikaParser(_).toOption)) { markupOp : Option[play.api.templates.Html] =>
 @defining(name.replaceAll("""[\[\]]""", "_")) { nameId : String =>
     <!-- ========= MARKUP EDITOR STARTS HERE ======= -->
     <table>
         <tr>
-        <td><textarea name="@{name}" id="@{nameId}" rows="@rows" cols="@cols" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)" class="inline"></textarea></td>
-        <td><span id="@{nameId}_div"> (this area will updated when markup is input)</span></td>
+        <td><textarea name="@{name}" id="@{nameId}" rows="@rows" cols="@cols" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)" class="inline"> @for(m <- markupStrOp){@m} </textarea></td>
+        <td><span id="@{nameId}_div"> @if(markupOp.nonEmpty){@markupOp.get}else{(this area will updated when markup is input)} </span></td>
         </tr>
     </table>
     <span class="clearBoth"></span>
@@ -44,4 +45,5 @@
     </script>
 
     <!-- ========= MARKUP EDITOR ENDS HERE ======= -->
+}
 }

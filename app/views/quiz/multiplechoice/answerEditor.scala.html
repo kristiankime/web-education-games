@@ -1,16 +1,17 @@
-@(action: play.api.mvc.Call, currentAnswer: Option[Either[models.quiz.answer.MultipleChoiceAnswer, models.quiz.answer.MultipleChoiceAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(action: play.api.mvc.Call, question: models.quiz.question.MultipleChoiceQuestion, currentAnswer: Option[Either[models.quiz.answer.MultipleChoiceAnswer, models.quiz.answer.MultipleChoiceAnswer]])(link: Html)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.quiz.graphmatch.GraphMatchAnswerForm
-@import models.quiz.question.GraphMatchQuestionWhich.{whichMin, whichMax}
+@import controllers.quiz.multiplechoice.MultipleChoiceAnswerForm
 
 <section>
     Select your answer, and then hit the submit button @tag.answerWarning()<br>
 
     @helper.form(action, 'id -> "tangentAnswerForm", 'class -> "pure-form") {
         <fieldset>
-            <select name="@{GraphMatchAnswerForm.guessIndex}">
-                @for(i <- whichMin to whichMax) {<option value="@i"> @i </option> }
+
+            <select name="@{MultipleChoiceAnswerForm.guessIndex}">
+                @for(i <- (1 to question.answerOptions.size)) {<option value="@{i-1}"> @i </option> }
             </select>
+
             <input type="submit" class="pure-button pure-button-primary" value="Submit">
             @link
         </fieldset>

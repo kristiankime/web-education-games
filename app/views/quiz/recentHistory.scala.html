@@ -20,7 +20,7 @@
             Here are the questions @user.nameView answered correctly recently:
             <ol>
             @for(correctQuestion <- correctQuestions) {
-                <li> @tag.questionSummary(correctQuestion) </li>
+                <li> @tag.questionSummary(correctQuestion)(user, session) </li>
             }
             </ol>
         }
@@ -32,7 +32,7 @@
             Here are the questions @user.nameView answered incorrectly recently:
             <ol>
             @for(incorrectQuestion <- incorrectQuestions) {
-                <li> @tag.questionSummary(incorrectQuestion) </li>
+                <li> @tag.questionSummary(incorrectQuestion)(user, session) </li>
             }
             </ol>
         }

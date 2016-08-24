@@ -1,6 +1,17 @@
 package com.artclod
 
+import scala.collection.GenSeqLike
+import scala.slick.collection.heterogenous.Zero.+
+
 package object collection {
+
+  implicit class PimpedGenSeqLike[+A, +Repr](val op: GenSeqLike[A, Repr]) {
+    def indexOfOp[B >: A](elem: B): Option[Int] ={
+      val indexOf = op.indexOf()
+      if(indexOf == -1) { None }
+      else { Some(indexOf) }
+    }
+  }
 
   implicit class PimpedOptionList[T](val op: Option[List[T]]) {
     def dropOption: List[T] = op match {

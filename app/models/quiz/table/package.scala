@@ -15,8 +15,10 @@ package object table {
   val tangentQuestionsTable = TableQuery[TangentQuestionsTable]
   val graphMatchQuestionsTable = TableQuery[GraphMatchQuestionsTable]
   val polynomialZoneQuestionsTable = TableQuery[PolynomialZoneQuestionsTable]
-  val multipleChoiceQuestionsTable = TableQuery[MultipleChoiceQuestionsTable]; val multipleChoiceQuestionOptionsTable = TableQuery[MultipleChoiceQuestionOptionsTable]
+  val multipleChoiceQuestionsTable = TableQuery[MultipleChoiceQuestionsTable];
   val questionTables = MustHandle(derivativeQuestionsTable, derivativeGraphQuestionsTable, tangentQuestionsTable, graphMatchQuestionsTable, polynomialZoneQuestionsTable, multipleChoiceQuestionsTable)
+
+  val multipleChoiceQuestionOptionsTable = TableQuery[MultipleChoiceQuestionOptionsTable]
 
   val derivativeAnswersTable = TableQuery[DerivativeAnswersTable]
   val derivativeGraphAnswersTable = TableQuery[DerivativeGraphAnswersTable]

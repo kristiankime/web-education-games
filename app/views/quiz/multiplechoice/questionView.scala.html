@@ -11,7 +11,7 @@
 @mainWithBorder("Question Page", tag.courseLink(course), tag.courseQuizLink(course, quiz, None)) {
     <h2>Welcome to a question page for quiz: @quiz.name </h2>
 
-    <h4>Below are a set of functions and a graph, figure out which function's graph is being displayed:</h4>
+    <h4>Read the explanation and select the correct answer:</h4>
 
     <section>
         @results.question.display(false)
@@ -29,7 +29,7 @@
     </section>
     }
 
-    @views.html.quiz.multiplechoice.answerEditor(AnswersController.createMultipleChoice(course.organizationId, course.id, quiz.id, results.question.id), currentAnswer){@tag.courseQuizLink(course, quiz, Some("Back to Quiz"))}
+    @views.html.quiz.multiplechoice.answerEditor(AnswersController.createMultipleChoice(course.organizationId, course.id, quiz.id, results.question.id), results.question,currentAnswer){@tag.courseQuizLink(course, quiz, Some("Back to Quiz"))}
 
 
     @* ===== Results ===== *@

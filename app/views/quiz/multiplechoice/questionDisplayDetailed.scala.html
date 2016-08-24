@@ -1,9 +1,9 @@
-@(question: models.quiz.question.MultipleChoiceQuestion)
+@(question: models.quiz.question.MultipleChoiceQuestion)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @question.explanation
 
-<ul>
+<ol>
 @for(answerOption <- question.answerOptions) {
     <li>@answerOption.option</li>
 }
-</ul>
+</ol>

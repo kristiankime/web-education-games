@@ -1,7 +1,7 @@
 package models.quiz.answer.table
 
-import models.quiz.answer.{MultipleChoiceAnswer, GraphMatchAnswer}
-import models.quiz.table.{AnswerIdNext, graphMatchQuestionsTable}
+import models.quiz.answer.MultipleChoiceAnswer
+import models.quiz.table.{AnswerIdNext, multipleChoiceQuestionsTable}
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
 
@@ -14,5 +14,5 @@ class MultipleChoiceAnswersTable(tag: Tag) extends Table[MultipleChoiceAnswer](t
 
   def idFK  = foreignKey("multiple_choice_answers__id_fk", id, AnswerIdNext.answerIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("multiple_choice_answers__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)
-	def questionFK = foreignKey("multiple_choice_answers__question_fk", questionId, graphMatchQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
+	def questionFK = foreignKey("multiple_choice_answers__question_fk", questionId, multipleChoiceQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

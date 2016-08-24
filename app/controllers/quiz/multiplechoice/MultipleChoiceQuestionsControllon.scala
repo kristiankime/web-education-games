@@ -1,9 +1,9 @@
 package controllers.quiz.multiplechoice
 
 import akka.actor.FSM.->
+import com.artclod.markup.LaikaParser
 import com.artclod.mathml.{MathMLEq, MathMLRange, Match, MathML}
 import com.artclod.slick.JodaUTC
-import com.artclod.util.LaikaParser
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.tangent.{TangentQuestionForm, TangentAnswerForm}
@@ -22,6 +22,7 @@ import com.artclod.mathml.MathMLEq.tightRange
 import views.html.{helper, mathml}
 import views.html.helper.options
 import views.html.mathml.correct
+import com.artclod.collection.PimpedGenSeqLike
 
 import scala.concurrent.ops
 import scala.util.{Success, Failure}
@@ -35,7 +36,8 @@ trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialCons
         MultipleChoiceQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, controllers.quiz.QuestionForms.multipleChoice(errors))),
           form => {
-            MultipleChoiceQuestions.create(MultipleChoiceQuestionForm.toQuestion(user, form), quizId)
+            val optionsProccesd = MultipleChoiceQuestionForm.nonBlankOptionsWithCorrectIndex(form.options, form.correctInt)
+            MultipleChoiceQuestions.create( MultipleChoiceQuestionForm.toQuestion(user, form, optionsProccesd), MultipleChoiceQuestionForm.toQuestionOptions(optionsProccesd), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
@@ -76,18 +78,35 @@ object MultipleChoiceQuestionForm {
   val difficulty = "difficulty"
   // Validation Check Names
   val explanationInvalid = "explanationInvalid"
+  val validCorrectOption = "validCorrectOption"
+
 
   val values = Form(
     mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => LaikaParser(e).isSuccess),
       correct -> number,
-      options -> list(nonEmptyText).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.map(e => LaikaParser(e).isSuccess).reduce(_ & _)} ),
+      options -> list(text).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => LaikaParser(e).isSuccess).reduce(_ & _)} ),
       difficulty -> number
     )
     (MultipleChoiceQuestionForm.apply)(MultipleChoiceQuestionForm.unapply)
+      verifying(validCorrectOption, fields => nonBlankOptionsWithCorrectIndex(fields.options, fields.correct)._2.nonEmpty)
   )
 
-  def toQuestion(user: User, form: MultipleChoiceQuestionForm) =
+  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {
     MultipleChoiceQuestion(null, user.id, form.explanation, form.correct, JodaUTC.now, form.difficulty)
+  }
+
+  def toQuestionOptions(options: (List[String], Option[Int])) =
+    options._1.map( MultipleChoiceQuestionOption(-1, null, _) )
+
+  // ==== Helpers
+  def nonBlankOptionsWithCorrectBoolean(options : List[String], correct: Int) : List[(String, Boolean)] =
+    options.zipWithIndex.map(o => (o._1, o._2 == correct)).filter(o => o._1.trim.nonEmpty)
+
+  def nonBlankOptionsWithCorrectIndex(options : List[String], correct: Int) : (List[String], Option[Int]) =
+    nonBlankOptionsWithCorrectIndex(nonBlankOptionsWithCorrectBoolean(options, correct))
+
+  def nonBlankOptionsWithCorrectIndex(options: List[(String, Boolean)]) : (List[String], Option[Int]) =
+    ( options.map(o => o._1), options.map(o => o._2).indexOfOp(true) )
 
 }
 

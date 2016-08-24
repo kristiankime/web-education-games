@@ -6,7 +6,7 @@ import models.quiz._
 import models.quiz.answer.{MultipleChoiceAnswer, GraphMatchAnswer}
 import models.quiz.answer.table.{MultipleChoiceAnswersTable, GraphMatchAnswersTable}
 import models.quiz.question.table.{MultipleChoiceQuestionsTable, GraphMatchQuestionsTable}
-import models.quiz.table.{QuestionIdNext, multipleChoiceAnswersTable, multipleChoiceQuestionsTable, quizzesTable}
+import models.quiz.table.{QuestionIdNext, multipleChoiceAnswersTable, multipleChoiceQuestionsTable, quizzesTable, multipleChoiceQuestionOptionsTable}
 import models.support._
 import models.user.User
 import models.user.table.usersTable
@@ -16,16 +16,18 @@ import play.api.db.slick.Config.driver.simple._
 object MultipleChoiceQuestions {
 
   // ======= CREATE ======
-  def create(info: MultipleChoiceQuestion, quizId: QuizId)(implicit session: Session): MultipleChoiceQuestion = {
+  def create(info: MultipleChoiceQuestion, options: List[MultipleChoiceQuestionOption], quizId: QuizId)(implicit session: Session): MultipleChoiceQuestion = {
     val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
     multipleChoiceQuestionsTable += toInsert
+    multipleChoiceQuestionOptionsTable ++= options.map(_.copy(questionId = toInsert.id))
     toInsert
   }
 
   @VisibleForTesting
-  def create(info: MultipleChoiceQuestion)(implicit session: Session): MultipleChoiceQuestion = {
+  def create(info: MultipleChoiceQuestion, options: List[MultipleChoiceQuestionOption])(implicit session: Session): MultipleChoiceQuestion = {
     val toInsert = info.copy(id = QuestionIdNext())
     multipleChoiceQuestionsTable += toInsert
+    multipleChoiceQuestionOptionsTable ++= options.map(_.copy(questionId = toInsert.id))
     toInsert
   }
 

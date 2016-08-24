@@ -1,2 +1,2 @@
-@(question: models.quiz.question.MultipleChoiceQuestion, explanation : Boolean)@if(explanation){ } else {@views.html.quiz.multiplechoice.questionDisplayDetailed(question)}
+@(question: models.quiz.question.MultipleChoiceQuestion, explanation : Boolean)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)@if(explanation){ Multiple Choice } else {@views.html.quiz.multiplechoice.questionDisplayDetailed(question)}
 

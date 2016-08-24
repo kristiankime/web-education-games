@@ -5,9 +5,9 @@ import scala.slick.collection.heterogenous.Zero.+
 
 package object collection {
 
-  implicit class PimpedGenSeqLike[+A, +Repr](val op: GenSeqLike[A, Repr]) {
+  implicit class PimpedGenSeqLike[+A, +Repr](val seq: GenSeqLike[A, Repr]) {
     def indexOfOp[B >: A](elem: B): Option[Int] ={
-      val indexOf = op.indexOf()
+      val indexOf = seq.indexOf(elem)
       if(indexOf == -1) { None }
       else { Some(indexOf) }
     }

@@ -102,8 +102,11 @@ object MultipleChoiceQuestionForm {
   def nonBlankOptionsWithCorrectBoolean(options : List[String], correct: Int) : List[(String, Boolean)] =
     options.zipWithIndex.map(o => (o._1, o._2 == correct)).filter(o => o._1.trim.nonEmpty)
 
-  def nonBlankOptionsWithCorrectIndex(options : List[String], correct: Int) : (List[String], Option[Int]) =
-    nonBlankOptionsWithCorrectIndex(nonBlankOptionsWithCorrectBoolean(options, correct))
+  def nonBlankOptionsWithCorrectIndex(options : List[String], correct: Int) : (List[String], Option[Int]) = {
+    val blankOptionsWithCorrectBoolean = nonBlankOptionsWithCorrectBoolean(options, correct)
+    val blankOptionsWithCorrectIndex = nonBlankOptionsWithCorrectIndex(blankOptionsWithCorrectBoolean)
+    blankOptionsWithCorrectIndex
+  }
 
   def nonBlankOptionsWithCorrectIndex(options: List[(String, Boolean)]) : (List[String], Option[Int]) =
     ( options.map(o => o._1), options.map(o => o._2).indexOfOp(true) )

@@ -5,7 +5,7 @@
     <!-- ========= MARKUP EDITOR STARTS HERE ======= -->
     <table>
         <tr>
-        <td><textarea name="@{name}" id="@{nameId}" rows="@rows" cols="@cols" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)" class="inline"> @for(m <- markupStrOp){@m} </textarea></td>
+        <td><textarea name="@{name}" id="@{nameId}" rows="@rows" cols="@cols" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)" class="inline">@for(m <- markupStrOp){@m}</textarea></td>
         <td><span id="@{nameId}_div"> @if(markupOp.nonEmpty){@markupOp.get}else{(this area will updated when markup is input)} </span></td>
         </tr>
     </table>

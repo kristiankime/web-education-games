@@ -91,7 +91,11 @@ object PolynomialZoneAnswerUnfinished {
 
 // ==== Multiple Choice ===
 case class MultipleChoiceAnswer(id: AnswerId, ownerId: UserId, questionId: QuestionId, guessIndex: Short, comment: String, correctNum: Short, creationDate: DateTime) extends Answer {
+
+  def guessIndexDisplay = guessIndex + 1
+
   def display : Html = views.html.quiz.multiplechoice.answerDisplay(this)
+
 }
 
 object MultipleChoiceAnswerUnfinished {

@@ -6,7 +6,7 @@
     <table>
         <tr>
         <td><textarea name="@{name}" id="@{nameId}" rows="@rows" cols="@cols" onchange="@{nameId}_helper.update(this.value)" oninput="@{nameId}_helper.update(this.value)" class="inline">@for(m <- markupStrOp){@m}</textarea></td>
-        <td><span id="@{nameId}_div"> @if(markupOp.nonEmpty){@markupOp.get}else{(this area will updated when markup is input)} </span></td>
+        <td><span id="@{nameId}_rendered"> @if(markupOp.nonEmpty){@markupOp.get}else{(this area will updated when markup is input)} </span></td>
         </tr>
     </table>
     <span class="clearBoth"></span>
@@ -19,9 +19,13 @@
             };
 
             var ajaxSuccess = function(data) {
+                var rendered = document.getElementById("@{nameId}_rendered");
+
                 result.rawStr = data.markupStr;
                 result.markupHtml = data.markupHtml;
-                $("#@{nameId}_div").html(data.markupHtml);
+                rendered.innerHTML = data.markupHtml;
+
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, rendered]);
             };
 
             result.update = _.debounce(function(markupStr) {

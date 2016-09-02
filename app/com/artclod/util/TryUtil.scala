@@ -2,7 +2,7 @@ package com.artclod.util
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent._
-import scala.util.{Random, Try}
+import scala.util.{Success, Failure, Random, Try}
 
 object TryUtil {
   val r = new Random(0)
@@ -26,4 +26,11 @@ object TryUtil {
     def retryOnFail(maxRetries: Int = 5, maxWaitBetweenCalls: Int = 100) = TryUtil.retryOnFail(f, maxRetries, maxWaitBetweenCalls)
   }
 
+  implicit class EitherPimp[L <: Throwable,R](e:Either[L,R]){
+    def toTry:Try[R] = e.fold(Failure(_), Success(_))
+  }
+
+  implicit class TryPimp[T](t:Try[T]){
+    def toEither:Either[Throwable,T] = t.transform(s => Success(Right(s)), f => Success(Left(f))).get
+  }
 }

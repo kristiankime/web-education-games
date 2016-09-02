@@ -2,6 +2,7 @@ package models.quiz.question
 
 import java.io.File
 
+import com.artclod.markup.{MarkupParser, LaikaParser}
 import com.artclod.mathml.scalar.{Cn, MathMLElem, x}
 import com.artclod.slick.JodaUTC
 import controllers.quiz.derivative.DerivativeQuestionForm
@@ -176,7 +177,11 @@ case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, explanation: 
   def answers(user: User)(implicit session: Session) = MultipleChoiceQuestions(id, user)
 
   def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.multiplechoice.questionDisplay(this, explanation)
+
+  def explanationMarkup = MarkupParser(explanation).getOrElse(Html("Was unable to parse explanation"))
 }
 
-case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option: String)
+case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option: String) {
+  def optionMarkup = MarkupParser(option).getOrElse(Html("Was unable to parse option"))
+}
 

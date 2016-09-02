@@ -1,7 +1,7 @@
 package controllers.quiz.multiplechoice
 
 import akka.actor.FSM.->
-import com.artclod.markup.LaikaParser
+import com.artclod.markup.{MarkupParser, LaikaParser}
 import com.artclod.mathml.{MathMLEq, MathMLRange, Match, MathML}
 import com.artclod.slick.JodaUTC
 import controllers.quiz.{QuestionForms, QuizzesController}
@@ -82,9 +82,9 @@ object MultipleChoiceQuestionForm {
 
 
   val values = Form(
-    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => LaikaParser(e).isSuccess),
+    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
       correct -> number,
-      options -> list(text).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => LaikaParser(e).isSuccess).reduce(_ & _)} ),
+      options -> list(text).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)} ),
       difficulty -> number
     )
     (MultipleChoiceQuestionForm.apply)(MultipleChoiceQuestionForm.unapply)

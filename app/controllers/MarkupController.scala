@@ -1,6 +1,6 @@
 package controllers
 
-import com.artclod.markup.LaikaParser
+import com.artclod.markup.{MarkupParser, LaikaParser}
 import com.artclod.mathml.MathML
 import com.artclod.mathml.scalar.MathMLElem
 import controllers.MathController.{FunctionDerivativeResponse, FunctionDerivativeRequest}
@@ -34,7 +34,7 @@ object MarkupController extends Controller with SecureSocialConsented {
     request.body.asJson.map { configJson =>
       configJson.validate[MarkupRequest]
         .map { markupRequest =>
-        LaikaParser(markupRequest.markupStr) match {
+          MarkupParser(markupRequest.markupStr) match {
           case Failure(e) => BadRequest("Could not parse [" + markupRequest.markupStr + "] as markup\n" + e.getStackTraceString)
           case Success(html) => {
             Ok(Json.toJson(MarkupResponse(markupRequest.markupStr, html.toString())))

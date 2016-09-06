@@ -1,0 +1,20 @@
+@(expanation: play.api.templates.Html, sideGraphs : List[play.api.templates.Html])
+@if(sideGraphs.isEmpty){ @expanation } else {
+    <table>
+        <tr>
+            <td rowspan="@sideGraphs.size">
+                @expanation
+            </td>
+            <td>
+                @sideGraphs.head
+            </td>
+        </tr>
+        @for(graph <- sideGraphs.tail){<tr>
+            <td>
+                @graph
+            </td>
+        </tr>}
+    </table>
+
+}
+

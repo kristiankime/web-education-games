@@ -1,9 +1,9 @@
-@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, glider: Boolean = true, xSize : Int = 300, ySize : Int = 300)
+@(name: String, initialFunction: String = "0", titleOp : Option[String] = None, glider: Boolean = true, xSize : Int = 300, ySize : Int = 300, anchorOp : Option[String] = None)
 
 @import com.artclod.mathml.MathMLEq.tightRange
-
+<span>
 <div class='inline secondary-content-bordered center-text'>
-    @for(title <- titleOp){<h4>@title</h4>}<div id='@{name}_box' class='jxgbox' style='width:@{xSize}px; height:@{ySize}px;'></div>
+    @for(anchor <- anchorOp){<a name="@anchor"></a>}@for(title <- titleOp){<h4>@title</h4>}<div id='@{name}_box' class='jxgbox' style='width:@{xSize}px; height:@{ySize}px;'></div>
 </div>
 
 <script type='text/javascript'>
@@ -50,3 +50,4 @@
     return ret;
 }();
 </script>
+</span>

@@ -8,6 +8,7 @@ import views.html
 import com.artclod.util.TryUtil.{TryPimp, EitherPimp}
 import com.artclod.play.JsResultPimp
 
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
 object TextToHtmlGraph {
@@ -29,11 +30,15 @@ object TextToHtmlGraph {
 
   def parse(text: String) : Try[Html] = {
     val objOp: Try[TextToHtmlGraph] = from(text)
-    objOp.map(v => views.html.mathml.graph(v.name, v.function, v.titleOp, v.glider.getOrElse(true), v.xSize.getOrElse(300), v.ySize.getOrElse(300)))
+    objOp.map(v => toHtml(v))
+  }
+
+  def toHtml(v: TextToHtmlGraph): Html = {
+    views.html.mathml.graph(v.name, v.function, Some(v.title), v.glider.getOrElse(true), v.xSize.getOrElse(300), v.ySize.getOrElse(300), Some(v.name))
   }
 
   def replaceGraph(text: String) : String = {
-    val gs = """\$graph\$(.*?)\$graph\$""".r
+    val gs = """\$g\$(.*?)\$g\$""".r
     val ret = gs.replaceSomeIn(text, m => {
       val main = m.group(1)
       val mainCleanup = main.replaceAll("&quot;", "\"")
@@ -47,6 +52,35 @@ object TextToHtmlGraph {
   def replaceGraph(html: Html) : Html = Html(replaceGraph(html.toString()))
 
 
+  // ========
+  def sideGraphs(text: String) : (String, List[Html]) = {
+    val gs = """\$g\$(.*?)\$g\$""".r
+
+    val sideGraphs = ArrayBuffer[Html]()
+
+    val ret = gs.replaceSomeIn(text, m => {
+      val main = m.group(1)
+      val mainCleanup = main.replaceAll("&quot;", "\"")
+      val toReplace = "{ " + mainCleanup + " }"
+      val op = from(toReplace).toOption
+
+      for(o <- op) {
+        sideGraphs += toHtml(o)
+      }
+      op.map(v => "<a href=\"#" + v.name + "\">" + v.name + "</a>")
+    })
+
+    (ret, sideGraphs.toList)
+  }
+
+  def sideGraphs(html: Html) : Html = {
+    val mainAndGraphs = sideGraphs(html.toString())
+    views.html.quiz.multiplechoice.graphsOnSide(Html(mainAndGraphs._1), mainAndGraphs._2)
+  }
+
+
 }
 
-case class TextToHtmlGraph(name: String, function: String = "0", titleOp : Option[String] = None, glider: Option[Boolean] = None, xSize : Option[Int] = None, ySize : Option[Int] = None)
+case class TextToHtmlGraph(title: String, function: String = "0", glider: Option[Boolean] = None, xSize : Option[Int] = None, ySize : Option[Int] = None) {
+  def name = title.replaceAll("""\s+""", "_")
+}

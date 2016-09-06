@@ -34,6 +34,8 @@
 
                 // replace the inner html (use jQuery so we handle scripts properly)
                 $("#@{nameId}_rendered").html(data.markupHtml);
+                //document.getElementById("@{nameId}_rendered").innerHTML = data.markupHtml;
+
                 // Tell MathJax it needs to rerender
                 var rendered = document.getElementById("@{nameId}_rendered");
 

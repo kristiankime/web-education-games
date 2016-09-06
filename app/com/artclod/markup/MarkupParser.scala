@@ -8,6 +8,6 @@ import scala.util.Success
 
 object MarkupParser {
 
-  def apply(text: String) = LaikaParser(text).map( TextToHtmlGraph.replaceGraph(_) )
+  def apply(text: String) = LaikaParser(text).map( TextToHtmlGraph.sideGraphs(_) )
 
 }

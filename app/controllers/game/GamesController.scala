@@ -181,6 +181,7 @@ object GamesController extends Controller with SecureSocialConsented {
       case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.question.answeringTangentQuestion(gameState, quiz, q, a))
       case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.question.answeringGraphMatchQuestion(gameState, quiz, q, a))
       case (q : PolynomialZoneQuestion, a : Option[Either[PolynomialZoneAnswer,PolynomialZoneAnswer]])    => Ok(views.html.game.question.answeringPolynomialZoneQuestion(gameState, quiz, q, a))
+      case (q : MultipleChoiceQuestion, a : Option[Either[MultipleChoiceAnswer,MultipleChoiceAnswer]])    => Ok(views.html.game.question.answeringMultipleChoiceQuestion(gameState, quiz, q, a))
     }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>

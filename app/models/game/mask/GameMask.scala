@@ -71,6 +71,10 @@ trait GameSetup {
     if(requestee) { controllers.game.routes.GamesRequesteeController.createPolynomialZoneQuestion(game.id) }
     else {          controllers.game.routes.GamesRequestorController.createPolynomialZoneQuestion(game.id) }
 
+  def createMultipleChoiceQuestionCall : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.createMultipleChoiceQuestion(game.id) }
+    else {          controllers.game.routes.GamesRequestorController.createMultipleChoiceQuestion(game.id) }
+
   // Finalize Quiz
   def finalizeCreatedQuiz : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeCreatedQuiz(game.id) }
@@ -103,6 +107,10 @@ trait GameSetup {
   def answerPolynomialZoneQuestion(questionId: QuestionId) : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.answerPolynomialZoneQuestion(game.id, questionId) }
     else {          controllers.game.routes.GamesRequestorController.answerPolynomialZoneQuestion(game.id, questionId) }
+
+  def answerMultipleChoiceQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerMultipleChoiceQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerMultipleChoiceQuestion(game.id, questionId) }
 
   // Finalize Answers
   def finalizeAnsweringQuiz : play.api.mvc.Call =

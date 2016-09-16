@@ -36,8 +36,7 @@ trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialCons
         MultipleChoiceQuestionForm.values.bindFromRequest.fold(
           errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, controllers.quiz.QuestionForms.multipleChoice(errors))),
           form => {
-            val optionsProccesd = MultipleChoiceQuestionForm.nonBlankOptionsWithCorrectIndex(form.options, form.correctInt)
-            MultipleChoiceQuestions.create( MultipleChoiceQuestionForm.toQuestion(user, form, optionsProccesd), MultipleChoiceQuestionForm.toQuestionOptions(optionsProccesd), quizId)
+            MultipleChoiceQuestions.create( MultipleChoiceQuestionForm.toQuestion(user, form), MultipleChoiceQuestionForm.toOptions(form), quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
       }
@@ -91,12 +90,21 @@ object MultipleChoiceQuestionForm {
       verifying(validCorrectOption, fields => nonBlankOptionsWithCorrectIndex(fields.options, fields.correct)._2.nonEmpty)
   )
 
-  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {
+  def toOptions(form: MultipleChoiceQuestionForm) = {
+    val (options, correct) = nonBlankOptionsWithCorrectIndex(form.options, form.correct)
+    options.map( o => MultipleChoiceQuestionOption(-1l, null, o.toString) ).toList
+  }
+
+  def toQuestion(user: User, form: MultipleChoiceQuestionForm) = {
     MultipleChoiceQuestion(null, user.id, form.explanation, form.correct, JodaUTC.now, form.difficulty)
   }
 
-  def toQuestionOptions(options: (List[String], Option[Int])) =
-    options._1.map( MultipleChoiceQuestionOption(-1, null, _) )
+//  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {
+//    MultipleChoiceQuestion(null, user.id, form.explanation, form.correct, JodaUTC.now, form.difficulty)
+//  }
+
+//  def toQuestionOptions(options: (List[String], Option[Int])) =
+//    options._1.map( MultipleChoiceQuestionOption(-1, null, _) )
 
   // ==== Helpers
   def nonBlankOptionsWithCorrectBoolean(options : List[String], correct: Int) : List[(String, Boolean)] =

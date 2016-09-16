@@ -67,7 +67,7 @@ object TextToHtmlGraph {
       for(o <- op) {
         sideGraphs += toHtml(o)
       }
-      op.map(v => "<a href=\"#" + v.name + "\">" + v.name + "</a>")
+      op.map(v => "<a href=\"#" + v.name + "\">" +  v.name + "</a>")
     })
 
     (ret, sideGraphs.toList)

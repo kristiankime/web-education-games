@@ -74,39 +74,48 @@ GET         /orgs/:o/courses/:c/games/find                                      
 GET         /orgs/:o/courses/:c/games/list                                             controllers.game.GamesController.list(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/games/request                                          controllers.game.GamesController.requestGame(o: OrganizationId, c: CourseId)
 
-# Games
+# Games Questions
 GET         /games/:g                                                                  controllers.game.GamesController.game(g: GameId, a: Option[models.support.AnswerId])
 GET         /games/:g/summary                                                          controllers.game.GamesController.summary(g: GameId)
 POST        /games/:g/respond                                                          controllers.game.GamesController.respond(g: GameId)
+# tor
 POST        /games/:g/questions/create/requestor/derivative                            controllers.game.GamesRequestorController.createDerivativeQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/derivativegraph                       controllers.game.GamesRequestorController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/tangent                               controllers.game.GamesRequestorController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/graphmatch                            controllers.game.GamesRequestorController.createGraphMatchQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/polynomialzone                        controllers.game.GamesRequestorController.createPolynomialZoneQuestion(g: GameId)
+POST        /games/:g/questions/create/requestor/multiplechoice                        controllers.game.GamesRequestorController.createMultipleChoiceQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestor                                       controllers.game.GamesRequestorController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestor                                          controllers.game.GamesRequestorController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestor                                       controllers.game.GamesRequestorController.finalizeAnswers(g: GameId)
+# tee
 POST        /games/:g/questions/create/requestee/derivative                            controllers.game.GamesRequesteeController.createDerivativeQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/derivativegraph                       controllers.game.GamesRequesteeController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/tangent                               controllers.game.GamesRequesteeController.createTangentQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/graphmatch                            controllers.game.GamesRequesteeController.createGraphMatchQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/polynomialzone                        controllers.game.GamesRequesteeController.createPolynomialZoneQuestion(g: GameId)
+POST        /games/:g/questions/create/requestee/multiplechoice                        controllers.game.GamesRequesteeController.createMultipleChoiceQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestee                                       controllers.game.GamesRequesteeController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestee                                          controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestee                                       controllers.game.GamesRequesteeController.finalizeAnswers(g: GameId)
-# Games Questions
+
 GET         /games/:g/questions/:q                                                     controllers.game.GamesController.question(g: GameId, q: QuestionId)
+# Games Answers
 GET         /games/:g/questions/:q/:a                                                  controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
+# tee
 POST        /games/:g/questions/:q/requestee/derivative                                controllers.game.GamesRequesteeController.answerDerivativeQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/derivativegraph                           controllers.game.GamesRequesteeController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/tangent                                   controllers.game.GamesRequesteeController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/graphmatch                                controllers.game.GamesRequesteeController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/polynomialzone                            controllers.game.GamesRequesteeController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestee/multiplechoice                            controllers.game.GamesRequesteeController.answerMultipleChoiceQuestion(g: GameId, q: QuestionId)
+#tor
 POST        /games/:g/questions/:q/requestor/derivative                                controllers.game.GamesRequestorController.answerDerivativeQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivativegraph                           controllers.game.GamesRequestorController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/tangent                                   controllers.game.GamesRequestorController.answerTangentQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/graphmatch                                controllers.game.GamesRequestorController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/polynomialzone                            controllers.game.GamesRequestorController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor/multiplechoice                            controllers.game.GamesRequestorController.answerMultipleChoiceQuestion(g: GameId, q: QuestionId)
 
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                                       controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)

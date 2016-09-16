@@ -11,6 +11,7 @@ import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
 import controllers.quiz.derivativegraph.{DerivativeGraphQuestionForm, DerivativeGraphAnswerForm}
 import controllers.quiz.graphmatch.{GraphMatchAnswerForm, GraphMatchQuestionForm}
+import controllers.quiz.multiplechoice.{MultipleChoiceQuestionForm, MultipleChoiceAnswerForm}
 import controllers.quiz.polynomialzone.{PolynomialZoneAnswerForm, PolynomialZoneQuestionForm}
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
@@ -164,6 +165,24 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           })
     }
   }
+
+  def createMultipleChoiceQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) =>
+        MultipleChoiceQuestionForm.values.bindFromRequest.fold(
+          errors =>
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.multipleChoice(errors)))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
+          form => {
+            val (updatedGame, quiz) = createdQuizEnsured(game)
+            MultipleChoiceQuestions.create(MultipleChoiceQuestionForm.toQuestion(user, form), MultipleChoiceQuestionForm.toOptions(form), quiz.id)
+            Redirect(routes.GamesController.game(updatedGame.id, None))
+          })
+    }
+  }
   // ===== End Create =====
 
   def removeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
@@ -230,7 +249,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             }
           })
       }
-      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a derivative graph question " + questionId))
     }
   }
 
@@ -268,7 +287,7 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
             }
           })
       }
-      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a tangent question " + questionId))
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a graph match question " + questionId))
     }
   }
 
@@ -287,6 +306,25 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           })
       }
       case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a polynomial zone question " + questionId))
+    }
+  }
+
+  def answerMultipleChoiceQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    questionToAnswer(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question: MultipleChoiceQuestion)) => {
+        MultipleChoiceAnswerForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val unfinishedAnswer =  MultipleChoiceAnswerForm.toAnswerUnfinished(user, question, form)
+            MultipleChoiceAnswers.correct(question, form.guessIndex) match {
+              case Yes => Redirect(routes.GamesController.game(game.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case No => Redirect(routes.GamesController.answer(game.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
+              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
+            }
+          })
+      }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a multiple choice question " + questionId))
     }
   }
   // ===== End Answer =====

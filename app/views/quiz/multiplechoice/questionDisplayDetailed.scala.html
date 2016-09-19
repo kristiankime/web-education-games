@@ -1,9 +1,17 @@
 @(question: models.quiz.question.MultipleChoiceQuestion)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @question.explanationMarkup
+@import controllers.quiz.multiplechoice.MultipleChoiceAnswerForm
 
-<ol>
-@for(answerOption <- question.answerOptions) {
-    <li>@answerOption.optionMarkup</li>
-}
-</ol>
+    <table class="pure-table pure-table-striped">
+        <tr>
+            <th>Index</th>
+            <th>Select</th>
+            <th>Option</th>
+        </tr>
+        @for(answerOption <- question.answerOptions.zipWithIndex) {<tr>
+            <td> <label for="multipleChoiceOption@{answerOption._2}">@{answerOption._2 + 1}</label> </td>
+            <td> <input type="radio" name="@MultipleChoiceAnswerForm.guessIndex" value="@answerOption._2" id="multipleChoiceOption@{answerOption._2}" @if(answerOption._2 == 0){ checked}> </td>
+            <td> <label for="multipleChoiceOption@{answerOption._2}">@answerOption._1.optionMarkup</label> </td>
+        </tr>}
+    </table>

@@ -14,23 +14,25 @@
 
     <h4>Below is a mulitple choice question. Read the explanation and pick the correct answer:</h4>
 
-    <section>
-    @question.display(false)
-    </section>
-    <br>
+    @helper.form(gameState.answerMultipleChoiceQuestion(question.id), 'id -> "multipleChociceForm", 'class -> "pure-form") {
+        <section>
+        @question.display(false)
+        </section>
+        <br>
 
-    @for(answerEither <- currentAnswer) {
-    <section align="center">
-        <h4>
-        @answerEither match {
-            case Right(answer) => {You answered @answer.display that answer was @mathml.correct(answer.correct)}
-            case Left(answerTmp) => {You answered @answerTmp.display Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+        @for(answerEither <- currentAnswer) {
+        <section align="center">
+            <h4>
+            @answerEither match {
+                case Right(answer) => {You answered @answer.display that answer was @mathml.correct(answer.correct)}
+                case Left(answerTmp) => {You answered @answerTmp.display Sorry but the system was unable to determine if that answer was correct :( please try another answer}
+            }
+            </h4>
+        </section>
         }
-        </h4>
-    </section>
-    }
 
-    @views.html.quiz.multiplechoice.answerEditor(gameState.answerMultipleChoiceQuestion(question.id), question, currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
+        @views.html.quiz.multiplechoice.answerEditor(question, currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
+    }
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results : models.quiz.question.MultipleChoiceQuestionResults =>

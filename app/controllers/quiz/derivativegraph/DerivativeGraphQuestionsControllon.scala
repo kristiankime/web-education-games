@@ -1,6 +1,7 @@
 package controllers.quiz.derivativegraph
 
-import com.artclod.mathml.{MathMLEq, MathMLRange, Match, MathML}
+import com.artclod.mathml.{Match, Yes, No, Inconclusive}
+import com.artclod.mathml._
 import com.artclod.slick.JodaUTC
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
@@ -93,10 +94,10 @@ object DerivativeGraphQuestionForm {
     val fp = f.dx
     val fpp = fp.dx
 
-    if(      (f  ?= fp)  == Match.Yes ) { false }
-    else if( (f  ?= fpp) == Match.Yes ) { false }
-    else if( (fp ?= fpp) == Match.Yes ) { false }
-    else                                { true  }
+    if(      (f  ?= fp)  == Yes ) { false }
+    else if( (f  ?= fpp) == Yes ) { false }
+    else if( (fp ?= fpp) == Yes ) { false }
+    else                          { true  }
   }
 
 }

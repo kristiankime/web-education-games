@@ -1,6 +1,7 @@
 package models.quiz.answer
 
 import com.artclod.mathml.Match._
+import com.artclod.mathml.{No, Yes}
 import models.quiz.question.{GraphMatchQuestion}
 import models.quiz.table.{AnswerIdNext, graphMatchAnswersTable}
 import play.api.db.slick.Config.driver.simple._

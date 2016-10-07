@@ -1,0 +1,68 @@
+@(action: play.api.mvc.Call, multipleFunctionForm: Form[controllers.quiz.multiplefunction.MultipleFunctionQuestionForm], successCallback : List[String] = List(), infoOp: Option[play.api.templates.Html] = None)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import helper._
+@import controllers.quiz.multiplefunction.MultipleFunctionQuestionForm
+@import com.artclod.play.FormEnhanced
+@import controllers.MathController
+@import com.artclod.mathml.MathMLEq.tightRange
+
+@defining(5){ numOp : Int =>
+
+<section>
+    Enter a description of the problem, as well as descriptions for answers options. Then mark the correct answer and submit. <br>
+
+    @if(multipleFunctionForm.hasErrors){ @for(error <- multipleFunctionForm.errors){<span class="form-error"> Error: @error.message </span><br>} }
+    @if(multipleFunctionForm.hasMessage(MultipleFunctionQuestionForm.explanationInvalid)){<span class="form-error"> Sorry we were unable to create your question since the explanation was not valid markup. </span><br>}
+
+    @form(action, 'id -> "multipleFunctionQuestionForm", 'class -> "pure-form") {
+        <fieldset>
+
+            <h4>Explanation</h4>
+            <p>
+            @tag.markupEditor(MultipleFunctionQuestionForm.explanation, multipleFunctionForm.dataFor(MultipleFunctionQuestionForm.explanation))
+            </p>
+
+            <h4>Answer Options</h4>
+            <table class="pure-table pure-table-striped">
+                <tr> <th> Option </th> <th> Details </th> <th> Correct </th>  </tr> @* TODO on error keep selection *@
+                @for(i <- 0 to numOp) {
+                    <tr>
+                        <td> Option @{i + 1} </td>
+                        <td> @tag.markupEditor(MultipleFunctionQuestionForm.options + "[" + i + "]", multipleFunctionForm.dataFor(MultipleFunctionQuestionForm.options + "[" + i + "]"), 4, 30) </td>
+                        <td> @mathml.mathmlEditor(MultipleFunctionQuestionForm.functions + i) </td>
+                    </tr>
+                }
+            </table>
+
+            <h4>Difficulty</h4>
+            <input type="number" min="1" max="300" step="1" value="1" size="6" name="@MultipleFunctionQuestionForm.difficulty" id="@MultipleFunctionQuestionForm.difficulty"> <br/><br/>
+
+            @for(i <- (0 to numOp)) {<input type="hidden" name='@{MultipleFunctionQuestionForm.functions + "[" + i + "]"}' id="derivativeQuestionMathML">
+            <input type="hidden" name='@{MultipleFunctionQuestionForm.functionsStr + "[" + i + "]"}' id="derivativeQuestionRawStr">}
+
+            <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_FUNCTION_QUESTION_FORM.formSubmit()">
+        </fieldset>
+    }
+
+    @for(info <- infoOp){ @info }
+
+
+    <script>
+        var MULTIPLE_FUNCTION_QUESTION_FORM = {}
+        MULTIPLE_FUNCTION_QUESTION_FORM.formSubmit = function() {
+            var ready = true;
+
+            if(true) {
+                // noop for now
+            } else {
+                ready = false;
+                alert("Sorry we couldn't understand one of the functions that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+            }
+
+            if(ready) {
+                $("#multipleFunctionQuestionForm").submit();
+            }
+        }
+    </script>
+</section>
+}

@@ -1,7 +1,7 @@
 package controllers.quiz.multiplechoice
 
 import com.artclod.mathml.Match._
-import com.artclod.mathml.MathML
+import com.artclod.mathml.{Inconclusive, No, Yes, MathML}
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.quiz.{QuestionsController, QuizzesController}
@@ -26,7 +26,7 @@ trait MultipleChoiceAnswersControllon extends Controller with SecureSocialConsen
             val unfinishedAnswer = MultipleChoiceAnswerForm.toAnswerUnfinished(user, question, form)
             MultipleChoiceAnswers.correct(question, form.guessIndex) match {
               case Yes => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
-              case  No => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
+              case No => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, question.results(user), Some(Left(unfinishedAnswer(false)))))
             }
           })

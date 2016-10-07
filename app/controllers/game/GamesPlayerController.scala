@@ -1,5 +1,6 @@
 package controllers.game
 
+import com.artclod.mathml.{Match, Yes, No, Inconclusive}
 import com.artclod.mathml.Match._
 import com.artclod.mathml.MathML
 import com.artclod.mathml.scalar.MathMLElem
@@ -12,6 +13,7 @@ import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm
 import controllers.quiz.derivativegraph.{DerivativeGraphQuestionForm, DerivativeGraphAnswerForm}
 import controllers.quiz.graphmatch.{GraphMatchAnswerForm, GraphMatchQuestionForm}
 import controllers.quiz.multiplechoice.{MultipleChoiceQuestionForm, MultipleChoiceAnswerForm}
+import controllers.quiz.multiplefunction.{MultipleFunctionQuestionForm, MultipleFunctionAnswerForm }
 import controllers.quiz.polynomialzone.{PolynomialZoneAnswerForm, PolynomialZoneQuestionForm}
 import controllers.quiz.tangent.{TangentAnswerForm, TangentQuestionForm}
 import controllers.support.SecureSocialConsented
@@ -183,6 +185,24 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           })
     }
   }
+
+  def createMultipleFunctionQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) =>
+        MultipleFunctionQuestionForm.values.bindFromRequest.fold(
+          errors =>
+            game.toMask(user) match {
+              case mask : models.game.mask.MyQuizUnfinished => BadRequest(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.multipleFunction(errors)))
+              case _ => BadRequest(views.html.errors.formErrorPage(errors))
+            },
+          form => {
+            val (updatedGame, quiz) = createdQuizEnsured(game)
+            MultipleFunctionQuestions.create(MultipleFunctionQuestionForm.toQuestion(user, form), MultipleFunctionQuestionForm.toOptions(form).get, quiz.id)
+            Redirect(routes.GamesController.game(updatedGame.id, None))
+          })
+    }
+  }
   // ===== End Create =====
 
   def removeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
@@ -321,6 +341,26 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
               case Yes => Redirect(routes.GamesController.game(game.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
               case No => Redirect(routes.GamesController.answer(game.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
               case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
+            }
+          })
+      }
+      case Right((game, quiz, _)) => Ok(views.html.errors.notFoundPage("Question was not a multiple choice question " + questionId))
+    }
+  }
+
+  def answerMultipleFunctionQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    questionToAnswer(gameId, questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right((game, quiz, question: MultipleFunctionQuestion)) => {
+        MultipleFunctionAnswerForm.values.bindFromRequest.fold(
+          errors => BadRequest(views.html.errors.formErrorPage(errors)),
+          form => {
+            val unfinishedAnswer = MultipleFunctionAnswerForm.toAnswerUnfinished(user, question, form, JodaUTC.now)
+            val answerOptions = MultipleFunctionAnswers.answerOptions(question, form)
+            Match.from(answerOptions.map(_.correctNum).max) match {
+                case Yes => Redirect(routes.GamesController.game(game.id, Some(MultipleFunctionAnswers.createAnswer(unfinishedAnswer(true), answerOptions).id)))
+                case No => Redirect(routes.GamesController.answer(game.id, question.id, MultipleFunctionAnswers.createAnswer(unfinishedAnswer(false), answerOptions).id))
+                case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
             }
           })
       }

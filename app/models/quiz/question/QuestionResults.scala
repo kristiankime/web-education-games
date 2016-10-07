@@ -52,3 +52,4 @@ case class PolynomialZoneQuestionResults(answerer: User, question: PolynomialZon
 
 case class MultipleChoiceQuestionResults(answerer: User, question: MultipleChoiceQuestion, answers: List[MultipleChoiceAnswer]) extends QuestionResults
 
+case class MultipleFunctionQuestionResults(answerer: User, question: MultipleFunctionQuestion, answers: List[MultipleFunctionAnswer]) extends QuestionResults

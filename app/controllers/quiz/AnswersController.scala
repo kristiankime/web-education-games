@@ -5,6 +5,7 @@ import controllers.quiz.derivative.DerivativeAnswersControllon
 import controllers.quiz.derivativegraph.DerivativeGraphAnswersControllon
 import controllers.quiz.graphmatch.GraphMatchAnswersControllon
 import controllers.quiz.multiplechoice.MultipleChoiceAnswersControllon
+import controllers.quiz.multiplefunction.MultipleFunctionAnswersControllon
 import controllers.quiz.polynomialzone.PolynomialZoneAnswersControllon
 import controllers.quiz.tangent.TangentAnswersControllon
 import controllers.support.SecureSocialConsented
@@ -22,7 +23,8 @@ object AnswersController extends Controller with SecureSocialConsented
   with TangentAnswersControllon
   with GraphMatchAnswersControllon
   with PolynomialZoneAnswersControllon
-  with MultipleChoiceAnswersControllon {
+  with MultipleChoiceAnswersControllon
+  with MultipleFunctionAnswersControllon {
 
   def apply(questionId: QuestionId, answerId: AnswerId)(implicit session: Session) : Either[Result, Answer] =
     Answers(answerId) match {

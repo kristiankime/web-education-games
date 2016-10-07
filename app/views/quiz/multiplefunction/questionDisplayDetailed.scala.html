@@ -1,0 +1,19 @@
+@(question: models.quiz.question.MultipleFunctionQuestion)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@question.explanationMarkup
+@import controllers.quiz.multiplefunction.MultipleFunctionAnswerForm
+
+    <table class="pure-table pure-table-striped">
+        <tr>
+            <th>Index</th>
+            <th>description</th>
+            <th>function</th>
+        </tr>
+        @for(answerOption <- question.answerOptions.zipWithIndex) {<tr>
+            <td> <label for="multipleFunctionOption@{answerOption._2}">@{answerOption._2 + 1}</label> </td>
+            <td> <label for="multipleFunctionOption@{answerOption._2}">@answerOption._1.optionMarkup</label> </td>
+            <td>
+                @mathml.mathmlEditor("multipleFunctionOption@{answerOption._2}")
+            </td>
+        </tr>}
+    </table>

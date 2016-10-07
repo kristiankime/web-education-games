@@ -24,9 +24,6 @@ import views.html.helper.options
 import views.html.mathml.correct
 import com.artclod.collection.PimpedGenSeqLike
 
-import scala.concurrent.ops
-import scala.util.{Success, Failure}
-
 trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialConsented {
 
   def createMultipleChoice(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>

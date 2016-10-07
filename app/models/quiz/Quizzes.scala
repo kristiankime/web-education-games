@@ -43,8 +43,9 @@ object Quizzes {
       _.filter(_.quizId === quizId).list,
       _.filter(_.quizId === quizId).list,
       _.filter(_.quizId === quizId).list,
+      _.filter(_.quizId === quizId).list,
       _.filter(_.quizId === quizId).list)
-      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
+      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
 
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =

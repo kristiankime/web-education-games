@@ -185,3 +185,23 @@ case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option
   def optionMarkup = MarkupParser(option).getOrElse(Html("Was unable to parse option"))
 }
 
+case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, explanation: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+
+  def answerOptions(implicit session: Session): List[MultipleFunctionQuestionOption] = MultipleFunctionQuestionOptions(this)
+
+  def answersAndOwners(implicit session: Session) = MultipleFunctionQuestions.answersAndOwners(id)
+
+  def difficulty : Double = atCreationDifficulty
+
+  def results(user: User)(implicit session: Session) = MultipleFunctionQuestionResults(user, this, answers(user))
+
+  def answers(user: User)(implicit session: Session) = MultipleFunctionQuestions(id, user)
+
+  def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.multiplefunction.questionDisplay(this, explanation)
+
+  def explanationMarkup = MarkupParser(explanation).getOrElse(Html("Was unable to parse explanation"))
+}
+
+case class MultipleFunctionQuestionOption(id: Long, questionId: QuestionId, option: String, functionMath: MathMLElem, functionRaw: String) {
+  def optionMarkup = MarkupParser(option).getOrElse(Html("Was unable to parse option"))
+}

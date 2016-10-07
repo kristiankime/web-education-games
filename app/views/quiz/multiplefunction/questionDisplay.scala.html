@@ -1,0 +1,2 @@
+@(question: models.quiz.question.MultipleFunctionQuestion, explanation : Boolean)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)@if(explanation){ Multiple Function } else {@views.html.quiz.multiplefunction.questionDisplayDetailed(question)}
+

@@ -11,8 +11,8 @@ object Answers {
 
   // ======= FIND ======
   def list()(implicit session: Session) : List[Answer] =
-    answerTables.->(_.list, _.list, _.list, _.list, _.list, _.list)
-      .toList[Answer](a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]])
+    answerTables.->(_.list, _.list, _.list, _.list, _.list, _.list, _.list)
+      .toList[Answer](a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]])
 
 
   def apply(answerId: AnswerId)(implicit session: Session) : Option[Answer] =
@@ -22,8 +22,9 @@ object Answers {
       _.where(_.id === answerId).list,
       _.where(_.id === answerId).list,
       _.where(_.id === answerId).list,
+      _.where(_.id === answerId).list,
       _.where(_.id === answerId).list)
-      .toList[Answer](a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]])
+      .toList[Answer](a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]], a => a.asInstanceOf[List[Answer]])
       .headOption
 
 }

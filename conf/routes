@@ -58,6 +58,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/tangent                    
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/graphmatch                        controllers.quiz.QuestionsController.createGraphMatch(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/polynomialzone                    controllers.quiz.QuestionsController.createPolynomialZone(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/multiplechoice                    controllers.quiz.QuestionsController.createMultipleChoice(o: OrganizationId, c: CourseId, z: QuizId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/multiplefunction                  controllers.quiz.QuestionsController.createMultipleFunction(o: OrganizationId, c: CourseId, z: QuizId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/remove                         controllers.quiz.QuestionsController.remove(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Course Quizzes Answers
@@ -68,6 +69,7 @@ POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/tangent         
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/graphmatch             controllers.quiz.AnswersController.createGraphMatch(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/polynomialzone         controllers.quiz.AnswersController.createPolynomialZone(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/multiplechoice         controllers.quiz.AnswersController.createMultipleChoice(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
+POST        /orgs/:o/courses/:c/quizzes/:z/questions/:q/answers/multiplefunction       controllers.quiz.AnswersController.createMultipleFunction(o: OrganizationId, c: CourseId, z: QuizId, q: QuestionId)
 
 # Games for Courses
 GET         /orgs/:o/courses/:c/games/find                                             controllers.game.GamesController.findPlayer(o: OrganizationId, c: CourseId)
@@ -85,6 +87,7 @@ POST        /games/:g/questions/create/requestor/tangent                        
 POST        /games/:g/questions/create/requestor/graphmatch                            controllers.game.GamesRequestorController.createGraphMatchQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/polynomialzone                        controllers.game.GamesRequestorController.createPolynomialZoneQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/multiplechoice                        controllers.game.GamesRequestorController.createMultipleChoiceQuestion(g: GameId)
+POST        /games/:g/questions/create/requestor/multiplefunction                      controllers.game.GamesRequestorController.createMultipleFunctionQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestor                                       controllers.game.GamesRequestorController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestor                                          controllers.game.GamesRequestorController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestor                                       controllers.game.GamesRequestorController.finalizeAnswers(g: GameId)
@@ -95,6 +98,7 @@ POST        /games/:g/questions/create/requestee/tangent                        
 POST        /games/:g/questions/create/requestee/graphmatch                            controllers.game.GamesRequesteeController.createGraphMatchQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/polynomialzone                        controllers.game.GamesRequesteeController.createPolynomialZoneQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/multiplechoice                        controllers.game.GamesRequesteeController.createMultipleChoiceQuestion(g: GameId)
+POST        /games/:g/questions/create/requestee/multiplefunction                      controllers.game.GamesRequesteeController.createMultipleFunctionQuestion(g: GameId)
 POST        /games/:g/questions/remove/requestee                                       controllers.game.GamesRequesteeController.removeQuestion(g: GameId)
 POST        /games/:g/finalize/quiz/requestee                                          controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestee                                       controllers.game.GamesRequesteeController.finalizeAnswers(g: GameId)
@@ -109,6 +113,7 @@ POST        /games/:g/questions/:q/requestee/tangent                            
 POST        /games/:g/questions/:q/requestee/graphmatch                                controllers.game.GamesRequesteeController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/polynomialzone                            controllers.game.GamesRequesteeController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestee/multiplechoice                            controllers.game.GamesRequesteeController.answerMultipleChoiceQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestee/multiplefunction                          controllers.game.GamesRequesteeController.answerMultipleFunctionQuestion(g: GameId, q: QuestionId)
 #tor
 POST        /games/:g/questions/:q/requestor/derivative                                controllers.game.GamesRequestorController.answerDerivativeQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/derivativegraph                           controllers.game.GamesRequestorController.answerDerivativeGraphQuestion(g: GameId, q: QuestionId)
@@ -116,6 +121,7 @@ POST        /games/:g/questions/:q/requestor/tangent                            
 POST        /games/:g/questions/:q/requestor/graphmatch                                controllers.game.GamesRequestorController.answerGraphMatchQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/polynomialzone                            controllers.game.GamesRequestorController.answerPolynomialZoneQuestion(g: GameId, q: QuestionId)
 POST        /games/:g/questions/:q/requestor/multiplechoice                            controllers.game.GamesRequestorController.answerMultipleChoiceQuestion(g: GameId, q: QuestionId)
+POST        /games/:g/questions/:q/requestor/multiplefunction                          controllers.game.GamesRequestorController.answerMultipleFunctionQuestion(g: GameId, q: QuestionId)
 
 # Review A Game when completed
 GET         /games/:g/quizzes/:z                                                       controllers.game.GamesController.reviewQuiz(g: GameId, z: QuizId)

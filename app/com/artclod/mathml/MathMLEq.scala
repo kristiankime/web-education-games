@@ -4,12 +4,29 @@ import com.artclod.mathml.scalar._
 
 import scala.util._
 
-object Match extends Enumeration {
-	type Match = Value
-	val Yes, No, Inconclusive = Value
+//object Match extends Enumeration {
+//	type Match = Value
+//	val Yes, No, Inconclusive = Value
+//}
+
+sealed trait Match {
+	val num : Short
 }
 
-import com.artclod.mathml.Match._
+object Yes extends Match { val num = 0.toShort; }
+object No extends Match { val num = 1.toShort; }
+object Inconclusive extends Match { val num = 2.toShort; }
+
+
+object Match {
+	def from(num: Short): Match = {
+		num match {
+			case 0 => Yes
+			case 1 => No
+			case 2 => Inconclusive
+		}
+	}
+}
 
 /**
  * This object has methods for checking to see if two functions (of a single variable) are the same.
@@ -59,7 +76,7 @@ object MathMLEq {
     matches.reduce(matchCombine)
 	}
 
-  def matchCombine(a : Match.Value, b: Match.Value) : Match = (a , b) match {
+  def matchCombine(a : Match, b: Match) : Match = (a , b) match {
     case (No, _) => No
     case (_, No) => No // If we ever see a No they are not a match
     case (Yes, _) => Yes

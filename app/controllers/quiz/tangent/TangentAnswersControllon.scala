@@ -1,7 +1,7 @@
 package controllers.quiz.tangent
 
 import com.artclod.mathml.Match._
-import com.artclod.mathml.MathML
+import com.artclod.mathml.{Inconclusive, No, Yes, MathML}
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
 import controllers.quiz.{QuestionsController, QuizzesController}

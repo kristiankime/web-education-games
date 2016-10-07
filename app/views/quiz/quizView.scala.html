@@ -51,7 +51,8 @@
         ("Create a Tangent Question", views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), forms.tangent)),
         ("Create a Graph Match Question", views.html.quiz.graphmatch.questionEditor(QuestionsController.createGraphMatch(course.organizationId, course.id, quiz.id), forms.graphMatch)),
         ("Create a Polynomial Zone Question", views.html.quiz.polynomialzone.questionEditor(QuestionsController.createPolynomialZone(course.organizationId, course.id, quiz.id), forms.polynomialZone)),
-        ("Create a Multiple Choice Question", views.html.quiz.multiplechoice.questionEditor(QuestionsController.createMultipleChoice(course.organizationId, course.id, quiz.id), forms.multipleChoice))
+        ("Create a Multiple Choice Question", views.html.quiz.multiplechoice.questionEditor(QuestionsController.createMultipleChoice(course.organizationId, course.id, quiz.id), forms.multipleChoice)),
+        ("Create a Multiple Function Question", views.html.quiz.multiplefunction.questionEditor(QuestionsController.createMultipleFunction(course.organizationId, course.id, quiz.id), forms.multipleFunction))
     )
 
     @defining(quiz.results(course)) { quizResults : List[models.quiz.QuizResults] =>

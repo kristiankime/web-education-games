@@ -91,11 +91,11 @@ trait MultipleFunctionQuestionsControllon extends Controller with SecureSocialCo
 
 object MultipleFunctionQuestionForm {
   // Field Names
-  val explanation = "explanation"
-  val options = "options"
-  val functions = "functions"
-  val functionsStr = "functionsStr"
-  val difficulty = "difficulty"
+  val explanation = "explanationMF"
+  val options = "optionsMF"
+  val functions = "functionsMF"
+  val functionsStr = "functionsStrMF"
+  val difficulty = "difficultyMF"
   // Validation Check Names
   val explanationInvalid = "explanationInvalid"
   val optionsDontMatchFunctions = "optionsDontMatchFunctions"
@@ -113,6 +113,10 @@ object MultipleFunctionQuestionForm {
 //  Option(String, Html, String, MathMLElem)
   def toOptions(form: MultipleFunctionQuestionForm) : Option[List[MultipleFunctionQuestionOption]] = {
     toOptions(form.options, form.functions)
+  }
+
+  def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
+    MultipleFunctionQuestion(null, user.id, form.explanation, JodaUTC.now, form.difficulty)
   }
 
   def toOptions(options: List[String], functions : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
@@ -134,20 +138,14 @@ object MultipleFunctionQuestionForm {
   }
 
 
-
-
 //  def toOptions(form: MultipleChoiceQuestionForm) = {
 //    val (options, correct) = nonBlankOptionsWithCorrectIndex(form.options, form.correct)
 //    options.map( o => MultipleChoiceQuestionOption(-1l, null, o.toString) ).toList
 //  }
 
-  def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
-    MultipleFunctionQuestion(null, user.id, form.explanation, JodaUTC.now, form.difficulty)
-  }
-
-  def toQuestion(user: User, form: MultipleFunctionQuestionForm, options: (List[String], Option[Int])) = {
-    MultipleFunctionQuestion(null, user.id, form.explanation, JodaUTC.now, form.difficulty)
-  }
+//  def toQuestion(user: User, form: MultipleFunctionQuestionForm, options: (List[String], Option[Int])) = {
+//    MultipleFunctionQuestion(null, user.id, form.explanation, JodaUTC.now, form.difficulty)
+//  }
 
 //  def toQuestionOptions(options: (List[String], Option[Int])) =
 //    options._1.map( MultipleChoiceQuestionOption(-1, null, _) )

@@ -37,8 +37,8 @@
             <h4>Difficulty</h4>
             <input type="number" min="1" max="300" step="1" value="1" size="6" name="@MultipleFunctionQuestionForm.difficulty" id="@MultipleFunctionQuestionForm.difficulty"> <br/><br/>
 
-            @for(i <- (0 to numOp)) {<input type="hidden" name='@{MultipleFunctionQuestionForm.functions + "[" + i + "]"}' id="derivativeQuestionMathML">
-            <input type="hidden" name='@{MultipleFunctionQuestionForm.functionsStr + "[" + i + "]"}' id="derivativeQuestionRawStr">}
+            @for(i <- (0 to numOp)) {
+                <input type="hidden" name='@{MultipleFunctionQuestionForm.functions + "[" + i + "]"}' id="derivativeQuestionMathML"> <input type="hidden" name='@{MultipleFunctionQuestionForm.functionsStr + "[" + i + "]"}' id="derivativeQuestionRawStr">}
 
             <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_FUNCTION_QUESTION_FORM.formSubmit()">
         </fieldset>

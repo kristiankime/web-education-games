@@ -68,10 +68,10 @@ trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialCons
 
 object MultipleChoiceQuestionForm {
   // Field Names
-  val explanation = "explanation"
-  val correct = "correct"
-  val options = "options"
-  val difficulty = "difficulty"
+  val explanation = "explanationMC"
+  val correct = "correctMC"
+  val options = "optionsMC"
+  val difficulty = "difficultyMC"
   // Validation Check Names
   val explanationInvalid = "explanationInvalid"
   val validCorrectOption = "validCorrectOption"

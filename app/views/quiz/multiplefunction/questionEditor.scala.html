@@ -38,7 +38,7 @@
             <input type="number" min="1" max="300" step="1" value="1" size="6" name="@MultipleFunctionQuestionForm.difficulty" id="@MultipleFunctionQuestionForm.difficulty"> <br/><br/>
 
             @for(i <- (0 to numOp)) {
-                <input type="hidden" name='@{MultipleFunctionQuestionForm.functions + "[" + i + "]"}' id="derivativeQuestionMathML"> <input type="hidden" name='@{MultipleFunctionQuestionForm.functionsStr + "[" + i + "]"}' id="derivativeQuestionRawStr">}
+                <input type="hidden" name='@{MultipleFunctionQuestionForm.functions + "[" + i + "]"}' id="@{MultipleFunctionQuestionForm.functions + i}MathML"> <input type="hidden" name='@{MultipleFunctionQuestionForm.functionsStr + "[" + i + "]"}' id="@{MultipleFunctionQuestionForm.functions + i}RawStr">}
 
             <input type="button" class="pure-button" value="Save Question" onclick="MULTIPLE_FUNCTION_QUESTION_FORM.formSubmit()">
         </fieldset>
@@ -52,15 +52,22 @@
         MULTIPLE_FUNCTION_QUESTION_FORM.formSubmit = function() {
             var ready = true;
 
-            if(true) {
-                // noop for now
-            } else {
+            var optionText = "";
+            @for(i <- (0 to numOp)) {
+            optionText = $("#@{MultipleFunctionQuestionForm.options + "_" + i + "_"}").val()
+            if(optionText !== "" && @{MultipleFunctionQuestionForm.functions + i}.valid) {
+                $("#@{MultipleFunctionQuestionForm.functions + i}MathML").val(@{MultipleFunctionQuestionForm.functions + i}.mathML);
+                $("#@{MultipleFunctionQuestionForm.functions + i}RawStr").val(@{MultipleFunctionQuestionForm.functions + i}.rawStr);
+            } else if(optionText !== "" && !@{MultipleFunctionQuestionForm.functions + i}.valid) {
                 ready = false;
-                alert("Sorry we couldn't understand one of the functions that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+            }
             }
 
             if(ready) {
                 $("#multipleFunctionQuestionForm").submit();
+            } else {
+                ready = false;
+                alert("Sorry we couldn't understand one of the functions that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
             }
         }
     </script>

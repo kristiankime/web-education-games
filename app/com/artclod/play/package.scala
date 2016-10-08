@@ -5,6 +5,7 @@ import _root_.play.api.data.validation.ValidationError
 import _root_.play.api.libs.json.{JsPath, JsResult}
 import _root_.play.api.templates.Html
 import _root_.play.api.data.{FormError, Form}
+import _root_.play.libs.F
 import models.quiz.question.support.DerivativeOrder
 import com.artclod.util.TryUtil.EitherPimp
 
@@ -53,6 +54,8 @@ package object play {
     def dataFor(field: String) = form.data.get(field)
 
     def dataOrElse(field: String, default: String) = form.data.getOrElse(field, default)
+
+    def noErrors = !form.hasErrors
 
   }
 

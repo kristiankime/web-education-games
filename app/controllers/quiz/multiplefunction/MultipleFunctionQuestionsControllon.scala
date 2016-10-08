@@ -42,7 +42,6 @@ trait MultipleFunctionQuestionsControllon extends Controller with SecureSocialCo
             MultipleFunctionQuestions.create( MultipleFunctionQuestionForm.toQuestion(user, form), MultipleFunctionQuestionForm.toOptions(form).get, quizId)
             Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
           })
-        Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
       }
     }
   }
@@ -101,9 +100,15 @@ object MultipleFunctionQuestionForm {
   val optionsDontMatchFunctions = "optionsDontMatchFunctions"
 
   val values = Form(
-    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
-      options -> list(text).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)} ),
-      functions -> list(text).verifying("Functions could not be parsed", ops => if(ops.isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MathML(e).isSuccess).reduce(_ & _)} ),
+    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => (
+      MarkupParser(e).isSuccess
+      )),
+      options -> list(text).verifying("Options could not be parsed", ops => (
+        if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)}
+        ) ),
+      functions -> list(text).verifying("Functions could not be parsed", ops => (
+        if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MathML(e).isSuccess).reduce(_ & _)}
+        ) ),
       difficulty -> number
     )
     (MultipleFunctionQuestionForm.apply)(MultipleFunctionQuestionForm.unapply)

@@ -48,6 +48,7 @@ object QuestionsController extends Controller with SecureSocialConsented
           case graphMatch : GraphMatchQuestion => Ok(views.html.quiz.graphmatch.questionView(course, quiz, graphMatch.results(user), None))
           case polyZone : PolynomialZoneQuestion => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, polyZone.results(user), None))
           case multipleChoice : MultipleChoiceQuestion => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, multipleChoice.results(user), None))
+          case multipleFunction : MultipleFunctionQuestion => Ok(views.html.quiz.multiplefunction.questionView(course, quiz, multipleFunction.results(user), None))
         }
     }
 	}

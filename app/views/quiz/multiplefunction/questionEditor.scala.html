@@ -51,6 +51,7 @@
         var MULTIPLE_FUNCTION_QUESTION_FORM = {}
         MULTIPLE_FUNCTION_QUESTION_FORM.formSubmit = function() {
             var ready = true;
+            var hasOption = false;
 
             var optionText = "";
             @for(i <- (0 to numOp)) {
@@ -58,16 +59,18 @@
             if(optionText !== "" && @{MultipleFunctionQuestionForm.functions + i}.valid) {
                 $("#@{MultipleFunctionQuestionForm.functions + i}MathML").val(@{MultipleFunctionQuestionForm.functions + i}.mathML);
                 $("#@{MultipleFunctionQuestionForm.functions + i}RawStr").val(@{MultipleFunctionQuestionForm.functions + i}.rawStr);
+                hasOption = true;
             } else if(optionText !== "" && !@{MultipleFunctionQuestionForm.functions + i}.valid) {
                 ready = false;
             }
             }
 
-            if(ready) {
+            if(ready & hasOption) {
                 $("#multipleFunctionQuestionForm").submit();
             } else {
                 ready = false;
-                alert("Sorry we couldn't understand one of the functions that you wrote. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.");
+                hasOption = false;
+                alert("Sorry we couldn't create your problem. There needs to be an explanation and at least one option. If there is a red icon next to a function input box the system can't understand what you typed.");
             }
         }
     </script>

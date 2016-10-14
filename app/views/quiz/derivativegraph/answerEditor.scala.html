@@ -5,7 +5,7 @@
 <section>
     Select your answer, and then hit the submit button @tag.answerWarning()<br>
 
-    @helper.form(action, 'id -> "tangentAnswerForm", 'class -> "pure-form") {
+    @helper.form(action, 'id -> "derivativeGraphAnswerForm", 'class -> "pure-form") {
         <fieldset>
             <select name="@{DerivativeGraphAnswerForm.derivativeOrder}">
                 @for(derOrd <- models.quiz.question.support.DerivativeOrder.all){<option value="@derOrd.asString"> @derOrd.niceString </option>}

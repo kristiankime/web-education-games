@@ -1,1 +1,1 @@
-@(answer: models.quiz.answer.MultipleFunctionAnswer)(implicit session: play.api.db.slick.Config.driver.simple.Session)@answer.options.size
+@(answer: models.quiz.answer.MultipleFunctionAnswer)(implicit session: play.api.db.slick.Config.driver.simple.Session)@for(option <- answer.options) { @option.display }

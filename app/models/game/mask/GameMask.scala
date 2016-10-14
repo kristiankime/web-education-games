@@ -75,6 +75,10 @@ trait GameSetup {
     if(requestee) { controllers.game.routes.GamesRequesteeController.createMultipleChoiceQuestion(game.id) }
     else {          controllers.game.routes.GamesRequestorController.createMultipleChoiceQuestion(game.id) }
 
+  def createMultipleFunctionQuestionCall : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.createMultipleFunctionQuestion(game.id) }
+    else {          controllers.game.routes.GamesRequestorController.createMultipleFunctionQuestion(game.id) }
+
   // Finalize Quiz
   def finalizeCreatedQuiz : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.finalizeCreatedQuiz(game.id) }
@@ -111,6 +115,11 @@ trait GameSetup {
   def answerMultipleChoiceQuestion(questionId: QuestionId) : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.answerMultipleChoiceQuestion(game.id, questionId) }
     else {          controllers.game.routes.GamesRequestorController.answerMultipleChoiceQuestion(game.id, questionId) }
+
+  def answerMultipleFunctionQuestion(questionId: QuestionId) : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.answerMultipleFunctionQuestion(game.id, questionId) }
+    else {          controllers.game.routes.GamesRequestorController.answerMultipleFunctionQuestion(game.id, questionId) }
+
 
   // Finalize Answers
   def finalizeAnsweringQuiz : play.api.mvc.Call =

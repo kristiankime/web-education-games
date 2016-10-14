@@ -44,6 +44,7 @@ object AnswersController extends Controller with SecureSocialConsented
         case (tq: GraphMatchQuestion, ta: GraphMatchAnswer)           => Ok(views.html.quiz.graphmatch.questionView(course, quiz, tq.results(user), Some(Right(ta))))
         case (pz: PolynomialZoneQuestion, pa: PolynomialZoneAnswer)   => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, pz.results(user), Some(Right(pa))))
         case (mc: MultipleChoiceQuestion, ma: MultipleChoiceAnswer)   => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, mc.results(user), Some(Right(ma))))
+        case (mc: MultipleFunctionQuestion, ma: MultipleFunctionAnswer)   => Ok(views.html.quiz.multiplefunction.questionView(course, quiz, mc.results(user), Some(Right(ma))))
         case _ => Ok(views.html.errors.notFoundPage("Question " + questionId + " type did not match Answer " + answerId))
       }
     }

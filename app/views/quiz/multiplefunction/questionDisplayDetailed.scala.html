@@ -13,7 +13,7 @@
             <td> <label for="multipleFunctionOption@{answerOption._2}">@{answerOption._2 + 1}</label> </td>
             <td> <label for="multipleFunctionOption@{answerOption._2}">@answerOption._1.optionMarkup</label> </td>
             <td>
-                @mathml.mathmlEditor("multipleFunctionOption@{answerOption._2}")
+                @mathml.mathmlEditor("MULTIPLE_FUNCTION_ANSWER_EDITOR_" + answerOption._2)
             </td>
         </tr>}
     </table>

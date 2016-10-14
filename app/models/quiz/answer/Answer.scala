@@ -119,4 +119,8 @@ object MultipleFunctionAnswerUnfinished {
     MultipleFunctionAnswer(null, ownerId, questionId, comment, if(correct) 1 else 0, creationDate)
 }
 
-case class MultipleFunctionAnswerOption(id: Long, answerId: AnswerId, functionMath: MathMLElem, functionRaw: String, correctNum: Short)
+case class MultipleFunctionAnswerOption(id: Long, answerId: AnswerId, functionMath: MathMLElem, functionRaw: String, correctNum: Short) extends ViewableMath {
+  val mathML: MathMLElem = functionMath
+  val rawStr: String = functionRaw
+  def display = views.html.mathml.mathmlDisplay(this)
+}

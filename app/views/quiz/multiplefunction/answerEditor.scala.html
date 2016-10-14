@@ -2,17 +2,45 @@
 
 @import controllers.quiz.multiplefunction.MultipleFunctionAnswerForm
 
+@defining(question.answerOptions.size){ numOps : Int=>
+
 <section>
     Select your answer, and then hit the submit button @tag.answerWarning()<br>
 
     <fieldset>
-        @*
-        <select name="@{MultipleChoiceAnswerForm.guessIndex}">
-            @for(i <- (1 to question.answerOptions.size)) {<option value="@{i-1}"> @i </option> }
-        </select>
-        *@
-        <input type="submit" class="pure-button pure-button-primary" value="Submit">
+
+        @for(i <- (0 until numOps)) {
+        <input type="hidden" name="@{MultipleFunctionAnswerForm.functionGuesses + "[" + i + "]"}" id="multipleFunctionGuessMathML@{i}">
+        <input type="hidden" name="@{MultipleFunctionAnswerForm.functionGuessesStr + "[" + i + "]"}" id="multipleFunctionGuessRawStr@{i}">
+        }
+
+        <input type="button" class="pure-button pure-button-primary" value="Finish Answer" onclick="MULTIPLE_FUNCTION_ANSWER_FORM.formSubmit()">
         @link
     </fieldset>
 
+        <script>
+        var MULTIPLE_FUNCTION_ANSWER_FORM = {};
+        MULTIPLE_FUNCTION_ANSWER_FORM.formSubmit = function () {
+            var valid = true;
+
+            @for(i <- (0 until numOps)) {
+            if(MULTIPLE_FUNCTION_ANSWER_EDITOR_@{i}.valid) {
+                $("#multipleFunctionGuessMathML@{i}").val(MULTIPLE_FUNCTION_ANSWER_EDITOR_@{i}.mathML);
+                $("#multipleFunctionGuessRawStr@{i}").val(MULTIPLE_FUNCTION_ANSWER_EDITOR_@{i}.rawStr);
+            } else {
+                valid = false;
+            }
+            }
+
+            if(valid){
+                $("#multipleFunctionForm").submit();
+            } else {
+                alert("Sorry we couldn't understand your answer. Please try changing it and resubmitting. There is a red icon next to the input box if the system can't understand what you typed.")
+                valid = true;
+            }
+        }
+        </script>
+
 </section>
+
+}

@@ -100,15 +100,9 @@ object MultipleFunctionQuestionForm {
   val optionsDontMatchFunctions = "optionsDontMatchFunctions"
 
   val values = Form(
-    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => (
-      MarkupParser(e).isSuccess
-      )),
-      options -> list(text).verifying("Options could not be parsed", ops => (
-        if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)}
-        ) ),
-      functions -> list(text).verifying("Functions could not be parsed", ops => (
-        if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MathML(e).isSuccess).reduce(_ & _)}
-        ) ),
+    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
+      options -> list(text).verifying("Options could not be parsed", ops => if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)}),
+      functions -> list(text).verifying("Functions could not be parsed", ops => if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MathML(e).isSuccess).reduce(_ & _)}),
       difficulty -> number
     )
     (MultipleFunctionQuestionForm.apply)(MultipleFunctionQuestionForm.unapply)
@@ -128,7 +122,7 @@ object MultipleFunctionQuestionForm {
     if(options.size != functions.size) {
       None;
     } else {
-      val opAndFunc = options.map(_.trim).zip(functions.map(_.trim)).filter(o => o._1.isEmpty && o._2.isEmpty)
+      val opAndFunc = options.map(_.trim).zip(functions.map(_.trim)).filter(o => o._1.nonEmpty && o._2.nonEmpty)
       if (opAndFunc.map(o => o._1.isEmpty || o._2.isEmpty).fold(false)(_ || _)) {
         None // Blanks mismatched
       } else {

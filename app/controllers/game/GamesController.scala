@@ -176,12 +176,13 @@ object GamesController extends Controller with SecureSocialConsented {
   // LATER figure out how to ensure Option[Either[DerivativeAnswer,DerivativeAnswer]] etc
   def questionView(gameState: GameMask, quiz: Quiz, question: Question, answer: Option[Either[Answer, Answer]])(implicit user: User, session: Session) : Result =
     (question, answer) match {
-      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                => Ok(views.html.game.question.answeringDerivativeQuestion(gameState, quiz, q, a))
-      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]]) => Ok(views.html.game.question.answeringDerivativeGraphQuestion(gameState, quiz, q, a))
-      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                         => Ok(views.html.game.question.answeringTangentQuestion(gameState, quiz, q, a))
-      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                => Ok(views.html.game.question.answeringGraphMatchQuestion(gameState, quiz, q, a))
-      case (q : PolynomialZoneQuestion, a : Option[Either[PolynomialZoneAnswer,PolynomialZoneAnswer]])    => Ok(views.html.game.question.answeringPolynomialZoneQuestion(gameState, quiz, q, a))
-      case (q : MultipleChoiceQuestion, a : Option[Either[MultipleChoiceAnswer,MultipleChoiceAnswer]])    => Ok(views.html.game.question.answeringMultipleChoiceQuestion(gameState, quiz, q, a))
+      case (q : DerivativeQuestion, a : Option[Either[DerivativeAnswer,DerivativeAnswer]])                   => Ok(views.html.game.question.answeringDerivativeQuestion(gameState, quiz, q, a))
+      case (q : DerivativeGraphQuestion, a : Option[Either[DerivativeGraphAnswer,DerivativeGraphAnswer]])    => Ok(views.html.game.question.answeringDerivativeGraphQuestion(gameState, quiz, q, a))
+      case (q : TangentQuestion, a : Option[Either[TangentAnswer,TangentAnswer]])                            => Ok(views.html.game.question.answeringTangentQuestion(gameState, quiz, q, a))
+      case (q : GraphMatchQuestion, a : Option[Either[GraphMatchAnswer,GraphMatchAnswer]])                   => Ok(views.html.game.question.answeringGraphMatchQuestion(gameState, quiz, q, a))
+      case (q : PolynomialZoneQuestion, a : Option[Either[PolynomialZoneAnswer,PolynomialZoneAnswer]])       => Ok(views.html.game.question.answeringPolynomialZoneQuestion(gameState, quiz, q, a))
+      case (q : MultipleChoiceQuestion, a : Option[Either[MultipleChoiceAnswer,MultipleChoiceAnswer]])       => Ok(views.html.game.question.answeringMultipleChoiceQuestion(gameState, quiz, q, a))
+      case (q : MultipleFunctionQuestion, a : Option[Either[MultipleFunctionAnswer,MultipleFunctionAnswer]]) => Ok(views.html.game.question.answeringMultipleFunctionQuestion(gameState, quiz, q, a))
     }
 
   def reviewQuiz(gameId: GameId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>

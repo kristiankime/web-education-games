@@ -68,6 +68,7 @@ trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialCons
 
 object MultipleChoiceQuestionForm {
   // Field Names
+  val description = "descriptionMC"
   val explanation = "explanationMC"
   val correct = "correctMC"
   val options = "optionsMC"
@@ -78,7 +79,9 @@ object MultipleChoiceQuestionForm {
 
 
   val values = Form(
-    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
+    mapping(
+      description -> nonEmptyText,
+      explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
       correct -> number,
       options -> list(text).verifying("Options could not be parsed", ops => if(ops.isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)} ),
       difficulty -> number
@@ -93,7 +96,7 @@ object MultipleChoiceQuestionForm {
   }
 
   def toQuestion(user: User, form: MultipleChoiceQuestionForm) = {
-    MultipleChoiceQuestion(null, user.id, form.explanation, form.correct, JodaUTC.now, form.difficulty)
+    MultipleChoiceQuestion(null, user.id, form.description, form.explanation, form.correct, JodaUTC.now, form.difficulty)
   }
 
 //  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {
@@ -118,7 +121,7 @@ object MultipleChoiceQuestionForm {
 
 }
 
-case class MultipleChoiceQuestionForm(explanation: String, correctInt: Int, options: List[String], difficultyInt: Int) {
+case class MultipleChoiceQuestionForm(description: String, explanation: String, correctInt: Int, options: List[String], difficultyInt: Int) {
   val correct = correctInt.toShort
   val difficulty = difficultyInt.toDouble
 }

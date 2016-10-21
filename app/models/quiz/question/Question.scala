@@ -164,7 +164,7 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
     }
 }
 
-case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, explanation: String, correctAnswer: Short, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, description: String, explanation: String, correctAnswer: Short, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
   def answerOptions(implicit session: Session): List[MultipleChoiceQuestionOption] = MultipleChoiceQuestionOptions(this)
 
@@ -185,7 +185,7 @@ case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option
   def optionMarkup = MarkupParser(option).getOrElse(Html("Was unable to parse option"))
 }
 
-case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, explanation: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
+case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, description: String, explanation: String, creationDate: DateTime, atCreationDifficulty : Double, quizIdOp: Option[QuizId] = None, order: Int = 1) extends Question {
 
   def answerOptions(implicit session: Session): List[MultipleFunctionQuestionOption] = MultipleFunctionQuestionOptions(this)
 

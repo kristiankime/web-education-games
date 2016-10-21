@@ -90,6 +90,7 @@ trait MultipleFunctionQuestionsControllon extends Controller with SecureSocialCo
 
 object MultipleFunctionQuestionForm {
   // Field Names
+  val description = "descriptionMF"
   val explanation = "explanationMF"
   val options = "optionsMF"
   val functions = "functionsMF"
@@ -100,7 +101,9 @@ object MultipleFunctionQuestionForm {
   val optionsDontMatchFunctions = "optionsDontMatchFunctions"
 
   val values = Form(
-    mapping(explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
+    mapping(
+      description -> nonEmptyText,
+      explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
       options -> list(text).verifying("Options could not be parsed", ops => if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)}),
       functions -> list(text).verifying("Functions could not be parsed", ops => if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MathML(e).isSuccess).reduce(_ & _)}),
       difficulty -> number
@@ -115,7 +118,7 @@ object MultipleFunctionQuestionForm {
   }
 
   def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
-    MultipleFunctionQuestion(null, user.id, form.explanation, JodaUTC.now, form.difficulty)
+    MultipleFunctionQuestion(null, user.id, form.description, form.explanation, JodaUTC.now, form.difficulty)
   }
 
   def toOptions(options: List[String], functions : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
@@ -165,6 +168,6 @@ object MultipleFunctionQuestionForm {
 }
 //case class AnswerOptionData(optionStr: String, option: Html, functionStr: String, function : MathMLElem)
 
-case class MultipleFunctionQuestionForm(explanation: String, options: List[String], functions: List[String], difficultyInt: Int) {
+case class MultipleFunctionQuestionForm(description: String, explanation: String, options: List[String], functions: List[String], difficultyInt: Int) {
   val difficulty = difficultyInt.toDouble
 }

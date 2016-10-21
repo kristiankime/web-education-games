@@ -17,6 +17,9 @@
     @form(action, 'id -> "multipleFunctionQuestionForm", 'class -> "pure-form") {
         <fieldset>
 
+            <h4>Short Description</h4>
+            <input id="@MultipleFunctionQuestionForm.description" name="@MultipleFunctionQuestionForm.description" type="text" size="40"/>
+
             <h4>Explanation</h4>
             <p>
             @tag.markupEditor(MultipleFunctionQuestionForm.explanation, multipleFunctionForm.dataFor(MultipleFunctionQuestionForm.explanation))

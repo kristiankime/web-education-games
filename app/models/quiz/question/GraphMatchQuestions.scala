@@ -5,8 +5,8 @@ import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.{GraphMatchAnswer, DerivativeGraphAnswer}
 import models.quiz.answer.table.{GraphMatchAnswersTable, DerivativeGraphAnswersTable}
-import models.quiz.question.table.{GraphMatchQuestionsTable, DerivativeGraphQuestionsTable}
-import models.quiz.table.{QuestionIdNext, graphMatchAnswersTable, graphMatchQuestionsTable, quizzesTable}
+import models.quiz.question.table.{GraphMatchQuestion2QuizTable, DerivativeQuestion2QuizTable, GraphMatchQuestionsTable, DerivativeGraphQuestionsTable}
+import models.quiz.table._
 import models.support._
 import models.user.User
 import models.user.table.usersTable
@@ -17,8 +17,12 @@ object GraphMatchQuestions {
 
   // ======= CREATE ======
   def create(info: GraphMatchQuestion, quizId: QuizId)(implicit session: Session): GraphMatchQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
+    val toInsert = info.copy(id = QuestionIdNext())
     graphMatchQuestionsTable += toInsert
+
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    graphMatchQuestion2QuizTable += quizLink
+
     toInsert
   }
 
@@ -44,11 +48,17 @@ object GraphMatchQuestions {
       u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
-  def quizFor(questionId: QuestionId)(implicit session: Session) =
+  def quizFor(questionId: QuestionId, quizId: QuizId)(implicit session: Session) =
     (for (
-      q <- graphMatchQuestionsTable if q.id === questionId;
+      q <- graphMatchQuestion2QuizTable if q.questionId === questionId && q.quizId === quizId;
       z <- quizzesTable if z.id === q.quizId
     ) yield z).firstOption
+
+//  def quizFor(questionId: QuestionId)(implicit session: Session) =
+//    (for (
+//      q <- graphMatchQuestionsTable if q.id === questionId;
+//      z <- quizzesTable if z.id === q.quizId
+//    ) yield z).firstOption
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = graphMatchAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
@@ -58,11 +68,12 @@ object GraphMatchQuestions {
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: GraphMatchQuestion)(implicit session: Session) =
-    graphMatchQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+    graphMatchQuestion2QuizTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+//  graphMatchQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= RESULTS =======
-  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[GraphMatchQuestionsTable], answerTable: TableQuery[GraphMatchAnswersTable])(implicit session: Session) = {
-    val resultsRelational = Questions.resultsQuery[GraphMatchQuestion, GraphMatchQuestionsTable, GraphMatchAnswer, GraphMatchAnswersTable](user, asOfOp, quizOp)(questionTable, answerTable)
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[GraphMatchQuestionsTable], answerTable: TableQuery[GraphMatchAnswersTable], question2QuizTable: TableQuery[GraphMatchQuestion2QuizTable])(implicit session: Session) = {
+    val resultsRelational = Questions.resultsQuery[GraphMatchQuestion, GraphMatchQuestionsTable, GraphMatchAnswer, GraphMatchAnswersTable, GraphMatchQuestion2QuizTable](user, asOfOp, quizOp)(questionTable, answerTable, question2QuizTable)
     val grouped = listGroupBy(resultsRelational)(_._1, _._2)
     grouped.map(v => GraphMatchQuestionResults(user, v.key, v.values))
   }

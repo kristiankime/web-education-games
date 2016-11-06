@@ -5,8 +5,8 @@ import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.{MultipleChoiceAnswer, GraphMatchAnswer}
 import models.quiz.answer.table.{MultipleChoiceAnswersTable, GraphMatchAnswersTable}
-import models.quiz.question.table.{MultipleChoiceQuestionsTable, GraphMatchQuestionsTable}
-import models.quiz.table.{QuestionIdNext, multipleChoiceAnswersTable, multipleChoiceQuestionsTable, quizzesTable, multipleChoiceQuestionOptionsTable}
+import models.quiz.question.table.{MultipleChoiceQuestion2QuizTable, MultipleChoiceQuestionsTable, GraphMatchQuestionsTable}
+import models.quiz.table._
 import models.support._
 import models.user.User
 import models.user.table.usersTable
@@ -17,9 +17,13 @@ object MultipleChoiceQuestions {
 
   // ======= CREATE ======
   def create(info: MultipleChoiceQuestion, options: List[MultipleChoiceQuestionOption], quizId: QuizId)(implicit session: Session): MultipleChoiceQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
+    val toInsert = info.copy(id = QuestionIdNext())  // TODO setup order here
     multipleChoiceQuestionsTable += toInsert
     multipleChoiceQuestionOptionsTable ++= options.map(_.copy(questionId = toInsert.id))
+
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    multipleChoiceQuestion2QuizTable += quizLink
+
     toInsert
   }
 
@@ -46,11 +50,17 @@ object MultipleChoiceQuestions {
       u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
-  def quizFor(questionId: QuestionId)(implicit session: Session) =
+  def quizFor(questionId: QuestionId, quizId: QuizId)(implicit session: Session) =
     (for (
-      q <- multipleChoiceQuestionsTable if q.id === questionId;
+      q <- multipleChoiceQuestion2QuizTable if q.questionId === questionId && q.quizId === quizId;
       z <- quizzesTable if z.id === q.quizId
     ) yield z).firstOption
+
+//  def quizFor(questionId: QuestionId)(implicit session: Session) =
+//    (for (
+//      q <- multipleChoiceQuestionsTable if q.id === questionId;
+//      z <- quizzesTable if z.id === q.quizId
+//    ) yield z).firstOption
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = multipleChoiceAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
@@ -60,11 +70,12 @@ object MultipleChoiceQuestions {
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: MultipleChoiceQuestion)(implicit session: Session) =
-    multipleChoiceQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+    multipleChoiceQuestion2QuizTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+//  multipleChoiceQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= RESULTS =======
-  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[MultipleChoiceQuestionsTable], answerTable: TableQuery[MultipleChoiceAnswersTable])(implicit session: Session) = {
-    val resultsRelational = Questions.resultsQuery[MultipleChoiceQuestion, MultipleChoiceQuestionsTable, MultipleChoiceAnswer, MultipleChoiceAnswersTable](user, asOfOp, quizOp)(questionTable, answerTable)
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[MultipleChoiceQuestionsTable], answerTable: TableQuery[MultipleChoiceAnswersTable], question2QuizTable: TableQuery[MultipleChoiceQuestion2QuizTable])(implicit session: Session) = {
+    val resultsRelational = Questions.resultsQuery[MultipleChoiceQuestion, MultipleChoiceQuestionsTable, MultipleChoiceAnswer, MultipleChoiceAnswersTable, MultipleChoiceQuestion2QuizTable](user, asOfOp, quizOp)(questionTable, answerTable, question2QuizTable)
     val grouped = listGroupBy(resultsRelational)(_._1, _._2)
     grouped.map(v => MultipleChoiceQuestionResults(user, v.key, v.values))
   }

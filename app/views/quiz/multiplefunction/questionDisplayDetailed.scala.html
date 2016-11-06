@@ -1,4 +1,4 @@
-@(question: models.quiz.question.MultipleFunctionQuestion)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(question: models.quiz.question.MultipleFunctionQuestion, currentAnswer: Option[Either[models.quiz.answer.MultipleFunctionAnswer, models.quiz.answer.MultipleFunctionAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @question.explanationMarkup
 @import controllers.quiz.multiplefunction.MultipleFunctionAnswerForm

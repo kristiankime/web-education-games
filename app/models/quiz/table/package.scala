@@ -22,6 +22,18 @@ package object table {
   val multipleChoiceQuestionOptionsTable = TableQuery[MultipleChoiceQuestionOptionsTable]
   val multipleFunctionQuestionOptionsTable = TableQuery[MultipleFunctionQuestionOptionsTable]
 
+  val derivativeQuestion2QuizTable = TableQuery[DerivativeQuestion2QuizTable]
+  val derivativeGraphQuestion2QuizTable = TableQuery[DerivativeGraphQuestion2QuizTable]
+  val tangentQuestion2QuizTable = TableQuery[TangentQuestion2QuizTable]
+  val graphMatchQuestion2QuizTable = TableQuery[GraphMatchQuestion2QuizTable]
+  val polynomialZoneQuestion2QuizTable = TableQuery[PolynomialZoneQuestion2QuizTable]
+  val multipleChoiceQuestion2QuizTable = TableQuery[MultipleChoiceQuestion2QuizTable]
+  val multipleFunctionQuestion2QuizTable = TableQuery[MultipleFunctionQuestion2QuizTable]
+  val question2QuizTables = MustHandle(derivativeQuestion2QuizTable, derivativeGraphQuestion2QuizTable, tangentQuestion2QuizTable, graphMatchQuestion2QuizTable, polynomialZoneQuestion2QuizTable, multipleChoiceQuestion2QuizTable, multipleFunctionQuestion2QuizTable)
+
+  val questionAnd2QuizTables = questionTables.zip(question2QuizTables)
+
+
   val derivativeAnswersTable = TableQuery[DerivativeAnswersTable]
   val derivativeGraphAnswersTable = TableQuery[DerivativeGraphAnswersTable]
   val tangentAnswersTable = TableQuery[TangentAnswersTable]
@@ -44,4 +56,22 @@ package object table {
     qAndA => QuestionAndAnswer(qAndA._1, qAndA._2),
     qAndA => QuestionAndAnswer(qAndA._1, qAndA._2)
     ))
+
+//  case class QuestionAnswer2Quiz[Q <: TableQuery[QuestionsTable[_]], A <: TableQuery[AnswersTable[_]], Q2Q <: TableQuery[Question2QuizTable]](question: Q, answer: A, quiz2: Q)
+  case class QuestionAnswer2Quiz[Q, A, Q2Q](question: Q, answer: A, quiz2: Q2Q)
+
+  val questionAnswerAnd2QuizTables = {
+    val zip = questionTables.zip(answerTables, question2QuizTables)
+    MustHandle.fromTuple(zip -> (
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3),
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3),
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3),
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3),
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3),
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3),
+          qAndA => QuestionAnswer2Quiz(qAndA._1, qAndA._2, qAndA._3)
+          )
+    )
+  }
+
 }

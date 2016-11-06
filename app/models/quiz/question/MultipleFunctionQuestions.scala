@@ -5,8 +5,8 @@ import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.MultipleFunctionAnswer
 import models.quiz.answer.table.MultipleFunctionAnswersTable
-import models.quiz.question.table.MultipleFunctionQuestionsTable
-import models.quiz.table.{QuestionIdNext, multipleFunctionAnswersTable, multipleFunctionQuestionOptionsTable, multipleFunctionQuestionsTable, quizzesTable}
+import models.quiz.question.table.{MultipleFunctionQuestion2QuizTable, MultipleChoiceQuestion2QuizTable, MultipleFunctionQuestionsTable}
+import models.quiz.table._
 import models.support._
 import models.user.User
 import models.user.table.usersTable
@@ -17,9 +17,13 @@ object MultipleFunctionQuestions {
 
   // ======= CREATE ======
   def create(info: MultipleFunctionQuestion, options: List[MultipleFunctionQuestionOption], quizId: QuizId)(implicit session: Session): MultipleFunctionQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
+    val toInsert = info.copy(id = QuestionIdNext())  // TODO setup order here
     multipleFunctionQuestionsTable += toInsert
     multipleFunctionQuestionOptionsTable ++= options.map(_.copy(questionId = toInsert.id))
+
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    multipleFunctionQuestion2QuizTable += quizLink
+
     toInsert
   }
 
@@ -46,11 +50,17 @@ object MultipleFunctionQuestions {
       u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
-  def quizFor(questionId: QuestionId)(implicit session: Session) =
+  def quizFor(questionId: QuestionId, quizId: QuizId)(implicit session: Session) =
     (for (
-      q <- multipleFunctionQuestionsTable if q.id === questionId;
+      q <- multipleFunctionQuestion2QuizTable if q.questionId === questionId && q.quizId === quizId;
       z <- quizzesTable if z.id === q.quizId
     ) yield z).firstOption
+
+//  def quizFor(questionId: QuestionId)(implicit session: Session) =
+//    (for (
+//      q <- multipleFunctionQuestionsTable if q.id === questionId;
+//      z <- quizzesTable if z.id === q.quizId
+//    ) yield z).firstOption
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = multipleFunctionAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
@@ -60,11 +70,12 @@ object MultipleFunctionQuestions {
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: MultipleFunctionQuestion)(implicit session: Session) =
-    multipleFunctionQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+    multipleFunctionQuestion2QuizTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+//  multipleFunctionQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= RESULTS =======
-  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[MultipleFunctionQuestionsTable], answerTable: TableQuery[MultipleFunctionAnswersTable])(implicit session: Session) = {
-    val resultsRelational = Questions.resultsQuery[MultipleFunctionQuestion, MultipleFunctionQuestionsTable, MultipleFunctionAnswer, MultipleFunctionAnswersTable](user, asOfOp, quizOp)(questionTable, answerTable)
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[MultipleFunctionQuestionsTable], answerTable: TableQuery[MultipleFunctionAnswersTable], question2QuizTable: TableQuery[MultipleFunctionQuestion2QuizTable])(implicit session: Session) = {
+    val resultsRelational = Questions.resultsQuery[MultipleFunctionQuestion, MultipleFunctionQuestionsTable, MultipleFunctionAnswer, MultipleFunctionAnswersTable, MultipleFunctionQuestion2QuizTable](user, asOfOp, quizOp)(questionTable, answerTable, question2QuizTable)
     val grouped = listGroupBy(resultsRelational)(_._1, _._2)
     grouped.map(v => MultipleFunctionQuestionResults(user, v.key, v.values))
   }

@@ -12,6 +12,6 @@ trait QuestionsTable[Q <: Question] extends Table[Q] {
   def ownerId = column[UserId]("owner")
   def creationDate = column[DateTime]("creation_date")
   def atCreationDifficulty = column[Double]("at_creation_difficulty")
-  def quizId = column[Option[QuizId]]("quiz_id")
+//  def quizId = column[Option[QuizId]]("quiz_id")
   def order = column[Int]("order")
 }

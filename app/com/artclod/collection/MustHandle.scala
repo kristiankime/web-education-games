@@ -95,6 +95,8 @@ case class MustHandle7[T1, T2, T3, T4, T5, T6, T7](v1: T1, v2: T2, v3: T3, v4: T
 
   def zip[Z1, Z2, Z3, Z4, Z5, Z6, Z7](z : MustHandle7[Z1, Z2, Z3, Z4, Z5, Z6, Z7]) = MustHandle( (v1, z.v1), (v2, z.v2), (v3, z.v3), (v4, z.v4), (v5, z.v5), (v6, z.v6), (v7, z.v7) )
 
+  def zip[Z1, Z2, Z3, Z4, Z5, Z6, Z7, X1, X2, X3, X4, X5, X6, X7](z : MustHandle7[Z1, Z2, Z3, Z4, Z5, Z6, Z7], x : MustHandle7[X1, X2, X3, X4, X5, X6, X7]) = MustHandle( (v1, z.v1, x.v1), (v2, z.v2, x.v2), (v3, z.v3, x.v3), (v4, z.v4, x.v4), (v5, z.v5, x.v5), (v6, z.v6, x.v6), (v7, z.v7, x.v7) )
+
   def size = 7
 }
 

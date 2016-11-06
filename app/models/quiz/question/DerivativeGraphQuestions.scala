@@ -5,20 +5,26 @@ import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.DerivativeGraphAnswer
 import models.quiz.answer.table.DerivativeGraphAnswersTable
-import models.quiz.question.table.{DerivativeGraphQuestionsTable}
-import models.quiz.table.{QuestionIdNext, derivativeGraphAnswersTable, derivativeGraphQuestionsTable, quizzesTable}
+import models.quiz.question.table._
+import models.quiz.table._
 import models.support._
 import models.user.User
 import models.user.table.usersTable
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
 
+import scala.slick.direct.order
+
 object DerivativeGraphQuestions {
 
   // ======= CREATE ======
   def create(info: DerivativeGraphQuestion, quizId: QuizId)(implicit session: Session): DerivativeGraphQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
+    val toInsert = info.copy(id = QuestionIdNext())
     derivativeGraphQuestionsTable += toInsert
+
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    derivativeGraphQuestion2QuizTable += quizLink
+
     toInsert
   }
 
@@ -44,11 +50,17 @@ object DerivativeGraphQuestions {
       u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
-  def quizFor(questionId: QuestionId)(implicit session: Session) =
-    (for (
-      q <- derivativeGraphQuestionsTable if q.id === questionId;
-      z <- quizzesTable if z.id === q.quizId
-    ) yield z).firstOption
+    def quizFor(questionId: QuestionId, quizId: QuizId)(implicit session: Session) =
+      (for (
+        q <- derivativeGraphQuestion2QuizTable if q.questionId === questionId && q.quizId === quizId;
+        z <- quizzesTable if z.id === q.quizId
+      ) yield z).firstOption
+
+//  def quizFor(questionId: QuestionId)(implicit session: Session) =
+//    (for (
+//      q <- derivativeGraphQuestionsTable if q.id === questionId;
+//      z <- quizzesTable if z.id === q.quizId
+//    ) yield z).firstOption
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = derivativeGraphAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
@@ -58,11 +70,12 @@ object DerivativeGraphQuestions {
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: DerivativeGraphQuestion)(implicit session: Session) =
-    derivativeGraphQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+    derivativeGraphQuestion2QuizTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+//    derivativeGraphQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= RESULTS =======
-  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[DerivativeGraphQuestionsTable], answerTable: TableQuery[DerivativeGraphAnswersTable])(implicit session: Session) = {
-    val resultsRelational = Questions.resultsQuery[DerivativeGraphQuestion, DerivativeGraphQuestionsTable, DerivativeGraphAnswer, DerivativeGraphAnswersTable](user, asOfOp, quizOp)(questionTable, answerTable)
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[DerivativeGraphQuestionsTable], answerTable: TableQuery[DerivativeGraphAnswersTable], question2QuizTable: TableQuery[DerivativeGraphQuestion2QuizTable])(implicit session: Session) = {
+    val resultsRelational = Questions.resultsQuery[DerivativeGraphQuestion, DerivativeGraphQuestionsTable, DerivativeGraphAnswer, DerivativeGraphAnswersTable, DerivativeGraphQuestion2QuizTable](user, asOfOp, quizOp)(questionTable, answerTable, question2QuizTable)
     val grouped = listGroupBy(resultsRelational)(_._1, _._2)
     grouped.map(v => DerivativeGraphQuestionResults(user, v.key, v.values))
   }

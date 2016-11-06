@@ -20,3 +20,4 @@ class MultipleChoiceQuestionOptionsTable(tag: Tag) extends Table[MultipleChoiceQ
 
 	def questionIdFK = foreignKey("multiple_choice_question_options__question_id_fk", questionId, multipleChoiceQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }
+

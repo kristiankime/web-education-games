@@ -8,7 +8,7 @@ import com.artclod.tuple._
 import models.quiz._
 import models.quiz.answer.Answer
 import models.quiz.answer.table.AnswersTable
-import models.quiz.question.table.QuestionsTable
+import models.quiz.question.table.{Question2QuizTable, QuestionsTable}
 import models.quiz.table._
 import models.support._
 import models.user.User
@@ -51,15 +51,15 @@ object Questions {
 
   // ======= RESULTS ======
   def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(implicit session: Session) : List[QuestionResults] =
-    questionAndAnswerTables.->(
-      t => DerivativeQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => DerivativeGraphQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => TangentQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => GraphMatchQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => PolynomialZoneQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => MultipleChoiceQuestions.results(user, asOfOp, quizOp)(t.question, t.answer),
-      t => MultipleFunctionQuestions.results(user, asOfOp, quizOp)(t.question, t.answer))
-      .toList[QuestionResults](a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]])
+    questionAnswerAnd2QuizTables.->(
+      t => DerivativeQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2),
+      t => DerivativeGraphQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2),
+      t => TangentQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2),
+      t => GraphMatchQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2),
+      t => PolynomialZoneQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2),
+      t => MultipleChoiceQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2),
+      t => MultipleFunctionQuestions.results(user, asOfOp, quizOp)(t.question, t.answer, t.quiz2)
+    ).toList[QuestionResults](a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]], a => a.asInstanceOf[List[QuestionResults]])
 
   def correctResults(user: User, num: Int)(implicit session: Session) : List[(QuestionResults, DateTime)] =
     questionAndAnswerTables.->(
@@ -86,11 +86,61 @@ object Questions {
   // ========================================================
   //GENERIC METHODS USED BY SPECIFIC QUESTION TYPE MODELS (SEE DerivativeQuestions, TangentQuestions ...)
   // ========================================================
-  def resultsQuery[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]](user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[QT], answerTable: TableQuery[AT])(implicit session: Session) = {
+//  def resultsQuery[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A], Q2Q <: Question2QuizTable]
+//  (user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)
+//  (questionTable: TableQuery[QT], answerTable: TableQuery[AT], question2Quiz: TableQuery[Q2Q])
+//  (implicit session: Session) = {
+//    val questionsAndAnswers: Query[(QT, AT), (Q, A)] = (for { q <- questionTable; a <- answerTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
+//    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
+//
+//
+//    val answersForQuiz = optionElse(quizOp) {
+////      quiz => answersAsOf.filter(_._1.quizId === quiz.id)
+//
+//      quiz => {
+//        (for { q2q <- question2Quiz if q2q.quizId === quiz.id } yield ( q2q ) )
+//      }
+//      answersAsOf
+//    } {
+//      answersAsOf
+//    }
+//
+//    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
+//    summaryDataSorted.list
+//  }
+
+  def resultsQuery[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A], Q2Q <: Question2QuizTable]
+      (user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz])
+      (questionTable: TableQuery[QT], answerTable: TableQuery[AT], question2Quiz: TableQuery[Q2Q])
+      (implicit session: Session) : List[(Q, A)] =
+    if (quizOp.nonEmpty) {
+      resultsQueryYesQuiz[Q, QT, A, AT, Q2Q](user, asOfOp, quizOp.get)(questionTable, answerTable, question2Quiz)
+    } else {
+      resultsQueryNoQuiz[Q, QT, A, AT](user, asOfOp)(questionTable, answerTable)
+    }
+
+  def resultsQueryNoQuiz[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A]]
+      (user: User, asOfOp: Option[DateTime] = None)
+      (questionTable: TableQuery[QT], answerTable: TableQuery[AT])
+      (implicit session: Session) : List[(Q, A)] = {
     val questionsAndAnswers: Query[(QT, AT), (Q, A)] = (for { q <- questionTable; a <- answerTable if q.id === a.questionId && a.ownerId === user.id } yield (q, a))
     val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
-    val answersForQuiz = optionElse(quizOp) { quiz => answersAsOf.filter(_._1.quizId === quiz.id) } { answersAsOf }
-    val summaryDataSorted = answersForQuiz.sortBy(r => (r._1.id, r._2.creationDate))
+    val summaryDataSorted = answersAsOf.sortBy(r => (r._1.id, r._2.creationDate))
+    summaryDataSorted.list
+  }
+
+  def resultsQueryYesQuiz[Q <: Question, QT <: QuestionsTable[Q], A <: Answer, AT <: AnswersTable[A], Q2Q <: Question2QuizTable]
+      (user: User, asOfOp: Option[DateTime] = None, quiz: Quiz)
+      (questionTable: TableQuery[QT], answerTable: TableQuery[AT], question2Quiz: TableQuery[Q2Q])
+      (implicit session: Session) : List[(Q, A)] = {
+    val questionsAndAnswers: Query[(QT, AT), (Q, A)] =
+      (for {
+        q <- questionTable; a <- answerTable; q2q <- question2Quiz
+        if a.ownerId === user.id && q.id === a.questionId && q2q.questionId === q.id && q2q.quizId === quiz.id
+      } yield (q, a))
+
+    val answersAsOf = optionElse(asOfOp) { asOf => questionsAndAnswers.filter(_._2.creationDate <= asOf) } { questionsAndAnswers }
+    val summaryDataSorted = answersAsOf.sortBy(r => (r._1.id, r._2.creationDate))
     summaryDataSorted.list
   }
 

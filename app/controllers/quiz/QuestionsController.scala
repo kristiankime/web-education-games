@@ -30,7 +30,7 @@ object QuestionsController extends Controller with SecureSocialConsented
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))
-      case Some(question) => question.quiz match {
+      case Some(question) => question.quiz(quizId) match {
         case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for question for id=["+questionId+"]")))
         case Some(quiz) =>
           if(quiz.id ^!= quizId) { Left(NotFound(views.html.errors.notFoundPage("Question for id=["+questionId+"] is associated with quiz id=[" + quiz.id + "] not quiz id=[" + quizId + "]"))) }

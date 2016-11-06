@@ -8,8 +8,8 @@ import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.DerivativeAnswer
 import models.quiz.answer.table.DerivativeAnswersTable
-import models.quiz.question.table.DerivativeQuestionsTable
-import models.quiz.table.{QuestionIdNext, derivativeAnswersTable, derivativeQuestionsTable, quizzesTable}
+import models.quiz.question.table.{DerivativeQuestion2QuizTable, DerivativeQuestionsTable}
+import models.quiz.table._
 import models.support._
 import models.user.User
 import models.user.table.usersTable
@@ -22,8 +22,12 @@ object DerivativeQuestions {
 
   // ======= CREATE ======
   def create(info: DerivativeQuestion, quizId: QuizId)(implicit session: Session): DerivativeQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext(), quizIdOp = Some(quizId))  // TODO setup order here
+    val toInsert = info.copy(id = QuestionIdNext())
     derivativeQuestionsTable += toInsert
+
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    derivativeQuestion2QuizTable += quizLink
+
     toInsert
   }
 
@@ -49,11 +53,17 @@ object DerivativeQuestions {
       u <- usersTable if u.userId === a.ownerId
     ) yield (a, u)).sortBy( aU => (aU._2.name, aU._1.creationDate)).list
 
-  def quizFor(questionId: QuestionId)(implicit session: Session) =
+  def quizFor(questionId: QuestionId, quizId: QuizId)(implicit session: Session) =
     (for (
-      q <- derivativeQuestionsTable if q.id === questionId;
+      q <- derivativeQuestion2QuizTable if q.questionId === questionId && q.quizId === quizId;
       z <- quizzesTable if z.id === q.quizId
     ) yield z).firstOption
+
+//  def quizFor(questionId: QuestionId)(implicit session: Session) =
+//    (for (
+//      q <- derivativeQuestionsTable if q.id === questionId;
+//      z <- quizzesTable if z.id === q.quizId
+//    ) yield z).firstOption
 
   def answerers(questionId: QuestionId)(implicit session: Session) = {
     val userIds = derivativeAnswersTable.where(_.questionId === questionId).groupBy(_.ownerId).map({ case (ownerId, query) => ownerId})
@@ -63,11 +73,12 @@ object DerivativeQuestions {
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: DerivativeQuestion)(implicit session: Session) =
-    derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
+    derivativeQuestion2QuizTable.where(r => r.questionId === question.id && r.quizId === quiz.id).delete
+//  derivativeQuestionsTable.where(_.id === question.id).update(question.copy(quizIdOp = None))
 
   // ======= RESULTS =======
-  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable])(implicit session: Session) = {
-    val resultsRelational = Questions.resultsQuery[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable](user, asOfOp, quizOp)(questionTable, answerTable)
+  def results(user: User, asOfOp: Option[DateTime] = None, quizOp: Option[Quiz] = None)(questionTable: TableQuery[DerivativeQuestionsTable], answerTable: TableQuery[DerivativeAnswersTable], question2QuizTable: TableQuery[DerivativeQuestion2QuizTable])(implicit session: Session) = {
+    val resultsRelational = Questions.resultsQuery[DerivativeQuestion, DerivativeQuestionsTable, DerivativeAnswer, DerivativeAnswersTable, DerivativeQuestion2QuizTable](user, asOfOp, quizOp)(questionTable, answerTable, question2QuizTable)
     val grouped = listGroupBy(resultsRelational)(_._1, _._2)
     grouped.map(v => DerivativeQuestionResults(user, v.key, v.values))
   }

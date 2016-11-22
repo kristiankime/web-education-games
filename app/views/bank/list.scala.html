@@ -1,0 +1,42 @@
+@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.bank.QuestionBank
+@import controllers.bank.routes.{ QuestionBankController }
+@import controllers.quiz.QuizForm
+@import helper._
+@import com.artclod.play.{are, s}
+
+@mainWithBorder("Question Bank") {
+
+    <h2>Welcome to the Quiz Bank Page </h2>
+
+    @defining(QuestionBank.allQuestions){ questions : List[models.quiz.question.Question] =>
+
+    <h4>There @are(questions) @questions.size Question@s(questions) in the system </h4>
+
+    <table class="pure-table pure-table-striped">
+        <tr>
+    	    <th>Question</th>
+        </tr>
+        @for(question <- questions){<tr>
+            <td> <a class="pure-button" href="@QuestionBankController.view(question.id)"> @question.display() </a> </td>
+            @* @if(access.write){<td> @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "pure-form") { <input class="pure-button" type="submit" value="remove" > } </td> } *@
+        </tr>}
+    </table>
+    }
+
+
+    <h4>Add a new Question</h4>
+
+    @*
+    @tag.switch("createQuestion", 6,
+        ("Create a Derivative Question",        views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id), forms.derivative)),
+        ("Create a Derivative Graph Question",  views.html.quiz.derivativegraph.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id), forms.derivativeGraph)),
+        ("Create a Tangent Question",           views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), forms.tangent)),
+        ("Create a Graph Match Question",       views.html.quiz.graphmatch.questionEditor(QuestionsController.createGraphMatch(course.organizationId, course.id, quiz.id), forms.graphMatch)),
+        ("Create a Polynomial Zone Question",   views.html.quiz.polynomialzone.questionEditor(QuestionsController.createPolynomialZone(course.organizationId, course.id, quiz.id), forms.polynomialZone)),
+        ("Create a Multiple Choice Question",   views.html.quiz.multiplechoice.questionEditor(QuestionsController.createMultipleChoice(course.organizationId, course.id, quiz.id), forms.multipleChoice)),
+        ("Create a Multiple Function Question", views.html.quiz.multiplefunction.questionEditor(QuestionsController.createMultipleFunction(course.organizationId, course.id, quiz.id), forms.multipleFunction))
+    )
+    *@
+}

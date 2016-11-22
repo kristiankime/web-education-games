@@ -27,6 +27,12 @@ object QuestionsController extends Controller with SecureSocialConsented
   with MultipleChoiceQuestionsControllon
   with MultipleFunctionQuestionsControllon {
 
+  def apply(questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
+    Questions(questionId) match {
+      case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))
+      case Some(question) => Right(question)
+    }
+
   def apply(quizId: QuizId, questionId: QuestionId)(implicit session: Session) : Either[Result, Question] =
     Questions(questionId) match {
       case None => Left(NotFound(views.html.errors.notFoundPage("There was no question for id=["+questionId+"]")))

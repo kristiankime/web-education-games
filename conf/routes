@@ -44,6 +44,10 @@ GET         /orgs/:o/courses/:c/studentsummary                                  
 # Tournaments
 GET         /leaderboard                                                               controllers.tournament.TournamentsController.leaderBoard
 
+# Question Bank
+GET         /bank                                                                      controllers.bank.QuestionBankController.list
+GET         /bank/questions/:q                                                         controllers.bank.QuestionBankController.view(q: QuestionId)
+
 # Course Quizzes
 GET         /orgs/:o/courses/:c/quizzes/create                                         controllers.quiz.QuizzesController.createForm(o: OrganizationId, c: CourseId)
 POST        /orgs/:o/courses/:c/quizzes                                                controllers.quiz.QuizzesController.createSubmit(o: OrganizationId, c: CourseId)

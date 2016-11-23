@@ -47,6 +47,13 @@ GET         /leaderboard                                                        
 # Question Bank
 GET         /bank                                                                      controllers.bank.QuestionBankController.list
 GET         /bank/questions/:q                                                         controllers.bank.QuestionBankController.view(q: QuestionId)
+POST        /bank/questions/derivative                                                 controllers.bank.QuestionBankController.createDerivative()
+POST        /bank/questions/derivativegraph                                            controllers.bank.QuestionBankController.createDerivativeGraph()
+POST        /bank/questions/tangent                                                    controllers.bank.QuestionBankController.createTangent()
+POST        /bank/questions/graphmatch                                                 controllers.bank.QuestionBankController.createGraphMatch()
+POST        /bank/questions/polynomialzone                                             controllers.bank.QuestionBankController.createPolynomialZone()
+POST        /bank/questions/multiplechoice                                             controllers.bank.QuestionBankController.createMultipleChoice()
+POST        /bank/questions/multiplefunction                                           controllers.bank.QuestionBankController.createMultipleFunction()
 
 # Course Quizzes
 GET         /orgs/:o/courses/:c/quizzes/create                                         controllers.quiz.QuizzesController.createForm(o: OrganizationId, c: CourseId)

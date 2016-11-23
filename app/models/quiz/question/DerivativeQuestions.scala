@@ -22,8 +22,7 @@ object DerivativeQuestions {
 
   // ======= CREATE ======
   def create(info: DerivativeQuestion, quizId: QuizId)(implicit session: Session): DerivativeQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext())
-    derivativeQuestionsTable += toInsert
+    val toInsert = create(info)
 
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     derivativeQuestion2QuizTable += quizLink
@@ -31,7 +30,6 @@ object DerivativeQuestions {
     toInsert
   }
 
-  @VisibleForTesting
   def create(info: DerivativeQuestion)(implicit session: Session): DerivativeQuestion = {
     val toInsert = info.copy(id = QuestionIdNext())
     derivativeQuestionsTable += toInsert

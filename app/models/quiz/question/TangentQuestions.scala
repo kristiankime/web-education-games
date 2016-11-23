@@ -19,11 +19,17 @@ object TangentQuestions {
 
   // ======= CREATE ======
   def create(info: TangentQuestion, quizId: QuizId)(implicit session: Session): TangentQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext())  // TODO setup order here
-    tangentQuestionsTable += toInsert
+    val toInsert = create(info)
 
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     tangentQuestion2QuizTable += quizLink
+
+    toInsert
+  }
+
+  def create(info: TangentQuestion)(implicit session: Session): TangentQuestion = {
+    val toInsert = info.copy(id = QuestionIdNext())
+    tangentQuestionsTable += toInsert
 
     toInsert
   }

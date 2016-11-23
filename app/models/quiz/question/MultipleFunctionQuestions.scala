@@ -17,9 +17,7 @@ object MultipleFunctionQuestions {
 
   // ======= CREATE ======
   def create(info: MultipleFunctionQuestion, options: List[MultipleFunctionQuestionOption], quizId: QuizId)(implicit session: Session): MultipleFunctionQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext())  // TODO setup order here
-    multipleFunctionQuestionsTable += toInsert
-    multipleFunctionQuestionOptionsTable ++= options.map(_.copy(questionId = toInsert.id))
+    val toInsert = create(info, options)
 
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     multipleFunctionQuestion2QuizTable += quizLink
@@ -27,7 +25,6 @@ object MultipleFunctionQuestions {
     toInsert
   }
 
-  @VisibleForTesting
   def create(info: MultipleFunctionQuestion, options: List[MultipleFunctionQuestionOption])(implicit session: Session): MultipleFunctionQuestion = {
     val toInsert = info.copy(id = QuestionIdNext())
     multipleFunctionQuestionsTable += toInsert

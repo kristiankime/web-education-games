@@ -17,8 +17,7 @@ object GraphMatchQuestions {
 
   // ======= CREATE ======
   def create(info: GraphMatchQuestion, quizId: QuizId)(implicit session: Session): GraphMatchQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext())
-    graphMatchQuestionsTable += toInsert
+    val toInsert = create(info)
 
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     graphMatchQuestion2QuizTable += quizLink
@@ -26,7 +25,6 @@ object GraphMatchQuestions {
     toInsert
   }
 
-  @VisibleForTesting
   def create(info: GraphMatchQuestion)(implicit session: Session): GraphMatchQuestion = {
     val toInsert = info.copy(id = QuestionIdNext())
     graphMatchQuestionsTable += toInsert

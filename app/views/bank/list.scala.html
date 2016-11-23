@@ -1,4 +1,4 @@
-@()(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+@(forms: controllers.quiz.QuestionForms)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.bank.QuestionBank
 @import controllers.bank.routes.{ QuestionBankController }
@@ -28,15 +28,14 @@
 
     <h4>Add a new Question</h4>
 
-    @*
     @tag.switch("createQuestion", 6,
-        ("Create a Derivative Question",        views.html.quiz.derivative.questionEditor(QuestionsController.createDerivative(course.organizationId, course.id, quiz.id), forms.derivative)),
-        ("Create a Derivative Graph Question",  views.html.quiz.derivativegraph.questionEditor(QuestionsController.createDerivativeGraph(course.organizationId, course.id, quiz.id), forms.derivativeGraph)),
-        ("Create a Tangent Question",           views.html.quiz.tangent.questionEditor(QuestionsController.createTangent(course.organizationId, course.id, quiz.id), forms.tangent)),
-        ("Create a Graph Match Question",       views.html.quiz.graphmatch.questionEditor(QuestionsController.createGraphMatch(course.organizationId, course.id, quiz.id), forms.graphMatch)),
-        ("Create a Polynomial Zone Question",   views.html.quiz.polynomialzone.questionEditor(QuestionsController.createPolynomialZone(course.organizationId, course.id, quiz.id), forms.polynomialZone)),
-        ("Create a Multiple Choice Question",   views.html.quiz.multiplechoice.questionEditor(QuestionsController.createMultipleChoice(course.organizationId, course.id, quiz.id), forms.multipleChoice)),
-        ("Create a Multiple Function Question", views.html.quiz.multiplefunction.questionEditor(QuestionsController.createMultipleFunction(course.organizationId, course.id, quiz.id), forms.multipleFunction))
+        ("Create a Derivative Question",        views.html.quiz.derivative.questionEditor(QuestionBankController.createDerivative(), forms.derivative)),
+        ("Create a Derivative Graph Question",  views.html.quiz.derivativegraph.questionEditor(QuestionBankController.createDerivativeGraph(), forms.derivativeGraph)),
+        ("Create a Tangent Question",           views.html.quiz.tangent.questionEditor(QuestionBankController.createTangent(), forms.tangent)),
+        ("Create a Graph Match Question",       views.html.quiz.graphmatch.questionEditor(QuestionBankController.createGraphMatch(), forms.graphMatch)),
+        ("Create a Polynomial Zone Question",   views.html.quiz.polynomialzone.questionEditor(QuestionBankController.createPolynomialZone(), forms.polynomialZone)),
+        ("Create a Multiple Choice Question",   views.html.quiz.multiplechoice.questionEditor(QuestionBankController.createMultipleChoice(), forms.multipleChoice)),
+        ("Create a Multiple Function Question", views.html.quiz.multiplefunction.questionEditor(QuestionBankController.createMultipleFunction(), forms.multipleFunction))
     )
-    *@
+
 }

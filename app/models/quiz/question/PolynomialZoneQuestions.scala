@@ -17,11 +17,17 @@ object PolynomialZoneQuestions {
 
   // ======= CREATE ======
   def create(info: PolynomialZoneQuestion, quizId: QuizId)(implicit session: Session): PolynomialZoneQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext())  // TODO setup order here
-    polynomialZoneQuestionsTable += toInsert
+    val toInsert = create(info)
 
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     polynomialZoneQuestion2QuizTable += quizLink
+
+    toInsert
+  }
+
+  def create(info: PolynomialZoneQuestion)(implicit session: Session): PolynomialZoneQuestion = {
+    val toInsert = info.copy(id = QuestionIdNext())
+    polynomialZoneQuestionsTable += toInsert
 
     toInsert
   }

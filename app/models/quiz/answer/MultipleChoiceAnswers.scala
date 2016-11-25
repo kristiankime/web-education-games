@@ -8,7 +8,7 @@ import play.api.db.slick.Config.driver.simple._
 
 object MultipleChoiceAnswers {
 
-  def correct(question: MultipleChoiceQuestion, guessIndex: Short) = if(question.correctAnswer == guessIndex) { Yes } else { No }
+  def correct(question: MultipleChoiceQuestion, guessIndex: Short) = (question.correctAnswer == guessIndex)
 
   // ======= CREATE ======
   def createAnswer(answer: MultipleChoiceAnswer)(implicit session: Session) = {

@@ -1,20 +1,15 @@
-@(gameState: models.game.mask.GameMask,
-        quiz: models.quiz.Quiz,
-        question: models.quiz.question.MultipleFunctionQuestion,
+@(question: models.quiz.question.MultipleFunctionQuestion,
         currentAnswer: Option[Either[models.quiz.answer.MultipleFunctionAnswer, models.quiz.answer.MultipleFunctionAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.routes.{GamesRequestorController, GamesController}
-@import controllers.quiz.tangent.TangentQuestionForm
+@import controllers.bank.routes.QuestionBankController
 @import helper._
 @import com.artclod.play.s
 
-@mainWithBorder("Answering Question", tag.courseOpLink(gameState.game.course), tag.gameLink(Html("game"), gameState.game)) {
-
-    <h2>You are answering Question for a game with @gameState.other.nameView </h2>
+@mainWithBorder("Viewing Question", tag.bankLink()) {
 
     <h4>Below is a mulitple function question. Read the explanation and pick the correct answer:</h4>
 
-    @helper.form(gameState.answerMultipleFunctionQuestion(question.id), 'id -> "multipleFunctionForm", 'class -> "pure-form") {
+    @helper.form(QuestionBankController.answerMultipleFunction(question.id), 'id -> "multipleFunctionForm", 'class -> "pure-form") {
         <section>
         @question.display(false)
         </section>
@@ -31,7 +26,7 @@
         </section>
         }
 
-        @views.html.quiz.multiplefunction.answerEditor(question, currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
+        @views.html.quiz.multiplefunction.answerEditor(question, currentAnswer){@tag.bankLink()}
     }
 
     @* ===== Results ===== *@

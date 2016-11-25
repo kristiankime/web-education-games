@@ -47,6 +47,7 @@ GET         /leaderboard                                                        
 # Question Bank
 GET         /bank                                                                      controllers.bank.QuestionBankController.list
 GET         /bank/questions/:q                                                         controllers.bank.QuestionBankController.view(q: QuestionId)
+GET         /bank/questions/:q/:a                                                      controllers.bank.QuestionBankController.viewAnswer(q: QuestionId, a: AnswerId)
 POST        /bank/questions/derivative                                                 controllers.bank.QuestionBankController.createDerivative()
 POST        /bank/questions/derivativegraph                                            controllers.bank.QuestionBankController.createDerivativeGraph()
 POST        /bank/questions/tangent                                                    controllers.bank.QuestionBankController.createTangent()
@@ -54,6 +55,13 @@ POST        /bank/questions/graphmatch                                          
 POST        /bank/questions/polynomialzone                                             controllers.bank.QuestionBankController.createPolynomialZone()
 POST        /bank/questions/multiplechoice                                             controllers.bank.QuestionBankController.createMultipleChoice()
 POST        /bank/questions/multiplefunction                                           controllers.bank.QuestionBankController.createMultipleFunction()
+POST        /bank/questions/:q/derivative                                              controllers.bank.QuestionBankController.answerDerivative(q: QuestionId)
+POST        /bank/questions/:q/derivativegraph                                         controllers.bank.QuestionBankController.answerDerivativeGraph(q: QuestionId)
+POST        /bank/questions/:q/tangent                                                 controllers.bank.QuestionBankController.answerTangent(q: QuestionId)
+POST        /bank/questions/:q/graphmatch                                              controllers.bank.QuestionBankController.answerGraphMatch(q: QuestionId)
+POST        /bank/questions/:q/polynomialzone                                          controllers.bank.QuestionBankController.answerPolynomialZone(q: QuestionId)
+POST        /bank/questions/:q/multiplechoice                                          controllers.bank.QuestionBankController.answerMultipleChoice(q: QuestionId)
+POST        /bank/questions/:q/multiplefunction                                        controllers.bank.QuestionBankController.answerMultipleFunction(q: QuestionId)
 
 # Course Quizzes
 GET         /orgs/:o/courses/:c/quizzes/create                                         controllers.quiz.QuizzesController.createForm(o: OrganizationId, c: CourseId)

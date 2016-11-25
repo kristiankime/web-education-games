@@ -1,16 +1,11 @@
-@(gameState: models.game.mask.GameMask,
-        quiz: models.quiz.Quiz,
-        question: models.quiz.question.GraphMatchQuestion,
+@(question: models.quiz.question.GraphMatchQuestion,
         currentAnswer: Option[Either[models.quiz.answer.GraphMatchAnswer, models.quiz.answer.GraphMatchAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
-@import controllers.game.routes.{GamesRequestorController, GamesController}
-@import controllers.quiz.tangent.TangentQuestionForm
+@import controllers.bank.routes.QuestionBankController
 @import helper._
 @import com.artclod.play.s
 
-@mainWithBorder("Answering Question", tag.courseOpLink(gameState.game.course), tag.gameLink(Html("game"), gameState.game)) {
-
-    <h2>You are answering Question for a game with @gameState.other.nameView </h2>
+@mainWithBorder("Viewing Question", tag.bankLink()) {
 
     <h4>Below are a set of functions and a graph, figure out which function's graph is being displayed:</h4>
 
@@ -30,7 +25,7 @@
     </section>
     }
 
-    @views.html.quiz.graphmatch.answerEditor(gameState.answerGraphMatchQuestion(question.id), currentAnswer){@tag.gameLink(Html("Back to the Quiz"), gameState.game)}
+    @views.html.quiz.graphmatch.answerEditor(QuestionBankController.answerGraphMatch(question.id), currentAnswer){@tag.bankLink()}
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results : models.quiz.question.GraphMatchQuestionResults =>

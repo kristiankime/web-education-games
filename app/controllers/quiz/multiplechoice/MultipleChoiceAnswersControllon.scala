@@ -25,9 +25,9 @@ trait MultipleChoiceAnswersControllon extends Controller with SecureSocialConsen
           form => {
             val unfinishedAnswer = MultipleChoiceAnswerForm.toAnswerUnfinished(user, question, form)
             MultipleChoiceAnswers.correct(question, form.guessIndex) match {
-              case Yes => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
-              case No => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, question.results(user), Some(Left(unfinishedAnswer(false)))))
+              case true => Redirect(controllers.quiz.routes.QuizzesController.view(course.organizationId, course.id, quiz.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case false => Redirect(controllers.quiz.routes.AnswersController.view(course.organizationId, course.id, quiz.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
+//              case Inconclusive => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, question.results(user), Some(Left(unfinishedAnswer(false)))))
             }
           })
       }

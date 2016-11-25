@@ -338,9 +338,9 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
           form => {
             val unfinishedAnswer =  MultipleChoiceAnswerForm.toAnswerUnfinished(user, question, form)
             MultipleChoiceAnswers.correct(question, form.guessIndex) match {
-              case Yes => Redirect(routes.GamesController.game(game.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
-              case No => Redirect(routes.GamesController.answer(game.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
-              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
+              case true => Redirect(routes.GamesController.game(game.id, Some(MultipleChoiceAnswers.createAnswer(unfinishedAnswer(true)).id)))
+              case false => Redirect(routes.GamesController.answer(game.id, question.id, MultipleChoiceAnswers.createAnswer(unfinishedAnswer(false)).id))
+//              case Inconclusive => questionView(game, quiz, question, unfinishedAnswer(false))
             }
           })
       }

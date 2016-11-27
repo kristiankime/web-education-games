@@ -13,9 +13,9 @@ import scala.util.Success
 @RunWith(classOf[JUnitRunner])
 class PolynomialZoneQuestionSpec extends Specification {
 
-  def pZQ(zoneType: PolynomialZoneType, roots: Int*) = PolynomialZoneQuestion(QuestionId(0), UserId(0), Vector(roots:_*), 1d, zoneType, JodaUTC(0), 0d, None, 1)
+  def pZQ(zoneType: PolynomialZoneType, roots: Int*) = PolynomialZoneQuestion(QuestionId(0), UserId(0), Vector(roots:_*), 1d, zoneType, JodaUTC(0), 0d, 1)
 
-  def pZQ(roots: Vector[Int], zoneType: PolynomialZoneType) = PolynomialZoneQuestion(QuestionId(0), UserId(0), roots, 1d, zoneType, JodaUTC(0), 0d, None, 1)
+  def pZQ(roots: Vector[Int], zoneType: PolynomialZoneType) = PolynomialZoneQuestion(QuestionId(0), UserId(0), roots, 1d, zoneType, JodaUTC(0), 0d, 1)
 
 
 	"polynomial" should {

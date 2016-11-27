@@ -3,7 +3,7 @@ package controllers.quiz.multiplefunction
 import akka.actor.FSM.->
 import com.artclod.markup.{MarkupParser, LaikaParser}
 import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.mathml.{MathMLEq, MathMLRange, Match, MathML}
+import com.artclod.mathml._
 import com.artclod.slick.JodaUTC
 import controllers.quiz.multiplechoice.MultipleChoiceQuestionForm
 import controllers.quiz.{QuestionForms, QuizzesController}
@@ -106,38 +106,71 @@ object MultipleFunctionQuestionForm {
       explanation -> nonEmptyText.verifying("Explanation could not be parsed as Markup", e => MarkupParser(e).isSuccess),
       options -> list(text).verifying("Options could not be parsed", ops => if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MarkupParser(e).isSuccess).reduce(_ & _)}),
       functions -> list(text).verifying("Functions could not be parsed", ops => if(ops.filter(e => e.trim.nonEmpty).isEmpty){false}else{ops.filter(e => e.trim.nonEmpty).map(e => MathML(e).isSuccess).reduce(_ & _)}),
+      functionsStr -> list(text),
       difficulty -> number
     )
     (MultipleFunctionQuestionForm.apply)(MultipleFunctionQuestionForm.unapply)
       verifying(optionsDontMatchFunctions, fields => toOptions(fields).nonEmpty)
   )
 
-//  Option(String, Html, String, MathMLElem)
+  private def isValid(s: String): Boolean = { (s != null) && (s.nonEmpty) }
+  private def isValidToSome(s: String): Option[String] = if (isValid(s)) { Some(s) } else { None }
+
+  def toOptions(optionsIn: List[String], functionsIn : List[String], functionsStrsIn : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
+    // Must have option text for anything to make sense
+    val size = optionsIn.size;
+    // Create lists where each has option value (some if valid value, non otherwise)
+    val options      =        optionsIn.map(_.trim)                .map(isValidToSome(_)) //.map( _.flatMap(o => MarkupParser(o).toOption))
+    val functions    =      functionsIn.map(_.trim).padTo(size, "").map(isValidToSome(_)).map( _.flatMap(o => MathML(o).toOption))
+    val functionStrs =  functionsStrsIn.map(_.trim).padTo(size, "").map(isValidToSome(_))
+
+    // Check to see if any row set that has options has invalid functions
+    var error = false
+    for(i <- 0 until size if options(i).isDefined) {
+      if(functions(i).isEmpty | functionStrs(i).isEmpty) { error = true }
+    }
+
+    if(error) {
+      None
+    } else { Some(
+      (for(i <- 0 until size if options(i).isDefined if functions(i).isDefined if functionStrs(i).isDefined) yield {
+        val option = options(i)
+        val function = functions(i)
+        val functionStr = functionStrs(i)
+
+        MultipleFunctionQuestionOption(-1, null, option.get.toString, function.get, functionStr.get)
+      }).toList
+    )}
+  }
+
+
+  //  Option(String, Html, String, MathMLElem)
   def toOptions(form: MultipleFunctionQuestionForm) : Option[List[MultipleFunctionQuestionOption]] = {
-    toOptions(form.options, form.functions)
+    toOptions(form.options, form.functions, form.functionsStr)
   }
 
   def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
     MultipleFunctionQuestion(null, user.id, form.description, form.explanation, JodaUTC.now, form.difficulty)
   }
 
-  def toOptions(options: List[String], functions : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
-    if(options.size != functions.size) {
-      None;
-    } else {
-      val opAndFunc = options.map(_.trim).zip(functions.map(_.trim)).filter(o => o._1.nonEmpty && o._2.nonEmpty)
-      if (opAndFunc.map(o => o._1.isEmpty || o._2.isEmpty).fold(false)(_ || _)) {
-        None // Blanks mismatched
-      } else {
-        val parsed = opAndFunc.map(o => (o._1, MarkupParser(o._1), o._2, MathML(o._2)))
-        if(parsed.map(o => o._2.isFailure || o._4.isFailure).fold(false)(_ || _)) {
-          None // Parsing failures
-        } else {
-          Some(parsed.map(o => MultipleFunctionQuestionOption(-1, null, o._1, /*o._2.get,*/ o._4.get, o._3)  ) )
-        }
-      }
-    }
-  }
+//
+//  def toOptions(options: List[String], functions : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
+//    if(options.size != functions.size) {
+//      None;
+//    } else {
+//      val opAndFunc = options.map(_.trim).zip(functions.map(_.trim)).filter(o => o._1.nonEmpty && o._2.nonEmpty)
+//      if (opAndFunc.map(o => o._1.isEmpty || o._2.isEmpty).fold(false)(_ || _)) {
+//        None // Blanks mismatched
+//      } else {
+//        val parsed = opAndFunc.map(o => (o._1, MarkupParser(o._1), o._2, MathML(o._2)))
+//        if(parsed.map(o => o._2.isFailure || o._4.isFailure).fold(false)(_ || _)) {
+//          None // Parsing failures
+//        } else {
+//          Some(parsed.map(o => MultipleFunctionQuestionOption(-1, null, o._1, /*o._2.get,*/ o._4.get, o._3)  ) )
+//        }
+//      }
+//    }
+//  }
 
 
 //  def toOptions(form: MultipleChoiceQuestionForm) = {
@@ -168,6 +201,6 @@ object MultipleFunctionQuestionForm {
 }
 //case class AnswerOptionData(optionStr: String, option: Html, functionStr: String, function : MathMLElem)
 
-case class MultipleFunctionQuestionForm(description: String, explanation: String, options: List[String], functions: List[String], difficultyInt: Int) {
+case class MultipleFunctionQuestionForm(description: String, explanation: String, options: List[String], functions: List[String], functionsStr: List[String], difficultyInt: Int) {
   val difficulty = difficultyInt.toDouble
 }

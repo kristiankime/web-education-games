@@ -13,7 +13,7 @@ import scala.slick.collection.heterogenous.Zero.+
 import scala.util.Success
 
 @RunWith(classOf[JUnitRunner])
-class LaikaParser$Test extends Specification {
+class LaikaParserSpec extends Specification {
 
   "apply(String)" should {
 

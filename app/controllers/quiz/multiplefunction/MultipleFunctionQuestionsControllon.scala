@@ -46,22 +46,6 @@ trait MultipleFunctionQuestionsControllon extends Controller with SecureSocialCo
     }
   }
 
-//  def createMultipleFunction(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
-//    QuizzesController(organizationId, courseId, quizId) match {
-//      case Left(notFoundResult) => notFoundResult
-//      case Right((organization, course, quiz)) => {
-//        null.asInstanceOf[SecuredRequest[AnyContent]]
-////        MultipleFunctionQuestionForm.values.bindFromRequest.fold(
-////          errors => BadRequest(views.html.quiz.quizView(course.access, course, quiz, None, controllers.quiz.QuestionForms.multipleChoice(errors))),
-////          form => {
-////            MultipleChoiceQuestions.create( MultipleChoiceQuestionForm.toQuestion(user, form), MultipleChoiceQuestionForm.toOptions(form), quizId)
-////            Redirect(controllers.quiz.routes.QuizzesController.view(organization.id, course.id, quiz.id, None))
-////          })
-//
-//      }
-//    }
-//  }
-
 //  case class MultipleChoiceDifficultyRequest(functionStr1: String, function1: String, functionStr2: String, function2: String, functionStr3: String, function3: String, graphThis: Short, partnerSkill: Double)
 //  case class MultipleChoiceDifficultyResponse(functionStr1: String, function1: String, functionStr2: String, function2: String, functionStr3: String, function3: String, graphThis: Short, difficulty: Double, correctPoints: Double, incorrectPoints: Double)
 //  implicit val formatMultipleChoiceDifficultyRequest = Json.format[MultipleChoiceDifficultyRequest]
@@ -113,16 +97,23 @@ object MultipleFunctionQuestionForm {
       verifying(optionsDontMatchFunctions, fields => toOptions(fields).nonEmpty)
   )
 
-  private def isValid(s: String): Boolean = { (s != null) && (s.nonEmpty) }
-  private def isValidToSome(s: String): Option[String] = if (isValid(s)) { Some(s) } else { None }
+  def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
+    MultipleFunctionQuestion(null, user.id, form.description, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), JodaUTC.now, form.difficulty)
+  }
+
+  def toOptions(form: MultipleFunctionQuestionForm) : Option[List[MultipleFunctionQuestionOption]] = {
+    toOptions(form.options, form.functions, form.functionsStr)
+  }
 
   def toOptions(optionsIn: List[String], functionsIn : List[String], functionsStrsIn : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
     // Must have option text for anything to make sense
     val size = optionsIn.size;
     // Create lists where each has option value (some if valid value, non otherwise)
-    val options      =        optionsIn.map(_.trim)                .map(isValidToSome(_)) //.map( _.flatMap(o => MarkupParser(o).toOption))
-    val functions    =      functionsIn.map(_.trim).padTo(size, "").map(isValidToSome(_)).map( _.flatMap(o => MathML(o).toOption))
-    val functionStrs =  functionsStrsIn.map(_.trim).padTo(size, "").map(isValidToSome(_))
+    def isValid(s: String): Boolean = { (s != null) && (s.nonEmpty) }
+    def isValid2Some(s: String): Option[String] = if (isValid(s)) { Some(s) } else { None }
+    val options      =        optionsIn.map(_.trim)                .map(isValid2Some(_)).map( _.flatMap(o => MarkupParser(o).toOption))
+    val functions    =      functionsIn.map(_.trim).padTo(size, "").map(isValid2Some(_)).map( _.flatMap(o => MathML(o).toOption))
+    val functionStrs =  functionsStrsIn.map(_.trim).padTo(size, "").map(isValid2Some(_))
 
     // Check to see if any row set that has options has invalid functions
     var error = false
@@ -138,68 +129,12 @@ object MultipleFunctionQuestionForm {
         val function = functions(i)
         val functionStr = functionStrs(i)
 
-        MultipleFunctionQuestionOption(-1, null, option.get.toString, function.get, functionStr.get)
+        MultipleFunctionQuestionOption(-1, null, option.get, function.get, functionStr.get)
       }).toList
     )}
   }
 
-
-  //  Option(String, Html, String, MathMLElem)
-  def toOptions(form: MultipleFunctionQuestionForm) : Option[List[MultipleFunctionQuestionOption]] = {
-    toOptions(form.options, form.functions, form.functionsStr)
-  }
-
-  def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
-    MultipleFunctionQuestion(null, user.id, form.description, form.explanation, JodaUTC.now, form.difficulty)
-  }
-
-//
-//  def toOptions(options: List[String], functions : List[String]) : Option[List[MultipleFunctionQuestionOption]] = {
-//    if(options.size != functions.size) {
-//      None;
-//    } else {
-//      val opAndFunc = options.map(_.trim).zip(functions.map(_.trim)).filter(o => o._1.nonEmpty && o._2.nonEmpty)
-//      if (opAndFunc.map(o => o._1.isEmpty || o._2.isEmpty).fold(false)(_ || _)) {
-//        None // Blanks mismatched
-//      } else {
-//        val parsed = opAndFunc.map(o => (o._1, MarkupParser(o._1), o._2, MathML(o._2)))
-//        if(parsed.map(o => o._2.isFailure || o._4.isFailure).fold(false)(_ || _)) {
-//          None // Parsing failures
-//        } else {
-//          Some(parsed.map(o => MultipleFunctionQuestionOption(-1, null, o._1, /*o._2.get,*/ o._4.get, o._3)  ) )
-//        }
-//      }
-//    }
-//  }
-
-
-//  def toOptions(form: MultipleChoiceQuestionForm) = {
-//    val (options, correct) = nonBlankOptionsWithCorrectIndex(form.options, form.correct)
-//    options.map( o => MultipleChoiceQuestionOption(-1l, null, o.toString) ).toList
-//  }
-
-//  def toQuestion(user: User, form: MultipleFunctionQuestionForm, options: (List[String], Option[Int])) = {
-//    MultipleFunctionQuestion(null, user.id, form.explanation, JodaUTC.now, form.difficulty)
-//  }
-
-//  def toQuestionOptions(options: (List[String], Option[Int])) =
-//    options._1.map( MultipleChoiceQuestionOption(-1, null, _) )
-
-//  // ==== Helpers
-//  def nonBlankOptionsWithCorrectBoolean(options : List[String], correct: Int) : List[(String, Boolean)] =
-//    options.zipWithIndex.map(o => (o._1, o._2 == correct)).filter(o => o._1.trim.nonEmpty)
-//
-//  def nonBlankOptionsWithCorrectIndex(options : List[String], correct: Int) : (List[String], Option[Int]) = {
-//    val blankOptionsWithCorrectBoolean = nonBlankOptionsWithCorrectBoolean(options, correct)
-//    val blankOptionsWithCorrectIndex = nonBlankOptionsWithCorrectIndex(blankOptionsWithCorrectBoolean)
-//    blankOptionsWithCorrectIndex
-//  }
-//
-//  def nonBlankOptionsWithCorrectIndex(options: List[(String, Boolean)]) : (List[String], Option[Int]) =
-//    ( options.map(o => o._1), options.map(o => o._2).indexOfOp(true) )
-
 }
-//case class AnswerOptionData(optionStr: String, option: Html, functionStr: String, function : MathMLElem)
 
 case class MultipleFunctionQuestionForm(description: String, explanation: String, options: List[String], functions: List[String], functionsStr: List[String], difficultyInt: Int) {
   val difficulty = difficultyInt.toDouble

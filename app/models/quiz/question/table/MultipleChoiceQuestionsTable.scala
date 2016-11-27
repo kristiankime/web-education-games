@@ -3,13 +3,14 @@ package models.quiz.question.table
 import models.quiz.question.{Question2Quiz, MultipleChoiceQuestion}
 import models.quiz.table._
 import play.api.db.slick.Config.driver.simple._
+import play.api.templates.Html
 import service.table.LoginsTable
-
+import models.support._
 import scala.slick.model.ForeignKeyAction
 
 class MultipleChoiceQuestionsTable(tag: Tag) extends Table[MultipleChoiceQuestion](tag, "multiple_choice_questions") with QuestionsTable[MultipleChoiceQuestion] {
 	def description   = column[String]("description")
-	def explanation   = column[String]("explanation")
+	def explanation   = column[Html]("explanation")
 	def correctAnswer = column[Short]("correct_answer")
 
 	def * = (id, ownerId, description, explanation, correctAnswer, creationDate, atCreationDifficulty, order) <> (MultipleChoiceQuestion.tupled, MultipleChoiceQuestion.unapply _)

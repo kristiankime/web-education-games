@@ -1,7 +1,6 @@
 package models.quiz.question.table
 
 import com.artclod.mathml.scalar._
-import com.artclod.mathml.slick.MathMLMapper._
 import com.artclod.slick.JodaUTC._
 import models.quiz.question.{Question2Quiz, DerivativeQuestion}
 import models.quiz.table._

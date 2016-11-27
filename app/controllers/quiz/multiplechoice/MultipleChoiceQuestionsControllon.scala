@@ -19,6 +19,7 @@ import play.api.mvc.{Action, Controller}
 import play.api.data.format.Formats._
 import models.quiz.question.support.DerivativeOrder.derivativeOrderFormatter
 import com.artclod.mathml.MathMLEq.tightRange
+import play.api.templates.Html
 import views.html.{helper, mathml}
 import views.html.helper.options
 import views.html.mathml.correct
@@ -92,11 +93,11 @@ object MultipleChoiceQuestionForm {
 
   def toOptions(form: MultipleChoiceQuestionForm) = {
     val (options, correct) = nonBlankOptionsWithCorrectIndex(form.options, form.correct)
-    options.map( o => MultipleChoiceQuestionOption(-1l, null, o.toString) ).toList
+    options.map( o => MultipleChoiceQuestionOption(-1l, null, MarkupParser(o).getOrElse(Html("Unable to process " + o))) ).toList
   }
 
   def toQuestion(user: User, form: MultipleChoiceQuestionForm) = {
-    MultipleChoiceQuestion(null, user.id, form.description, form.explanation, form.correct, JodaUTC.now, form.difficulty)
+    MultipleChoiceQuestion(null, user.id, form.description, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), form.correct, JodaUTC.now, form.difficulty)
   }
 
 //  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {

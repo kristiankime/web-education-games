@@ -1,7 +1,6 @@
 package models.quiz.answer.table
 
 import com.artclod.mathml.scalar._
-import com.artclod.mathml.slick.MathMLMapper.string2mathML
 import models.quiz.answer.{DerivativeGraphAnswer, DerivativeAnswer}
 import models.quiz.question.support.DerivativeOrder
 import models.quiz.question.support.DerivativeOrder.string2DerivativeOrder

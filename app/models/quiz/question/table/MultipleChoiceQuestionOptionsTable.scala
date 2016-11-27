@@ -4,17 +4,17 @@ import models.quiz.question.{MultipleChoiceQuestionOption, MultipleChoiceQuestio
 import models.quiz.table.{QuestionIdNext, quizzesTable}
 import models.support.QuestionId
 import play.api.db.slick.Config.driver.simple._
+import play.api.templates.Html
 import service.table.LoginsTable
-
+import models.support._
 import scala.slick.direct.order
 import scala.slick.model.ForeignKeyAction
 import models.quiz.table.{QuestionIdNext, multipleChoiceAnswersTable, multipleChoiceQuestionsTable, quizzesTable}
 
-
 class MultipleChoiceQuestionOptionsTable(tag: Tag) extends Table[MultipleChoiceQuestionOption](tag, "multiple_choice_question_options") {
 	def id         = column[Long]("id", O.AutoInc, O.PrimaryKey)
 	def questionId = column[QuestionId]("question_id")
-	def option     = column[String]("option")
+	def option     = column[Html]("option")
 
 	def * = (id, questionId, option) <> (MultipleChoiceQuestionOption.tupled, MultipleChoiceQuestionOption.unapply _)
 

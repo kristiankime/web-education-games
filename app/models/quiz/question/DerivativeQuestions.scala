@@ -1,7 +1,5 @@
 package models.quiz.question
 
-import com.artclod.mathml.slick.MathMLMapper
-import com.artclod.mathml.slick.MathMLMapper.string2mathML
 import com.artclod.slick.NumericBoolean
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import com.google.common.annotations.VisibleForTesting

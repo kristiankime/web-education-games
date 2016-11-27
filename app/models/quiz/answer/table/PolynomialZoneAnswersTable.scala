@@ -2,7 +2,6 @@ package models.quiz.answer.table
 
 import com.artclod.math.Interval
 import com.artclod.mathml.scalar._
-import com.artclod.mathml.slick.MathMLMapper.string2mathML
 import models.quiz.answer.{PolynomialZoneAnswer, TangentAnswer}
 import models.quiz.table.{AnswerIdNext, polynomialZoneQuestionsTable}
 import play.api.db.slick.Config.driver.simple._

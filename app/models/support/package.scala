@@ -1,11 +1,14 @@
 package models
 
 import com.artclod.math.Interval
+import com.artclod.mathml.{Math, MathML}
+import com.artclod.mathml.scalar.{Cn, MathMLElem}
 import com.google.common.annotations.VisibleForTesting
 import models.game.GameResponseStatus
 import models.quiz.question.support.PolynomialZoneType
 import play.api.db.slick.Config.driver.simple._
 import play.api.mvc._
+import play.api.templates.Html
 import service._
 
 /**
@@ -239,7 +242,6 @@ package object support {
 		zone => zone.order,
 		short => PolynomialZoneType(short))
 
-
 	// ==========================
 	// Vector of Intervals
 	// ==========================
@@ -262,6 +264,20 @@ package object support {
 		}
 		intervals.toVector
 	}
+
+	// ==========================
+	// MathML
+	// ==========================
+	implicit def string2mathML = MappedColumnType.base[MathMLElem, String](
+		mathML => mathML.toString,
+		string => MathML(string).getOrElse(Math(Cn(-123456))))
+
+	// ==========================
+	// HTML
+	// ==========================
+	implicit def string2Html = MappedColumnType.base[Html, String](
+		html => html.toString,
+		string => Html(string))
 
 }
 

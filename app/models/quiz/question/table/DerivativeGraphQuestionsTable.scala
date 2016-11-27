@@ -1,13 +1,13 @@
 package models.quiz.question.table
 
 import com.artclod.mathml.scalar._
-import com.artclod.mathml.slick.MathMLMapper._
 import models.quiz.question.support.DerivativeOrder
 import models.quiz.question.support.DerivativeOrder.string2DerivativeOrder
 import models.quiz.question.{Question2Quiz, DerivativeGraphQuestion, DerivativeQuestion}
 import models.quiz.table.{QuestionIdNext, quizzesTable, derivativeGraphQuestionsTable}
 import play.api.db.slick.Config.driver.simple._
 import service.table.LoginsTable
+import models.support._
 
 import scala.slick.model.ForeignKeyAction
 

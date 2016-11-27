@@ -1,13 +1,12 @@
 package models.quiz.answer.table
 
 import com.artclod.mathml.scalar.MathMLElem
-import com.artclod.mathml.slick.MathMLMapper._
 import models.quiz.answer.MultipleFunctionAnswerOption
 import models.quiz.question.MultipleFunctionQuestionOption
 import models.quiz.table.multipleFunctionAnswersTable
 import models.support.{AnswerId, QuestionId}
 import play.api.db.slick.Config.driver.simple._
-
+import models.support._
 import scala.slick.model.ForeignKeyAction
 
 

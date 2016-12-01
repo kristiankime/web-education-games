@@ -19,16 +19,16 @@ object DerivativeGraphQuestions {
 
   // ======= CREATE ======
   def create(info: DerivativeGraphQuestion, quizId: QuizId)(implicit session: Session): DerivativeGraphQuestion = {
-    val toInsert = info.copy(id = QuestionIdNext())
-    derivativeGraphQuestionsTable += toInsert
-
-    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
-    derivativeGraphQuestion2QuizTable += quizLink
-
+    val toInsert = create(info)
+    attach(toInsert, quizId)
     toInsert
   }
 
-  @VisibleForTesting
+  def attach(toInsert: DerivativeGraphQuestion, quizId: QuizId)(implicit session: Session): Unit = {
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    derivativeGraphQuestion2QuizTable += quizLink
+  }
+
   def create(info: DerivativeGraphQuestion)(implicit session: Session): DerivativeGraphQuestion = {
     val toInsert = info.copy(id = QuestionIdNext())
     derivativeGraphQuestionsTable += toInsert

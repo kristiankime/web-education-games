@@ -21,11 +21,13 @@ object DerivativeQuestions {
   // ======= CREATE ======
   def create(info: DerivativeQuestion, quizId: QuizId)(implicit session: Session): DerivativeQuestion = {
     val toInsert = create(info)
+    attach(toInsert, quizId)
+    toInsert
+  }
 
+  def attach(toInsert: DerivativeQuestion, quizId: QuizId)(implicit session: Session): Unit = {
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     derivativeQuestion2QuizTable += quizLink
-
-    toInsert
   }
 
   def create(info: DerivativeQuestion)(implicit session: Session): DerivativeQuestion = {
@@ -66,6 +68,9 @@ object DerivativeQuestions {
     val users = service.table.LoginsTable.loginTable.where(_.id in userIds).sortBy(_.email)
     users.list
   }
+
+  // ======= Attach ======
+
 
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: DerivativeQuestion)(implicit session: Session) =

@@ -9,7 +9,8 @@ import controllers.quiz.tangent.TangentQuestionForm
 import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.organization._
 import models.quiz.answer.Answers
-import models.quiz.{Quiz, Quizzes}
+import models.quiz.question.{Questions, Question}
+import models.quiz.{Quizzes, Quiz}
 import models.support._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -18,6 +19,12 @@ import play.api.mvc.{Controller, Result}
 import service.Edit
 
 object QuizzesController extends Controller with SecureSocialConsented {
+
+  def apply(quizId: QuizId)(implicit session: Session) : Either[Result, Quiz] =
+    Quizzes(quizId) match {
+      case None => Left(NotFound(views.html.errors.notFoundPage("There was no quiz for id=["+quizId+"]")))
+      case Some(quiz) => Right(quiz)
+    }
 
   def apply(organizationId: OrganizationId, courseId: CourseId, quizId: QuizId)(implicit session: Session) : Either[Result, (Organization, Course, Quiz)] =
     Quizzes(quizId) match {

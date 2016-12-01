@@ -1,0 +1,40 @@
+@(quiz: models.quiz.Quiz)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import models.bank.QuestionBank
+@import controllers.bank.routes.{ QuestionBankController }
+@import controllers.bank.BankQuizForm
+@import controllers.quiz.QuizForm
+@import helper._
+@import com.artclod.play.{are, s}
+
+@mainWithBorder("Question Bank") {
+
+    <h2>Select the Questions you want in your quiz </h2>
+
+    @defining(QuestionBank.allQuestions){ questions : List[models.quiz.question.Question] =>
+    @defining(quiz.questions.map(_.id).toSet){ quizQuestionIds : Set[models.support.QuestionId] =>
+
+    <h4>There @are(questions) @questions.size Question@s(questions) in the system </h4>
+
+    @form(action = controllers.bank.routes.QuestionBankController.setQuizQuestions(quiz.id)) {
+    <table class="pure-table pure-table-striped">
+        <tr>
+    	    <th>Question</th>
+        </tr>
+        @for(question <- questions.zipWithIndex){<tr>
+            <td>@* The hidden input is here because false checkboxes do not send values in forms, see https://groups.google.com/forum/?fromgroups=#!topic/play-framework/HygQuYF3a8E *@
+                <input type="checkbox" name="@{BankQuizForm.questionIdList + "[" + question._2 + "]" }" value="@question._1.id.v" @if(quizQuestionIds.contains(question._1.id)){checked} /> <input type="hidden" name="@{BankQuizForm.questionIdList + "[" + question._2 + "]"}" value="-1" />
+            </td>
+            <td>
+                <a class="pure-button" href="@QuestionBankController.viewQuestion(question._1.id)"> @question._1.display() </a>
+            </td>
+        </tr>}
+    </table>
+
+    <input type="submit" value="Submit">
+    }
+
+    }
+    }
+
+}

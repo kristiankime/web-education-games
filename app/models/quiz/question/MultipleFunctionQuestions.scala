@@ -18,11 +18,13 @@ object MultipleFunctionQuestions {
   // ======= CREATE ======
   def create(info: MultipleFunctionQuestion, options: List[MultipleFunctionQuestionOption], quizId: QuizId)(implicit session: Session): MultipleFunctionQuestion = {
     val toInsert = create(info, options)
+    attach(toInsert, quizId)
+    toInsert
+  }
 
+  def attach(toInsert: MultipleFunctionQuestion, quizId: QuizId)(implicit session: Session): Unit = {
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     multipleFunctionQuestion2QuizTable += quizLink
-
-    toInsert
   }
 
   def create(info: MultipleFunctionQuestion, options: List[MultipleFunctionQuestionOption])(implicit session: Session): MultipleFunctionQuestion = {

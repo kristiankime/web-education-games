@@ -36,6 +36,10 @@ object Questions {
       .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
       .headOption
 
+  def apply(questionIds: List[QuestionId])(implicit session: Session) : List[Question] = {
+    questionIds.flatMap(id => apply(id))
+  }
+
   // ======= REMOVE ======
   def remove(quiz: Quiz, question: Question)(implicit session: Session) =
     question match {

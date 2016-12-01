@@ -12,14 +12,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
 object TextToHtmlGraph {
-  def q(text: String) = "\"" + text + "\"";
-  val name = q("name")
-  val function = q("function")
-  val titleOp = q("titleOp")
-  val glider = q("glider")
-  val xSize = q("xSize")
-  val ySize = q("ySize")
-
   implicit val formatDerivativeDifficultyRequest : Format[TextToHtmlGraph] = Json.format[TextToHtmlGraph]
 
   @VisibleForTesting
@@ -77,7 +69,6 @@ object TextToHtmlGraph {
     val mainAndGraphs = sideGraphs(html.toString())
     views.html.quiz.multiplechoice.graphsOnSide(Html(mainAndGraphs._1), mainAndGraphs._2)
   }
-
 
 }
 

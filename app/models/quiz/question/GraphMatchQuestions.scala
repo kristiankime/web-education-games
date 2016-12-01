@@ -18,11 +18,13 @@ object GraphMatchQuestions {
   // ======= CREATE ======
   def create(info: GraphMatchQuestion, quizId: QuizId)(implicit session: Session): GraphMatchQuestion = {
     val toInsert = create(info)
+    attach(toInsert, quizId)
+    toInsert
+  }
 
+  def attach(toInsert: GraphMatchQuestion, quizId: QuizId)(implicit session: Session): Unit = {
     val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
     graphMatchQuestion2QuizTable += quizLink
-
-    toInsert
   }
 
   def create(info: GraphMatchQuestion)(implicit session: Session): GraphMatchQuestion = {

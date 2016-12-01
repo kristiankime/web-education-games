@@ -4,7 +4,7 @@ import com.artclod.tuple._
 import com.google.common.annotations.VisibleForTesting
 import models.organization._
 import models.organization.table._
-import models.quiz.question.Question
+import models.quiz.question.{Questions, Question}
 import models.quiz.question.table.{DerivativeQuestion2QuizTable, DerivativeQuestionsTable, QuestionsTable, Question2QuizTable}
 import models.quiz.table._
 import models.support._
@@ -68,6 +68,25 @@ object Quizzes {
       (a: List[Question]) => a.asInstanceOf[List[Question]]
     )
 
+//  private def questionIds(quizId: QuizId)(implicit session: Session) : List[QuestionId] =
+//    question2QuizTables.->(
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list
+//    ).toList[QuestionId](
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
+//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]]
+//    )
+
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (
       c <- coursesTable;
@@ -89,6 +108,25 @@ object Quizzes {
       }
       case None => false
     }
+
+  def setQuestions(quizId: QuizId, questionIds: List[QuestionId])(implicit session: Session): Unit = {
+    clearQuestions(quizId)
+    addQuestions(quizId, questionIds)
+  }
+
+  private def clearQuestions(quizId: QuizId)(implicit session: Session) =
+    question2QuizTables.->(
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete
+    )
+
+  private def addQuestions(quizId: QuizId, questionIds: List[QuestionId])(implicit session: Session): Unit =
+    for(q <- questionIds.flatMap(id => Questions(id))) { q.attach(quizId) }
 
   // ======= AUTHORIZATION ======
   def linkAccess(quiz: Quiz)(implicit user: User, session: Session) =

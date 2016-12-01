@@ -8,7 +8,7 @@
 
 @mainWithBorder("Question Bank") {
 
-    <h2>Welcome to the Quiz Bank Page </h2>
+    <h2>Welcome to the Question Bank Page </h2>
 
     @defining(QuestionBank.allQuestions){ questions : List[models.quiz.question.Question] =>
 
@@ -19,7 +19,7 @@
     	    <th>Question</th>
         </tr>
         @for(question <- questions){<tr>
-            <td> <a class="pure-button" href="@QuestionBankController.view(question.id)"> @question.display() </a> </td>
+            <td> <a class="pure-button" href="@QuestionBankController.viewQuestion(question.id)"> @question.display() </a> </td>
             @* @if(access.write){<td> @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "pure-form") { <input class="pure-button" type="submit" value="remove" > } </td> } *@
         </tr>}
     </table>

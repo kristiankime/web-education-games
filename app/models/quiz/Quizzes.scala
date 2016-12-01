@@ -16,7 +16,6 @@ import service._
 object Quizzes {
 
   // ======= CREATE ======
-  @VisibleForTesting
   def create(quiz: Quiz)(implicit session: Session) : Quiz = {
     val quizId: QuizId = (quizzesTable returning quizzesTable.map(_.id)) += quiz
     quiz.copy(id = quizId)

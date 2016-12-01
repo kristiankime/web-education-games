@@ -2,6 +2,7 @@ package controllers.support
 
 import models.game.Games
 import models.organization._
+import models.quiz.Quizzes
 import models.support._
 import models.user.Users
 import play.api.Play.current
@@ -36,6 +37,7 @@ object RequireAccess {
 
 	def apply(level: Access, gameId: GameId) = new RequireAccess(level, (s:Session) => Games(gameId)(s))
 
+	def apply(level: Access, quizId: QuizId) = new RequireAccess(level, (s:Session) => Quizzes(quizId)(s))
 }
 
 

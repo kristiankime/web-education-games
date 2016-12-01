@@ -25,7 +25,7 @@ import play.api.mvc.Controller
 import com.artclod.random._
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
-import controllers.support.SecureSocialConsented
+import controllers.support.{RequireAccess, SecureSocialConsented}
 import models.organization._
 import models.support._
 import play.api.data.Form
@@ -47,6 +47,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
     Ok(views.html.bank.list(QuestionForms.empty))
   }
 
+  // TODO should have access to the question
   def deleteQuestion(questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     Ok(views.html.bank.list(QuestionForms.empty))
   }
@@ -66,6 +67,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
     }
   }
 
+  // TODO should have access to the answer
   def viewAnswer(questionId: QuestionId, answerId: AnswerId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuestionsController(questionId) + AnswersController(questionId, answerId) match {
       case Left(notFoundResult) => notFoundResult
@@ -82,14 +84,14 @@ object QuestionBankController extends Controller with SecureSocialConsented {
     }
   }
 
-  def viewQuiz(quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def viewQuiz(quizId: QuizId) = ConsentedAction(RequireAccess(Edit, quizId)) { implicit request => implicit user => implicit session =>
     QuizzesController(quizId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(quiz : Quiz) => Ok(views.html.bank.quiz(quiz))
     }
   }
 
-  def setQuizQuestions(quizId: QuizId) = ConsentedAction { implicit request => implicit user => implicit session =>
+  def setQuizQuestions(quizId: QuizId) = ConsentedAction(RequireAccess(Edit, quizId)) { implicit request => implicit user => implicit session =>
     QuizzesController(quizId) match {
       case Left(notFoundResult) => notFoundResult
       case Right(quiz : Quiz) => {

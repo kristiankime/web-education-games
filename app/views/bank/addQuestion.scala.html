@@ -1,7 +1,7 @@
 @(forms: controllers.quiz.QuestionForms)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.bank.QuestionBank
-@import controllers.bank.routes.{ QuestionBankController }
+@import controllers.bank.routes.QuestionBankController
 @import controllers.quiz.QuizForm
 @import helper._
 @import com.artclod.play.{are, s}
@@ -10,24 +10,8 @@
 
     <h2>Welcome to the Question Bank Page </h2>
 
-    <a class="pure-button" href="@QuestionBankController.addQuestion()"> create a new question </a>
+    <a class="pure-button" href="@QuestionBankController.listQuestions()"> view all questions </a>
 
-    @defining(QuestionBank.allQuestions){ questions : List[models.quiz.question.Question] =>
-
-    <h4>There @are(questions) @questions.size Question@s(questions) in the system </h4>
-
-    <table class="pure-table pure-table-striped">
-        <tr>
-    	    <th>Question</th>
-        </tr>
-        @for(question <- questions){<tr>
-            <td> <a class="pure-button" href="@QuestionBankController.viewQuestion(question.id)"> @question.display() </a> </td>
-            @* @if(access.write){<td> @form(QuestionsController.remove(course.organizationId, course.id, quiz.id, result.question.id), 'class -> "pure-form") { <input class="pure-button" type="submit" value="remove" > } </td> } *@
-        </tr>}
-    </table>
-    }
-
-    @*
     <h4>Add a new Question</h4>
 
     @tag.switch("createQuestion", 6,
@@ -39,5 +23,5 @@
         ("Create a Multiple Choice Question",   views.html.quiz.multiplechoice.questionEditor(QuestionBankController.createMultipleChoice(), forms.multipleChoice)),
         ("Create a Multiple Function Question", views.html.quiz.multiplefunction.questionEditor(QuestionBankController.createMultipleFunction(), forms.multipleFunction))
     )
-    *@
+
 }

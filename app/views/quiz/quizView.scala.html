@@ -5,6 +5,7 @@
     forms: controllers.quiz.QuestionForms)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import controllers.quiz.routes.{ QuestionsController, QuizzesController}
+@import controllers.bank.routes.QuestionBankController
 @import controllers.quiz.QuizForm
 @import helper._
 @import com.artclod.play.{are, s}
@@ -43,6 +44,11 @@
     }
 
     @if(access.write){
+
+    <h4>Select Questions</h4>
+
+    <a class="pure-button" href="@QuestionBankController.viewQuiz(quiz.id)"> select existing questions for your quiz </a>
+
     <h4>Add a new Question</h4>
 
     @tag.switch("createQuestion", forms.errorIndexOrRandom,

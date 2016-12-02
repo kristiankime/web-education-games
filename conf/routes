@@ -46,6 +46,7 @@ GET         /leaderboard                                                        
 
 # Question Bank
 GET         /bank                                                                      controllers.bank.QuestionBankController.listQuestions
+GET         /bank/question                                                             controllers.bank.QuestionBankController.addQuestion
 GET         /bank/quiz/:z                                                              controllers.bank.QuestionBankController.viewQuiz(z: QuizId)
 POST        /bank/quiz/:z/questions                                                    controllers.bank.QuestionBankController.setQuizQuestions(z: QuizId)
 GET         /bank/questions/:q                                                         controllers.bank.QuestionBankController.viewQuestion(q: QuestionId)

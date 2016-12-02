@@ -47,6 +47,10 @@ object QuestionBankController extends Controller with SecureSocialConsented {
     Ok(views.html.bank.list(QuestionForms.empty))
   }
 
+  def addQuestion = ConsentedAction { implicit request => implicit user => implicit session =>
+    Ok(views.html.bank.addQuestion(QuestionForms.empty))
+  }
+
   // TODO should have access to the question
   def deleteQuestion(questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
     Ok(views.html.bank.list(QuestionForms.empty))
@@ -109,7 +113,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == Derivative
   def createDerivative() = ConsentedAction { implicit request => implicit user => implicit session =>
     DerivativeQuestionForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.derivative(errors))),
+      errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.derivative(errors))),
       form => {
         val question = DerivativeQuestions.create(DerivativeQuestionForm.toQuestion(user, form))
         Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))
@@ -138,7 +142,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == DerivativeGraph
   def createDerivativeGraph() = ConsentedAction { implicit request => implicit user => implicit session =>
       DerivativeGraphQuestionForm.values.bindFromRequest.fold(
-        errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.derivativeGraph(errors))),
+        errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.derivativeGraph(errors))),
         form => {
           val question = DerivativeGraphQuestions.create(DerivativeGraphQuestionForm.toQuestion(user, form))
           Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))
@@ -167,7 +171,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == Tangent
   def createTangent() = ConsentedAction { implicit request => implicit user => implicit session =>
     TangentQuestionForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.tangent(errors))),
+      errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.tangent(errors))),
       form => {
         val question = TangentQuestions.create(TangentQuestionForm.toQuestion(user, form))
         Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))
@@ -196,7 +200,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == GraphMatch
   def createGraphMatch() = ConsentedAction { implicit request => implicit user => implicit session =>
     GraphMatchQuestionForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.graphMatch(errors))),
+      errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.graphMatch(errors))),
       form => {
         val question = GraphMatchQuestions.create(GraphMatchQuestionForm.toQuestion(user, form))
         Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))
@@ -225,7 +229,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == PolynomialZone
   def createPolynomialZone() = ConsentedAction { implicit request => implicit user => implicit session =>
     PolynomialZoneQuestionForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.polynomialZone(errors))),
+      errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.polynomialZone(errors))),
       form => {
         val question = PolynomialZoneQuestions.create(PolynomialZoneQuestionForm.toQuestion(user, form))
         Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))
@@ -253,7 +257,7 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == MultipleChoice
   def createMultipleChoice() = ConsentedAction { implicit request => implicit user => implicit session =>
     MultipleChoiceQuestionForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.multipleChoice(errors))),
+      errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.multipleChoice(errors))),
       form => {
         val question = MultipleChoiceQuestions.create(MultipleChoiceQuestionForm.toQuestion(user, form), MultipleChoiceQuestionForm.toOptions(form))
         Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))
@@ -281,11 +285,11 @@ object QuestionBankController extends Controller with SecureSocialConsented {
   // == MultipleFunction
   def createMultipleFunction() = ConsentedAction { implicit request => implicit user => implicit session =>
     MultipleFunctionQuestionForm.values.bindFromRequest.fold(
-      errors => BadRequest(views.html.bank.list(controllers.quiz.QuestionForms.multipleFunction(errors))),
+      errors => BadRequest(views.html.bank.addQuestion(controllers.quiz.QuestionForms.multipleFunction(errors))),
       form => {
         val optionsOp = MultipleFunctionQuestionForm.toOptions(form)
         optionsOp match {
-          case None => BadRequest(views.html.bank.list(QuestionForms.empty)) // TODO put real error here
+          case None => BadRequest(views.html.bank.addQuestion(QuestionForms.empty)) // TODO put real error here
           case Some(options) => {
             val question = MultipleFunctionQuestions.create(MultipleFunctionQuestionForm.toQuestion(user, form), options)
             Redirect(controllers.bank.routes.QuestionBankController.viewQuestion(question.id))

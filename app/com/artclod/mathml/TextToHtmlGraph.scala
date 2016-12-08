@@ -45,8 +45,11 @@ object TextToHtmlGraph {
 
 
   // ========
+  val graphIndicators = """$g$"""
+  val graphInficatorsLiteral = java.util.regex.Pattern.quote(graphIndicators)
+
   def sideGraphs(text: String) : (String, List[Html]) = {
-    val gs = """\$g\$(.*?)\$g\$""".r
+    val gs = (graphInficatorsLiteral + """(.*?)""" + graphInficatorsLiteral).r
 
     val sideGraphs = ArrayBuffer[Html]()
 

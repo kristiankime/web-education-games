@@ -66,7 +66,7 @@ object QuestionForms {
 
   def verifyFunctionValid(f: MathMLElem) = MathMLDefined.isDefinedFor(f, .10d)
 
-  def verifyFunctionDerivativeIsEasyToType(f: MathMLElem) = Nodes.nodeCount(f.dx.simplify) <= 60
+  def verifyFunctionDerivativeIsEasyToType(f: MathMLElem) = Nodes.nodeCount(f.dx.simplify) <= 80
 
   def verifyFunctionDisplaysNicely(f: MathMLElem) = {
     val ret = MathMLRange.percentInRange("x", f, -1d * MathMLEq.tightRange, MathMLEq.tightRange) >= .10d

@@ -34,4 +34,35 @@ class LaikaParserSpec extends Specification {
     }
   }
 
+  "replaceSpecials" should {
+
+    "replace first match with 0" in {
+      val (replaced, map) = LaikaParser.replaceSpecials("hello $$zero$$ bye", LaikaParser.mt)
+
+      replaced must beEqualTo("hello $$0$$ bye")
+      map must beEqualTo(Map("$$0$$" -> "$$zero$$"))
+    }
+
+    "replace all matches with sequential numbers" in {
+      val (replaced, map) = LaikaParser.replaceSpecials("a $$zero$$ b $$one$$ c $$two$$ d", LaikaParser.mt)
+
+      replaced must beEqualTo("a $$0$$ b $$1$$ c $$2$$ d")
+      map must beEqualTo(Map("$$0$$" -> "$$zero$$", "$$1$$" -> "$$one$$", "$$2$$" -> "$$two$$"))
+    }
+
+    "handle the case where the string starts with a special" in {
+      val (replaced, map) = LaikaParser.replaceSpecials("$$zero$$ b $$one$$ c $$two$$", LaikaParser.mt)
+
+      replaced must beEqualTo("$$0$$ b $$1$$ c $$2$$")
+      map must beEqualTo(Map("$$0$$" -> "$$zero$$", "$$1$$" -> "$$one$$", "$$2$$" -> "$$two$$"))
+    }
+
+    "handle the case where the string ends with a special" in {
+      val (replaced, map) = LaikaParser.replaceSpecials("a $$zero$$ b $$one$$ c $$two$$", LaikaParser.mt)
+
+      replaced must beEqualTo("a $$0$$ b $$1$$ c $$2$$")
+      map must beEqualTo(Map("$$0$$" -> "$$zero$$", "$$1$$" -> "$$one$$", "$$2$$" -> "$$two$$"))
+    }
+  }
+
 }

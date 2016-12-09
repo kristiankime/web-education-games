@@ -19,6 +19,7 @@
     @form(action = controllers.bank.routes.QuestionBankController.setQuizQuestions(quiz.id)) {
     <table class="pure-table pure-table-striped">
         <tr>
+            <th>Select</th>
     	    <th>Question</th>
         </tr>
         @for(question <- questions.zipWithIndex){<tr>

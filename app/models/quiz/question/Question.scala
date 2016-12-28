@@ -225,6 +225,8 @@ case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, description
 
   def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.multiplefunction.questionDisplay(this, explanation)
 
+  def display(currentAnswer: Option[Either[models.quiz.answer.MultipleFunctionAnswer, models.quiz.answer.MultipleFunctionAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html = views.html.quiz.multiplefunction.questionDisplayDetailed(this, currentAnswer)
+
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = MultipleFunctionQuestions.quizFor(id, quizId)
 
   def attach(quizId: QuizId)(implicit session: Session) = MultipleFunctionQuestions.attach(this, quizId)

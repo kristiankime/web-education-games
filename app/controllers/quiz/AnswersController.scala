@@ -38,13 +38,13 @@ object AnswersController extends Controller with SecureSocialConsented
     QuizzesController(organizationId, courseId, quizId) + QuestionsController(quizId, questionId) + AnswersController(questionId, answerId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course, quiz, question, answer)) => (question, answer) match {
-        case (dq: DerivativeQuestion, da: DerivativeAnswer)             => Ok(views.html.quiz.derivative.questionView(course, quiz, dq.results(user), Some(Right(da))))
-        case (dq: DerivativeGraphQuestion, da: DerivativeGraphAnswer)   => Ok(views.html.quiz.derivativegraph.questionView(course, quiz, dq.results(user), Some(Right(da))))
-        case (tq: TangentQuestion, ta: TangentAnswer)                   => Ok(views.html.quiz.tangent.questionView(course, quiz, tq.results(user), Some(Right(ta))))
-        case (tq: GraphMatchQuestion, ta: GraphMatchAnswer)             => Ok(views.html.quiz.graphmatch.questionView(course, quiz, tq.results(user), Some(Right(ta))))
-        case (pz: PolynomialZoneQuestion, pa: PolynomialZoneAnswer)     => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, pz.results(user), Some(Right(pa))))
-        case (mc: MultipleChoiceQuestion, ma: MultipleChoiceAnswer)     => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, mc.results(user), Some(Right(ma))))
-        case (mc: MultipleFunctionQuestion, ma: MultipleFunctionAnswer) => Ok(views.html.quiz.multiplefunction.questionView(course, quiz, mc.results(user), Some(Right(ma))))
+        case (dq: DerivativeQuestion, da: DerivativeAnswer)              => Ok(views.html.quiz.derivative.questionView(course, quiz, dq.results(user), Some(Right(da))))
+        case (dq: DerivativeGraphQuestion, da: DerivativeGraphAnswer)    => Ok(views.html.quiz.derivativegraph.questionView(course, quiz, dq.results(user), Some(Right(da))))
+        case (tq: TangentQuestion, ta: TangentAnswer)                    => Ok(views.html.quiz.tangent.questionView(course, quiz, tq.results(user), Some(Right(ta))))
+        case (tq: GraphMatchQuestion, ta: GraphMatchAnswer)              => Ok(views.html.quiz.graphmatch.questionView(course, quiz, tq.results(user), Some(Right(ta))))
+        case (pz: PolynomialZoneQuestion, pa: PolynomialZoneAnswer)      => Ok(views.html.quiz.polynomialzone.questionView(course, quiz, pz.results(user), Some(Right(pa))))
+        case (mc: MultipleChoiceQuestion, mca: MultipleChoiceAnswer)     => Ok(views.html.quiz.multiplechoice.questionView(course, quiz, mc.results(user), Some(Right(mca))))
+        case (mf: MultipleFunctionQuestion, mfa: MultipleFunctionAnswer) => Ok(views.html.quiz.multiplefunction.questionView(course, quiz, mf.results(user), Some(Right(mfa))))
         case _ => Ok(views.html.errors.notFoundPage("Question " + questionId + " type did not match Answer " + answerId))
       }
     }

@@ -124,3 +124,7 @@ case class MultipleFunctionAnswerOption(id: Long, answerId: AnswerId, functionMa
   val rawStr: String = functionRaw
   def display = views.html.mathml.mathmlDisplay(this)
 }
+
+object MultipleFunctionUtil {
+  def get(curOpAns: Option[List[MultipleFunctionAnswerOption]], index : Int) =  curOpAns.flatMap(e => e.lift(index).map(_.functionRaw))
+}

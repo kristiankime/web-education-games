@@ -10,10 +10,11 @@ import scala.slick.model.ForeignKeyAction
 
 class MultipleChoiceQuestionsTable(tag: Tag) extends Table[MultipleChoiceQuestion](tag, "multiple_choice_questions") with QuestionsTable[MultipleChoiceQuestion] {
 	def description   = column[String]("description")
-	def explanation   = column[Html]("explanation")
+	def explanationRaw   = column[String]("explanation_raw")
+	def explanationHtml   = column[Html]("explanation_html")
 	def correctAnswer = column[Short]("correct_answer")
 
-	def * = (id, ownerId, description, explanation, correctAnswer, creationDate, atCreationDifficulty, order) <> (MultipleChoiceQuestion.tupled, MultipleChoiceQuestion.unapply _)
+	def * = (id, ownerId, description, explanationRaw, explanationHtml, correctAnswer, creationDate, atCreationDifficulty, order) <> (MultipleChoiceQuestion.tupled, MultipleChoiceQuestion.unapply _)
 
 	def idFK = foreignKey("multiple_choice_questions__id_fk", id, QuestionIdNext.questionIdTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 	def ownerFK = foreignKey("multiple_choice_questions__owner_fk", ownerId, LoginsTable.loginTable)(_.id, onDelete = ForeignKeyAction.Cascade)

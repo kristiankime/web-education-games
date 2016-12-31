@@ -1,7 +1,6 @@
 @(question: models.quiz.question.MultipleFunctionQuestion, currentAnswer: Option[Either[models.quiz.answer.MultipleFunctionAnswer, models.quiz.answer.MultipleFunctionAnswer]])(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
 
 @import models.quiz.answer.MultipleFunctionAnswerOption
-@question.explanationMarkup
 @import controllers.quiz.multiplefunction.MultipleFunctionAnswerForm
 
 @defining(currentAnswer.map(e => e.fold(l => l.options, r => r.options))){ curOpAns : Option[List[MultipleFunctionAnswerOption]] =>
@@ -14,7 +13,7 @@
         </tr>
         @for(answerOption <- question.answerOptions.zipWithIndex) {<tr>
             <td> <label for="multipleFunctionOption@{answerOption._2}">@{answerOption._2 + 1}</label> </td>
-            <td> <label for="multipleFunctionOption@{answerOption._2}">@answerOption._1.optionMarkup</label> </td>
+            <td> <label for="multipleFunctionOption@{answerOption._2}">@answerOption._1.optionHtml</label> </td>
             <td>
                 @mathml.mathmlEditor("MULTIPLE_FUNCTION_ANSWER_EDITOR_" + answerOption._2, models.quiz.answer.MultipleFunctionUtil.get(curOpAns, answerOption._2), mathParser = "CALC.mathJS.functionOfXParser")
             </td>

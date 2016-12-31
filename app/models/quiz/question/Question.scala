@@ -184,7 +184,7 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
     }
 }
 
-case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, description: String, explanation: Html, correctAnswer: Short, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question {
+case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, description: String, explanationRaw: String, explanationHtml: Html, correctAnswer: Short, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question {
 
   def answerOptions(implicit session: Session): List[MultipleChoiceQuestionOption] = MultipleChoiceQuestionOptions(this)
 
@@ -202,16 +202,11 @@ case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, description: 
 
   def attach(quizId: QuizId)(implicit session: Session) = MultipleChoiceQuestions.attach(this, quizId)
 
-  //  def explanationMarkup = MarkupParser(explanation).getOrElse(Html("Was unable to parse explanation"))
-  def explanationMarkup = explanation
 }
 
-case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, option: Html) {
-//  def optionMarkup = MarkupParser(option).getOrElse(Html("Was unable to parse option"))
-  def optionMarkup = option
-}
+case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, optionRaw: String, optionHtml: Html)
 
-case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, description: String, explanation: Html, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question {
+case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, description: String, explanationRaw: String, explanationHtml: Html, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question {
 
   def answerOptions(implicit session: Session): List[MultipleFunctionQuestionOption] = MultipleFunctionQuestionOptions(this)
 
@@ -230,12 +225,6 @@ case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, description
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = MultipleFunctionQuestions.quizFor(id, quizId)
 
   def attach(quizId: QuizId)(implicit session: Session) = MultipleFunctionQuestions.attach(this, quizId)
-
-  //  def explanationMarkup = MarkupParser(explanation).getOrElse(Html("Was unable to parse explanation"))
-  def explanationMarkup = explanation
 }
 
-case class MultipleFunctionQuestionOption(id: Long, questionId: QuestionId, option: Html, functionMath: MathMLElem, functionRaw: String) {
-//  def optionMarkup = MarkupParser(option).getOrElse(Html("Was unable to parse option"))
-  def optionMarkup = option
-}
+case class MultipleFunctionQuestionOption(id: Long, questionId: QuestionId, optionRaw: String, optionHtml: Html, functionMath: MathMLElem, functionRaw: String)

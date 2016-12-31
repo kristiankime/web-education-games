@@ -97,8 +97,13 @@ object MultipleFunctionQuestionForm {
       verifying(optionsDontMatchFunctions, fields => toOptions(fields).nonEmpty)
   )
 
+  def fromQuestion(question: MultipleFunctionQuestion) : Form[controllers.quiz.multiplefunction.MultipleFunctionQuestionForm] = {
+    val foo = MultipleFunctionQuestionForm(question.description, question.explanationRaw, null, null, null, question.difficulty.toInt)
+    values.fill(foo)
+  }
+
   def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
-    MultipleFunctionQuestion(null, user.id, form.description, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), JodaUTC.now, form.difficulty)
+    MultipleFunctionQuestion(null, user.id, form.description, form.explanation, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), JodaUTC.now, form.difficulty)
   }
 
   def toOptions(form: MultipleFunctionQuestionForm) : Option[List[MultipleFunctionQuestionOption]] = {
@@ -112,6 +117,7 @@ object MultipleFunctionQuestionForm {
     def isValid(s: String): Boolean = { (s != null) && (s.nonEmpty) }
     def isValid2Some(s: String): Option[String] = if (isValid(s)) { Some(s) } else { None }
     val options      =        optionsIn.map(_.trim)                .map(isValid2Some(_)).map( _.flatMap(o => MarkupParser(o).toOption))
+    val optionsStrs  =        optionsIn.map(_.trim)                .map(isValid2Some(_))
     val functions    =      functionsIn.map(_.trim).padTo(size, "").map(isValid2Some(_)).map( _.flatMap(o => MathML(o).toOption))
     val functionStrs =  functionsStrsIn.map(_.trim).padTo(size, "").map(isValid2Some(_))
 
@@ -126,10 +132,11 @@ object MultipleFunctionQuestionForm {
     } else { Some(
       (for(i <- 0 until size if options(i).isDefined if functions(i).isDefined if functionStrs(i).isDefined) yield {
         val option = options(i)
+        val optionStr = optionsStrs(i)
         val function = functions(i)
         val functionStr = functionStrs(i)
 
-        MultipleFunctionQuestionOption(-1, null, option.get, function.get, functionStr.get)
+        MultipleFunctionQuestionOption(-1, null, optionStr.get, option.get, function.get, functionStr.get)
       }).toList
     )}
   }

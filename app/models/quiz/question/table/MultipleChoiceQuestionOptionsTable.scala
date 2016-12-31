@@ -14,9 +14,10 @@ import models.quiz.table.{QuestionIdNext, multipleChoiceAnswersTable, multipleCh
 class MultipleChoiceQuestionOptionsTable(tag: Tag) extends Table[MultipleChoiceQuestionOption](tag, "multiple_choice_question_options") {
 	def id         = column[Long]("id", O.AutoInc, O.PrimaryKey)
 	def questionId = column[QuestionId]("question_id")
-	def option     = column[Html]("option")
+	def optionRaw  = column[String]("option_raw")
+	def optionHtml = column[Html]("option_html")
 
-	def * = (id, questionId, option) <> (MultipleChoiceQuestionOption.tupled, MultipleChoiceQuestionOption.unapply _)
+	def * = (id, questionId, optionRaw, optionHtml) <> (MultipleChoiceQuestionOption.tupled, MultipleChoiceQuestionOption.unapply _)
 
 	def questionIdFK = foreignKey("multiple_choice_question_options__question_id_fk", questionId, multipleChoiceQuestionsTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }

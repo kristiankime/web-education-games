@@ -93,11 +93,11 @@ object MultipleChoiceQuestionForm {
 
   def toOptions(form: MultipleChoiceQuestionForm) = {
     val (options, correct) = nonBlankOptionsWithCorrectIndex(form.options, form.correct)
-    options.map( o => MultipleChoiceQuestionOption(-1l, null, MarkupParser(o).getOrElse(Html("Unable to process " + o))) ).toList
+    options.map( o => MultipleChoiceQuestionOption(-1l, null, o, MarkupParser(o).getOrElse(Html("Unable to process " + o))) ).toList
   }
 
   def toQuestion(user: User, form: MultipleChoiceQuestionForm) = {
-    MultipleChoiceQuestion(null, user.id, form.description, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), form.correct, JodaUTC.now, form.difficulty)
+    MultipleChoiceQuestion(null, user.id, form.description, form.explanation, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), form.correct, JodaUTC.now, form.difficulty)
   }
 
 //  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {

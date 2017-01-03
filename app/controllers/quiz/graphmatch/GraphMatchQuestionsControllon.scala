@@ -101,6 +101,10 @@ object GraphMatchQuestionForm {
     GraphMatchQuestion(null, user.id, form.functionMathML1, form.functionStr1, form.functionMathML2, form.functionStr2, form.functionMathML3, form.functionStr3, form.graphThis, JodaUTC.now,
       GraphMatchQuestionDifficulty(form.functionMathML2, form.functionMathML2, form.functionMathML3, form.graphThis))
 
+  def fromQuestion(question: GraphMatchQuestion): Form[GraphMatchQuestionForm] = {
+    val formFill = GraphMatchQuestionForm(question.function1Math.toString, question.function1Raw, question.function2Math.toString, question.function2Raw, question.function3Math.toString, question.function3Raw, question.graphThis.toInt)
+    values.fill(formFill)
+  }
 }
 
 case class GraphMatchQuestionForm(function1: String, functionStr1: String, function2: String, functionStr2: String, function3: String, functionStr3: String, graphThisInt: Int) {

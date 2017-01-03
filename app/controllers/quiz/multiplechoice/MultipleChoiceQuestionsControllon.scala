@@ -4,6 +4,7 @@ import akka.actor.FSM.->
 import com.artclod.markup.{MarkupParser, LaikaParser}
 import com.artclod.mathml.{MathMLEq, MathMLRange, Match, MathML}
 import com.artclod.slick.JodaUTC
+import controllers.quiz.multiplefunction.MultipleFunctionQuestionForm
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.tangent.{TangentQuestionForm, TangentAnswerForm}
@@ -24,6 +25,7 @@ import views.html.{helper, mathml}
 import views.html.helper.options
 import views.html.mathml.correct
 import com.artclod.collection.PimpedGenSeqLike
+import play.api.db.slick.Config.driver.simple.Session
 
 trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialConsented {
 
@@ -100,12 +102,14 @@ object MultipleChoiceQuestionForm {
     MultipleChoiceQuestion(null, user.id, form.description, form.explanation, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), form.correct, JodaUTC.now, form.difficulty)
   }
 
-//  def toQuestion(user: User, form: MultipleChoiceQuestionForm, options: (List[String], Option[Int])) = {
-//    MultipleChoiceQuestion(null, user.id, form.explanation, form.correct, JodaUTC.now, form.difficulty)
-//  }
+  def fromQuestion(question: MultipleChoiceQuestion)(implicit session: Session): Form[MultipleChoiceQuestionForm] = {
+    fromQuestion(question, question.answerOptions)
+  }
 
-//  def toQuestionOptions(options: (List[String], Option[Int])) =
-//    options._1.map( MultipleChoiceQuestionOption(-1, null, _) )
+  def fromQuestion(question: MultipleChoiceQuestion, options : List[MultipleChoiceQuestionOption]): Form[MultipleChoiceQuestionForm] = {
+    val formObj = MultipleChoiceQuestionForm(question.description, question.explanationRaw, question.correctAnswer, options.map(_.optionRaw), question.difficulty.toInt)
+    values.fill(formObj)
+  }
 
   // ==== Helpers
   def nonBlankOptionsWithCorrectBoolean(options : List[String], correct: Int) : List[(String, Boolean)] =

@@ -2,6 +2,7 @@ package controllers.quiz.derivative
 
 import com.artclod.mathml.{MathMLDefined, MathML}
 import com.artclod.slick.JodaUTC
+import controllers.quiz.multiplefunction.MultipleFunctionQuestionForm
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.support.SecureSocialConsented
 import models.quiz.question._
@@ -55,6 +56,7 @@ trait DerivativeQuestionsControllon extends Controller with SecureSocialConsente
 }
 
 object DerivativeQuestionForm {
+
   val function = "function"
   val functionStr = "functionStr"
   // Validation Check Names
@@ -70,6 +72,12 @@ object DerivativeQuestionForm {
   )
 
   def toQuestion(user: User, form: DerivativeQuestionForm) = DerivativeQuestion(null, user.id, form.functionMathML, form.functionStr, JodaUTC.now, DerivativeQuestionDifficulty(form.functionMathML))
+
+  def fromQuestion(question: DerivativeQuestion) : Form[DerivativeQuestionForm] = {
+    val formFill = DerivativeQuestionForm(question.mathML.toString, question.rawStr)
+    values.fill(formFill)
+  }
+
 }
 
 case class DerivativeQuestionForm(function: String, functionStr: String) {

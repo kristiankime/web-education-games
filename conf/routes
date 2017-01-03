@@ -50,6 +50,7 @@ GET         /bank/question                                                      
 GET         /bank/quiz/:z                                                              controllers.bank.QuestionBankController.viewQuiz(z: QuizId)
 POST        /bank/quiz/:z/questions                                                    controllers.bank.QuestionBankController.setQuizQuestions(z: QuizId)
 GET         /bank/questions/:q                                                         controllers.bank.QuestionBankController.viewQuestion(q: QuestionId)
+GET         /bank/questions/:q/copy                                                    controllers.bank.QuestionBankController.copyQuestion(q: QuestionId)
 GET         /bank/questions/:q/answer/:a                                               controllers.bank.QuestionBankController.viewAnswer(q: QuestionId, a: AnswerId)
 POST        /bank/questions/derivative                                                 controllers.bank.QuestionBankController.createDerivative()
 POST        /bank/questions/derivativegraph                                            controllers.bank.QuestionBankController.createDerivativeGraph()

@@ -34,6 +34,8 @@ case class QuestionForms(derivative: Form[DerivativeQuestionForm],
     firstTrue
   }
 
+  def errorIndexOr(default: Int) = if (errorIndex != -1) { errorIndex } else { default }
+
   def errorIndexOrRandom =
     if (errorIndex != -1) {
       errorIndex

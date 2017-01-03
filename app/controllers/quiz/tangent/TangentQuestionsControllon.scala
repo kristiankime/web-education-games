@@ -86,6 +86,12 @@ object TangentQuestionForm {
     f.functionMathML.isDefinedAt("x" -> xVal) &&
     f.functionMathML.dx.isDefinedAt("x" -> xVal)
   }
+
+  def fromQuestion(question: TangentQuestion): Form[TangentQuestionForm] = {
+    val formFill = TangentQuestionForm(question.function.toString, question.functionStr, question.atPointX.toString, question.atPointXStr)
+    values.fill(formFill)
+  }
+
 }
 
 case class TangentQuestionForm(function: String, functionStr : String, atPointX: String, atPointXStr: String) {

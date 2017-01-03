@@ -62,6 +62,7 @@ trait DerivativeGraphQuestionsControllon extends Controller with SecureSocialCon
 }
 
 object DerivativeGraphQuestionForm {
+
   // Field Names
   val function = "function"
   val functionStr = "functionStr"
@@ -98,6 +99,11 @@ object DerivativeGraphQuestionForm {
     else if( (f  ?= fpp) == Yes ) { false }
     else if( (fp ?= fpp) == Yes ) { false }
     else                          { true  }
+  }
+
+  def fromQuestion(question: DerivativeGraphQuestion): Form[DerivativeGraphQuestionForm] = {
+    val formFill = DerivativeGraphQuestionForm(question.function.toString, question.functionStr, question.derivativeOrder, question.showFunction)
+    values.fill(formFill)
   }
 
 }

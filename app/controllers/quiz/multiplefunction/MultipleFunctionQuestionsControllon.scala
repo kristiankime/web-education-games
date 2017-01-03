@@ -29,6 +29,7 @@ import views.html.mathml.correct
 import com.artclod.collection.PimpedGenSeqLike
 import scala.concurrent.ops
 import scala.util.{Success, Failure}
+import play.api.db.slick.Config.driver.simple.Session
 
 trait MultipleFunctionQuestionsControllon extends Controller with SecureSocialConsented {
 
@@ -97,11 +98,6 @@ object MultipleFunctionQuestionForm {
       verifying(optionsDontMatchFunctions, fields => toOptions(fields).nonEmpty)
   )
 
-  def fromQuestion(question: MultipleFunctionQuestion) : Form[controllers.quiz.multiplefunction.MultipleFunctionQuestionForm] = {
-    val foo = MultipleFunctionQuestionForm(question.description, question.explanationRaw, null, null, null, question.difficulty.toInt)
-    values.fill(foo)
-  }
-
   def toQuestion(user: User, form: MultipleFunctionQuestionForm) = {
     MultipleFunctionQuestion(null, user.id, form.description, form.explanation, MarkupParser(form.explanation).getOrElse(Html("Unable to process " + form.explanation)), JodaUTC.now, form.difficulty)
   }
@@ -139,6 +135,15 @@ object MultipleFunctionQuestionForm {
         MultipleFunctionQuestionOption(-1, null, optionStr.get, option.get, function.get, functionStr.get)
       }).toList
     )}
+  }
+
+  def fromQuestion(question: MultipleFunctionQuestion)(implicit session: Session) : Form[controllers.quiz.multiplefunction.MultipleFunctionQuestionForm] = {
+    fromQuestion(question, question.answerOptions)
+  }
+
+  def fromQuestion(question: MultipleFunctionQuestion, options: List[MultipleFunctionQuestionOption]) : Form[controllers.quiz.multiplefunction.MultipleFunctionQuestionForm] = {
+    val formObj = MultipleFunctionQuestionForm(question.description, question.explanationRaw, options.map(_.optionRaw), options.map(_.functionMath.toString), options.map(_.functionRaw), question.difficulty.toInt)
+    values.fill(formObj)
   }
 
 }

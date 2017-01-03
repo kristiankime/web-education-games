@@ -71,6 +71,21 @@ object QuestionBankController extends Controller with SecureSocialConsented {
     }
   }
 
+  def copyQuestion(questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuestionsController(questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(question) => question match {
+        case derivative :       DerivativeQuestion       => Ok(views.html.bank.addQuestion(QuestionForms.derivative(      DerivativeQuestionForm.fromQuestion(derivative))))
+        case derivativeGraph :  DerivativeGraphQuestion  => Ok(views.html.bank.addQuestion(QuestionForms.derivativeGraph( DerivativeGraphQuestionForm.fromQuestion(derivativeGraph))))
+        case tangent :          TangentQuestion          => Ok(views.html.bank.addQuestion(QuestionForms.tangent(         TangentQuestionForm.fromQuestion(tangent))))
+        case graphMatch :       GraphMatchQuestion       => Ok(views.html.bank.addQuestion(QuestionForms.graphMatch(      GraphMatchQuestionForm.fromQuestion(graphMatch))))
+        case polyZone :         PolynomialZoneQuestion   => Ok(views.html.bank.addQuestion(QuestionForms.polynomialZone(  PolynomialZoneQuestionForm.fromQuestion(polyZone))))
+        case multipleChoice :   MultipleChoiceQuestion   => Ok(views.html.bank.addQuestion(QuestionForms.multipleChoice(  MultipleChoiceQuestionForm.fromQuestion(multipleChoice))))
+        case multipleFunction : MultipleFunctionQuestion => Ok(views.html.bank.addQuestion(QuestionForms.multipleFunction(MultipleFunctionQuestionForm.fromQuestion(multipleFunction))))
+      }
+    }
+  }
+
   // TODO should have access to the answer
   def viewAnswer(questionId: QuestionId, answerId: AnswerId) = ConsentedAction { implicit request => implicit user => implicit session =>
     QuestionsController(questionId) + AnswersController(questionId, answerId) match {

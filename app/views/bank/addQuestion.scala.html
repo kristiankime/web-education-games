@@ -14,7 +14,7 @@
 
     <h4>Add a new Question</h4>
 
-    @tag.switch("createQuestion", 6,
+    @tag.switch("createQuestion", forms.errorIndexOr(6),
         ("Create a Derivative Question",        views.html.quiz.derivative.questionEditor(QuestionBankController.createDerivative(), forms.derivative)),
         ("Create a Derivative Graph Question",  views.html.quiz.derivativegraph.questionEditor(QuestionBankController.createDerivativeGraph(), forms.derivativeGraph)),
         ("Create a Tangent Question",           views.html.quiz.tangent.questionEditor(QuestionBankController.createTangent(), forms.tangent)),

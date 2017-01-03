@@ -2,6 +2,7 @@ package controllers.quiz.polynomialzone
 
 import com.artclod.mathml.MathML
 import com.artclod.slick.JodaUTC
+import controllers.quiz.graphmatch.GraphMatchQuestionForm
 import controllers.quiz.{QuestionForms, QuizzesController}
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
@@ -77,6 +78,10 @@ object PolynomialZoneQuestionForm {
 
   def toQuestion(user: User, form: PolynomialZoneQuestionForm) = PolynomialZoneQuestion(null, user.id, form.roots, form.scale, form.zoneType, JodaUTC.now, PolynomialZoneQuestionDifficulty(form.roots, form.scale, form.zoneType))
 
+  def fromQuestion(question: PolynomialZoneQuestion): Form[PolynomialZoneQuestionForm] = {
+    val formFill = PolynomialZoneQuestionForm(question.roots.mkString(","), question.scale, question.zoneType.order)
+    values.fill(formFill)
+  }
 }
 
 case class PolynomialZoneQuestionForm(rootsStr : String, scale: Double, zoneTypeShort: Short) {

@@ -34,13 +34,26 @@ case class QuestionForms(derivative: Form[DerivativeQuestionForm],
     firstTrue
   }
 
-  def errorIndexOr(default: Int) = if (errorIndex != -1) { errorIndex } else { default }
+  def hasValuesIndex = {
+    val errors = mustHandle -> (_.data.nonEmpty , _.data.nonEmpty, _.data.nonEmpty, _.data.nonEmpty, _.data.nonEmpty, _.data.nonEmpty, _.data.nonEmpty)
+    val firstTrue = com.artclod.play.firstTrue(errors)
+    firstTrue
+  }
 
-  def errorIndexOrRandom =
+  def valueOrErrorOr(default: Int) =
+    if (hasValuesIndex != -1) {
+      hasValuesIndex
+    } else if (errorIndex != -1) {
+      errorIndex
+    } else {
+      default
+    }
+
+  def errorIndexOrRandom(max : Int = mustHandle.size) =
     if (errorIndex != -1) {
       errorIndex
     } else {
-      randomEngine.nextInt(mustHandle.size)
+      randomEngine.nextInt(Math.min(max, mustHandle.size))
     }
 
   def hasErrors = (errorIndex != -1)

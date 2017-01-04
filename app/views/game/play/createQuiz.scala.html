@@ -42,7 +42,7 @@
 
         <h4>Add a new Question</h4>
 
-        @tag.switch("createQuestion", forms.errorIndexOrRandom,
+        @tag.switch("createQuestion", forms.errorIndexOrRandom(4),
             ("Create a Derivative Question",        derivative.questionEditor(gameState.createDerivativeQuestionCall,             forms.derivative,       successCallback = List("derivativeEditorSuccess"),       Some(derivative.scoringHints("derivativeEditorSuccess",           gameState.otherSkill)))),
             ("Create a Derivative Graph Question",  derivativegraph.questionEditor(gameState.createDerivativeGraphQuestionCall,   forms.derivativeGraph,  successCallback = List("derivativeGraphEditorSuccess"),  Some(derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.otherSkill)))),
             ("Create a Tangent Question",           tangent.questionEditor(gameState.createTangentQuestionCall,                   forms.tangent,          successCallback = List("tangentEditorSuccess"),          Some(tangent.scoringHints("tangentEditorSuccess",                 gameState.otherSkill)))),

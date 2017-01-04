@@ -5,7 +5,7 @@
 @import helper._
 @import com.artclod.play.s
 
-@mainWithBorder("Viewing Question", tag.bankLink()) {
+@mainWithBorder("Viewing Question", tag.bankLink(), tag.copyLink(question.id)) {
 
     <h4>What is the Derivative of:</h4>
 
@@ -22,7 +22,7 @@
     </section>
     }
 
-    @views.html.quiz.derivative.answerEditor(QuestionBankController.answerDerivative(question.id), currentAnswer){@tag.bankLink()}
+    @views.html.quiz.derivative.answerEditor(QuestionBankController.answerDerivative(question.id), currentAnswer){@tag.bankLink() @tag.copyLink(question.id)}
 
     @* ===== Results ===== *@
     @defining(question.results(user)) { results : models.quiz.question.DerivativeQuestionResults =>

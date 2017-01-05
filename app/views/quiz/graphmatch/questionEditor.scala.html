@@ -29,11 +29,13 @@
         <input type="hidden" name="@GraphMatchQuestionForm.functionStr2" id="graphMatchQuestionRawStr2">
         <input type="hidden" name="@GraphMatchQuestionForm.function3"    id="graphMatchQuestionMathML3">
         <input type="hidden" name="@GraphMatchQuestionForm.functionStr3" id="graphMatchQuestionRawStr3">
+        @defining(graphMatchForm.dataFor(GraphMatchQuestionForm.graphThis).map(_.toInt).getOrElse(GraphMatchQuestionWhich.randomWhichValue)){ whichIndex : Int =>
         @for(which <- GraphMatchQuestionWhich.whichMin to GraphMatchQuestionWhich.whichMax) {
         <label for="@which" class="pure-radio">
-            <input id="@GraphMatchQuestionForm.graphThis" type="radio" name="@GraphMatchQuestionForm.graphThis" value="@which" @if(which == 1){checked} >
+            <input id="@GraphMatchQuestionForm.graphThis" type="radio" name="@GraphMatchQuestionForm.graphThis" value="@which" @if(which == whichIndex){checked} >
             @which
         </label>
+        }
         }
         <input type="button" class="pure-button" value="Save Question" onclick="GRAPH_MATCH_QUESTION_FORM.formSubmit()">
     </fieldset>

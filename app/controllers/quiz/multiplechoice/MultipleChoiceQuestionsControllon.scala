@@ -70,6 +70,8 @@ trait MultipleChoiceQuestionsControllon extends Controller with SecureSocialCons
 }
 
 object MultipleChoiceQuestionForm {
+  val numOps = 5
+
   // Field Names
   val description = "descriptionMC"
   val explanation = "explanationMC"

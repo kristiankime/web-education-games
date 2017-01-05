@@ -19,6 +19,8 @@ import play.api.db.slick.Config.driver.simple.Session
 import play.api.templates.Html
 import service.Access
 
+import scala.util.Random
+
 sealed trait Question extends Owned {
   val id: QuestionId
   val ownerId: UserId
@@ -150,6 +152,9 @@ case class GraphMatchQuestion(id: QuestionId, ownerId: UserId, function1Math: Ma
 object GraphMatchQuestionWhich {
   val whichMin = 1;
   val whichMax = 3;
+  implicit val randomEngine = new Random(JodaUTC.now.getMillis())
+
+  def randomWhichValue = whichMax + randomEngine.nextInt(whichMax - whichMin)
 
   def validWhichValue(v: Short): Unit = {
     if(v < whichMin) throw new IllegalStateException("graphThis was " + v + " should have been between " + GraphMatchQuestionWhich.whichMin + " and " + GraphMatchQuestionWhich.whichMax)

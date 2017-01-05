@@ -7,6 +7,8 @@ import play.api.db.slick.Config.driver.simple._
 object DerivativeOrder {
   val all = Vector(FuncFirstSecond, FuncSecondFirst, FirstFuncSecond, FirstSecondFunc, SecondFuncFirst, SecondFirstFunc)
 
+  def random = com.artclod.util.Randoms.randomFrom(all)
+
   def apply(in: String) = all.find( _.asString == in) match {
     case Some(out) => out
     case None => throw new IllegalArgumentException("Could not find " + DerivativeOrder.getClass.getSimpleName + " for " + in)

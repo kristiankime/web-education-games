@@ -103,6 +103,9 @@ POST        /orgs/:o/courses/:c/games/request                                   
 GET         /games/:g                                                                  controllers.game.GamesController.game(g: GameId, a: Option[models.support.AnswerId])
 GET         /games/:g/summary                                                          controllers.game.GamesController.summary(g: GameId)
 POST        /games/:g/respond                                                          controllers.game.GamesController.respond(g: GameId)
+
+
+POST        /games/:g/add                                                              controllers.game.GamesController.addQuestion(g: GameId)
 # tor
 POST        /games/:g/questions/create/requestor/derivative                            controllers.game.GamesRequestorController.createDerivativeQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/derivativegraph                       controllers.game.GamesRequestorController.createDerivativeGraphQuestion(g: GameId)

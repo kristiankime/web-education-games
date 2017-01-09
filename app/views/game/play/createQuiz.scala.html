@@ -40,9 +40,16 @@
         } else {
         <h4>Quizzes need @numberOfQuestions questions. Your quiz has @questions.size questions. You need to add @numQuestionRemaining more.</h4>
 
+        @if(numQuestionRemaining == 0){
+        @form(gameState.finalizeCreatedQuiz, 'class -> "pure-form") {
+        <input type="submit" class="pure-button pure-button-primary" value="Finalize Quiz" >
+        }
+        }
+
         <h4>Add a new Question</h4>
 
-        @tag.switch("createQuestion", forms.errorIndexOrRandom(4),
+        @tag.switch("createQuestion", (1 + forms.valueOrErrorOr(-1)),
+            ("Pick a Question",                     views.html.game.play.addQuestion(gameState)),
             ("Create a Derivative Question",        derivative.questionEditor(gameState.createDerivativeQuestionCall,             forms.derivative,       successCallback = List("derivativeEditorSuccess"),       Some(derivative.scoringHints("derivativeEditorSuccess",           gameState.otherSkill)))),
             ("Create a Derivative Graph Question",  derivativegraph.questionEditor(gameState.createDerivativeGraphQuestionCall,   forms.derivativeGraph,  successCallback = List("derivativeGraphEditorSuccess"),  Some(derivativegraph.scoringHints("derivativeGraphEditorSuccess", gameState.otherSkill)))),
             ("Create a Tangent Question",           tangent.questionEditor(gameState.createTangentQuestionCall,                   forms.tangent,          successCallback = List("tangentEditorSuccess"),          Some(tangent.scoringHints("tangentEditorSuccess",                 gameState.otherSkill)))),
@@ -54,11 +61,7 @@
 
         }
 
-        @if(numQuestionRemaining == 0){
-        @form(gameState.finalizeCreatedQuiz, 'class -> "pure-form") {
-            <input type="submit" class="pure-button pure-button-primary" value="Finalize Quiz" >
-        }
-        }
+
     </section>
 }{  @* ===== Minor Content Here ==== *@
     @views.html.quiz.recentHistory(gameState.other)

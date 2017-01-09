@@ -1,0 +1,39 @@
+@(gameState: models.game.mask.GameMask with models.game.mask.MyQuizUnfinished)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.game.routes.GamesController
+@import models.bank.QuestionBank
+@import controllers.bank.routes.{ QuestionBankController }
+@import controllers.game.GameAddQuestion
+@import controllers.quiz.QuizForm
+@import helper._
+@import com.artclod.play.{are, s}
+
+
+    <h4>Select the Questions you want to add to your quiz </h4>
+
+    @defining(gameState.myQuizOp.map(_.questions.map(_.id).toSet).getOrElse(Set())){ quizQuestionIds : Set[models.support.QuestionId] =>
+    @defining(QuestionBank.allQuestions.filterNot(q => quizQuestionIds.contains(q.id))){ questions : List[models.quiz.question.Question] =>
+
+    @form(action = controllers.game.routes.GamesController.addQuestion(gameState.game.id)) {
+    <table class="pure-table pure-table-striped">
+        <tr>
+            <th>Select</th>
+    	    <th>Question</th>
+        </tr>
+        @for(question <- questions.zipWithIndex){<tr>
+            <td>
+                <input type="radio" name="@{GameAddQuestion.question}" value="@question._1.id.v" />
+            </td>
+            <td>
+                @question._1.display()
+                @*<a class="pure-button" href="@controllers.game.routes.GamesController.viewQuestion(question._1.id, gameState.game.id)"> @question._1.display() </a>*@
+            </td>
+        </tr>}
+    </table>
+
+    <input type="submit" value="Submit">
+    }
+
+    }
+    }
+

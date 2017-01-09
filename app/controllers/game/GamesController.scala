@@ -103,6 +103,23 @@ object GamesController extends Controller with SecureSocialConsented {
     }
   }
 
+  def addQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) => {
+        game.toMask(user) match {
+          case mask : mask.MyQuizUnfinished => {
+            GameAddQuestion.form.bindFromRequest.fold(
+              errors => BadRequest(views.html.errors.formErrorPage(errors)),
+              questionIdNum => Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+            )
+          }
+          case _ =>  BadRequest(views.html.errors.errorPage(new IllegalStateException("Can only add to game quizzes when they are unfinished state ["  + gameId + "]")))
+        }
+      }
+    }
+  }
+
   def respond(gameId: GameId) = ConsentedAction{ implicit request => implicit user => implicit session =>
     GamesController(gameId) match {
       case Left(notFoundResult) => notFoundResult
@@ -219,4 +236,9 @@ object  GameRequest {
 object GameResponse {
   val response = "reponse"
   val form = Form(response -> boolean)
+}
+
+object GameAddQuestion {
+  val question = "question"
+  val form = Form(question -> number)
 }

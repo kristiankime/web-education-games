@@ -51,6 +51,13 @@ trait GameSetup {
   // ======================
   // Create a Quiz/Question
   // ======================
+
+  // add Question
+  def addQuestion : play.api.mvc.Call =
+    if(requestee) { controllers.game.routes.GamesRequesteeController.addQuestion(game.id) }
+    else {          controllers.game.routes.GamesRequestorController.addQuestion(game.id) }
+
+  // create Question
   def createDerivativeQuestionCall : play.api.mvc.Call =
     if(requestee) { controllers.game.routes.GamesRequesteeController.createDerivativeQuestion(game.id) }
     else {          controllers.game.routes.GamesRequestorController.createDerivativeQuestion(game.id) }

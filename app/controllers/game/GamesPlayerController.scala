@@ -7,6 +7,7 @@ import com.artclod.mathml.scalar.MathMLElem
 import com.artclod.play.CommonsMailerHelper
 import com.artclod.slick.JodaUTC
 import com.artclod.util._
+import controllers.game.GamesController._
 import controllers.game.GamesEmail._
 import controllers.quiz.QuestionsController
 import controllers.quiz.derivative.{DerivativeAnswerForm, DerivativeQuestionForm}
@@ -76,6 +77,33 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
         case Some(quiz) => Right[Result, (Game, Quiz)]((game, quiz)) + QuestionsController(quiz.id, questionId)
       }
     }
+
+  // ===== Add =====
+  def addQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    GamesController(gameId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(game) => {
+        game.toMask(user) match {
+          case mask : mask.MyQuizUnfinished => {
+            GameAddQuestion.form.bindFromRequest.fold(
+              errors => BadRequest(views.html.errors.formErrorPage(errors)),
+              questionIdNum => {
+                Questions(QuestionId(questionIdNum)) match {
+                  case Some(question) => {
+                    val (_, quiz) = createdQuizEnsured(game)
+                    question.attach(quiz.id)
+                    Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+                  }
+                  case None => BadRequest(views.html.errors.errorPage(new IllegalStateException("No question found for ["  + QuestionId(questionIdNum) + "]")))
+                }
+              }
+            )
+          }
+          case _ =>  BadRequest(views.html.errors.errorPage(new IllegalStateException("Can only add to game quizzes when they are unfinished state ["  + gameId + "]")))
+        }
+      }
+    }
+  }
 
   // ===== Start Create =====
   def createDerivativeQuestion(gameId: GameId) = ConsentedAction { implicit request => implicit user => implicit session =>

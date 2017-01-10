@@ -104,9 +104,8 @@ GET         /games/:g                                                           
 GET         /games/:g/summary                                                          controllers.game.GamesController.summary(g: GameId)
 POST        /games/:g/respond                                                          controllers.game.GamesController.respond(g: GameId)
 
-
-POST        /games/:g/add                                                              controllers.game.GamesController.addQuestion(g: GameId)
 # tor
+POST        /games/:g/questions/add/requestor                                          controllers.game.GamesRequestorController.addQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/derivative                            controllers.game.GamesRequestorController.createDerivativeQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/derivativegraph                       controllers.game.GamesRequestorController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestor/tangent                               controllers.game.GamesRequestorController.createTangentQuestion(g: GameId)
@@ -118,6 +117,7 @@ POST        /games/:g/questions/remove/requestor                                
 POST        /games/:g/finalize/quiz/requestor                                          controllers.game.GamesRequestorController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestor                                       controllers.game.GamesRequestorController.finalizeAnswers(g: GameId)
 # tee
+POST        /games/:g/questions/add/requestee                                          controllers.game.GamesRequesteeController.addQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/derivative                            controllers.game.GamesRequesteeController.createDerivativeQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/derivativegraph                       controllers.game.GamesRequesteeController.createDerivativeGraphQuestion(g: GameId)
 POST        /games/:g/questions/create/requestee/tangent                               controllers.game.GamesRequesteeController.createTangentQuestion(g: GameId)

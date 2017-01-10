@@ -14,7 +14,7 @@
     @defining(gameState.myQuizOp.map(_.questions.map(_.id).toSet).getOrElse(Set())){ quizQuestionIds : Set[models.support.QuestionId] =>
     @defining(QuestionBank.allQuestions.filterNot(q => quizQuestionIds.contains(q.id))){ questions : List[models.quiz.question.Question] =>
 
-    @form(action = controllers.game.routes.GamesController.addQuestion(gameState.game.id)) {
+    @form(action = gameState.addQuestion) {
     <table class="pure-table pure-table-striped">
         <tr>
             <th>Select</th>

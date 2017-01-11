@@ -43,7 +43,11 @@ sealed trait Question extends Owned {
 
   def display(explanation : Boolean = true)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session) : Html
 
-  def attach(quizId: QuizId)(implicit session: Session) : Unit
+  def isAttached(quizId: QuizId)(implicit session: Session) : Boolean = Quizzes.questions(quizId).map(_.id).toSet.contains(id)
+
+  def attach(quizId: QuizId)(implicit session: Session) : Unit = if(!isAttached(quizId)){ attachUnsafe(quizId ) }
+
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) : Unit
 }
 
 case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLElem, rawStr: String, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question with ViewableMath {
@@ -60,7 +64,7 @@ case class DerivativeQuestion(id: QuestionId, ownerId: UserId, mathML: MathMLEle
 
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = DerivativeQuestions.quizFor(id, quizId)
 
-  def attach(quizId: QuizId)(implicit session: Session) = DerivativeQuestions.attach(this, quizId)
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = DerivativeQuestions.attach(this, quizId)
 }
 
 case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, atPointX: MathMLElem, atPointXStr: String, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question {
@@ -81,7 +85,7 @@ case class TangentQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem
 
   def atPointXViewableMath = new ViewableMath { val mathML = atPointX; val rawStr = atPointXStr }
 
-  def attach(quizId: QuizId)(implicit session: Session) = TangentQuestions.attach(this, quizId)
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = TangentQuestions.attach(this, quizId)
 }
 
 case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: MathMLElem, functionStr: String, showFunction: Boolean, creationDate: DateTime, derivativeOrder: DerivativeOrder, atCreationDifficulty : Double, order: Int = 1) extends Question with ViewableMath {
@@ -98,7 +102,7 @@ case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: Ma
 
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = DerivativeGraphQuestions.quizFor(id, quizId)
 
-  def attach(quizId: QuizId)(implicit session: Session) = DerivativeGraphQuestions.attach(this, quizId)
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = DerivativeGraphQuestions.attach(this, quizId)
 
   val mathML = function
   val rawStr = functionStr
@@ -115,7 +119,6 @@ case class DerivativeGraphQuestion(id: QuestionId, ownerId: UserId, function: Ma
     case SecondFuncFirst => (secondDerivativeMathJS, functionMathJs, firstDerivativeMathJS)
     case SecondFirstFunc => (secondDerivativeMathJS, firstDerivativeMathJS, functionMathJs)
   }
-
 }
 
 case class GraphMatchQuestion(id: QuestionId, ownerId: UserId, function1Math: MathMLElem, function1Raw: String, function2Math: MathMLElem, function2Raw: String, function3Math: MathMLElem, function3Raw: String, graphThis: Short, creationDate: DateTime, atCreationDifficulty : Double, order: Int = 1) extends Question {
@@ -133,7 +136,7 @@ case class GraphMatchQuestion(id: QuestionId, ownerId: UserId, function1Math: Ma
 
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = GraphMatchQuestions.quizFor(id, quizId)
 
-  def attach(quizId: QuizId)(implicit session: Session) = GraphMatchQuestions.attach(this, quizId)
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = GraphMatchQuestions.attach(this, quizId)
 
   def mathView1 : models.quiz.ViewableMath = new models.quiz.ViewableMath { val mathML = function1Math; val rawStr = function1Raw;  }
 
@@ -176,7 +179,7 @@ case class PolynomialZoneQuestion(id: QuestionId, ownerId: UserId, roots: Vector
 
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = PolynomialZoneQuestions.quizFor(id, quizId)
 
-  def attach(quizId: QuizId)(implicit session: Session) = PolynomialZoneQuestions.attach(this, quizId)
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = PolynomialZoneQuestions.attach(this, quizId)
 
   def polynomial : MathMLElem =
     if(roots.isEmpty) {
@@ -205,8 +208,7 @@ case class MultipleChoiceQuestion(id: QuestionId, ownerId: UserId, description: 
 
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = MultipleChoiceQuestions.quizFor(id, quizId)
 
-  def attach(quizId: QuizId)(implicit session: Session) = MultipleChoiceQuestions.attach(this, quizId)
-
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = MultipleChoiceQuestions.attach(this, quizId)
 }
 
 case class MultipleChoiceQuestionOption(id: Long, questionId: QuestionId, optionRaw: String, optionHtml: Html)
@@ -229,7 +231,7 @@ case class MultipleFunctionQuestion(id: QuestionId, ownerId: UserId, description
 
   def quiz(quizId: QuizId)(implicit session: Session) : Option[Quiz] = MultipleFunctionQuestions.quizFor(id, quizId)
 
-  def attach(quizId: QuizId)(implicit session: Session) = MultipleFunctionQuestions.attach(this, quizId)
+  protected def attachUnsafe(quizId: QuizId)(implicit session: Session) = MultipleFunctionQuestions.attach(this, quizId)
 }
 
 case class MultipleFunctionQuestionOption(id: Long, questionId: QuestionId, optionRaw: String, optionHtml: Html, functionMath: MathMLElem, functionRaw: String)

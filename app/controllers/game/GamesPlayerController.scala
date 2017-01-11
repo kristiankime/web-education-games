@@ -90,9 +90,9 @@ trait GamesPlayerController extends Controller with SecureSocialConsented {
               questionIdNum => {
                 Questions(QuestionId(questionIdNum)) match {
                   case Some(question) => {
-                    val (_, quiz) = createdQuizEnsured(game)
+                    val (updatedGame, quiz) = createdQuizEnsured(game)
                     question.attach(quiz.id)
-                    Ok(views.html.game.play.createQuiz(mask, controllers.quiz.QuestionForms.empty))
+                    Redirect(routes.GamesController.game(updatedGame.id, None))
                   }
                   case None => BadRequest(views.html.errors.errorPage(new IllegalStateException("No question found for ["  + QuestionId(questionIdNum) + "]")))
                 }

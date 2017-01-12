@@ -1,0 +1,19 @@
+@(question: models.quiz.question.GraphMatchQuestion, gameId: models.support.GameId)(implicit user: models.user.User, session: play.api.db.slick.Config.driver.simple.Session)
+
+@import controllers.bank.routes.QuestionBankController
+@import helper._
+@import com.artclod.play.s
+
+@mainWithBorder("Viewing Question", tag.bankLink(), tag.copyLink(question.id)) {
+
+    <h4>Below are a set of functions and a graph, figure out which function's graph is being displayed:</h4>
+
+    <section>
+    @question.display(false)
+    </section>
+    <br>
+
+    @tag.gameIdLink(Html("back to game"),gameId)
+
+
+}

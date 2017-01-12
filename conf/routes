@@ -129,7 +129,10 @@ POST        /games/:g/questions/remove/requestee                                
 POST        /games/:g/finalize/quiz/requestee                                          controllers.game.GamesRequesteeController.finalizeCreatedQuiz(g: GameId)
 POST        /games/:g/finalize/answers/requestee                                       controllers.game.GamesRequesteeController.finalizeAnswers(g: GameId)
 
+# Games Questionns
 GET         /games/:g/questions/:q                                                     controllers.game.GamesController.question(g: GameId, q: QuestionId)
+GET         /games/:g/preview/questions/:q                                             controllers.game.GamesController.previewQuestion(g: GameId, q: QuestionId)
+
 # Games Answers
 GET         /games/:g/questions/:q/:a                                                  controllers.game.GamesController.answer(g: GameId, q: QuestionId, a: AnswerId)
 # tee

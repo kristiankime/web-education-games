@@ -4,7 +4,7 @@ import com.artclod.play.CommonsMailerHelper
 import com.artclod.util._
 import controllers.game.GamesEmail._
 import controllers.organization.CoursesController
-import controllers.quiz.AnswersController
+import controllers.quiz.{QuestionsController, AnswersController}
 import controllers.quiz.derivative.DerivativeQuestionForm
 import controllers.quiz.derivativegraph.DerivativeGraphQuestionForm
 import controllers.quiz.tangent.TangentQuestionForm
@@ -206,6 +206,21 @@ object GamesController extends Controller with SecureSocialConsented {
     CoursesController(organizationId, courseId) match {
       case Left(notFoundResult) => notFoundResult
       case Right((organization, course)) => Ok(views.html.organization.courseGames(organization, course))
+    }
+  }
+
+  def previewQuestion(gameId: GameId, questionId: QuestionId) = ConsentedAction { implicit request => implicit user => implicit session =>
+    QuestionsController(questionId) match {
+      case Left(notFoundResult) => notFoundResult
+      case Right(question) => question match {
+        case derivative :       DerivativeQuestion       => Ok(views.html.game.question.previewDerivativeQuestion(derivative, gameId))
+        case derivativeGraph :  DerivativeGraphQuestion  => Ok(views.html.game.question.previewDerivativeGraphQuestion(derivativeGraph, gameId))
+        case tangent :          TangentQuestion          => Ok(views.html.game.question.previewTangentQuestion(tangent, gameId))
+        case graphMatch :       GraphMatchQuestion       => Ok(views.html.game.question.previewGraphMatchQuestion(graphMatch, gameId))
+        case polyZone :         PolynomialZoneQuestion   => Ok(views.html.game.question.previewPolynomialZoneQuestion(polyZone, gameId))
+        case multipleChoice :   MultipleChoiceQuestion   => Ok(views.html.game.question.previewMultipleChoiceQuestion(multipleChoice, gameId))
+        case multipleFunction : MultipleFunctionQuestion => Ok(views.html.game.question.previewMultipleFunctionQuestion(multipleFunction, gameId))
+      }
     }
   }
 

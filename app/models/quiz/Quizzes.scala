@@ -4,7 +4,7 @@ import com.artclod.tuple._
 import com.google.common.annotations.VisibleForTesting
 import models.organization._
 import models.organization.table._
-import models.quiz.question.{Questions, Question}
+import models.quiz.question.{Question2Quiz, Questions, Question}
 import models.quiz.question.table.{DerivativeQuestion2QuizTable, DerivativeQuestionsTable, QuestionsTable, Question2QuizTable}
 import models.quiz.table._
 import models.support._
@@ -36,55 +36,16 @@ object Quizzes {
       cq <- coursesQuizzesTable if cq.quizId === q.id && cq.courseId === courseId
     ) yield q).sortBy(_.creationDate).list
 
-//  def questions(quizId: QuizId)(implicit session: Session) : List[Question] =
-//    questionTables.->(
-//      _.filter(_.quizId === quizId).list,
-//      _.filter(_.quizId === quizId).list,
-//      _.filter(_.quizId === quizId).list,
-//      _.filter(_.quizId === quizId).list,
-//      _.filter(_.quizId === quizId).list,
-//      _.filter(_.quizId === quizId).list,
-//      _.filter(_.quizId === quizId).list)
-//      .toList[Question](a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]], a => a.asInstanceOf[List[Question]])
-
   def questions(quizId: QuizId)(implicit session: Session) : List[Question] =
-//    (qt: TableQuery[DerivativeQuestionsTable], jt: TableQuery[DerivativeQuestion2QuizTable])
     questionAnd2QuizTables.->(
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list,
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list,
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list,
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list,
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list,
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list,
-      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield q).list
-    ).toList[Question](
-      (a: List[Question]) => a.asInstanceOf[List[Question]],
-      (a: List[Question]) => a.asInstanceOf[List[Question]],
-      (a: List[Question]) => a.asInstanceOf[List[Question]],
-      (a: List[Question]) => a.asInstanceOf[List[Question]],
-      (a: List[Question]) => a.asInstanceOf[List[Question]],
-      (a: List[Question]) => a.asInstanceOf[List[Question]],
-      (a: List[Question]) => a.asInstanceOf[List[Question]]
-    )
-
-//  private def questionIds(quizId: QuizId)(implicit session: Session) : List[QuestionId] =
-//    question2QuizTables.->(
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
-//      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list
-//    ).toList[QuestionId](
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]],
-//      (a: List[QuestionId]) => a.asInstanceOf[List[QuestionId]]
-//    )
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]],
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]],
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]],
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]],
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]],
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]],
+      t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]]
+    ).toList(a => a, a => a, a => a, a => a, a => a, a => a, a => a).sortBy(_._1.creationDate.getMillis).map(_._2)
 
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (

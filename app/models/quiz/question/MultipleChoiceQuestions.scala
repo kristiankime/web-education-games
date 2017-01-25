@@ -1,6 +1,6 @@
 package models.quiz.question
 
-import com.artclod.slick.listGroupBy
+import com.artclod.slick.{JodaUTC, listGroupBy}
 import com.google.common.annotations.VisibleForTesting
 import models.quiz._
 import models.quiz.answer.{MultipleChoiceAnswer, GraphMatchAnswer}
@@ -23,7 +23,7 @@ object MultipleChoiceQuestions {
   }
 
   def attach(toInsert: MultipleChoiceQuestion, quizId: QuizId)(implicit session: Session): Unit = {
-    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, JodaUTC.now, 1) // TODO setup order here
     multipleChoiceQuestion2QuizTable += quizLink
   }
 

@@ -1,6 +1,6 @@
 package models.quiz.question
 
-import com.artclod.slick.listGroupBy
+import com.artclod.slick.{JodaUTC, listGroupBy}
 import models.quiz.Quiz
 import models.quiz.table.polynomialZoneQuestionsTable
 import models.quiz.answer.PolynomialZoneAnswer
@@ -23,7 +23,7 @@ object PolynomialZoneQuestions {
   }
 
   def attach(toInsert: PolynomialZoneQuestion, quizId: QuizId)(implicit session: Session): Unit = {
-    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, JodaUTC.now, 1) // TODO setup order here
     polynomialZoneQuestion2QuizTable += quizLink
   }
 

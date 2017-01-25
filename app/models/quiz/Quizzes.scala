@@ -11,6 +11,9 @@ import models.support._
 import models.user.User
 import play.api.db.slick.Config.driver.simple._
 import service._
+import views.html.bank.quiz
+
+import scala.collection.immutable.ListSet
 
 
 object Quizzes {
@@ -47,6 +50,17 @@ object Quizzes {
       t => (for (q2q <- t._2; q <- t._1 if q2q.quizId === quizId && q2q.questionId === q.id) yield (q2q, q)).list.asInstanceOf[List[(Question2Quiz, Question)]]
     ).toList(a => a, a => a, a => a, a => a, a => a, a => a, a => a).sortBy(_._1.creationDate.getMillis).map(_._2)
 
+  def questionsIds(quizId: QuizId)(implicit session: Session) : List[QuestionId] =
+    question2QuizTables.->(
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list,
+      t => (for (q2q <- t if q2q.quizId === quizId) yield q2q.questionId).list
+    ).toList(a => a, a => a, a => a, a => a, a => a, a => a, a => a)
+
   def courses(quizId: QuizId)(implicit session: Session) : List[Course] =
     (for (
       c <- coursesTable;
@@ -69,10 +83,27 @@ object Quizzes {
       case None => false
     }
 
-  def setQuestions(quizId: QuizId, questionIds: List[QuestionId])(implicit session: Session): Unit = {
-    clearQuestions(quizId)
-    addQuestions(quizId, questionIds)
+  def setQuestions(quizId: QuizId, questionIds: QuestionId*)(implicit session: Session): Unit = {
+    setQuestions(quizId, questionIds)
   }
+
+  def setQuestions(quizId: QuizId, questionIds: Traversable[QuestionId])(implicit session: Session): Unit = {
+    val desiredSet = ListSet(questionIds.toSeq : _*) // Use ListSet since order matters
+    val existingSet = ListSet(Quizzes.questionsIds(quizId) : _*)
+    clearQuestions(quizId, existingSet -- desiredSet )
+    addQuestions(quizId, desiredSet -- existingSet)
+  }
+
+  private def clearQuestions(quizId: QuizId, questionIds: Traversable[QuestionId])(implicit session: Session) =
+    question2QuizTables.->(
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete,
+      t => (for (q2q <- t if q2q.quizId === quizId && q2q.questionId.inSet(questionIds)) yield q2q).delete
+    )
 
   private def clearQuestions(quizId: QuizId)(implicit session: Session) =
     question2QuizTables.->(
@@ -85,7 +116,7 @@ object Quizzes {
       t => (for (q2q <- t if q2q.quizId === quizId) yield q2q).delete
     )
 
-  private def addQuestions(quizId: QuizId, questionIds: List[QuestionId])(implicit session: Session): Unit =
+  private def addQuestions(quizId: QuizId, questionIds: Traversable[QuestionId])(implicit session: Session): Unit =
     for(q <- questionIds.flatMap(id => Questions(id))) { q.attach(quizId) }
 
   // ======= AUTHORIZATION ======

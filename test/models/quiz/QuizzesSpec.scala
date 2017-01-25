@@ -3,7 +3,7 @@ package models.quiz
 import models.DBTest._
 import models.organization._
 import models.quiz.answer.{TestDerivativeAnswer, DerivativeAnswers}
-import models.quiz.question.{DerivativeQuestionResults, TestDerivativeQuestion, DerivativeQuestions}
+import models.quiz.question._
 import models.support.CourseId
 import org.junit.runner._
 import org.specs2.mutable._
@@ -113,7 +113,6 @@ class QuizzesSpec extends Specification {
 	}
 
   "quiz.course" should {
-
     "return a course if the quiz is associated with a course" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
       DB.withSession { implicit session: Session =>
         val user = newFakeUser(UserTest())
@@ -133,7 +132,70 @@ class QuizzesSpec extends Specification {
         quiz.course(CourseId(0L)) must beNone
       }
     }
-
   }
+
+	"quiz.setQuestions" should {
+		"add all questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = newFakeUser(UserTest())
+				val quiz = Quizzes.create(TestQuiz(owner = user.id))
+				val q1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+				val q2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+
+				Quizzes.setQuestions(quiz.id, q1.id, q2.id)
+
+				quiz.questions.map(_.id) must beEqualTo(List(q1.id, q2.id))
+			}
+		}
+
+		"remove old questions" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = newFakeUser(UserTest())
+				val quiz = Quizzes.create(TestQuiz(owner = user.id))
+				val q1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+				val q2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+
+				Quizzes.setQuestions(quiz.id, q1.id, q2.id)
+
+				Quizzes.setQuestions(quiz.id,q2.id)
+
+				quiz.questions.map(_.id) must beEqualTo(List(q2.id))
+			}
+		}
+
+		"overwrite question with new set" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = newFakeUser(UserTest())
+				val quiz = Quizzes.create(TestQuiz(owner = user.id))
+				val q1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+				val q2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+				val q3 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+
+				Quizzes.setQuestions(quiz.id, q1.id, q2.id)
+
+				Quizzes.setQuestions(quiz.id, q1.id, q3.id)
+
+				quiz.questions.map(_.id) must beEqualTo(List(q1.id, q3.id))
+			}
+		}
+
+		"overwrite question are in order added" in new WithApplication(FakeApplication(additionalConfiguration = inMemH2)) {
+			DB.withSession { implicit session: Session =>
+				val user = newFakeUser(UserTest())
+				val quiz = Quizzes.create(TestQuiz(owner = user.id))
+				val q1 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+				val q2 = DerivativeQuestions.create(TestDerivativeQuestion(owner = user.id))
+				val q3 = TangentQuestions.create(TestTangentQuestion(owner = user.id))
+
+				Quizzes.setQuestions(quiz.id, q1.id, q2.id)
+
+				Quizzes.setQuestions(quiz.id, q3.id)
+
+				Quizzes.setQuestions(quiz.id, q3.id, q1.id)
+
+				quiz.questions.map(_.id) must beEqualTo(List(q3.id, q1.id))
+			}
+		}
+	}
 
 }

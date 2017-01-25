@@ -1,6 +1,6 @@
 package models.quiz.question
 
-import com.artclod.slick.NumericBoolean
+import com.artclod.slick.{JodaUTC, NumericBoolean, listGroupBy}
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import com.google.common.annotations.VisibleForTesting
 import models.quiz._
@@ -14,7 +14,6 @@ import models.user.table.usersTable
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple.{Query, _}
 import com.artclod.util.optionElse
-import com.artclod.slick.listGroupBy
 
 object DerivativeQuestions {
 
@@ -26,7 +25,7 @@ object DerivativeQuestions {
   }
 
   def attach(toInsert: DerivativeQuestion, quizId: QuizId)(implicit session: Session): Unit = {
-    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, JodaUTC.now, 1) // TODO setup order here
     derivativeQuestion2QuizTable += quizLink
   }
 

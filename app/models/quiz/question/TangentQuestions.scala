@@ -1,6 +1,6 @@
 package models.quiz.question
 
-import com.artclod.slick.NumericBoolean
+import com.artclod.slick.{JodaUTC, NumericBoolean, listGroupBy}
 import com.artclod.slick.JodaUTC.timestamp2DateTime
 import models.quiz.Quiz
 import models.quiz.answer.TangentAnswer
@@ -12,7 +12,6 @@ import models.user.User
 import models.user.table._
 import org.joda.time.DateTime
 import play.api.db.slick.Config.driver.simple._
-import com.artclod.slick.listGroupBy
 
 object TangentQuestions {
 
@@ -24,7 +23,7 @@ object TangentQuestions {
   }
 
   def attach(toInsert: TangentQuestion, quizId: QuizId)(implicit session: Session): Unit = {
-    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, toInsert.creationDate, 1) // TODO setup order here
+    val quizLink = Question2Quiz(toInsert.id, quizId, toInsert.ownerId, JodaUTC.now, 1) // TODO setup order here
     tangentQuestion2QuizTable += quizLink
   }
 
